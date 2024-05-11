@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "501667206572",
+    "firebase_url": "https://salae-efa45-default-rtdb.firebaseio.com",
+    "project_id": "salae-efa45",
+    "storage_bucket": "salae-efa45.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:501667206572:android:27ca7d5ed71ccb1fded609",
+        "android_client_info": {
+          "package_name": "paysaw.com.wallet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDM3ow4lh89xZf-5xAf3UdkelcA_SYz2Ms"
+        },
+        {
+          "current_key": "AIzaSyDjkR8ufdK1QNqXp_zScjbCGc7QIVDvhT0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:501667206572:android:8b93ee0116515801ded609",
+        "android_client_info": {
+          "package_name": "saleandbuy.sale"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDM3ow4lh89xZf-5xAf3UdkelcA_SYz2Ms"
+        },
+        {
+          "current_key": "AIzaSyDjkR8ufdK1QNqXp_zScjbCGc7QIVDvhT0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

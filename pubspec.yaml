@@ -1,0 +1,40 @@
+name: wallet
+version: 1.0.0+1
+publish_to: none
+description: A new Flutter project.
+environment: 
+  sdk: '>=3.3.4 <4.0.0'
+
+dependencies: 
+  cupertino_icons: ^1.0.6
+  firebase_auth: any
+  cloud_firestore: any
+  firebase_database: any
+  firebase_messaging: any
+  firebase_storage: any
+  firebase_core: ^2.31.0
+  camera: 0.10.6
+  get_storage: ^2.1.1
+  provider: 6.1.2
+  get: 4.6.6
+  google_fonts: 6.2.1
+  shared_preferences: 2.2.3
+  timeago: 3.6.1
+  quickalert: 1.1.0
+  image_picker: 1.1.1
+  fancy_password_field: 2.0.6
+  country_picker: 2.0.25
+  flutter: 
+    sdk: flutter
+
+dev_dependencies: 
+  flutter_lints: ^4.0.0
+  flutter_test: 
+    sdk: flutter
+
+flutter: 
+  assets: 
+    - assets/
+    - assets/images/
+  uses-material-design: true
+
