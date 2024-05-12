@@ -1,4 +1,8 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:wallet/models/seller_model.dart';
+
 class UserModel {
   String? name;
   String? username;
@@ -59,5 +63,20 @@ class UserModel {
       'updatedAt': updatedAt,
 
     };
+  }
+
+  factory UserModel.fromDocument(DocumentSnapshot doc) {
+    return UserModel(
+      uid: doc['uid'],
+      email: doc['email'],
+      phone: doc['phone'],
+      name: doc['name'],
+      username: doc['username'],
+      image: doc['image'],
+      balance: doc['balance'],
+      sellerType: doc['sellerType'],
+      createdAt: doc['createdAt'],
+      updatedAt: doc['updatedAt'],
+    );
   }
 }

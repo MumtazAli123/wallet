@@ -407,10 +407,8 @@ class _RegisterViewState extends State<RegisterView> {
       context: context,
       type: QuickAlertType.info,
       title: 'Select Image',
-      text: 'Select image from gallery or camera',
       widget: Column(
         children: [
-          Divider(),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

@@ -256,7 +256,7 @@ class _WalletViewState extends State<WalletView> {
                       ),
                       SizedBox(height: 4),
                       Text(
-                        "PKR: ${currencyFormat(model?.balance) ?? 0.0}",
+                        "PKR: ${currencyFormat(double.parse(model!.balance.toString())) }",
                         // "name",
                         style: TextStyle(
                             color: Colors.white,

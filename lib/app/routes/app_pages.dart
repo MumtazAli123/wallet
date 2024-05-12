@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:wallet/models/seller_model.dart';
 import 'package:wallet/models/user_model.dart';
 
 import '../modules/home/bindings/home_binding.dart';
@@ -38,7 +37,9 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.HOME,
-      page: () => const HomeView(),
+      page: () =>  HomeView(
+        userModel: UserModel(),
+      ),
       binding: HomeBinding(),
     ),
     GetPage(

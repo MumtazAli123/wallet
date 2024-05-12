@@ -5,16 +5,22 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:get_time_ago/get_time_ago.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:quickalert/quickalert.dart';
 import 'package:wallet/global/global.dart';
 import 'package:wallet/models/seller_model.dart';
+import 'package:wallet/models/user_model.dart';
 import 'package:wallet/widgets/my_drawer.dart';
 
 import '../../../../widgets/currency_format.dart';
+import '../../../../widgets/mix_widgets.dart';
 import '../controllers/home_controller.dart';
 
 class HomeView extends StatefulWidget {
-  const HomeView({super.key});
+  final UserModel? userModel;
+   HomeView({Key? key, this.userModel}) : super(key: key);
+
 
 
   @override
@@ -26,12 +32,11 @@ class _HomeViewState extends State<HomeView> {
   final user = fAuth.currentUser;
 
   final GetStorage box = GetStorage();
-  double someDoubleValue = 10.0;
-  String? balance = sharedPreferences?.getString('balance') ?? '10';
   String? name = sharedPreferences?.getString('name');
   String? email = sharedPreferences?.getString('email');
   String? image = sharedPreferences?.getString('image');
   String? phone = sharedPreferences?.getString('phone');
+  String? balnce = sharedPreferences?.getString('balance');
 
   SellerModel? sellerModel = SellerModel();
 
@@ -42,60 +47,64 @@ class _HomeViewState extends State<HomeView> {
   static var map = {};
 
 
-
-  Future<List>getAllSellers() async {
+  Future<List> getAllStatement() async {
     final List<DocumentSnapshot> documents = [];
-    await FirebaseFirestore.instance.collection('sellers').get().then((querySnapshot) {
+    await FirebaseFirestore.instance
+        .collection('sellers')
+        .doc(user!.uid)
+        .collection('statement')
+        .get()
+        .then((querySnapshot) {
       for (var element in querySnapshot.docs) {
         documents.add(element);
       }
     });
     return documents;
   }
+
+  UserModel? userModel = UserModel.fromMap(map);
 
   Future<List> getAllData() async {
     // current user data
-    final List<DocumentSnapshot> documents = [];
-    await FirebaseFirestore.instance.collection('sellers').get().then((querySnapshot) {
-      for (var element in querySnapshot.docs) {
-        documents.add(element);
-      }
-    });
-    return documents;
-  }
-
-
-  bool isLoading = false;
-  @override
-  void initState() {
-    super.initState();
-    isLoading = true;
-    FirebaseFirestore.instance
-        .collection("sellers")
+    await FirebaseFirestore.instance
+        .collection('sellers')
         .doc(user!.uid)
         .get()
         .then((value) {
-      balance = value.data()!['balance'];
-      name = value.data()!['name'];
-      email = value.data()!['email'];
-      image = value.data()!['image'];
-      phone = value.data()!['phone'];
-      setState(() {});
+      setState(() {
+        userModel = UserModel.fromMap(value.data());
+      });
     });
+    return [];
 
-    controller.streamArticle();
-    Future.delayed(Duration(seconds: 2), () {
+  }
+
+  bool isLoading = false;
+  @override
+  // statement data
+  void initState() {
+    super.initState();
+    isLoading = true;
+    getAllData().then((value) {
+      setState(() {
+        isLoading = false;
+      });
+    });
+    getAllStatement().then((value) {
       setState(() {
         isLoading = false;
       });
     });
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: MyDrawer(),
+      appBar: AppBar(
+        title: Text('Home'),
+        centerTitle: true,
+      ),
       body: _buildBody(),
     );
   }
@@ -103,187 +112,429 @@ class _HomeViewState extends State<HomeView> {
   _buildBody() {
     return isLoading
         ? Center(
-      child: CircularProgressIndicator(),
-    )
-        : NestedScrollView(
-        headerSliverBuilder: (context, innerBoxIsScrolled) {
-          return [
-            SliverAppBar(
-              leading: IconButton(
-                onPressed: () {
-                  Scaffold.of(context).openDrawer();
-
-                },
-                icon: Padding(
-                  padding: const EdgeInsets.only(bottom: 8, left: 10),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      image: DecorationImage(
-                        image: NetworkImage(image ?? 'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png'),
-                        fit: BoxFit.cover,
-                      ),
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                ),
-              ),),
-
-
-              iconTheme: IconThemeData(color: Colors.white),
-              centerTitle: true,
-              actions: [
-                IconButton(onPressed: () {
-                  fAuth.signOut();
-                  Get.offAllNamed('/login');
-                }, icon: Padding(
-                  padding:  EdgeInsets.only(bottom: 10, right: 10),
-                  child: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    child: Icon(Icons.lock_open, color: Colors.black),
-                  ),
-                )),],
-
-              title: Container(
-                padding: const EdgeInsets.all(6),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                // minimum text length is 0 to 8 ... use shared preference
-                child:  Text(
-                //   first 8 characters and first letter of the name is capital
-                  "Welcome, ${name!.length > 8 ? name!.substring(0, 8) : name!.toUpperCase()[0] + name!.substring(1)}",
-                  style: GoogleFonts.roboto(
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              pinned: false,
-              floating: false,
-              snap: false,
-              expandedHeight: 230,
-              flexibleSpace: FlexibleSpaceBar(
-                centerTitle: false,
-                title: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Text(
-                      'Total Balance',
-                      style: GoogleFonts.roboto(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      // String someStringVariable = map['someKey'].toString();
-                      'Rs. ${balance ??<  String > {
-                      }}',
-                      style: GoogleFonts.roboto(
-                        color: Colors.white,
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  //   in word form 1000 = one thousand rupees
-                  ],
-                ),
-                background: Image.asset(
-                  'assets/images/wallet.png',
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-          ];
-        },
-        body: _buildSliverList());
-
-  }
-
-  _buildSliverList() {
-    return FutureBuilder(
-      future:
-      FirebaseFirestore.instance.collection("sellers").doc(uid).get(),
-      builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
-        }
-        return Column(
-          children: <Widget>[
-            _buildCategories(),
-            _buildStatementList(),
-          ],
-        );
-      },
-    );
-  }
-
-  currencyFormat(String? balance) {
-    return CurrencyFormat.convertToIdr(balance, 2);
-  }
-
-  _buildCategories() {
-    return Container(
-      alignment: Alignment.center,
-      height: 100,
-      child: ListView.builder(
-        itemCount: 5,
-        scrollDirection: Axis.horizontal,
-        itemBuilder: (context, index) {
-          return Container(
-            margin: EdgeInsets.all(8),
-            width: 100,
-            decoration: BoxDecoration(
-              color: Colors.blue,
-              borderRadius: BorderRadius.circular(10),
-            ),
+            child: CircularProgressIndicator(),
+          )
+        : SingleChildScrollView(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: const <Widget>[
-                Icon(
-                  Icons.category,
-                  color: Colors.white,
-                ),
-                Text(
-                  "Category",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+              children: [
+                _buildHeader(
+                    name ?? 'name', email ?? 'email', image ?? 'image'),
+                _buildBalance( balnce ?? 'balance'),
+                _buildStatement( ),
               ],
             ),
           );
-        },
+  }
+
+  _buildHeader(String s, String t, String u) {
+    return Container(
+      padding: EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.blue,
+        image: DecorationImage(
+          image: AssetImage('assets/wallet.png'),
+          fit: BoxFit.cover,
+        ),
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(30),
+          bottomRight: Radius.circular(30),
+        ),
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 30,
+                backgroundImage: NetworkImage(u),
+              ),
+              SizedBox(width: 20),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    s,
+                    style: GoogleFonts.poppins(
+                      fontSize: 20,
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    t,
+                    style: GoogleFonts.poppins(
+                      fontSize: 15,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                children: [
+                  Text(
+                    'Balance',
+                    style: GoogleFonts.poppins(
+                      fontSize: 15,
+                      color: Colors.white,
+                    ),
+                  ),
+                  StreamBuilder(
+                      stream: FirebaseFirestore.instance
+                          .collection('sellers')
+                          .doc(user!.uid)
+                          .snapshots(),
+                      builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return CircularProgressIndicator();
+                        }
+                        return Text(
+                          '\PKR: ${currencyFormat(double.parse(snapshot.data!['balance'].toString()))}',
+                          style: GoogleFonts.poppins(
+                            fontSize: 20,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        );
+                      }
+                      )
+                ],
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  _withdraw(balnce, user!.uid);
+                },
+                style: ElevatedButton.styleFrom(
+                  padding: EdgeInsets.symmetric(horizontal: 30),
+                ),
+                child: wText(
+                  'Withdraw',
+                  color: Colors.blue,
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
 
-  _buildStatementList() {
-    return Expanded(
-      child: StreamBuilder(
-        stream: FirebaseFirestore.instance
-            .collection("sellers").doc(uid).collection('statement').snapshots(),
-        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          }
-          return ListView.builder(
-            itemCount: snapshot.data!.docs.length,
-            itemBuilder: (context, index) {
-              var data = snapshot.data!.docs[index];
-              return ListTile(
-                title: Text(data['title']),
-                subtitle: Text(data['body']),
-                trailing: Text(data['balance']),
-              );
+  currencyFormat(double? balance) {
+    // as per thousand separator
+    return balance?.toStringAsFixed(2).replaceAllMapped(
+        RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},');
+  }
+
+  _buildBalance(param0) {
+    return Container(
+      padding: EdgeInsets.all(20),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                children: [
+                  Text(
+                    'Total Earnings',
+                    style: GoogleFonts.poppins(
+                      fontSize: 15,
+                      color: Colors.black,
+                    ),
+                  ),
+                  Text(
+                    '\PKR: 0.00',
+                    style: GoogleFonts.poppins(
+                      fontSize: 20,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  Text(
+                    'Total Withdraw',
+                    style: GoogleFonts.poppins(
+                      fontSize: 15,
+                      color: Colors.black,
+                    ),
+                  ),
+                  Text(
+                    '\PKR: 0.00',
+                    style: GoogleFonts.poppins(
+                      fontSize: 20,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  _buildStatement() {
+    return Container(
+      padding: EdgeInsets.all(20),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Statement',
+                style: GoogleFonts.poppins(
+                  fontSize: 20,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              TextButton(
+                onPressed: () {},
+                child: Text(
+                  'View All',
+                  style: GoogleFonts.poppins(
+                    fontSize: 15,
+                    color: Colors.blue,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 20),
+          StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection('sellers')
+                  .doc(user!.uid)
+                  .collection('statement')
+                  .snapshots(),
+              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                return ListView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  itemCount: snapshot.data!.docs.length,
+                  itemBuilder: (context, index) {
+                    return _buildStatementItem(snapshot.data!.docs[index]);
+                  },
+                );
+              }
+          ),
+        ],
+      ),
+    );
+  }
+
+  _buildStatementItem(param0) {
+    return Container(
+      margin: EdgeInsets.only(bottom: 10),
+      padding: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(10),
+      ),
+      // child: Row(
+      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      //   children: [
+      //     Column(
+      //       crossAxisAlignment: CrossAxisAlignment.start,
+      //       children: [
+      //         isLoading
+      //             ? CircularProgressIndicator()
+      //             : Text(
+      //                 "${param0['type']}",
+      //                 style: GoogleFonts.poppins(
+      //                   fontSize: 15,
+      //                   color: Colors.black,
+      //                 ),
+      //               ),
+      //         Text(
+      //           '${currencyFormat(double.parse(param0['amount'].toString()))}',
+      //           style: GoogleFonts.poppins(
+      //             fontSize: 20,
+      //             color: Colors.black,
+      //             fontWeight: FontWeight.bold,
+      //           ),
+      //         ),
+      //       ],
+      //     ),
+      //     Column(
+      //       crossAxisAlignment: CrossAxisAlignment.end,
+      //       children: [
+      //         Text(
+      //           'Date',
+      //           style: GoogleFonts.poppins(
+      //             fontSize: 15,
+      //             color: Colors.black,
+      //           ),
+      //         ),
+      // Text(
+      //   GetTimeAgo.parse(
+      //       DateTime.parse(param0['created_at'].toDate().toString()),
+      //       locale: 'en'),
+      //
+      //         ),
+      //       ],
+      //     ),
+      //   ],
+      // ),
+      child: ListTile(
+        onTap: () {
+          _buildDetailDialog(param0);
+        },
+        leading: CircleAvatar(
+          backgroundColor: Colors.blue,
+          child: Text(
+            "${param0['name'][0]}",
+            style: GoogleFonts.poppins(
+              fontSize: 20,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        ),
+        title: Text(
+          "${param0['name']}",
+          style: GoogleFonts.poppins(
+            fontSize: 15,
+            color: Colors.black,
+          ),
+        ),
+        subtitle: Text(
+          GetTimeAgo.parse(
+              DateTime.parse(param0['created_at'].toDate().toString()),
+              locale: 'en'),
+        ),
+        trailing:  Column(
+          children: [
+            Text(
+              "${param0['type'] == 'send' ? '-' : '+'} ${currencyFormat(double.parse(param0['amount'].toString())) }",
+              style: GoogleFonts.poppins(
+                fontSize: 18,
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 5),
+            Text(
+              param0['type'] == 'send' ? 'Sent' : 'Received',
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _withdraw(String? balnce, String uid) {
+    Get.defaultDialog(
+      title: 'Withdraw',
+      content: Column(
+        children: [
+          TextField(
+            controller: TextEditingController(),
+            decoration: InputDecoration(
+              labelText: 'Amount',
+              hintText: 'Enter amount to withdraw',
+            ),
+          ),
+          SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () {
+              Get.back();
+              _saveWithdraw( balnce, uid);
             },
-          );
-        },
+            child: Text('Withdraw'),
+          ),
+        ],
       ),
     );
   }
 
+  void _saveWithdraw(String? balnce, String uid) {
+    FirebaseFirestore.instance
+        .collection('sellers')
+        .doc(uid)
+        .collection('statement')
+        .add({
+      'name': 'Withdraw',
+      'amount': TextEditingController().text,
+      'type': 'withdraw',
+      'created_at': DateTime.now(),
+    }).then((value) {
+      FirebaseFirestore.instance.collection('sellers').doc(uid).update({
+        'balance': double.parse(balnce!) - double.parse(TextEditingController().text),
+      });
+    });
+  }
+
+  void _buildDetailDialog(param0) {
+    QuickAlert.show(context: context,
+        type: QuickAlertType.custom,
+        title: 'Detail',
+        text: 'Detail of the transaction',
+        widget: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Divider(),
+            Text(
+              'Name: ${param0['name']}',
+              style: GoogleFonts.poppins(
+                fontSize: 15,
+                color: Colors.black,
+              ),
+            ),
+            Text(
+              'Amount: ${currencyFormat(double.parse(param0['amount'].toString()))}',
+              style: GoogleFonts.poppins(
+                fontSize: 15,
+                color: Colors.black,
+              ),
+            ),
+            Text(
+              'Type: ${param0['type']}',
+              style: GoogleFonts.poppins(
+                fontSize: 15,
+                color: Colors.black,
+              ),
+            ),
+            Text(param0['phone'] == null ? 'Phone: Not Available' : 'Phone: ${param0['phone']}',
+              style: GoogleFonts.poppins(
+                fontSize: 15,
+                color: Colors.black,
+              ),
+            ),
+            Text(
+              'Date: ${GetTimeAgo.parse(
+                  DateTime.parse(param0['created_at'].toDate().toString()),
+                  locale: 'en')}',
+              style: GoogleFonts.poppins(
+                fontSize: 15,
+                color: Colors.black,
+              ),
+            ),
+          ],
+        )
+    );
+  }
+}
+
+class DateFormat {
+  static String yMMMd() {
+    return 'yMMMd';
+  }
 }

@@ -31,17 +31,6 @@ class _SendViewState extends State<SendView> {
 
   // search and save user list from firebase firestore
 
-  Future<List<DocumentSnapshot<Object?>>> addListOtherUser()async{
-    final List<DocumentSnapshot> documents = [];
-    await FirebaseFirestore.instance.collection('sellers').get().then((querySnapshot) {
-      for (var element in querySnapshot.docs) {
-        documents.add(element);
-      }
-    });
-    return documents;
-  }
-
-
 
   final fb = FirebaseFirestore.instance;
 
@@ -90,7 +79,7 @@ class _SendViewState extends State<SendView> {
 
     otherUsers.clear();
 
-    for (QueryDocumentSnapshot documentSnapshot in querySnapshot.docs) {
+    for (DocumentSnapshot documentSnapshot in querySnapshot.docs) {
       Map<String, dynamic> userData =
           documentSnapshot.data() as Map<String, dynamic>;
 
@@ -196,56 +185,42 @@ class _SendViewState extends State<SendView> {
       //     );
       //   }).toList(),
       // ),
-      body: FutureBuilder(
-        future: addListOtherUser(),
-        builder: (BuildContext context, AsyncSnapshot<List<DocumentSnapshot<Object?>>> snapshot) {
-          if (snapshot.hasData) {
-            return ListView.builder(
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                return Container(
-                  margin: EdgeInsets.all(20),
-                  height: 100,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: Color.fromRGBO(245, 152, 53, 0.498),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.all(25),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              "${snapshot.data![index]['name']}",
-                              style: TextStyle(
-                                  fontSize: 18, fontWeight: FontWeight.bold),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {
-                                _buildDialogSendMoney(UserModel(
-                                  username: snapshot.data![index]['name'],
-                                  name: snapshot.data![index]['name'],
-                                  uid: snapshot.data![index].id,
-                                  balance: snapshot.data![index]['balance'] ?? 0,
-                                ));
-                              },
-                              child: Text('Send Money'),
-                            ),
-                          ],
-                        ),
-                      ],
+      body: ListView.builder(itemBuilder: (context, index) {
+        return Container(
+          margin: EdgeInsets.all(20),
+          height: 100,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            color: Color.fromRGBO(245, 152, 53, 0.498),
+          ),
+          child: Padding(
+            padding: EdgeInsets.all(25),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "${otherUsers[index].name}",
+                      style: TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold),
                     ),
-                  ),
-                );
-              },
-            );
-          }
-          return Center(child: CircularProgressIndicator());
-        },
+                    ElevatedButton(
+                      onPressed: () {
+                        _buildDialogSendMoney(otherUsers[index]);
+                      },
+                      child: Text('Send Money'),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+        itemCount: otherUsers.length,
       ),
     );
   }
@@ -356,7 +331,7 @@ class _SendViewState extends State<SendView> {
                 return null;
               },
             ),
-            SizedBox(height: 5.0),
+            SizedBox(height: 2.0),
             TextField(
               controller: descriptionController,
               decoration: InputDecoration(
