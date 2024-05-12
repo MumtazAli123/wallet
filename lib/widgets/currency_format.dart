@@ -1,4 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+
+import '../models/user_model.dart';
 
 class CurrencyFormat {
   CurrencyFormat(double? balance, double i);
@@ -102,5 +105,25 @@ class NumberToWord {
       }
     }
     return words;
+  }
+}
+
+
+class UserService {
+  final CollectionReference usersCollection = FirebaseFirestore.instance.collection('sellers');
+
+  Future<UserModel?> getUserData(String uid) async {
+    try {
+      DocumentSnapshot userDoc = await usersCollection.doc(uid).get();
+      if (userDoc.exists) {
+        return UserModel.fromMap(userDoc.data() as Map<String, dynamic>);
+
+      } else {
+        return null;
+      }
+    } catch (e) {
+      print(e);
+      return null;
+    }
   }
 }

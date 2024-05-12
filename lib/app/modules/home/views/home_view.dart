@@ -35,23 +35,31 @@ class _HomeViewState extends State<HomeView> {
 
   SellerModel? sellerModel = SellerModel();
 
-  // Future<List>getAllSellers() async {
-  //   final List<DocumentSnapshot> documents = [];
-  //   await FirebaseFirestore.instance.collection('sellers').get().then((querySnapshot) {
-  //     querySnapshot.docs.forEach((element) {
-  //       documents.add(element);
-  //     });
-  //   });
-  //   return documents;
-  // }
+  String? uid = fAuth.currentUser!.uid;
+
+  String someStringVariable = map['someKey'].toString();
+
+  static var map = {};
+
+
+
+  Future<List>getAllSellers() async {
+    final List<DocumentSnapshot> documents = [];
+    await FirebaseFirestore.instance.collection('sellers').get().then((querySnapshot) {
+      for (var element in querySnapshot.docs) {
+        documents.add(element);
+      }
+    });
+    return documents;
+  }
 
   Future<List> getAllData() async {
     // current user data
     final List<DocumentSnapshot> documents = [];
     await FirebaseFirestore.instance.collection('sellers').get().then((querySnapshot) {
-      querySnapshot.docs.forEach((element) {
+      for (var element in querySnapshot.docs) {
         documents.add(element);
-      });
+      }
     });
     return documents;
   }
@@ -67,7 +75,11 @@ class _HomeViewState extends State<HomeView> {
         .doc(user!.uid)
         .get()
         .then((value) {
-      sellerModel = SellerModel.fromMap(value.data());
+      balance = value.data()!['balance'];
+      name = value.data()!['name'];
+      email = value.data()!['email'];
+      image = value.data()!['image'];
+      phone = value.data()!['phone'];
       setState(() {});
     });
 
@@ -166,7 +178,9 @@ class _HomeViewState extends State<HomeView> {
                       ),
                     ),
                     Text(
-                      'Rs. $balance' ,
+                      // String someStringVariable = map['someKey'].toString();
+                      'Rs. ${balance ??<  String > {
+                      }}',
                       style: GoogleFonts.roboto(
                         color: Colors.white,
                         fontSize: 24,
@@ -191,7 +205,7 @@ class _HomeViewState extends State<HomeView> {
   _buildSliverList() {
     return FutureBuilder(
       future:
-      FirebaseFirestore.instance.collection("users").doc(uid).get(),
+      FirebaseFirestore.instance.collection("sellers").doc(uid).get(),
       builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(child: CircularProgressIndicator());
@@ -251,10 +265,7 @@ class _HomeViewState extends State<HomeView> {
     return Expanded(
       child: StreamBuilder(
         stream: FirebaseFirestore.instance
-            .collection("users")
-            .doc(uid)
-            .collection("budget")
-            .snapshots(),
+            .collection("sellers").doc(uid).collection('statement').snapshots(),
         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());

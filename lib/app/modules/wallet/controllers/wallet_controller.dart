@@ -1,23 +1,128 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
+import 'package:wallet/models/seller_model.dart';
 
 class WalletController extends GetxController {
-  //TODO: Implement WalletController
+  final transferNominalController = TextEditingController();
+  final descriptionController = TextEditingController();
 
-  final count = 0.obs;
+  final totalBalance = 0.obs;
+
+  var addMoney = 0.0.obs;
+  var sendMoney = 0.0.obs;
+
+  var type = ''.obs;
+
+  var isRefresh = false.obs;
+
+  var statementInOutList = [].obs;
+
+  var isLoading = false.obs;
+
+  final db = FirebaseFirestore.instance;
+  SellerModel userModel = SellerModel();
+
+  var incomeList = [].obs;
+
   @override
   void onInit() {
     super.onInit();
+    statementInOut();
+  }
+
+  void increment() => totalBalance.value++;
+  void decrement(double parse) {
+    if (totalBalance.value > 0) {
+      totalBalance.value--;
+    }
   }
 
   @override
-  void onReady() {
-    super.onReady();
+  void onClose() {}
+
+  void statementInOut() async {
+    var snapshot = await db.doc('statement').collection('in_out').get();
+    statementInOutList.value = snapshot.docs.reversed.toList();
+  }
+
+  void streamStatementInOut() async {
+    await for (var snapshot
+        in db.doc('statement').collection('in_out').snapshots()) {
+      statementInOutList.value = snapshot.docs.reversed.toList();
+    }
+  }
+
+  void addStatementInOut() async {
+    await db.doc('statement').collection('in_out').add({
+      'type': type.value,
+      'amount': addMoney.value,
+      'created_at': DateTime.now(),
+    });
+    refresh();
+  }
+
+  void sendStatementInOut() async {
+    // save other user data
+    await db.doc('sellers').collection('statement').add({
+      "user_id": userModel.uid,
+      'name': userModel.name,
+      'phone': userModel.phone,
+      'email': userModel.email,
+      'type': "send",
+      'amount': transferNominalController.text.trim(),
+      'description': descriptionController.text.trim() == ''
+          ? 'No description'
+          : userModel.name,
+      'created_at': DateTime.now(),
+    });
+    refresh();
+  }
+
+  void incomeStatementInOut() async {
+    await db.doc('sellers').collection('statement').add({
+      "user_id": userModel.uid,
+      'name': userModel.name,
+      'phone': userModel.phone,
+      'type': 'income',
+      'amount': addMoney.value,
+      'created_at': DateTime.now(),
+    });
+    refresh();
   }
 
   @override
-  void onClose() {
-    super.onClose();
+  void refresh() {
+    isRefresh.value = !isRefresh.value;
   }
 
-  void increment() => count.value++;
+  void clear() {
+    addMoney.value = 0.0;
+    sendMoney.value = 0.0;
+  }
+
+  void clearType() {
+    type.value = '';
+  }
+
+  void clearAll() {
+    clear();
+    clearType();
+  }
+
+  void streamArticle() {
+    var logger = Logger();
+
+    FirebaseFirestore.instance
+        .collection('sellers')
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection('budget')
+        .snapshots()
+        .listen((event) {
+      incomeList.value = event.docs.reversed.toList();
+      logger.i(event.docs[0].data()['created_at']);
+    });
+  }
 }

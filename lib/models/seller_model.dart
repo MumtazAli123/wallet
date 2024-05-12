@@ -1,3 +1,4 @@
+
 class SellerModel {
   String? uid;
   String? name;
@@ -9,7 +10,8 @@ class SellerModel {
   String? code;
   String? token;
   String? earning;
-  String? balance;
+  double? balance;
+
   String? createdAt;
   String? updatedAt;
   String? status;
@@ -71,50 +73,43 @@ class SellerModel {
     return data;
   }
 
-  static SellerModel? fromMap(Map<String, dynamic>? data) {
-    if (data == null) {
-      return null;
-    }
+  static SellerModel? fromMap(Map<String, dynamic> map) {
     return SellerModel(
-      uid: data['uid'],
-      name: data['name'],
-      email: data['email'],
-      phone: data['phone'],
-      image: data['image'],
-      earning: data['earning'],
-      balance: data['balance'],
-      latitude: data['latitude'],
-      longitude: data['longitude'],
-      code: data['code'],
-      token: data['token'],
-      createdAt: data['createdAt'],
-      updatedAt: data['updatedAt'],
-      status: data['status'],
-      cart: data['cart'],
+      uid: map['uid'],
+      name: map['name'],
+      email: map['email'],
+      phone: map['phone'],
+      image: map['image'],
+      earning: map['earning'],
+      balance: map['balance'],
+      latitude: map['latitude'],
+      longitude: map['longitude'],
+      code: map['code'],
+      token: map['token'],
+      createdAt: map['createdAt'],
+      updatedAt: map['updatedAt'],
+      status: map['status'],
+      cart: map['cart'],
     );
   }
 
-  static Map<String, dynamic>? toMap(SellerModel? sellerModel) {
-    if (sellerModel == null) {
-      return null;
-    }
+  Map<String, dynamic> toMap() {
     return {
-      'uid': sellerModel.uid,
-      'name': sellerModel.name,
-      'email': sellerModel.email,
-      'phone': sellerModel.phone,
-      'image': sellerModel.image,
-      'earning': sellerModel.earning,
-      'balance': sellerModel.balance,
-      'latitude': sellerModel.latitude,
-      'longitude': sellerModel.longitude,
-      'code': sellerModel.code,
-      'token': sellerModel.token,
-      'createdAt': sellerModel.createdAt,
-      'updatedAt': sellerModel.updatedAt,
-      'status': sellerModel.status,
-      'cart': sellerModel.cart,
+      'uid': uid,
+      'name': name,
+      'email': email,
+      'phone': phone,
+      'image': image,
+      'earning': earning,
+      'balance': balance,
+      'latitude': latitude,
+      'longitude': longitude,
+      'code': code,
+      'token': token,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
+      'status': status,
+      'cart': cart,
     };
   }
-
 }

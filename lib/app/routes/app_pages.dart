@@ -1,4 +1,6 @@
 import 'package:get/get.dart';
+import 'package:wallet/models/seller_model.dart';
+import 'package:wallet/models/user_model.dart';
 
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/home_view.dart';
@@ -36,12 +38,14 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.HOME,
-      page: () => HomeView(),
+      page: () => const HomeView(),
       binding: HomeBinding(),
     ),
     GetPage(
       name: _Paths.WALLET,
-      page: () => const WalletView(),
+      page: () =>  WalletView(
+        loggedInUser: UserModel(),
+      ),
       binding: WalletBinding(),
     ),
   ];

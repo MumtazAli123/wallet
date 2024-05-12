@@ -1,5 +1,6 @@
 // ignore_for_file: avoid_print, use_build_context_synchronously, prefer_const_constructors
 
+import 'dart:ffi';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_picker/country_picker.dart';
@@ -13,7 +14,7 @@ import 'package:quickalert/quickalert.dart';
 import 'package:wallet/app/modules/home/views/home_view.dart';
 
 import '../../../../global/global.dart';
-import '../../../../widgets/mix_widgets.dart';
+import '../../../../models/user_model.dart';
 import '../controllers/register_controller.dart';
 
 class RegisterView extends StatefulWidget {
@@ -27,12 +28,14 @@ class _RegisterViewState extends State<RegisterView> {
   final controller = Get.put(RegisterController());
 
   final fStore = FirebaseFirestore.instance;
+  final String date = DateTime.now().toString();
 
   // country flag
-
+  UserModel model = UserModel();
   bool _isImageLoaded = false;
-  bool _isPasswordVisible = false;
+  final bool _isPasswordVisible = false;
   bool isLoading = false;
+  var hintText = 'Email';
 
   fromValidation() {
     if (controller.emailController.text.isEmpty) {
@@ -53,7 +56,8 @@ class _RegisterViewState extends State<RegisterView> {
         controller.confirmPasswordController.text) {
       Get.snackbar('Error', 'Password does not match');
     } else {
-      _registerUser();
+      signUp(
+          controller.emailController.text, controller.passwordController.text);
     }
   }
 
@@ -81,21 +85,7 @@ class _RegisterViewState extends State<RegisterView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: _buildAppBar(context),
       body: _buildBody(context),
-    );
-  }
-
-  _buildAppBar(BuildContext context) {
-    return AppBar(
-      title: wText('Register', color: Colors.white, size: 20),
-      centerTitle: true,
-      leading: IconButton(
-        icon: const Icon(Icons.arrow_back),
-        onPressed: () {
-          Navigator.pop(context);
-        },
-      ),
     );
   }
 
@@ -109,7 +99,6 @@ class _RegisterViewState extends State<RegisterView> {
             children: [
               _buildImage(context),
               _buildForm(context),
-              _buildLoginButton(),
             ],
           ),
         ),
@@ -184,71 +173,98 @@ class _RegisterViewState extends State<RegisterView> {
         key: controller.formKey,
         child: Column(
           children: [
-            TextFormField(
-              controller: controller.nameController,
-              keyboardType: TextInputType.text,
-              decoration: const InputDecoration(
-                labelText: 'Name',
-              ),
-            ),
-            TextFormField(
-              controller: controller.emailController,
-              keyboardType: TextInputType.emailAddress,
-              decoration: const InputDecoration(
-                labelText: 'Email',
-              ),
-            ),
+            _nameField(),
+            SizedBox(height: 20.0),
+            _emailField(),
             SizedBox(height: 20.0),
             _phoneField(),
             SizedBox(height: 20.0),
-            FancyPasswordField(
-              controller: controller.passwordController,
-              obscureText: !_isPasswordVisible,
-              decoration: InputDecoration(
-                labelText: 'Password',
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _isPasswordVisible
-                        ? Icons.visibility
-                        : Icons.visibility_off,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _isPasswordVisible = !_isPasswordVisible;
-                    });
-                  },
-                ),
-              ),
-            ),
-            FancyPasswordField(
-              controller: controller.confirmPasswordController,
-              obscureText: !_isPasswordVisible,
-              decoration: InputDecoration(
-                labelText: 'Confirm Password',
-                suffixIcon: IconButton(
-                  icon: Icon(
-                    _isPasswordVisible
-                        ? Icons.visibility
-                        : Icons.visibility_off,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _isPasswordVisible = !_isPasswordVisible;
-                    });
-                  },
-                ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                fromValidation();
-              },
-              child: const Text('Register'),
-            ),
+            _passwordField(),
+            SizedBox(height: 10.0),
+            _confirmPasswordField(),
+            SizedBox(height: 30.0),
+            _registerButton(),
+            SizedBox(height: 10.0),
+            _loginLink(),
           ],
         ),
       ),
+    );
+  }
+
+  _nameField() {
+    return TextFormField(
+      controller: controller.nameController,
+      maxLength: 20,
+      focusNode: controller.nameFocus,
+      keyboardType: TextInputType.text,
+      textInputAction: TextInputAction.next,
+      decoration: InputDecoration(
+        helperText: 'Enter your name as per CNIC',
+        labelText: 'Name',
+        hintText: 'Enter your name',
+        prefixIcon: Icon(Icons.person),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+      ),
+      validator: (value) {
+        // when enter some value in name field then change hintText to Name
+        if (value!.isEmpty) {
+          return 'Name is required';
+        } else if (value.length < 3) {
+          return 'Name must be at least 3 characters';
+        }
+        return null;
+      },
+      onFieldSubmitted: (value) {
+        controller.nameFocus.unfocus();
+        FocusScope.of(context).requestFocus(controller.nameFocus);
+      },
+    );
+  }
+
+  _emailField() {
+    return TextFormField(
+      controller: controller.emailController,
+      keyboardType: TextInputType.emailAddress,
+      textInputAction: TextInputAction.next,
+      onChanged: (value) {
+        setState(() {
+          hintText = 'Email';
+        });
+      },
+      decoration: InputDecoration(
+        labelText: 'Email',
+        hintText: 'Enter your email',
+        prefixIcon: Icon(Icons.email),
+        suffixIcon: hintText == 'Email' &&
+                controller.emailController.text.contains('.com')
+            ? Container(
+                margin: const EdgeInsets.only(right: 10),
+                height: 20,
+                width: 20,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.green,
+                ),
+                child: const Icon(
+                  Icons.done,
+                  color: Colors.white,
+                  size: 20,
+                ),
+              )
+            : null,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+      ),
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'Email is required';
+        }
+        return null;
+      },
     );
   }
 
@@ -324,6 +340,68 @@ class _RegisterViewState extends State<RegisterView> {
     );
   }
 
+  _passwordField() {
+    return FancyPasswordField(
+      controller: controller.passwordController,
+      decoration: InputDecoration(
+        labelText: 'Password',
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+      ),
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'Password is required';
+        }
+        return null;
+      },
+    );
+  }
+
+  _confirmPasswordField() {
+    return FancyPasswordField(
+      controller: controller.confirmPasswordController,
+      decoration: InputDecoration(
+        labelText: 'Confirm Password',
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+      ),
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'Confirm Password is required';
+        }
+        return null;
+      },
+    );
+  }
+
+  _registerButton() {
+    return ElevatedButton(
+      onPressed: () {
+        if (controller.formKey.currentState!.validate()) {
+          fromValidation();
+        }
+      },
+      child: const Text('Register'),
+    );
+  }
+
+  _loginLink() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text('Already have an account?'),
+        TextButton(
+          onPressed: () {
+            Get.back();
+          },
+          child: Text('Login'),
+        ),
+      ],
+    );
+  }
+
   void _showPicker(BuildContext context) {
     QuickAlert.show(
       context: context,
@@ -382,47 +460,41 @@ class _RegisterViewState extends State<RegisterView> {
   }
 
   // already have an account text widget
-  _buildLoginButton() {
-    return Container(
-      margin: const EdgeInsets.only(top: 2),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Text('Already have an account?'),
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: const Text('Now Login',
-                style: TextStyle(
-                    color: Colors.blue,
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold)),
-          ),
-        ],
-      ),
-    );
-  }
 
-  void _registerUser() {
+ Future <void> signUp(String email, String password) async {
     QuickAlert.show(
       context: context,
       type: QuickAlertType.loading,
       title: 'Please wait...',
     );
+    bool isPhoneNoAvailable = await isUserPhoneAvailable(
+        "+${controller.countryCode}${controller.phoneController.text}");
+
     try {
-      FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
-              email: controller.emailController.text,
-              password: controller.passwordController.text)
-          .then((value) {
-        uid = value.user!.uid;
-        _uploadImageToFirebase();
-      });
+      if (isPhoneNoAvailable) {
+        FirebaseAuth.instance
+            .createUserWithEmailAndPassword(email: email, password: password)
+            .then((value) {
+          uid = value.user!.uid;
+          _uploadImageToFirebase();
+        });
+      } else {
+        Get.back();
+        Get.snackbar('Error', 'Phone number already exists');
+      }
     } catch (e) {
       Get.back();
       Get.snackbar('Error', e.toString());
     }
+  }
+
+  Future<bool> isUserPhoneAvailable(String phoneNumber) async {
+    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+    final query = await firebaseFirestore
+        .collection("sellers")
+        .where("phone", isEqualTo: phoneNumber)
+        .get();
+    return query.docs.isEmpty;
   }
 
   void _uploadImageToFirebase() {
@@ -433,6 +505,7 @@ class _RegisterViewState extends State<RegisterView> {
           .then((value) {
         value.ref.getDownloadURL().then((value) {
           _saveUserData(value);
+          // postDetailsToFireStore( value);
         });
       });
     } catch (e) {
@@ -441,21 +514,84 @@ class _RegisterViewState extends State<RegisterView> {
     }
   }
 
+  postDetailsToFireStore(String value) {
+    FirebaseFirestore firebaseFirestore =
+        FirebaseFirestore.instance; // to call firestore
+    User? user = fAuth.currentUser; // to call user model
+
+    UserModel userModel = UserModel();
+    userModel.uid = user!.uid;
+    userModel.email = user.email;
+    userModel.name = controller.nameController.text;
+    userModel.phone = "+${controller.countryCode}${controller.phoneController.text}";
+    userModel.image = value;
+    userModel.sellerType = 'user';
+    userModel.balance = 100.0;
+    userModel.createdAt = date;
+    userModel.updatedAt = date;
+
+    firebaseFirestore.collection("sellers").doc(user.uid).set({
+      'uid': userModel.uid,
+      'name': userModel.name,
+      'email': userModel.email,
+      'phone': userModel.phone,
+      'image': value,
+      'sellerType': userModel.sellerType,
+      'status': 'approved',
+      'balance': 100.0,
+      'createdAt': userModel.createdAt,
+      'updatedAt': userModel.updatedAt,
+    }).then((value) async {
+      await sharedPreferences?.setString('uid', uid!);
+      await sharedPreferences?.setString('name', controller.nameController.text);
+      await sharedPreferences?.setString('email', controller.emailController.text);
+      await sharedPreferences?.setString('phone',
+          '+${controller.countryCode}${controller.phoneController.text}');
+      await sharedPreferences?.setString('image', controller.image!.path);
+      await sharedPreferences?.setString('sellerType', 'user');
+      await sharedPreferences?.setString('status', 'approved');
+      await sharedPreferences?.setString('balance', '100.0');
+      await sharedPreferences?.setString('createdAt', DateTime.now().toString());
+      await sharedPreferences?.setString('sellerCart', DateTime.now().toString());
+
+      Get.back();
+      Get.offAll(() => HomeView());
+      Get.snackbar('Success', 'User registered successfully');
+    }).catchError((e) {
+      Get.back();
+      Get.snackbar('Error', e.toString());
+    });
+  }
+
   void _saveUserData(String value) async {
+   // to call firestore
+
     try {
+
+      User? user = fAuth.currentUser; // to call user model
+
+      UserModel userModel = UserModel();
+      userModel.uid = user!.uid;
+      userModel.email = user.email;
+      userModel.name = controller.nameController.text;
+      userModel.phone = "+${controller.countryCode}${controller.phoneController.text}";
+      userModel.image = value;
+      userModel.sellerType = 'user';
+      userModel.balance = 100.0;
+      userModel.createdAt = date;
+      userModel.updatedAt = date;
       //   svae user data to firestore and save locally to shared preference
       await FirebaseFirestore.instance.collection('sellers').doc(uid).set({
-        'uid': uid,
-        'name': controller.nameController.text,
-        'email': controller.emailController.text,
-        'phone': "+${controller.countryCode}${controller.phoneController.text}",
+        'uid': userModel.uid,
+        'name': userModel.name,
+        'email': userModel.email,
+        'phone': userModel.phone,
         'image': value,
-        'sellerType': 'user',
+        'sellerType': userModel.sellerType,
         'status': 'approved',
-        "earning": 0.0,
-        "balance": 0.0,
-        'createdAt': DateTime.now(),
-        "updatedAt": DateTime.now(),
+        'balance': 100.0,
+        'createdAt': userModel.createdAt,
+        'updatedAt': userModel.updatedAt,
       });
       await sharedPreferences?.setString('uid', uid!);
       await sharedPreferences?.setString(
@@ -467,17 +603,15 @@ class _RegisterViewState extends State<RegisterView> {
       await sharedPreferences?.setString('image', value);
       await sharedPreferences?.setString('sellerType', 'user');
       await sharedPreferences?.setString('status', 'approved');
-      await sharedPreferences?.setString('earning', '0.0');
-      await sharedPreferences?.setString('balance', '0.0');
+      await sharedPreferences?.setString('earning', '100.0');
+      await sharedPreferences?.setString('balance', '100.0');
       await sharedPreferences?.setString(
           'createdAt', DateTime.now().toString());
       await sharedPreferences?.setString(
           'sellerCart', DateTime.now().toString());
 
       Get.back();
-      Get.offAll(() =>  HomeView(
-
-      ));
+      Get.offAll(() => HomeView());
       Get.snackbar('Success', 'User registered successfully');
     } catch (e) {
       Get.back();

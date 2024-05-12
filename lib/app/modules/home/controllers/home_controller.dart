@@ -19,6 +19,11 @@ class HomeController extends GetxController {
 
   var articleList = [].obs;
 
+  var isRefresh = false.obs;
+  var isLoading = false.obs;
+
+
+
   void article() async {
     var snapshot =
         await db.collection('sellers').doc(uid).get();
@@ -32,15 +37,7 @@ class HomeController extends GetxController {
     article();
   }
 
-  @override
-  void onReady() {
-    super.onReady();
-  }
 
-  @override
-  void onClose() {
-    super.onClose();
-  }
 
   void increment() => count.value++;
 

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:quickalert/quickalert.dart';
 import 'package:wallet/app/modules/home/controllers/home_controller.dart';
 
-import '../app/modules/login/controllers/login_controller.dart';
 import '../global/global.dart';
 
 class MyDrawer extends StatefulWidget {
@@ -98,7 +96,7 @@ class _MyDrawerState extends State<MyDrawer> {
           leading: const Icon(Icons.wallet_membership),
           title: const Text('Wallet'),
           onTap: () {
-            Navigator.of(context).pushNamed('/statement');
+            Get.toNamed('/wallet');
           },
         ),
         ListTile(
