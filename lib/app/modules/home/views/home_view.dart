@@ -1,10 +1,8 @@
 // ignore_for_file: prefer_const_constructors, use_key_in_widget_constructors, prefer_const_constructors_in_immutables
 
 import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -12,6 +10,7 @@ import 'package:wallet/global/global.dart';
 import 'package:wallet/models/seller_model.dart';
 import 'package:wallet/widgets/my_drawer.dart';
 
+import '../../../../widgets/currency_format.dart';
 import '../controllers/home_controller.dart';
 
 class HomeView extends StatefulWidget {
@@ -24,6 +23,7 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   final HomeController controller = Get.put(HomeController());
+  final user = fAuth.currentUser;
 
   final GetStorage box = GetStorage();
   double someDoubleValue = 10.0;
@@ -56,14 +56,15 @@ class _HomeViewState extends State<HomeView> {
     return documents;
   }
 
+
   bool isLoading = false;
   @override
   void initState() {
     super.initState();
     isLoading = true;
     FirebaseFirestore.instance
-        .collection("users")
-        .doc(uid)
+        .collection("sellers")
+        .doc(user!.uid)
         .get()
         .then((value) {
       sellerModel = SellerModel.fromMap(value.data());
@@ -102,7 +103,7 @@ class _HomeViewState extends State<HomeView> {
 
                 },
                 icon: Padding(
-                  padding: const EdgeInsets.only(bottom: 8, left: 8),
+                  padding: const EdgeInsets.only(bottom: 8, left: 10),
                   child: Container(
                     decoration: BoxDecoration(
                       color: Colors.white,
@@ -138,9 +139,8 @@ class _HomeViewState extends State<HomeView> {
                 ),
                 // minimum text length is 0 to 8 ... use shared preference
                 child:  Text(
-                  //     minimum text length is 0 to 8 ... use shared preference
-                  "Welcome $name"  ?? 'Welcome User',
-
+                //   first 8 characters and first letter of the name is capital
+                  "Welcome, ${name!.length > 8 ? name!.substring(0, 8) : name!.toUpperCase()[0] + name!.substring(1)}",
                   style: GoogleFonts.roboto(
                     color: Colors.black,
                     fontSize: 16,
@@ -190,36 +190,89 @@ class _HomeViewState extends State<HomeView> {
 
   _buildSliverList() {
     return FutureBuilder(
-        future: getAllData(),
-        builder: (context, AsyncSnapshot<List> snapshot) {
-        try{
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }
-          if (snapshot.hasData) {
-            return ListView.builder(
-              itemCount: snapshot.data!.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  trailing: Text(snapshot.data![index].data()!['balance'].toString()),
-                  title: Text(snapshot.data![index].data()?['name']),
-                  subtitle: Text(snapshot.data![index].data()?['email']),
-                  leading: CircleAvatar(
-                    backgroundImage: NetworkImage(snapshot.data![index].data()?['image']),
-                  ),
-                );
-              },
-            );
-          }
-        } catch (e) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
+      future:
+      FirebaseFirestore.instance.collection("users").doc(uid).get(),
+      builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(child: CircularProgressIndicator());
         }
-          return Container();
-        }
+        return Column(
+          children: <Widget>[
+            _buildCategories(),
+            _buildStatementList(),
+          ],
+        );
+      },
     );
   }
+
+  currencyFormat(String? balance) {
+    return CurrencyFormat.convertToIdr(balance, 2);
+  }
+
+  _buildCategories() {
+    return Container(
+      alignment: Alignment.center,
+      height: 100,
+      child: ListView.builder(
+        itemCount: 5,
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (context, index) {
+          return Container(
+            margin: EdgeInsets.all(8),
+            width: 100,
+            decoration: BoxDecoration(
+              color: Colors.blue,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: const <Widget>[
+                Icon(
+                  Icons.category,
+                  color: Colors.white,
+                ),
+                Text(
+                  "Category",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  _buildStatementList() {
+    return Expanded(
+      child: StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection("users")
+            .doc(uid)
+            .collection("budget")
+            .snapshots(),
+        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+          return ListView.builder(
+            itemCount: snapshot.data!.docs.length,
+            itemBuilder: (context, index) {
+              var data = snapshot.data!.docs[index];
+              return ListTile(
+                title: Text(data['title']),
+                subtitle: Text(data['body']),
+                trailing: Text(data['balance']),
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+
 }
