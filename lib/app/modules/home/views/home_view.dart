@@ -19,7 +19,7 @@ import '../controllers/home_controller.dart';
 
 class HomeView extends StatefulWidget {
   final UserModel? userModel;
-   HomeView({Key? key, this.userModel}) : super(key: key);
+   HomeView({super.key, this.userModel});
 
 
 
