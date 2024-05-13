@@ -12,10 +12,10 @@ import 'package:wallet/app/modules/wallet/views/send_view.dart';
 import 'package:wallet/global/global.dart';
 import 'package:wallet/models/seller_model.dart';
 import 'package:wallet/models/user_model.dart';
-import 'package:wallet/widgets/my_drawer.dart';
 
 import '../../../../widgets/currency_format.dart';
 import '../../../../widgets/mix_widgets.dart';
+import '../../statement/views/statement_view.dart';
 import '../controllers/home_controller.dart';
 
 class HomeView extends StatefulWidget {
@@ -37,7 +37,7 @@ class _HomeViewState extends State<HomeView> {
   String? email = sharedPreferences?.getString('email');
   String? image = sharedPreferences?.getString('image');
   String? phone = sharedPreferences?.getString('phone');
-  String? balnce = sharedPreferences?.getString('balance');
+  String? balance = sharedPreferences?.getString('balance');
 
   SellerModel? sellerModel = SellerModel();
 
@@ -116,7 +116,7 @@ class _HomeViewState extends State<HomeView> {
               children: [
                 _buildHeader(
                     name ?? 'name', email ?? 'email', image ?? 'image'),
-                _buildBalance( balnce ?? 'balance'),
+                _buildBalance( balance ?? 'balance'),
                 _buildStatement( ),
               ],
             ),
@@ -197,7 +197,7 @@ class _HomeViewState extends State<HomeView> {
                           return Column(
                             children: [
                               Text(
-                                '\PKR: ${currencyFormat(double.parse(snapshot.data!['balance'].toString()))}',
+                                'PKR: ${currencyFormat(double.parse(snapshot.data!['balance'].toString()))}',
                                 style: GoogleFonts.poppins(
                                   fontSize: 20,
                                   color: Colors.white,
@@ -266,7 +266,7 @@ class _HomeViewState extends State<HomeView> {
                     ),
                   ),
                   Text(
-                    '\PKR: 0.00',
+                    'PKR: 0.00',
                     style: GoogleFonts.poppins(
                       fontSize: 20,
                       color: Colors.black,
@@ -285,7 +285,7 @@ class _HomeViewState extends State<HomeView> {
                     ),
                   ),
                   Text(
-                    '\PKR: 0.00',
+                    'PKR: 0.00',
                     style: GoogleFonts.poppins(
                       fontSize: 20,
                       color: Colors.black,
@@ -318,7 +318,9 @@ class _HomeViewState extends State<HomeView> {
                 ),
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+
+                },
                 child: Text(
                   'View All',
                   style: GoogleFonts.poppins(
@@ -457,51 +459,10 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-  void _withdraw(String? balnce, String uid) {
-    Get.defaultDialog(
-      title: 'Withdraw',
-      content: Column(
-        children: [
-          TextField(
-            controller: TextEditingController(),
-            decoration: InputDecoration(
-              labelText: 'Amount',
-              hintText: 'Enter amount to withdraw',
-            ),
-          ),
-          SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: () {
-              Get.back();
-              _saveWithdraw( balnce, uid);
-            },
-            child: Text('Withdraw'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _saveWithdraw(String? balnce, String uid) {
-    FirebaseFirestore.instance
-        .collection('sellers')
-        .doc(uid)
-        .collection('statement')
-        .add({
-      'name': 'Withdraw',
-      'amount': TextEditingController().text,
-      'type': 'withdraw',
-      'created_at': DateTime.now(),
-    }).then((value) {
-      FirebaseFirestore.instance.collection('sellers').doc(uid).update({
-        'balance': double.parse(balnce!) - double.parse(TextEditingController().text),
-      });
-    });
-  }
 
   Future<void> _buildDetailDialog(param0)async {
      // is mobile or tablet or desktop
-    
+    isMobile(context) ? _buildDetailMobile(param0) : _buildDetailDesktop(param0);
 
   }
 

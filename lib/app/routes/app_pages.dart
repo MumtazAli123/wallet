@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
-import 'package:wallet/models/user_model.dart';
 
+import '../../models/user_model.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/bottom_page_view.dart';
 import '../modules/home/views/home_view.dart';
@@ -10,6 +10,8 @@ import '../modules/register/bindings/register_binding.dart';
 import '../modules/register/views/register_view.dart';
 import '../modules/splash_screen/bindings/splash_screen_binding.dart';
 import '../modules/splash_screen/views/splash_screen_view.dart';
+import '../modules/statement/bindings/statement_binding.dart';
+import '../modules/statement/views/statement_view.dart';
 import '../modules/wallet/bindings/wallet_binding.dart';
 import '../modules/wallet/views/wallet_view.dart';
 
@@ -38,21 +40,26 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.HOME,
-      page: () =>  HomeView(
+      page: () => HomeView(
         userModel: UserModel(),
       ),
       binding: HomeBinding(),
     ),
     GetPage(
       name: _Paths.WALLET,
-      page: () =>  WalletView(
+      page: () => WalletView(
         loggedInUser: UserModel(),
       ),
       binding: WalletBinding(),
     ),
-    GetPage(name: _Paths.BOTTOM_PAGE,
+    GetPage(
+        name: _Paths.BOTTOM_PAGE,
         page: () => BottomPageView(),
-        binding: HomeBinding()
-    )
+        binding: HomeBinding()),
+    GetPage(
+      name: _Paths.STATEMENT,
+      page: () => const StatementView(),
+      binding: StatementBinding(),
+    ),
   ];
 }
