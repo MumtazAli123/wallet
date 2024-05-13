@@ -14,6 +14,7 @@ import 'package:wallet/models/seller_model.dart';
 import 'package:wallet/models/user_model.dart';
 import 'package:wallet/widgets/my_drawer.dart';
 
+import '../../../../widgets/currency_format.dart';
 import '../../../../widgets/mix_widgets.dart';
 import '../controllers/home_controller.dart';
 
@@ -100,11 +101,7 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: MyDrawer(),
-      appBar: AppBar(
-        title: Text('Home'),
-        centerTitle: true,
-      ),
+
       body: _buildBody(),
     );
   }
@@ -128,100 +125,119 @@ class _HomeViewState extends State<HomeView> {
 
   _buildHeader(String s, String t, String u) {
     return Container(
-      height: 180,
-      // width: 300,
-      padding: EdgeInsets.all(20),
+      margin: EdgeInsets.symmetric(horizontal: 6),
+      height: 210,
+      width: 400,
       decoration: BoxDecoration(
         // color: Colors.blue,
         image: DecorationImage(
-          image: AssetImage('assets/wallet.png'),
+          image: AssetImage("assets/wallet.png"),
           fit: BoxFit.cover,
+          alignment: Alignment.topRight,
         ),
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(30),
-          bottomRight: Radius.circular(30),
-        ),
+        shape: BoxShape.rectangle,
+        borderRadius: BorderRadius.circular(20),
       ),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              CircleAvatar(
-                radius: 30,
-                backgroundImage: NetworkImage(u),
-              ),
-              SizedBox(width: 20),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    s,
-                    style: GoogleFonts.poppins(
-                      fontSize: 20,
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: 30,
+                  backgroundImage: NetworkImage(u),
+                ),
+                SizedBox(width: 20),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // intelliJ IDEA
+                    Text(
+                      s,
+                      style: GoogleFonts.poppins(
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  Text(
-                    t,
-                    style: GoogleFonts.poppins(
-                      fontSize: 15,
-                      color: Colors.white,
+                    Text(
+                      t,
+                      style: GoogleFonts.poppins(
+                        fontSize: 15,
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                children: [
-                  Text(
-                    'Balance',
-                    style: GoogleFonts.poppins(
-                      fontSize: 15,
-                      color: Colors.white,
+                  ],
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  children: [
+                    Text(
+                      'Balance',
+                      style: GoogleFonts.poppins(
+                        fontSize: 15,
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
-                  StreamBuilder(
-                      stream: FirebaseFirestore.instance
-                          .collection('sellers')
-                          .doc(user!.uid)
-                          .snapshots(),
-                      builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return CircularProgressIndicator();
+                    StreamBuilder(
+                        stream: FirebaseFirestore.instance
+                            .collection('sellers')
+                            .doc(user!.uid)
+                            .snapshots(),
+                        builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                          if (snapshot.connectionState == ConnectionState.waiting) {
+                            return CircularProgressIndicator();
+                          }
+                          return Column(
+                            children: [
+                              Text(
+                                '\PKR: ${currencyFormat(double.parse(snapshot.data!['balance'].toString()))}',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 20,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              SizedBox(height: 14.0),
+                              // snapshot.data!['balance']
+                              Text(
+                                "Balance, ${NumberToWord().convert(snapshot.data!['balance'].toInt())}",
+                                // "${model?.name}",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 14),
+                              ),
+                            ],
+                          );
                         }
-                        return Text(
-                          '\PKR: ${currencyFormat(double.parse(snapshot.data!['balance'].toString()))}',
-                          style: GoogleFonts.poppins(
-                            fontSize: 20,
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        );
-                      }
-                      )
-                ],
-              ),
-              ElevatedButton(
-                onPressed: () {
-                 Get.to(() => SendView());
-                },
-                style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(horizontal: 30),
+                        ),
+                  ],
                 ),
-                child: wText(
-                  'Send Money',
-                  color: Colors.blue,
+                ElevatedButton(
+                  onPressed: () {
+                   Get.to(() => SendView());
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(horizontal: 30),
+                  ),
+                  child: wText(
+                    'Send Money',
+                    color: Colors.blue,
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ],
+              ],
+            ),
+
+
+          ],
+        ),
       ),
     );
   }
@@ -483,8 +499,20 @@ class _HomeViewState extends State<HomeView> {
     });
   }
 
-  void _buildDetailDialog(param0) {
-    QuickAlert.show(context: context,
+  Future<void> _buildDetailDialog(param0)async {
+     // is mobile or tablet or desktop
+    
+
+  }
+
+  isMobile(BuildContext context) {
+    return MediaQuery.of(context).size.width < 600;
+
+  }
+
+  _buildDetailMobile(param0) {
+    MediaQuery.of(context).size.width < 600;
+    return QuickAlert.show(context: context,
         type: QuickAlertType.custom,
         title: 'Detail',
         text: 'Detail of the transaction',
@@ -539,6 +567,61 @@ class _HomeViewState extends State<HomeView> {
             ),
           ],
         )
+    );
+  }
+
+  _buildDetailDesktop(param0) {
+    MediaQuery.of(context).size.width > 600;
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Divider(),
+        Text(
+          'Name: ${param0['name']}',
+          style: GoogleFonts.poppins(
+            fontSize: 15,
+            color: Colors.black,
+          ),
+        ),
+        Text(
+          'Amount: ${currencyFormat(double.parse(param0['amount'].toString()))}',
+          style: GoogleFonts.poppins(
+            fontSize: 15,
+            color: Colors.black,
+          ),
+        ),
+        Text(
+          'Type: ${param0['type']}',
+          style: GoogleFonts.poppins(
+            fontSize: 15,
+            color: Colors.black,
+          ),
+        ),
+        Text(param0['phone'] == null ? 'Phone: Not Available' : 'Phone: ${param0['phone']}',
+          style: GoogleFonts.poppins(
+            fontSize: 15,
+            color: Colors.black,
+          ),
+        ),
+        Text(
+          // description
+          'Description: ${param0['description'] ?? 'No Description'}',
+          style: GoogleFonts.poppins(
+            fontSize: 15,
+            color: Colors.black,
+          ),
+        ),
+        Text(
+          'Date: ${GetTimeAgo.parse(
+              DateTime.parse(param0['created_at'].toDate().toString()),
+              locale: 'en')}',
+          style: GoogleFonts.poppins(
+            fontSize: 15,
+            color: Colors.black,
+          ),
+        ),
+      ],
     );
   }
 }

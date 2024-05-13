@@ -8,12 +8,12 @@ import 'package:get_time_ago/get_time_ago.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:wallet/app/modules/wallet/views/send_view.dart';
 import 'package:wallet/app/modules/wallet/views/topup_view.dart';
-import 'package:wallet/global/global.dart';
 
 import '../../../../models/user_model.dart';
 import '../../../../widgets/currency_format.dart';
 import '../../../../widgets/mix_widgets.dart';
 import '../../home/controllers/home_controller.dart';
+import '../../home/views/bottom_page_view.dart';
 
 class WalletView extends StatefulWidget {
   UserModel loggedInUser = UserModel();
@@ -174,7 +174,7 @@ class _WalletViewState extends State<WalletView> {
         leading: IconButton(
           icon: Icon(Icons.backspace_sharp),
           onPressed: () {
-            Get.toNamed('/home');
+            Get.offAll(() =>  BottomPageView());
           },
         ),
         title: Row(

@@ -146,7 +146,7 @@ class _SendViewState extends State<SendView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.recipient?.name  ?? 'Send Money'.substring(0, 1).toUpperCase() + 'Send Money'.substring(0)),
+        title: Text(widget.recipient?.name  ?? 'Send Money'.substring(0, 1).toUpperCase() + 'Send Money'.substring(1)),
       ),
       // body: ListView(
       //   children: otherUsers.map((recipient) {

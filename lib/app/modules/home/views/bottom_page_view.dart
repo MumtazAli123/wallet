@@ -6,6 +6,7 @@ import 'package:fancy_bottom_navigation_plus/fancy_bottom_navigation_plus.dart';
 import 'package:get/get.dart';
 import 'package:wallet/app/modules/home/views/home_view.dart';
 
+import '../../../../widgets/my_drawer.dart';
 import '../controllers/home_controller.dart';
 
 class BottomPageView extends GetView {
@@ -15,10 +16,11 @@ class BottomPageView extends GetView {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: const Text('BottomPageView'),
-      //   centerTitle: true,
-      // ),
+      drawer: MyDrawer(),
+      appBar: AppBar(
+        title: Text('Home'),
+        centerTitle: true,
+      ),
       body: SizedBox.expand(
         child: PageView(
           pageSnapping: true,
@@ -43,24 +45,6 @@ class BottomPageView extends GetView {
           ],
         ),
       ),
-      // bottomNavigationBar: Obx(
-      //       () => FancyBottomNavigation(
-      //         circleColor: Colors.blue,
-      //
-      //         // textColor: Colors.green,
-      //         tabs: [
-      //           TabData(iconData: Icons.home, title: "Home"),
-      //           TabData(iconData: Icons.search, title: "Search"),
-      //           TabData(iconData: Icons.wallet, title: "Wallet")
-      //         ],
-      //         key: controller.bottomNavigationKey,
-      //         initialSelection: controller.currentIndex.value,
-      //         onTabChangedListener: (position) {
-      //           controller.currentIndex.value = position;
-      //           controller.pageController.jumpToPage(position);
-      //         },
-      //       )
-      // ),
       bottomNavigationBar: Obx(
         () => FancyBottomNavigationPlus(
           barheight: 60,
