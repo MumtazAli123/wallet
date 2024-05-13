@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../../global/global.dart';
+import '../../home/views/bottom_page_view.dart';
 import '../controllers/splash_screen_controller.dart';
 
 class SplashScreenView extends StatefulWidget {
@@ -24,7 +25,9 @@ class _SplashScreenViewState extends State<SplashScreenView> {
         : currentUser = null;
     Timer(const Duration(seconds: 3), () {
       if (currentUser != null) {
-        Get.offAllNamed('/home');
+        // Get.offAllNamed('/home');
+        // go to bottom page view
+        Get.offAll(() => const BottomPageView());
       } else {
         Get.offAllNamed('/login');
       }

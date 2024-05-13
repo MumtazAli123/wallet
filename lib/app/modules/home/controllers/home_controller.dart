@@ -6,6 +6,12 @@ import 'package:wallet/global/global.dart';
 
 class HomeController extends GetxController {
   final nameController = TextEditingController();
+  final emailController = TextEditingController();
+
+  PageController pageController = PageController();
+  GlobalKey bottomNavigationKey = GlobalKey();
+
+  var currentIndex = 0.obs;
 
   final count = 0.obs;
   final name = ''.obs;
@@ -35,6 +41,19 @@ class HomeController extends GetxController {
   void onInit() {
     super.onInit();
     article();
+    pageController = PageController();
+  }
+
+  @override
+  void onReady() {
+    // super.onReady();
+  }
+
+  @override
+  void onClose() {
+    nameController.dispose();
+    emailController.dispose();
+    pageController.dispose();
   }
 
 

@@ -2,6 +2,7 @@ import 'package:get/get.dart';
 import 'package:wallet/models/user_model.dart';
 
 import '../modules/home/bindings/home_binding.dart';
+import '../modules/home/views/bottom_page_view.dart';
 import '../modules/home/views/home_view.dart';
 import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
@@ -49,5 +50,9 @@ class AppPages {
       ),
       binding: WalletBinding(),
     ),
+    GetPage(name: _Paths.BOTTOM_PAGE,
+        page: () => BottomPageView(),
+        binding: HomeBinding()
+    )
   ];
 }

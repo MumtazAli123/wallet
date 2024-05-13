@@ -8,12 +8,12 @@ import 'package:get_storage/get_storage.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:quickalert/quickalert.dart';
+import 'package:wallet/app/modules/wallet/views/send_view.dart';
 import 'package:wallet/global/global.dart';
 import 'package:wallet/models/seller_model.dart';
 import 'package:wallet/models/user_model.dart';
 import 'package:wallet/widgets/my_drawer.dart';
 
-import '../../../../widgets/currency_format.dart';
 import '../../../../widgets/mix_widgets.dart';
 import '../controllers/home_controller.dart';
 
@@ -128,9 +128,11 @@ class _HomeViewState extends State<HomeView> {
 
   _buildHeader(String s, String t, String u) {
     return Container(
+      height: 180,
+      // width: 300,
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: Colors.blue,
+        // color: Colors.blue,
         image: DecorationImage(
           image: AssetImage('assets/wallet.png'),
           fit: BoxFit.cover,
@@ -207,13 +209,13 @@ class _HomeViewState extends State<HomeView> {
               ),
               ElevatedButton(
                 onPressed: () {
-                  _withdraw(balnce, user!.uid);
+                 Get.to(() => SendView());
                 },
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(horizontal: 30),
                 ),
                 child: wText(
-                  'Withdraw',
+                  'Send Money',
                   color: Colors.blue,
                 ),
               ),
@@ -513,6 +515,14 @@ class _HomeViewState extends State<HomeView> {
               ),
             ),
             Text(param0['phone'] == null ? 'Phone: Not Available' : 'Phone: ${param0['phone']}',
+              style: GoogleFonts.poppins(
+                fontSize: 15,
+                color: Colors.black,
+              ),
+            ),
+            Text(
+              // description
+              'Description: ${param0['description'] ?? 'No Description'}',
               style: GoogleFonts.poppins(
                 fontSize: 15,
                 color: Colors.black,
