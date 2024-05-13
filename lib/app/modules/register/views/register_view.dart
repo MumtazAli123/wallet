@@ -1,6 +1,5 @@
 // ignore_for_file: avoid_print, use_build_context_synchronously, prefer_const_constructors
 
-import 'dart:ffi';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_picker/country_picker.dart';
@@ -24,6 +23,7 @@ class RegisterView extends StatefulWidget {
   State<RegisterView> createState() => _RegisterViewState();
 }
 
+
 class _RegisterViewState extends State<RegisterView> {
   final controller = Get.put(RegisterController());
 
@@ -33,7 +33,6 @@ class _RegisterViewState extends State<RegisterView> {
   // country flag
   UserModel model = UserModel();
   bool _isImageLoaded = false;
-  final bool _isPasswordVisible = false;
   bool isLoading = false;
   var hintText = 'Email';
 
@@ -578,7 +577,7 @@ class _RegisterViewState extends State<RegisterView> {
       userModel.balance = 100.0;
       userModel.createdAt = date;
       userModel.updatedAt = date;
-      //   svae user data to firestore and save locally to shared preference
+      //   save user data to firestore and save locally to shared preference
       await FirebaseFirestore.instance.collection('sellers').doc(uid).set({
         'uid': userModel.uid,
         'name': userModel.name,

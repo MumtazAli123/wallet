@@ -15,14 +15,11 @@ import 'package:wallet/models/user_model.dart';
 
 import '../../../../widgets/currency_format.dart';
 import '../../../../widgets/mix_widgets.dart';
-import '../../statement/views/statement_view.dart';
 import '../controllers/home_controller.dart';
 
 class HomeView extends StatefulWidget {
   final UserModel? userModel;
-   HomeView({super.key, this.userModel});
-
-
+  HomeView({super.key, this.userModel});
 
   @override
   State<HomeView> createState() => _HomeViewState();
@@ -46,7 +43,6 @@ class _HomeViewState extends State<HomeView> {
   String someStringVariable = map['someKey'].toString();
 
   static var map = {};
-
 
   Future<List> getAllStatement() async {
     final List<DocumentSnapshot> documents = [];
@@ -77,7 +73,6 @@ class _HomeViewState extends State<HomeView> {
       });
     });
     return [];
-
   }
 
   bool isLoading = false;
@@ -101,7 +96,6 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: _buildBody(),
     );
   }
@@ -116,8 +110,8 @@ class _HomeViewState extends State<HomeView> {
               children: [
                 _buildHeader(
                     name ?? 'name', email ?? 'email', image ?? 'image'),
-                _buildBalance( balance ?? 'balance'),
-                _buildStatement( ),
+                _buildBalance(balance ?? 'balance'),
+                _buildStatement(),
               ],
             ),
           );
@@ -190,8 +184,10 @@ class _HomeViewState extends State<HomeView> {
                             .collection('sellers')
                             .doc(user!.uid)
                             .snapshots(),
-                        builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-                          if (snapshot.connectionState == ConnectionState.waiting) {
+                        builder: (context,
+                            AsyncSnapshot<DocumentSnapshot> snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
                             return CircularProgressIndicator();
                           }
                           return Column(
@@ -216,13 +212,12 @@ class _HomeViewState extends State<HomeView> {
                               ),
                             ],
                           );
-                        }
-                        ),
+                        }),
                   ],
                 ),
                 ElevatedButton(
                   onPressed: () {
-                   Get.to(() => SendView());
+                    Get.to(() => SendView());
                   },
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.symmetric(horizontal: 30),
@@ -234,8 +229,6 @@ class _HomeViewState extends State<HomeView> {
                 ),
               ],
             ),
-
-
           ],
         ),
       ),
@@ -318,9 +311,7 @@ class _HomeViewState extends State<HomeView> {
                 ),
               ),
               TextButton(
-                onPressed: () {
-
-                },
+                onPressed: () {},
                 child: Text(
                   'View All',
                   style: GoogleFonts.poppins(
@@ -352,8 +343,7 @@ class _HomeViewState extends State<HomeView> {
                     return _buildStatementItem(snapshot.data!.docs[index]);
                   },
                 );
-              }
-          ),
+              }),
         ],
       ),
     );
@@ -367,51 +357,6 @@ class _HomeViewState extends State<HomeView> {
         color: Colors.grey[200],
         borderRadius: BorderRadius.circular(10),
       ),
-      // child: Row(
-      //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //   children: [
-      //     Column(
-      //       crossAxisAlignment: CrossAxisAlignment.start,
-      //       children: [
-      //         isLoading
-      //             ? CircularProgressIndicator()
-      //             : Text(
-      //                 "${param0['type']}",
-      //                 style: GoogleFonts.poppins(
-      //                   fontSize: 15,
-      //                   color: Colors.black,
-      //                 ),
-      //               ),
-      //         Text(
-      //           '${currencyFormat(double.parse(param0['amount'].toString()))}',
-      //           style: GoogleFonts.poppins(
-      //             fontSize: 20,
-      //             color: Colors.black,
-      //             fontWeight: FontWeight.bold,
-      //           ),
-      //         ),
-      //       ],
-      //     ),
-      //     Column(
-      //       crossAxisAlignment: CrossAxisAlignment.end,
-      //       children: [
-      //         Text(
-      //           'Date',
-      //           style: GoogleFonts.poppins(
-      //             fontSize: 15,
-      //             color: Colors.black,
-      //           ),
-      //         ),
-      // Text(
-      //   GetTimeAgo.parse(
-      //       DateTime.parse(param0['created_at'].toDate().toString()),
-      //       locale: 'en'),
-      //
-      //         ),
-      //       ],
-      //     ),
-      //   ],
-      // ),
       child: ListTile(
         onTap: () {
           _buildDetailDialog(param0);
@@ -439,10 +384,10 @@ class _HomeViewState extends State<HomeView> {
               DateTime.parse(param0['created_at'].toDate().toString()),
               locale: 'en'),
         ),
-        trailing:  Column(
+        trailing: Column(
           children: [
             Text(
-              "${param0['type'] == 'send' ? '-' : '+'} ${currencyFormat(double.parse(param0['amount'].toString())) }",
+              "${param0['type'] == 'send' ? '-' : '+'} ${currencyFormat(double.parse(param0['amount'].toString()))}",
               style: GoogleFonts.poppins(
                 fontSize: 18,
                 color: Colors.black,
@@ -459,21 +404,21 @@ class _HomeViewState extends State<HomeView> {
     );
   }
 
-
-  Future<void> _buildDetailDialog(param0)async {
-     // is mobile or tablet or desktop
-    isMobile(context) ? _buildDetailMobile(param0) : _buildDetailDesktop(param0);
-
+  Future<void> _buildDetailDialog(param0) async {
+    // is mobile or tablet or desktop
+   return isMobile(context)
+        ? _buildDetailMobile(param0)
+        : _buildDetailDesktop(param0);
   }
 
   isMobile(BuildContext context) {
     return MediaQuery.of(context).size.width < 600;
-
   }
 
   _buildDetailMobile(param0) {
     MediaQuery.of(context).size.width < 600;
-    return QuickAlert.show(context: context,
+    return QuickAlert.show(
+        context: context,
         type: QuickAlertType.custom,
         title: 'Detail',
         text: 'Detail of the transaction',
@@ -503,7 +448,10 @@ class _HomeViewState extends State<HomeView> {
                 color: Colors.black,
               ),
             ),
-            Text(param0['phone'] == null ? 'Phone: Not Available' : 'Phone: ${param0['phone']}',
+            Text(
+              param0['phone'] == null
+                  ? 'Phone: Not Available'
+                  : 'Phone: ${param0['phone']}',
               style: GoogleFonts.poppins(
                 fontSize: 15,
                 color: Colors.black,
@@ -511,76 +459,79 @@ class _HomeViewState extends State<HomeView> {
             ),
             Text(
               // description
-              'Description: ${param0['description'] ?? 'No Description'}',
+              'Purpose: ${param0['description'] ?? 'No Description'}',
               style: GoogleFonts.poppins(
                 fontSize: 15,
                 color: Colors.black,
               ),
             ),
             Text(
-              'Date: ${GetTimeAgo.parse(
-                  DateTime.parse(param0['created_at'].toDate().toString()),
-                  locale: 'en')}',
+              'Date: ${GetTimeAgo.parse(DateTime.parse(param0['created_at'].toDate().toString()), locale: 'en')}',
               style: GoogleFonts.poppins(
                 fontSize: 15,
                 color: Colors.black,
               ),
             ),
           ],
-        )
-    );
+        ));
   }
 
   _buildDetailDesktop(param0) {
     MediaQuery.of(context).size.width > 600;
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Divider(),
-        Text(
-          'Name: ${param0['name']}',
-          style: GoogleFonts.poppins(
-            fontSize: 15,
-            color: Colors.black,
+    return Get.defaultDialog(
+      title: 'Detail',
+      content: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Divider(),
+          Text(
+            'Name: ${param0['name']}',
+            style: GoogleFonts.poppins(
+              fontSize: 15,
+            ),
           ),
-        ),
-        Text(
-          'Amount: ${currencyFormat(double.parse(param0['amount'].toString()))}',
-          style: GoogleFonts.poppins(
-            fontSize: 15,
-            color: Colors.black,
+          Text(
+            'Amount: ${currencyFormat(double.parse(param0['amount'].toString()))}',
+            style: GoogleFonts.poppins(
+              fontSize: 15,
+            ),
           ),
-        ),
-        Text(
-          'Type: ${param0['type']}',
-          style: GoogleFonts.poppins(
-            fontSize: 15,
-            color: Colors.black,
+          Text(
+            'Type: ${param0['type']}',
+            style: GoogleFonts.poppins(
+              fontSize: 15,
+            ),
           ),
-        ),
-        Text(param0['phone'] == null ? 'Phone: Not Available' : 'Phone: ${param0['phone']}',
-          style: GoogleFonts.poppins(
-            fontSize: 15,
-            color: Colors.black,
+          Text(
+            param0['phone'] == null
+                ? 'Phone: Not Available'
+                : 'Phone: ${param0['phone']}',
+            style: GoogleFonts.poppins(
+              fontSize: 15,
+            ),
           ),
-        ),
-        Text(
-          // description
-          'Description: ${param0['description'] ?? 'No Description'}',
-          style: GoogleFonts.poppins(
-            fontSize: 15,
-            color: Colors.black,
+          Text(
+            // description
+            'Purpose: ${param0['description'] ?? 'No Description'}',
+            style: GoogleFonts.poppins(
+              fontSize: 15,
+            ),
           ),
-        ),
-        Text(
-          'Date: ${GetTimeAgo.parse(
-              DateTime.parse(param0['created_at'].toDate().toString()),
-              locale: 'en')}',
-          style: GoogleFonts.poppins(
-            fontSize: 15,
-            color: Colors.black,
+          Text(
+            'Date: ${GetTimeAgo.parse(DateTime.parse(param0['created_at'].toDate().toString()), locale: 'en')}',
+            style: GoogleFonts.poppins(
+              fontSize: 15,
+            ),
           ),
+        ],
+      ),
+      actions: [
+        ElevatedButton(
+          onPressed: () {
+            Get.back();
+          },
+          child: Text('Close'),
         ),
       ],
     );

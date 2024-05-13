@@ -14,7 +14,7 @@ import '../../../../models/user_model.dart';
 
 class SendView extends StatefulWidget {
   UserModel? recipient;
-   SendView({super.key, this.recipient});
+  SendView({super.key, this.recipient});
 
   @override
   State<SendView> createState() => _SendViewState();
@@ -35,7 +35,7 @@ class _SendViewState extends State<SendView> {
   final fb = FirebaseFirestore.instance;
 
   final TextEditingController transferNominalController =
-      TextEditingController();
+  TextEditingController();
   final descriptionController = TextEditingController();
 
   UserModel userModel = UserModel();
@@ -53,13 +53,13 @@ class _SendViewState extends State<SendView> {
 
   Future<void> fetchLoggedInUserBalance(String uid) async {
     DocumentReference userDoc =
-        FirebaseFirestore.instance.collection('sellers').doc(uid);
+    FirebaseFirestore.instance.collection('sellers').doc(uid);
 
     DocumentSnapshot docSnapshot = await userDoc.get();
 
     if (docSnapshot.exists) {
       Map<String, dynamic>? userData =
-          docSnapshot.data() as Map<String, dynamic>?;
+      docSnapshot.data() as Map<String, dynamic>?;
 
       if (userData != null) {
         double userBalance = userData['balance'] ?? 0;
@@ -73,7 +73,7 @@ class _SendViewState extends State<SendView> {
 
   Future<void> fetchUserData() async {
     CollectionReference usersCollection =
-        FirebaseFirestore.instance.collection('sellers');
+    FirebaseFirestore.instance.collection('sellers');
 
     QuerySnapshot querySnapshot = await usersCollection.get();
 
@@ -81,7 +81,7 @@ class _SendViewState extends State<SendView> {
 
     for (DocumentSnapshot documentSnapshot in querySnapshot.docs) {
       Map<String, dynamic> userData =
-          documentSnapshot.data() as Map<String, dynamic>;
+      documentSnapshot.data() as Map<String, dynamic>;
 
       String uid = documentSnapshot.id;
 
@@ -259,9 +259,7 @@ class _SendViewState extends State<SendView> {
           'email': recipient.email ?? 'No email',
           'type': "send",
           'amount': transferNominalController.text.trim(),
-          'description': descriptionController.text.trim() == ''
-              ? 'No description'
-              : recipient.name,
+          'description': descriptionController.text.trim(),
           'created_at': DateTime.now(),
 
         });
@@ -277,9 +275,7 @@ class _SendViewState extends State<SendView> {
           'email': sharedPreferences?.getString('email') ?? 'No email',
           'type': "receive",
           'amount': transferNominalController.text.trim(),
-          'description': descriptionController.text.trim() == ''
-              ? 'No description'
-              : sharedPreferences?.getString('name'),
+          'description': descriptionController.text.trim(),
           'created_at': DateTime.now(),
         });
 
@@ -373,7 +369,7 @@ class _SendViewState extends State<SendView> {
       sendMoneyToUser(recipient);
     }
   }
-  
+
 
   void _buildDialogWithDataReceiver(
       String? username, int transferAmount, String fullName, String description) {
@@ -384,7 +380,7 @@ class _SendViewState extends State<SendView> {
       type: QuickAlertType.success,
       title: 'Success',
       text:
-          'Money sent to $fullName\nAmount: $transferAmount\nReceiver: $username \nDescription: $description',
+      'Money sent to $fullName\nAmount: $transferAmount\nReceiver: $username \nPurpose: $description',
       textAlignment: TextAlign.start,
       onConfirmBtnTap: () {
         Get.toNamed('/wallet');
