@@ -8,13 +8,13 @@ import 'package:get_storage/get_storage.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:quickalert/quickalert.dart';
-import 'package:wallet/app/modules/wallet/views/send_view.dart';
+import 'package:wallet/app/modules/statement/views/statement_view.dart';
 import 'package:wallet/global/global.dart';
-import 'package:wallet/models/seller_model.dart';
 import 'package:wallet/models/user_model.dart';
 
 import '../../../../widgets/currency_format.dart';
 import '../../../../widgets/mix_widgets.dart';
+import '../../send_money/views/send_money_view.dart';
 import '../controllers/home_controller.dart';
 
 class HomeView extends StatefulWidget {
@@ -36,7 +36,6 @@ class _HomeViewState extends State<HomeView> {
   String? phone = sharedPreferences?.getString('phone');
   String? balance = sharedPreferences?.getString('balance');
 
-  SellerModel? sellerModel = SellerModel();
 
   String? uid = fAuth.currentUser!.uid;
 
@@ -217,7 +216,8 @@ class _HomeViewState extends State<HomeView> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    Get.to(() => SendView());
+                    Get.to(() => SendMoneyView(
+                        loggedInUser: userModel!)); // userModel() is a function
                   },
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.symmetric(horizontal: 30),
@@ -311,7 +311,12 @@ class _HomeViewState extends State<HomeView> {
                 ),
               ),
               TextButton(
-                onPressed: () {},
+                onPressed: () {
+                //   statement
+                  Get.to(() => StatementView(
+                      loggedInUser: userModel!
+                  ));
+                },
                 child: Text(
                   'View All',
                   style: GoogleFonts.poppins(
@@ -338,7 +343,7 @@ class _HomeViewState extends State<HomeView> {
                 return ListView.builder(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
-                  itemCount: snapshot.data!.docs.length,
+                  itemCount: 5,
                   itemBuilder: (context, index) {
                     return _buildStatementItem(snapshot.data!.docs[index]);
                   },
@@ -472,6 +477,15 @@ class _HomeViewState extends State<HomeView> {
                 color: Colors.black,
               ),
             ),
+            Text(
+              //   gate date time just date and time only without timezone
+              'Date: ${DateTime.parse(param0['created_at'].toDate().toString()).toString().substring(0, 16)}',
+              style: GoogleFonts.poppins(
+                fontSize: 15,
+                color: Colors.black,
+              ),
+            )
+            
           ],
         ));
   }

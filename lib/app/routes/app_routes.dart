@@ -10,6 +10,7 @@ abstract class Routes {
   static const WALLET = _Paths.WALLET;
   static const BOTTOM_PAGE = _Paths.BOTTOM_PAGE;
   static const STATEMENT = _Paths.STATEMENT;
+  static const SEND_MONEY = _Paths.SEND_MONEY;
 }
 
 abstract class _Paths {
@@ -21,4 +22,5 @@ abstract class _Paths {
   static const WALLET = '/wallet';
   static const BOTTOM_PAGE = '/bottom-page';
   static const STATEMENT = '/statement';
+  static const SEND_MONEY = '/send-money';
 }

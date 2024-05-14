@@ -8,6 +8,8 @@ import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
 import '../modules/register/bindings/register_binding.dart';
 import '../modules/register/views/register_view.dart';
+import '../modules/send_money/bindings/send_money_binding.dart';
+import '../modules/send_money/views/send_money_view.dart';
 import '../modules/splash_screen/bindings/splash_screen_binding.dart';
 import '../modules/splash_screen/views/splash_screen_view.dart';
 import '../modules/statement/bindings/statement_binding.dart';
@@ -58,8 +60,17 @@ class AppPages {
         binding: HomeBinding()),
     GetPage(
       name: _Paths.STATEMENT,
-      page: () => const StatementView(),
+      page: () =>  StatementView(
+        loggedInUser: UserModel(),
+      ),
       binding: StatementBinding(),
+    ),
+    GetPage(
+      name: _Paths.SEND_MONEY,
+      page: () =>  SendMoneyView(
+        loggedInUser: UserModel(),
+      ),
+      binding: SendMoneyBinding(),
     ),
   ];
 }
