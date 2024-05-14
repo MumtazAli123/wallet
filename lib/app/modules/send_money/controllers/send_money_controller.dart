@@ -55,16 +55,25 @@ class SendMoneyController extends GetxController {
   void getOtherUsers(String query) async {
     // sellers
     otherUsers.clear();
-    if (query.isNotEmpty) {
-      isSearching.value = true;
-      await FirebaseFirestore.instance
-          .collection('sellers')
-          .orderBy('name')
-          .where('name', isEqualTo : query)
-          .get()
-          .then((value) =>searchList.value = value.docs);
-    } else {
+    await FirebaseFirestore.instance.collection('sellers').get().then((value) {
+      value.docs.forEach((element) {
+        if (element.id != user!.uid) {
+          otherUsers.add(UserModel.fromMap(element.data()));
+        }
+      });
+    });
+    if (query.isEmpty) {
+      searchList.clear();
       isSearching.value = false;
+    } else {
+      isSearching.value = true;
+      searchList.clear();
+      // if search name any type letter in search bar then show the result
+      otherUsers.forEach((element) {
+        if (element.name!.toLowerCase().contains(query.toLowerCase())) {
+          searchList.add(element);
+        }
+      });
     }
   }
 

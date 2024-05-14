@@ -26,42 +26,63 @@ class _SendMoneyViewState extends State<SendMoneyView> {
         title: Text("${widget.loggedInUser!.name}"),
         centerTitle: true,
       ),
-      body: Obx(() {
-        return controller.isLoading.value
-            ? Center(child: CircularProgressIndicator())
-            : Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                      controller: controller.searchController,
-                      onChanged: (value) {
-                        controller.getOtherUsers(value);
-                      },
-                      decoration: InputDecoration(
-                        hintText: 'Search',
-                        prefixIcon: Icon(Icons.search),
-                      ),
-                    ),
+      body: Container(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextField(
+                controller: controller.searchController,
+                onChanged: (value) {
+                  controller.getOtherUsers(value);
+                },
+                decoration: InputDecoration(
+                  hintText: 'Search',
+                  prefixIcon: Icon(Icons.search),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: controller.otherUsers.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          title: Text(controller.otherUsers[index].name),
-                          subtitle: Text(controller.otherUsers[index].email),
-                          onTap: () {
-                            Get.toNamed('/send-money/transfer',
-                                arguments: controller.otherUsers[index]);
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                ],
-              );
-      }),
+                ),
+              ),
+            ),
+            Expanded(
+              child: Obx(() {
+                if (controller.isSearching.value) {
+                  return ListView.builder(
+                    itemCount: controller.searchList.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(controller.searchList[index].name),
+                        subtitle: Text(controller.searchList[index].email),
+                        onTap: () {
+                          controller.searchController.text =
+                              controller.searchList[index].name;
+                          controller.isSearching.value = false;
+                        },
+                      );
+                    },
+                  );
+                } else {
+                  return ListView.builder(
+                    itemCount: controller.otherUsers.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(controller.otherUsers[index].name),
+                        subtitle: Text(controller.otherUsers[index].email),
+                        onTap: () {
+                          controller.searchController.text =
+                              controller.otherUsers[index].name;
+                          controller.isSearching.value = false;
+                        },
+                      );
+                    },
+                  );
+                }
+              }),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
