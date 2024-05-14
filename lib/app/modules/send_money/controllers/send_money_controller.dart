@@ -4,10 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:quickalert/quickalert.dart';
 import 'package:wallet/models/user_model.dart';
 
-import '../../../../global/global.dart';
 
 class SendMoneyController extends GetxController {
   // var noteList = List.empty(growable: true).obs;
@@ -52,22 +50,7 @@ class SendMoneyController extends GetxController {
   }
 
   void increment() => count.value++;
-
-  void searchOtherUserList(String query) {
-    // sellers
-    searchList.clear();
-    searchOtherUser.value = query;
-    if (query.isNotEmpty) {
-      isSearching.value = true;
-      FirebaseFirestore.instance
-          .collection('sellers')
-          .where('name', isEqualTo : query)
-          .get()
-          .then((value) => searchList.value= value.docs);
-    } else {
-      isSearching.value = false;
-    }
-  }
+  void decrement() => count.value--;
 
   void getOtherUsers(String query) async {
     // sellers

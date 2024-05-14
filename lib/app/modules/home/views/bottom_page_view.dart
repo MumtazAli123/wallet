@@ -29,6 +29,7 @@ class BottomPageView extends GetView {
             parent: NeverScrollableScrollPhysics(),
           ),
           children: [
+            HomeView(),
             Container(
               color: Colors.red,
               child: Center(
@@ -41,7 +42,7 @@ class BottomPageView extends GetView {
                 child: Text('Page 2'),
               ),
             ),
-            HomeView()
+
           ],
         ),
       ),
