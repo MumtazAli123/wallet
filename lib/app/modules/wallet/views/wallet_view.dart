@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:get_time_ago/get_time_ago.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:wallet/app/modules/wallet/views/send_view.dart';
 import 'package:wallet/app/modules/wallet/views/topup_view.dart';
@@ -256,7 +257,7 @@ class _WalletViewState extends State<WalletView> {
                       ),
                       SizedBox(height: 4),
                       Text(
-                        "PKR: ${currencyFormat(double.parse(model!.balance.toString())) }",
+                        'PKR: ${currencyFormat(double.parse(snapshot.data!['balance'].toString()))}',
                         // "name",
                         style: TextStyle(
                             color: Colors.white,
@@ -265,17 +266,16 @@ class _WalletViewState extends State<WalletView> {
                       ),
                       SizedBox(height: 4),
                       Divider(color: Colors.white),
-                      //   in word like three thousand four hundred and fifty first word is capital
                       Text(
-                        "Balance, ${NumberToWord().convert(model!.balance!.toInt())}",
-                        // "${model?.name}",
-                        style: TextStyle(
+                        " ${NumberToWord().convert(snapshot.data!['balance'].toInt())}",
+                        style: GoogleFonts.aBeeZee(
                             color: Colors.white,
                             fontWeight: FontWeight.w500,
-                            fontSize: 14),
+                            fontSize: 12
+                        ),
                       ),
                       SizedBox(height: 4),
-                      wText('${model?.phone}', color: Colors.white),
+                      wText('Phone: ${snapshot.data!['phone']}', color: Colors.white),
                       Text(
                         "Last Updated: ${DateTime.now().toString().substring(0, 16)}",
                         style: TextStyle(color: Colors.white, fontSize: 12),

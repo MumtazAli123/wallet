@@ -192,13 +192,20 @@ class _HomeViewState extends State<HomeView> {
                               ),
                               SizedBox(height: 14.0),
                               // snapshot.data!['balance']
-                              Text(
-                                "Balance, ${NumberToWord().convert(snapshot.data!['balance'].toInt())}",
-                                // "${model?.name}",
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 14),
+                              Container(
+                                width: 320,
+                                padding: EdgeInsets.all(5),
+                                child: Text(
+                                  " ${NumberToWord().convert(snapshot.data!['balance'].toInt())}",
+                                  // "${model?.name}",
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.start,
+                                  maxLines: 2,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.w500,
+                                      fontSize: 12),
+                                ),
                               ),
                             ],
                           );

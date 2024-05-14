@@ -71,6 +71,7 @@ class _LoginViewState extends State<LoginView> {
                     centerTitle: true,
                     title: Container(
                       //   shadow text
+                      margin: const EdgeInsets.only(top: 20),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
                         color: Colors.black.withOpacity(0.5),

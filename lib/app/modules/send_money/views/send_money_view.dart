@@ -109,80 +109,99 @@ class _SendMoneyViewState extends State<SendMoneyView> {
         title: Text("${widget.loggedInUser!.name}"),
         centerTitle: true,
       ),
-      body: Container(
-        alignment: Alignment.center,
-        child: Column(
-          children: [
-            ListTile(
-              leading: CircleAvatar(
-                backgroundImage: NetworkImage(widget.loggedInUser!.image ??
-                    'https://via.placeholder.com/150'),
-              ),
-              title: Text('Balance'),
-              subtitle: Text(widget.loggedInUser!.email ?? 'No email'),
-              trailing: wText('PKR ${loggedInUser.balance ?? 0.0}'),
+      body: Center(
+        child: Card(
+          child: Container(
+            decoration: BoxDecoration(
+              color: Get.theme.colorScheme.background,
+              borderRadius: BorderRadius.circular(10),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 5,
+                  blurRadius: 7,
+                  offset: Offset(0, 3),
+                ),
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextField(
-                // controller: controller.searchController,
-                onChanged: (value) {
-                  controller2.getOtherUsers(value);
-                },
-                decoration: InputDecoration(
-                  hintText: 'Search',
-                  prefixIcon: Icon(Icons.search),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
+            width: 600,
+            alignment: Alignment.center,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ListTile(
+                  leading: CircleAvatar(
+                    backgroundImage: NetworkImage(widget.loggedInUser!.image ??
+                        'https://via.placeholder.com/150'),
+                  ),
+                  title: Text('Balance'),
+                  subtitle: Text(widget.loggedInUser!.email ?? 'No email'),
+                  trailing: wText('PKR ${loggedInUser.balance ?? 0.0}'),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    // controller: controller.searchController,
+                    onChanged: (value) {
+                      controller2.getOtherUsers(value);
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'Search',
+                      prefixIcon: Icon(Icons.search),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                    ),
                   ),
                 ),
-              ),
-            ),
-            Expanded(
-              // 009900
-              child: Obx(() {
-                if (controller2.isSearching.value) {
-                  return ListView.builder(
-                    itemCount: controller2.searchList.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        leading: CircleAvatar(
-                          backgroundImage:
-                              NetworkImage(controller2.searchList[index].image),
-                        ),
-                        title: Text(controller2.searchList[index].name),
-                        subtitle: Text(controller2.searchList[index].phone),
-                        trailing: Text(
-                          controller2.searchList[index].email,
-                          style: TextStyle(color: Colors.grey),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
-                        onTap: () {
-                          _buildDialogSendMoney(otherUsers[index]);
-                          // _buildDialog();
+                Expanded(
+                  // 009900
+                  child: Obx(() {
+                    if (controller2.isSearching.value) {
+                      return ListView.builder(
+                        itemCount: controller2.searchList.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            leading: CircleAvatar(
+                              backgroundImage:
+                                  NetworkImage(controller2.searchList[index].image),
+                            ),
+                            title: Text(controller2.searchList[index].name),
+                            subtitle: Text(controller2.searchList[index].phone),
+                            trailing: Text(
+                              controller2.searchList[index].email,
+                              style: TextStyle(color: Colors.grey),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 1,
+                            ),
+                            onTap: () {
+                              _buildDialogSendMoney(otherUsers[index]);
+                              // _buildDialog();
+                            },
+                          );
                         },
                       );
-                    },
-                  );
-                } else {
-                  return ListView.builder(
-                    itemCount: controller2.otherUsers.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        title: Text(controller2.otherUsers[index].name),
-                        subtitle: Text(controller2.otherUsers[index].email),
-                        onTap: () {
-                          _buildDialogSendMoney(otherUsers[index]);
-                          // _buildDialog();
+                    } else {
+                      return ListView.builder(
+                        itemCount: controller2.otherUsers.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            title: Text(controller2.otherUsers[index].name),
+                            subtitle: Text(controller2.otherUsers[index].email),
+                            onTap: () {
+                              _buildDialogSendMoney(otherUsers[index]);
+                              // _buildDialog();
+                            },
+                          );
                         },
                       );
-                    },
-                  );
-                }
-              }),
+                    }
+                  }),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -260,6 +279,7 @@ class _SendMoneyViewState extends State<SendMoneyView> {
             recipient.phone!);
       } else {
         QuickAlert.show(
+          width: 400.0,
           backgroundColor: Colors.white,
           context: context,
           type: QuickAlertType.error,
@@ -277,10 +297,12 @@ class _SendMoneyViewState extends State<SendMoneyView> {
 
   void _buildDialogSendMoney(UserModel recipient) {
     QuickAlert.show(
-      backgroundColor: Colors.white,
+      width: 400.0,
+      backgroundColor: Get.theme.colorScheme.background,
       context: context,
       type: QuickAlertType.info,
       title: 'Send Money',
+      titleColor: Get.theme.colorScheme.primary,
       // text: 'Enter amount to send',
       textAlignment: TextAlign.center,
       widget: SingleChildScrollView(
@@ -341,8 +363,8 @@ class _SendMoneyViewState extends State<SendMoneyView> {
     } else {
       // _otpSendFromFirebase();
       // _otpSendMoney(recipient!);
-      // sendMoneyToUser(recipient);
-      _sureYouWantToSendMoney(recipient);
+      sendMoneyToUser(recipient);
+      // _sureYouWantToSendMoney(recipient);
     }
   }
 
@@ -359,8 +381,9 @@ class _SendMoneyViewState extends State<SendMoneyView> {
         children: [
           Divider(),
           ListTile(
-            leading: Icon(Icons.person),
-            title: Text('Name: ${recipient.name}'),
+            leading: Icon(Icons.person, color: Colors.green),
+            title: Text('Name: ${recipient.name}',
+                style: TextStyle(color: Theme.of(context).primaryColor)),
             subtitle: Text('Phone: ${recipient.phone}'),
           ),
           ListTile(
