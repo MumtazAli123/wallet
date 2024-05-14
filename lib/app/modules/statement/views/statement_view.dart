@@ -241,7 +241,7 @@ class _StatementViewState extends State<StatementView> {
           Text(
             'Type: ${param0['type']}',
             style: GoogleFonts.poppins(
-              fontSize: 15,
+              fontSize: 12,
             ),
           ),
           Text(
@@ -249,32 +249,24 @@ class _StatementViewState extends State<StatementView> {
                 ? 'Phone: Not Available'
                 : 'Phone: ${param0['phone']}',
             style: GoogleFonts.poppins(
-              fontSize: 15,
+              fontSize: 12,
             ),
           ),
           Text(
             // description
             'Purpose: ${param0['description'] ?? 'No Description'}',
             style: GoogleFonts.poppins(
-              fontSize: 15,
+              fontSize: 12,
             ),
           ),
           Text(
             'Date: ${GetTimeAgo.parse(DateTime.parse(param0['created_at'].toDate().toString()), locale: 'en')}',
             style: GoogleFonts.poppins(
-              fontSize: 15,
+              fontSize: 12,
             ),
           ),
         ],
       ),
-      actions: [
-        ElevatedButton(
-          onPressed: () {
-            Get.back();
-          },
-          child: Text('Close'),
-        ),
-      ],
     );
   }
   currencyFormat(double? balance) {
