@@ -10,6 +10,7 @@ import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 import '../../../../global/global.dart';
 import '../../../../models/user_model.dart';
+import '../../../../widgets/mix_widgets.dart';
 import '../../wallet/controllers/wallet_controller.dart';
 import '../controllers/send_money_controller.dart';
 
@@ -114,6 +115,16 @@ class _SendMoneyViewState extends State<SendMoneyView> {
       body: Container(
         child: Column(
           children: [
+            ListTile(
+              leading: CircleAvatar(
+                backgroundImage: NetworkImage(
+                    widget.loggedInUser!.image ?? 'https://via.placeholder.com/150'),
+              ),
+              title: Text('Balance'),
+              subtitle: Text(widget.loggedInUser!.email ?? 'No email'),
+              trailing: wText('PKR ${loggedInUser.balance ?? 0.0}'),
+            ),
+
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
@@ -244,6 +255,13 @@ class _SendMoneyViewState extends State<SendMoneyView> {
         _buildDialogWithDataReceiver(
             recipient.username, transferAmount.toInt(),recipient.name! ,descriptionController.text.trim(), recipient.phone!);
       } else {
+        QuickAlert.show(
+          backgroundColor: Colors.white,
+          context: context,
+          type: QuickAlertType.error,
+          title: 'Error',
+          text: 'Insufficient balance to send money',
+        );
 
         Get.snackbar('Error', 'Insufficient balance to send money',
             backgroundColor: Colors.red,
@@ -309,6 +327,7 @@ class _SendMoneyViewState extends State<SendMoneyView> {
         text: 'Please enter amount',
       );
     }else if (recipient == null) {
+
       QuickAlert.show(
         backgroundColor: Colors.white,
         context: context,

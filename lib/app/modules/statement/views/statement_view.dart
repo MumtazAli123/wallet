@@ -50,29 +50,31 @@ class _StatementViewState extends State<StatementView> {
         title: Text("${widget.loggedInUser!.name}"),
         centerTitle: true,
       ),
-      body:  StreamBuilder(
-          stream: FirebaseFirestore.instance
-              .collection('sellers')
-              .doc(user!.uid)
-              .collection('statement')
-              .orderBy('created_at', descending: true)
-              .snapshots(),
-          builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
-                child: CircularProgressIndicator(),
+      body:  SingleChildScrollView(
+        child: StreamBuilder(
+            stream: FirebaseFirestore.instance
+                .collection('sellers')
+                .doc(user!.uid)
+                .collection('statement')
+                .orderBy('created_at', descending: true)
+                .snapshots(),
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+              return ListView.builder(
+                itemExtent: 100,
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: snapshot.data!.docs.length,
+                itemBuilder: (context, index) {
+                  return _buildStatementItem(snapshot.data!.docs[index]);
+                },
               );
-            }
-            return ListView.builder(
-              shrinkWrap: true,
-              reverse: false,
-              physics: const NeverScrollableScrollPhysics(),
-              itemCount: snapshot.data!.docs.length,
-              itemBuilder: (context, index) {
-                return _buildStatementItem(snapshot.data!.docs[index]);
-              },
-            );
-          }),
+            }),
+      ),
     );
   }
   _buildStatementItem(param0) {
