@@ -99,48 +99,6 @@ class _SendViewState extends State<SendView> {
     }
   }
 
-  // void sendMoneyToUser(UserModel recipient) async {
-  //   if (user != null) {
-  //     String enteredValue = transferNominalController.text;
-  //
-  //     int transferAmount = int.tryParse(enteredValue) ?? 0;
-  //
-  //     if (loggedInUser.balance != null &&
-  //         loggedInUser.balance! >= transferAmount) {
-  //       double updatedBalance = loggedInUser.balance! - transferAmount;
-  //
-  //       double recipientUpdatedBalance = (recipient.balance!) + transferAmount;
-  //
-  //       await FirebaseFirestore.instance
-  //           .collection('users')
-  //           .doc(user!.uid)
-  //           .update({'balance': updatedBalance});
-  //
-  //       await FirebaseFirestore.instance
-  //           .collection('users')
-  //           .doc(recipient.uid)
-  //           .update({'balance': recipientUpdatedBalance});
-  //
-  //       setState(() {
-  //         loggedInUser.balance = updatedBalance;
-  //       });
-  //
-  //       Get.snackbar('Success', 'Money sent successfully',
-  //           backgroundColor: Colors.green,
-  //           colorText: Colors.white,
-  //           snackPosition: SnackPosition.BOTTOM);
-  //
-  //       _buildDialogWithDataReceiver(
-  //           recipient.username, transferAmount, recipient.fullName!);
-  //
-  //     } else {
-  //       Get.snackbar('Error', 'Insufficient balance to send money',
-  //           backgroundColor: Colors.red,
-  //           colorText: Colors.white,
-  //           snackPosition: SnackPosition.BOTTOM);
-  //     }
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {

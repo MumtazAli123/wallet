@@ -91,6 +91,8 @@ class _SendMoneyViewState extends State<SendMoneyView> {
         UserModel otherUser = UserModel(
           username: userData['name'],
           name: userData['name'],
+          email: userData['email'],
+          phone: userData['phone'],
           uid: uid,
           balance: double.tryParse(userData['balance'].toString()) ?? 0.0,
         );
@@ -196,7 +198,7 @@ class _SendMoneyViewState extends State<SendMoneyView> {
 
         await FirebaseFirestore.instance
             .collection('sellers')
-            .doc(recipient.uid)
+            .doc(user!.uid)
             .update({'balance': recipientUpdatedBalance});
 
         await FirebaseFirestore.instance
@@ -204,7 +206,7 @@ class _SendMoneyViewState extends State<SendMoneyView> {
             .doc(user!.uid)
             .collection('statement')
             .add({
-          "user_id": recipient.uid,
+          "user_id": user!.uid,
           'name': recipient.name,
           'phone': recipient.phone ?? 'No phone',
           'email': recipient.email ?? 'No email',
@@ -240,8 +242,9 @@ class _SendMoneyViewState extends State<SendMoneyView> {
             snackPosition: SnackPosition.BOTTOM);
 
         _buildDialogWithDataReceiver(
-            recipient.username, transferAmount.toInt(), recipient.name!, descriptionController.text.trim());
+            recipient.username, transferAmount.toInt(),recipient.name! ,descriptionController.text.trim(), recipient.phone!);
       } else {
+
         Get.snackbar('Error', 'Insufficient balance to send money',
             backgroundColor: Colors.red,
             colorText: Colors.white,
@@ -329,6 +332,8 @@ class _SendMoneyViewState extends State<SendMoneyView> {
       type: QuickAlertType.confirm,
       title: 'Send Money',
       text: 'Are you sure you want to send money to ${recipient.name}?',
+      confirmBtnText: "Confirm",
+        cancelBtnTextStyle: TextStyle(color: Colors.red),
       widget: Column(
         children: [
           Divider(),
@@ -345,6 +350,7 @@ class _SendMoneyViewState extends State<SendMoneyView> {
         ],
       ),
       onConfirmBtnTap: () {
+        Get.back();
         sendMoneyToUser(recipient);
       },
     );
@@ -352,7 +358,7 @@ class _SendMoneyViewState extends State<SendMoneyView> {
 
 
   void _buildDialogWithDataReceiver(
-      String? username, int transferAmount, String fullName, String description) {
+      String? username, int transferAmount, String fullName, String description, String phone) {
     QuickAlert.show(
       backgroundColor: Colors.white,
       barrierDismissible: false,
@@ -360,7 +366,7 @@ class _SendMoneyViewState extends State<SendMoneyView> {
       type: QuickAlertType.success,
       title: 'Success',
       text:
-      'Money sent to $fullName\nAmount: $transferAmount\nReceiver: $username \nPurpose: $description',
+      'Money sent to $fullName\nAmount: $transferAmount\nReceiver: $username  \nPurpose: $description \nPhone $phone',
       textAlignment: TextAlign.start,
       onConfirmBtnTap: () {
         Get.toNamed('/wallet');

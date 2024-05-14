@@ -145,16 +145,17 @@ class _HomeViewState extends State<HomeView> {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // intelliJ IDEA
                     Text(
-                      // just first letter capital and 8 letters
-                     "${title.substring(0, 8).toUpperCase()}...",
+                      // just first letter capital and < 8 letters
+                     // "${title.substring(0, 8).capitalizeFirst}",
+                      "${title.capitalizeFirst}",
                       style: GoogleFonts.poppins(
                         fontSize: 16,
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+                    SizedBox(height: 5),
                     Text(
                       // just email without @gmail
                       "${email.substring(0, email.indexOf('@'))}@...",

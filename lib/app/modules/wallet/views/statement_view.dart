@@ -62,8 +62,8 @@ class _StatementViewState extends State<StatementView> {
         }
         return ListView.builder(
           // new transaction will be at the top
-          // reverse: true,
-          // controller: ScrollController()..jumpTo(0),
+          reverse: true,
+          controller: ScrollController()..jumpTo(0),
           clipBehavior: Clip.none,
 
           itemCount: snapshot.data!.docs.length,
