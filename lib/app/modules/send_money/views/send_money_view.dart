@@ -23,7 +23,6 @@ class SendMoneyView extends StatefulWidget {
 }
 
 class _SendMoneyViewState extends State<SendMoneyView> {
-
   final controller = Get.put(WalletController());
   final controller2 = Get.put(SendMoneyController());
 
@@ -33,11 +32,10 @@ class _SendMoneyViewState extends State<SendMoneyView> {
 
   List<UserModel> otherUsers = [];
 
-
   final fb = FirebaseFirestore.instance;
 
   final TextEditingController transferNominalController =
-  TextEditingController();
+      TextEditingController();
   final descriptionController = TextEditingController();
 
   UserModel userModel = UserModel();
@@ -53,19 +51,19 @@ class _SendMoneyViewState extends State<SendMoneyView> {
     }
   }
 
-
   Future<void> fetchLoggedInUserBalance(String uid) async {
     DocumentReference userDoc =
-    FirebaseFirestore.instance.collection('sellers').doc(uid);
+        FirebaseFirestore.instance.collection('sellers').doc(uid);
 
     DocumentSnapshot docSnapshot = await userDoc.get();
 
     if (docSnapshot.exists) {
       Map<String, dynamic>? userData =
-      docSnapshot.data() as Map<String, dynamic>?;
+          docSnapshot.data() as Map<String, dynamic>?;
 
       if (userData != null) {
-        double userBalance = (double.tryParse(userData['balance'].toString()) ?? 0.0);
+        double userBalance =
+            (double.tryParse(userData['balance'].toString()) ?? 0.0);
 
         setState(() {
           loggedInUser.balance = userBalance;
@@ -76,7 +74,7 @@ class _SendMoneyViewState extends State<SendMoneyView> {
 
   Future<void> fetchUserData() async {
     CollectionReference usersCollection =
-    FirebaseFirestore.instance.collection('sellers');
+        FirebaseFirestore.instance.collection('sellers');
 
     QuerySnapshot querySnapshot = await usersCollection.get();
 
@@ -84,7 +82,7 @@ class _SendMoneyViewState extends State<SendMoneyView> {
 
     for (DocumentSnapshot documentSnapshot in querySnapshot.docs) {
       Map<String, dynamic> userData =
-      documentSnapshot.data() as Map<String, dynamic>;
+          documentSnapshot.data() as Map<String, dynamic>;
 
       String uid = documentSnapshot.id;
 
@@ -104,7 +102,6 @@ class _SendMoneyViewState extends State<SendMoneyView> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -113,18 +110,18 @@ class _SendMoneyViewState extends State<SendMoneyView> {
         centerTitle: true,
       ),
       body: Container(
+        alignment: Alignment.center,
         child: Column(
           children: [
             ListTile(
               leading: CircleAvatar(
-                backgroundImage: NetworkImage(
-                    widget.loggedInUser!.image ?? 'https://via.placeholder.com/150'),
+                backgroundImage: NetworkImage(widget.loggedInUser!.image ??
+                    'https://via.placeholder.com/150'),
               ),
               title: Text('Balance'),
               subtitle: Text(widget.loggedInUser!.email ?? 'No email'),
               trailing: wText('PKR ${loggedInUser.balance ?? 0.0}'),
             ),
-
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextField(
@@ -142,6 +139,7 @@ class _SendMoneyViewState extends State<SendMoneyView> {
               ),
             ),
             Expanded(
+              // 009900
               child: Obx(() {
                 if (controller2.isSearching.value) {
                   return ListView.builder(
@@ -149,17 +147,19 @@ class _SendMoneyViewState extends State<SendMoneyView> {
                     itemBuilder: (context, index) {
                       return ListTile(
                         leading: CircleAvatar(
-                          backgroundImage: NetworkImage(
-                              controller2.searchList[index].image),
+                          backgroundImage:
+                              NetworkImage(controller2.searchList[index].image),
                         ),
                         title: Text(controller2.searchList[index].name),
                         subtitle: Text(controller2.searchList[index].phone),
-                        trailing: Text(controller2.searchList[index].email,
-                            style: TextStyle(color: Colors.grey),
-                            overflow: TextOverflow.ellipsis
-                            ,maxLines: 1,),
+                        trailing: Text(
+                          controller2.searchList[index].email,
+                          style: TextStyle(color: Colors.grey),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
                         onTap: () {
-                            _buildDialogSendMoney(otherUsers[index]);
+                          _buildDialogSendMoney(otherUsers[index]);
                           // _buildDialog();
                         },
                       );
@@ -188,7 +188,6 @@ class _SendMoneyViewState extends State<SendMoneyView> {
     );
   }
 
-
   void sendMoneyToUser(UserModel recipient) async {
     //   send and save statement in_out of users
     if (user != null) {
@@ -200,7 +199,9 @@ class _SendMoneyViewState extends State<SendMoneyView> {
           loggedInUser.balance! >= transferAmount) {
         double updatedBalance = loggedInUser.balance! - transferAmount;
 
-        double recipientUpdatedBalance = (double.tryParse(recipient.balance.toString()) ?? 0.0) + transferAmount;
+        double recipientUpdatedBalance =
+            (double.tryParse(recipient.balance.toString()) ?? 0.0) +
+                transferAmount;
         //   update balance of sender and receiver and description of transaction
         await FirebaseFirestore.instance
             .collection('sellers')
@@ -225,7 +226,6 @@ class _SendMoneyViewState extends State<SendMoneyView> {
           'amount': transferNominalController.text.trim(),
           'description': descriptionController.text.trim(),
           'created_at': DateTime.now(),
-
         });
 
         await FirebaseFirestore.instance
@@ -253,7 +253,11 @@ class _SendMoneyViewState extends State<SendMoneyView> {
             snackPosition: SnackPosition.BOTTOM);
 
         _buildDialogWithDataReceiver(
-            recipient.username, transferAmount.toInt(),recipient.name! ,descriptionController.text.trim(), recipient.phone!);
+            recipient.username,
+            transferAmount.toInt(),
+            recipient.name!,
+            descriptionController.text.trim(),
+            recipient.phone!);
       } else {
         QuickAlert.show(
           backgroundColor: Colors.white,
@@ -326,8 +330,7 @@ class _SendMoneyViewState extends State<SendMoneyView> {
         title: 'Error',
         text: 'Please enter amount',
       );
-    }else if (recipient == null) {
-
+    } else if (recipient == null) {
       QuickAlert.show(
         backgroundColor: Colors.white,
         context: context,
@@ -335,8 +338,7 @@ class _SendMoneyViewState extends State<SendMoneyView> {
         title: 'Error',
         text: 'Please select a recipient to send money to',
       );
-    }
-    else {
+    } else {
       // _otpSendFromFirebase();
       // _otpSendMoney(recipient!);
       // sendMoneyToUser(recipient);
@@ -352,7 +354,7 @@ class _SendMoneyViewState extends State<SendMoneyView> {
       title: 'Send Money',
       text: 'Are you sure you want to send money to ${recipient.name}?',
       confirmBtnText: "Confirm",
-        cancelBtnTextStyle: TextStyle(color: Colors.red),
+      cancelBtnTextStyle: TextStyle(color: Colors.red),
       widget: Column(
         children: [
           Divider(),
@@ -375,9 +377,8 @@ class _SendMoneyViewState extends State<SendMoneyView> {
     );
   }
 
-
-  void _buildDialogWithDataReceiver(
-      String? username, int transferAmount, String fullName, String description, String phone) {
+  void _buildDialogWithDataReceiver(String? username, int transferAmount,
+      String fullName, String description, String phone) {
     QuickAlert.show(
       backgroundColor: Colors.white,
       barrierDismissible: false,
@@ -385,14 +386,11 @@ class _SendMoneyViewState extends State<SendMoneyView> {
       type: QuickAlertType.success,
       title: 'Success',
       text:
-      'Money sent to $fullName\nAmount: $transferAmount\nReceiver: $username  \nPurpose: $description \nPhone $phone',
+          'Money sent to $fullName\nAmount: $transferAmount\nReceiver: $username  \nPurpose: $description \nPhone $phone',
       textAlignment: TextAlign.start,
       onConfirmBtnTap: () {
         Get.toNamed('/wallet');
       },
     );
   }
-
-
 }
-

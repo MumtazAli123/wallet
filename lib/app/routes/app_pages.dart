@@ -1,10 +1,12 @@
-// ignore_for_file: constant_identifier_names
+// ignore_for_file: prefer_const_constructors , prefer_const_literals_to_create_immutables
+
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 import '../../models/user_model.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/bottom_page_view.dart';
-import '../modules/home/views/home_view.dart';
+import '../modules/home/views/web_home_view.dart';
 import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
 import '../modules/register/bindings/register_binding.dart';
@@ -17,6 +19,7 @@ import '../modules/statement/bindings/statement_binding.dart';
 import '../modules/statement/views/statement_view.dart';
 import '../modules/wallet/bindings/wallet_binding.dart';
 import '../modules/wallet/views/wallet_view.dart';
+
 
 part 'app_routes.dart';
 
@@ -43,9 +46,13 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.HOME,
-      page: () => HomeView(
-        userModel: UserModel(),
-      ),
+      page: () => LayoutBuilder(builder: (context, constraints) {
+        if (constraints.maxWidth < 600) {
+          return BottomPageView();
+        } else {
+          return WebHomeView();
+        }
+      }),
       binding: HomeBinding(),
     ),
     GetPage(
@@ -61,12 +68,12 @@ class AppPages {
         binding: HomeBinding()),
     GetPage(
       name: _Paths.STATEMENT,
-      page: () =>  StatementView(),
+      page: () => StatementView(),
       binding: StatementBinding(),
     ),
     GetPage(
       name: _Paths.SEND_MONEY,
-      page: () =>  SendMoneyView(
+      page: () => SendMoneyView(
         loggedInUser: UserModel(),
       ),
       binding: SendMoneyBinding(),

@@ -126,7 +126,7 @@ class _MyDrawerState extends State<MyDrawer> {
           title: const Text('Logout'),
           onTap: () {
             fAuth.signOut();
-            Navigator.of(context).pushNamed('/');
+            Get.offAllNamed('/login');
           },
         ),
       ],

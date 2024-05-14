@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:quickalert/quickalert.dart';
+import 'package:wallet/app/modules/home/views/bottom_page_view.dart';
 import 'package:wallet/app/modules/home/views/home_view.dart';
 
 import '../../../../global/global.dart';
@@ -22,7 +23,6 @@ class RegisterView extends StatefulWidget {
   @override
   State<RegisterView> createState() => _RegisterViewState();
 }
-
 
 class _RegisterViewState extends State<RegisterView> {
   final controller = Get.put(RegisterController());
@@ -407,26 +407,27 @@ class _RegisterViewState extends State<RegisterView> {
       type: QuickAlertType.info,
       title: 'Select Image',
       widget: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ElevatedButton.icon(
+              ElevatedButton(
                 onPressed: () {
                   _imgFromCamera();
                   Get.back();
                 },
-                label: const Text('Camera'),
-                icon: const Icon(Icons.camera),
+                child: const Text('Camera'),
               ),
               const SizedBox(width: 10),
-              ElevatedButton.icon(
+              ElevatedButton(
                 onPressed: () {
                   _imgFromGallery();
                   Get.back();
                 },
-                label: const Text('Gallery'),
-                icon: const Icon(Icons.image),
+                child: const Text('Gallery'),
               ),
             ],
           ),
@@ -458,7 +459,7 @@ class _RegisterViewState extends State<RegisterView> {
 
   // already have an account text widget
 
- Future <void> signUp(String email, String password) async {
+  Future<void> signUp(String email, String password) async {
     QuickAlert.show(
       context: context,
       type: QuickAlertType.loading,
@@ -520,7 +521,8 @@ class _RegisterViewState extends State<RegisterView> {
     userModel.uid = user!.uid;
     userModel.email = user.email;
     userModel.name = controller.nameController.text;
-    userModel.phone = "+${controller.countryCode}${controller.phoneController.text}";
+    userModel.phone =
+        "+${controller.countryCode}${controller.phoneController.text}";
     userModel.image = value;
     userModel.sellerType = 'user';
     userModel.balance = 100.0;
@@ -540,16 +542,20 @@ class _RegisterViewState extends State<RegisterView> {
       'updatedAt': userModel.updatedAt,
     }).then((value) async {
       await sharedPreferences?.setString('uid', uid!);
-      await sharedPreferences?.setString('name', controller.nameController.text);
-      await sharedPreferences?.setString('email', controller.emailController.text);
+      await sharedPreferences?.setString(
+          'name', controller.nameController.text);
+      await sharedPreferences?.setString(
+          'email', controller.emailController.text);
       await sharedPreferences?.setString('phone',
           '+${controller.countryCode}${controller.phoneController.text}');
       await sharedPreferences?.setString('image', controller.image!.path);
       await sharedPreferences?.setString('sellerType', 'user');
       await sharedPreferences?.setString('status', 'approved');
       await sharedPreferences?.setString('balance', '100.0');
-      await sharedPreferences?.setString('createdAt', DateTime.now().toString());
-      await sharedPreferences?.setString('sellerCart', DateTime.now().toString());
+      await sharedPreferences?.setString(
+          'createdAt', DateTime.now().toString());
+      await sharedPreferences?.setString(
+          'sellerCart', DateTime.now().toString());
 
       Get.back();
       Get.offAll(() => HomeView());
@@ -561,17 +567,17 @@ class _RegisterViewState extends State<RegisterView> {
   }
 
   void _saveUserData(String value) async {
-   // to call firestore
+    // to call firestore
 
     try {
-
       User? user = fAuth.currentUser; // to call user model
 
       UserModel userModel = UserModel();
       userModel.uid = user!.uid;
       userModel.email = user.email;
       userModel.name = controller.nameController.text;
-      userModel.phone = "+${controller.countryCode}${controller.phoneController.text}";
+      userModel.phone =
+          "+${controller.countryCode}${controller.phoneController.text}";
       userModel.image = value;
       userModel.sellerType = 'user';
       userModel.balance = 100.0;
@@ -608,7 +614,7 @@ class _RegisterViewState extends State<RegisterView> {
           'sellerCart', DateTime.now().toString());
 
       Get.back();
-      Get.offAll(() => HomeView());
+      Get.offAll(() => BottomPageView());
       Get.snackbar('Success', 'User registered successfully');
     } catch (e) {
       Get.back();

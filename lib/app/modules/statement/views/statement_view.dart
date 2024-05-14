@@ -87,7 +87,7 @@ class _StatementViewState extends State<StatementView> {
         padding: EdgeInsets.all(10),
         decoration: BoxDecoration(
           color: Colors.grey[200],
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(20),
         ),
         child: ListTile(
           onTap: () {
@@ -98,7 +98,7 @@ class _StatementViewState extends State<StatementView> {
             child: Text(
               "${param0['name'][0]}",
               style: GoogleFonts.poppins(
-                fontSize: 20,
+                fontSize: 18,
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
               ),
@@ -107,7 +107,7 @@ class _StatementViewState extends State<StatementView> {
           title: Text(
             "${param0['name']}",
             style: GoogleFonts.poppins(
-              fontSize: 15,
+              fontSize: 14,
               color: Colors.black,
             ),
           ),
@@ -121,7 +121,7 @@ class _StatementViewState extends State<StatementView> {
               Text(
                 "${param0['type'] == 'send' ? '-' : '+'} ${currencyFormat(double.parse(param0['amount'].toString()))}",
                 style: GoogleFonts.poppins(
-                  fontSize: 18,
+                  fontSize: 12,
                   color: Colors.black,
                   fontWeight: FontWeight.bold,
                 ),

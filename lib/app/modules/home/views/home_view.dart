@@ -36,7 +36,6 @@ class _HomeViewState extends State<HomeView> {
   String? phone = sharedPreferences?.getString('phone');
   String? balance = sharedPreferences?.getString('balance');
 
-
   String? uid = fAuth.currentUser!.uid;
 
   String someStringVariable = map['someKey'].toString();
@@ -119,8 +118,8 @@ class _HomeViewState extends State<HomeView> {
   _buildHeader(String title, String email, String image) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 6),
-      height: 235,
-      width: 400,
+      height: 255,
+      width: 550,
       decoration: BoxDecoration(
         // color: Colors.blue,
         image: DecorationImage(
@@ -137,16 +136,11 @@ class _HomeViewState extends State<HomeView> {
           children: [
             Row(
               children: [
-                CircleAvatar(
-                  radius: 25,
-                  backgroundImage: NetworkImage(image),
-                ),
-                SizedBox(width: 5),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                     // "${title.substring(0, 8).capitalizeFirst}",
+                      // "${title.substring(0, 8).capitalizeFirst}",
                       "${title.capitalizeFirst}",
                       style: GoogleFonts.poppins(
                         fontSize: 16,
@@ -155,14 +149,6 @@ class _HomeViewState extends State<HomeView> {
                       ),
                     ),
                     SizedBox(height: 5),
-                    Text(
-                      // just email without @gmail
-                      "${email.substring(0, email.indexOf('@'))}@...",
-                      style: GoogleFonts.poppins(
-                        fontSize: 15,
-                        color: Colors.white,
-                      ),
-                    ),
                   ],
                 ),
               ],
@@ -261,14 +247,12 @@ class _HomeViewState extends State<HomeView> {
                     'Total Earnings',
                     style: GoogleFonts.poppins(
                       fontSize: 15,
-                      color: Colors.black,
                     ),
                   ),
                   Text(
                     'PKR: 0.00',
                     style: GoogleFonts.poppins(
                       fontSize: 20,
-                      color: Colors.black,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -280,14 +264,12 @@ class _HomeViewState extends State<HomeView> {
                     'Total Withdraw',
                     style: GoogleFonts.poppins(
                       fontSize: 15,
-                      color: Colors.black,
                     ),
                   ),
                   Text(
                     'PKR: 0.00',
                     style: GoogleFonts.poppins(
                       fontSize: 20,
-                      color: Colors.black,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -312,16 +294,13 @@ class _HomeViewState extends State<HomeView> {
                 'Statement',
                 style: GoogleFonts.poppins(
                   fontSize: 20,
-                  color: Colors.black,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               TextButton(
                 onPressed: () {
-                //   statement
-                  Get.to(() => StatementView(
-                      loggedInUser: userModel!
-                  ));
+                  //   statement
+                  Get.to(() => StatementView(loggedInUser: userModel!));
                 },
                 child: Text(
                   'View All',
@@ -333,92 +312,107 @@ class _HomeViewState extends State<HomeView> {
               ),
             ],
           ),
-          SizedBox(height: 20),
+          SizedBox(height: 10),
+          // if no data found
           StreamBuilder(
-              stream: FirebaseFirestore.instance
-                  .collection('sellers')
-                  .doc(user!.uid)
-                  .collection('statement')
-                  .orderBy('created_at', descending: true)
-                  .snapshots(),
-              builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                return ListView.builder(
-                  shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
-                  itemCount: 12,
-                  itemBuilder: (context, index) {
-                    return _buildStatementItem(snapshot.data!.docs[index]);
-                  },
-                );
-              }),
+            stream: FirebaseFirestore.instance
+                .collection('sellers')
+                .doc(user!.uid)
+                .collection('statement')
+                .snapshots(),
+            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return CircularProgressIndicator();
+              }
+              return isLoading
+                  ? Center(
+                      child: Text('No Data Found',
+                          style: GoogleFonts.poppins(
+                            fontSize: 20,
+                          ) ,
+                      ),
+                    )
+                  : ListView.builder(
+                      itemExtent: 100,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: snapshot.data!.docs.length,
+                      itemBuilder: (context, index) {
+                        return _buildStatementItem(snapshot.data!.docs[index]);
+                      },
+                    );
+            },
+          ),
         ],
       ),
     );
   }
 
   _buildStatementItem(param0) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 10),
-      padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: ListTile(
-        onTap: () {
-          _buildDetailDialog(param0);
-        },
-        leading: CircleAvatar(
-          backgroundColor: Colors.blue,
-          child: Text(
-            "${param0['name'][0]}",
-            style: GoogleFonts.poppins(
-              fontSize: 20,
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
+    if (isLoading) {
+      return Center(
+            child: Text('No Data Found'),
+          );
+    } else {
+      return Container(
+            margin: EdgeInsets.only(bottom: 5),
+            padding: EdgeInsets.all(5),
+            decoration: BoxDecoration(
+              color: Colors.grey[200],
+              borderRadius: BorderRadius.circular(10),
             ),
-          ),
-        ),
-        title: Text(
-          "${param0['name']}",
-          style: GoogleFonts.poppins(
-            fontSize: 15,
-            color: Colors.black,
-          ),
-        ),
-        subtitle: Text(
-          GetTimeAgo.parse(
-              DateTime.parse(param0['created_at'].toDate().toString()),
-              locale: 'en'),
-        ),
-        trailing: Column(
-          children: [
-            Text(
-              "${param0['type'] == 'send' ? '-' : '+'} ${currencyFormat(double.parse(param0['amount'].toString()))}",
-              style: GoogleFonts.poppins(
-                fontSize: 18,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
+            child: ListTile(
+              onTap: () {
+                _buildDetailDialog(param0);
+              },
+              leading: CircleAvatar(
+                backgroundColor: Colors.blue,
+                child: Text(
+                  "${param0['name'][0]}",
+                  style: GoogleFonts.poppins(
+                    fontSize: 18,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+              title: Text(
+                "${param0['name']}",
+                style: GoogleFonts.poppins(
+                  fontSize: 15,
+                  color: Colors.black,
+                ),
+              ),
+              subtitle: Text(
+                GetTimeAgo.parse(
+                    DateTime.parse(param0['created_at'].toDate().toString()),
+                    locale: 'en'),
+              ),
+              trailing: Column(
+                children: [
+                  Text(
+                    "${param0['type'] == 'send' ? '-' : '+'} ${currencyFormat(double.parse(param0['amount'].toString()))}",
+                    style: GoogleFonts.poppins(
+                      fontSize: 12,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+
+                    ),
+                  ),
+                  SizedBox(height: 5),
+                  Text(
+                    param0['type'] == 'send' ? 'Sent' : 'Received',
+                  )
+                ],
               ),
             ),
-            SizedBox(height: 5),
-            Text(
-              param0['type'] == 'send' ? 'Sent' : 'Received',
-            )
-          ],
-        ),
-      ),
-    );
+          );
+    }
   }
 
   Future<void> _buildDetailDialog(param0) async {
     // is mobile or tablet or desktop
-   return isMobile(context)
+    return isMobile(context)
         ? _buildDetailMobile(param0)
         : _buildDetailDesktop(param0);
   }
@@ -478,7 +472,7 @@ class _HomeViewState extends State<HomeView> {
               ),
             ),
             Text(
-              'Date: ${GetTimeAgo.parse(DateTime.parse(param0['created_at'].toDate().toString()), locale: 'en')}',
+              'time: ${GetTimeAgo.parse(DateTime.parse(param0['created_at'].toDate().toString()), locale: 'en')}',
               style: GoogleFonts.poppins(
                 fontSize: 15,
                 color: Colors.black,
@@ -492,7 +486,6 @@ class _HomeViewState extends State<HomeView> {
                 color: Colors.black,
               ),
             )
-
           ],
         ));
   }
@@ -515,13 +508,13 @@ class _HomeViewState extends State<HomeView> {
           Text(
             'Amount: ${currencyFormat(double.parse(param0['amount'].toString()))}',
             style: GoogleFonts.poppins(
-              fontSize: 15,
+              fontSize: 12,
             ),
           ),
           Text(
             'Type: ${param0['type']}',
             style: GoogleFonts.poppins(
-              fontSize: 15,
+              fontSize: 12,
             ),
           ),
           Text(
@@ -529,32 +522,24 @@ class _HomeViewState extends State<HomeView> {
                 ? 'Phone: Not Available'
                 : 'Phone: ${param0['phone']}',
             style: GoogleFonts.poppins(
-              fontSize: 15,
+              fontSize: 12,
             ),
           ),
           Text(
             // description
             'Purpose: ${param0['description'] ?? 'No Description'}',
             style: GoogleFonts.poppins(
-              fontSize: 15,
+              fontSize: 12,
             ),
           ),
           Text(
             'Date: ${GetTimeAgo.parse(DateTime.parse(param0['created_at'].toDate().toString()), locale: 'en')}',
             style: GoogleFonts.poppins(
-              fontSize: 15,
+              fontSize: 12,
             ),
           ),
         ],
       ),
-      actions: [
-        ElevatedButton(
-          onPressed: () {
-            Get.back();
-          },
-          child: Text('Close'),
-        ),
-      ],
     );
   }
 }
