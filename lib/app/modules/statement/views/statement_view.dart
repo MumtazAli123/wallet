@@ -55,6 +55,7 @@ class _StatementViewState extends State<StatementView> {
               .collection('sellers')
               .doc(user!.uid)
               .collection('statement')
+              .orderBy('created_at', descending: true)
               .snapshots(),
           builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -64,8 +65,9 @@ class _StatementViewState extends State<StatementView> {
             }
             return ListView.builder(
               shrinkWrap: true,
+              reverse: false,
               physics: const NeverScrollableScrollPhysics(),
-              itemCount: 5,
+              itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, index) {
                 return _buildStatementItem(snapshot.data!.docs[index]);
               },

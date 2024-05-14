@@ -1,3 +1,4 @@
+// ignore_for_file: constant_identifier_names
 import 'package:get/get.dart';
 
 import '../../models/user_model.dart';
@@ -60,9 +61,7 @@ class AppPages {
         binding: HomeBinding()),
     GetPage(
       name: _Paths.STATEMENT,
-      page: () =>  StatementView(
-        loggedInUser: UserModel(),
-      ),
+      page: () =>  StatementView(),
       binding: StatementBinding(),
     ),
     GetPage(

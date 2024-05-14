@@ -146,7 +146,6 @@ class _HomeViewState extends State<HomeView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      // just first letter capital and < 8 letters
                      // "${title.substring(0, 8).capitalizeFirst}",
                       "${title.capitalizeFirst}",
                       style: GoogleFonts.poppins(
@@ -340,6 +339,7 @@ class _HomeViewState extends State<HomeView> {
                   .collection('sellers')
                   .doc(user!.uid)
                   .collection('statement')
+                  .orderBy('created_at', descending: true)
                   .snapshots(),
               builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
@@ -350,7 +350,7 @@ class _HomeViewState extends State<HomeView> {
                 return ListView.builder(
                   shrinkWrap: true,
                   physics: NeverScrollableScrollPhysics(),
-                  itemCount: 5,
+                  itemCount: 12,
                   itemBuilder: (context, index) {
                     return _buildStatementItem(snapshot.data!.docs[index]);
                   },
