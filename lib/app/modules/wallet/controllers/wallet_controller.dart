@@ -30,7 +30,6 @@ class WalletController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    statementInOut();
   }
 
   void increment() => totalBalance.value++;
@@ -43,17 +42,9 @@ class WalletController extends GetxController {
   @override
   void onClose() {}
 
-  void statementInOut() async {
-    var snapshot = await db.doc('statement').collection('in_out').get();
-    statementInOutList.value = snapshot.docs.reversed.toList();
-  }
 
-  void streamStatementInOut() async {
-    await for (var snapshot
-        in db.doc('statement').collection('in_out').snapshots()) {
-      statementInOutList.value = snapshot.docs.reversed.toList();
-    }
-  }
+
+
 
   void addStatementInOut() async {
     await db.doc('statement').collection('in_out').add({
@@ -112,17 +103,4 @@ class WalletController extends GetxController {
     clearType();
   }
 
-  void streamArticle() {
-    var logger = Logger();
-
-    FirebaseFirestore.instance
-        .collection('sellers')
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .collection('budget')
-        .snapshots()
-        .listen((event) {
-      incomeList.value = event.docs.reversed.toList();
-      logger.i(event.docs[0].data()['created_at']);
-    });
-  }
 }

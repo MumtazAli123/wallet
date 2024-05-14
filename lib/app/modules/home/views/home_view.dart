@@ -116,10 +116,10 @@ class _HomeViewState extends State<HomeView> {
           );
   }
 
-  _buildHeader(String s, String t, String u) {
+  _buildHeader(String title, String email, String image) {
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 6),
-      height: 210,
+      height: 235,
       width: 400,
       decoration: BoxDecoration(
         // color: Colors.blue,
@@ -138,24 +138,26 @@ class _HomeViewState extends State<HomeView> {
             Row(
               children: [
                 CircleAvatar(
-                  radius: 30,
-                  backgroundImage: NetworkImage(u),
+                  radius: 25,
+                  backgroundImage: NetworkImage(image),
                 ),
-                SizedBox(width: 20),
+                SizedBox(width: 5),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // intelliJ IDEA
                     Text(
-                      s,
+                      // just first letter capital and 8 letters
+                     "${title.substring(0, 8).toUpperCase()}...",
                       style: GoogleFonts.poppins(
-                        fontSize: 20,
+                        fontSize: 16,
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
-                      t,
+                      // just email without @gmail
+                      "${email.substring(0, email.indexOf('@'))}@...",
                       style: GoogleFonts.poppins(
                         fontSize: 15,
                         color: Colors.white,
@@ -170,6 +172,8 @@ class _HomeViewState extends State<HomeView> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Text(
                       'Balance',
@@ -190,11 +194,12 @@ class _HomeViewState extends State<HomeView> {
                             return CircularProgressIndicator();
                           }
                           return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
                                 'PKR: ${currencyFormat(double.parse(snapshot.data!['balance'].toString()))}',
                                 style: GoogleFonts.poppins(
-                                  fontSize: 20,
+                                  fontSize: 24,
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -214,20 +219,21 @@ class _HomeViewState extends State<HomeView> {
                         }),
                   ],
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    Get.to(() => SendMoneyView(
-                        loggedInUser: userModel!)); // userModel() is a function
-                  },
-                  style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.symmetric(horizontal: 30),
-                  ),
-                  child: wText(
-                    'Send Money',
-                    color: Colors.blue,
-                  ),
-                ),
               ],
+            ),
+            SizedBox(height: 10),
+            ElevatedButton(
+              onPressed: () {
+                Get.to(() => SendMoneyView(
+                    loggedInUser: userModel!)); // userModel() is a function
+              },
+              style: ElevatedButton.styleFrom(
+                padding: EdgeInsets.symmetric(horizontal: 30),
+              ),
+              child: wText(
+                'Send Money',
+                color: Colors.blue,
+              ),
             ),
           ],
         ),

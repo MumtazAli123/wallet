@@ -10,6 +10,7 @@ import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 import '../../../../global/global.dart';
 import '../../../../models/user_model.dart';
+import '../../wallet/controllers/wallet_controller.dart';
 import '../controllers/send_money_controller.dart';
 
 class SendMoneyView extends StatefulWidget {
@@ -22,14 +23,85 @@ class SendMoneyView extends StatefulWidget {
 
 class _SendMoneyViewState extends State<SendMoneyView> {
 
-  final controller = Get.put(SendMoneyController());
-  final _formKey = GlobalKey<FormState>();
+  final controller = Get.put(WalletController());
+  final controller2 = Get.put(SendMoneyController());
 
-  final  otherUsers = List<UserModel>.empty(growable: true);
+  final formKey = GlobalKey<FormState>();
   User? user = FirebaseAuth.instance.currentUser;
   UserModel loggedInUser = UserModel();
 
-  UserModel? recipient;
+  List<UserModel> otherUsers = [];
+
+
+  final fb = FirebaseFirestore.instance;
+
+  final TextEditingController transferNominalController =
+  TextEditingController();
+  final descriptionController = TextEditingController();
+
+  UserModel userModel = UserModel();
+
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserData();
+    if (user != null) {
+      fetchLoggedInUserBalance(user!.uid);
+    }
+  }
+
+
+  Future<void> fetchLoggedInUserBalance(String uid) async {
+    DocumentReference userDoc =
+    FirebaseFirestore.instance.collection('sellers').doc(uid);
+
+    DocumentSnapshot docSnapshot = await userDoc.get();
+
+    if (docSnapshot.exists) {
+      Map<String, dynamic>? userData =
+      docSnapshot.data() as Map<String, dynamic>?;
+
+      if (userData != null) {
+        double userBalance = (double.tryParse(userData['balance'].toString()) ?? 0.0);
+
+        setState(() {
+          loggedInUser.balance = userBalance;
+        });
+      }
+    }
+  }
+
+  Future<void> fetchUserData() async {
+    CollectionReference usersCollection =
+    FirebaseFirestore.instance.collection('sellers');
+
+    QuerySnapshot querySnapshot = await usersCollection.get();
+
+    otherUsers.clear();
+
+    for (DocumentSnapshot documentSnapshot in querySnapshot.docs) {
+      Map<String, dynamic> userData =
+      documentSnapshot.data() as Map<String, dynamic>;
+
+      String uid = documentSnapshot.id;
+
+      if (uid != user?.uid) {
+        UserModel otherUser = UserModel(
+          username: userData['name'],
+          name: userData['name'],
+          uid: uid,
+          balance: double.tryParse(userData['balance'].toString()) ?? 0.0,
+        );
+        otherUsers.add(otherUser);
+      }
+
+      setState(() {});
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,7 +117,7 @@ class _SendMoneyViewState extends State<SendMoneyView> {
               child: TextField(
                 // controller: controller.searchController,
                 onChanged: (value) {
-                  controller.getOtherUsers(value);
+                  controller2.getOtherUsers(value);
                 },
                 decoration: InputDecoration(
                   hintText: 'Search',
@@ -58,23 +130,23 @@ class _SendMoneyViewState extends State<SendMoneyView> {
             ),
             Expanded(
               child: Obx(() {
-                if (controller.isSearching.value) {
+                if (controller2.isSearching.value) {
                   return ListView.builder(
-                    itemCount: controller.searchList.length,
+                    itemCount: controller2.searchList.length,
                     itemBuilder: (context, index) {
                       return ListTile(
                         leading: CircleAvatar(
                           backgroundImage: NetworkImage(
-                              controller.searchList[index].image),
+                              controller2.searchList[index].image),
                         ),
-                        title: Text(controller.searchList[index].name),
-                        subtitle: Text(controller.searchList[index].phone),
-                        trailing: Text(controller.searchList[index].email,
+                        title: Text(controller2.searchList[index].name),
+                        subtitle: Text(controller2.searchList[index].phone),
+                        trailing: Text(controller2.searchList[index].email,
                             style: TextStyle(color: Colors.grey),
                             overflow: TextOverflow.ellipsis
                             ,maxLines: 1,),
                         onTap: () {
-                            _buildDialogSendMoney();
+                            _buildDialogSendMoney(otherUsers[index]);
                           // _buildDialog();
                         },
                       );
@@ -82,13 +154,13 @@ class _SendMoneyViewState extends State<SendMoneyView> {
                   );
                 } else {
                   return ListView.builder(
-                    itemCount: controller.otherUsers.length,
+                    itemCount: controller2.otherUsers.length,
                     itemBuilder: (context, index) {
                       return ListTile(
-                        title: Text(controller.otherUsers[index].name),
-                        subtitle: Text(controller.otherUsers[index].email),
+                        title: Text(controller2.otherUsers[index].name),
+                        subtitle: Text(controller2.otherUsers[index].email),
                         onTap: () {
-                          _buildDialogSendMoney();
+                          _buildDialogSendMoney(otherUsers[index]);
                           // _buildDialog();
                         },
                       );
@@ -104,133 +176,18 @@ class _SendMoneyViewState extends State<SendMoneyView> {
   }
 
 
-  void _buildDialogSendMoney() {
-    Get.defaultDialog(
-      backgroundColor: Colors.white,
-      title: 'Send Money',
-      // text: 'Enter amount to send',
-      content: SingleChildScrollView(
-        child: Expanded(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              TextFormField(
-                controller: controller.transferNominalController,
-                keyboardType: TextInputType.number,
-                decoration: InputDecoration(
-                  labelText: 'Amount',
-                  hintText: 'Enter amount',
-                ),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter amount';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 2.0),
-              TextField(
-                controller: controller.descriptionController,
-                decoration: InputDecoration(
-                  labelText: 'Description',
-                  hintText: 'Enter description',
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-      actions: [
-        ElevatedButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: Text('Cancel'),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            Get.back();
-            _validateField(recipient!);
-          },
-          child: Text('Send'),
-        ),
-      ],
-    );
-  }
-
-
-
-  _validateField(UserModel recipient) {
-    if (controller.transferNominalController.text.isEmpty) {
-      QuickAlert.show(
-        backgroundColor: Colors.white,
-        context: context,
-        type: QuickAlertType.error,
-        title: 'Error',
-        text: 'Please enter amount',
-      );
-    }else if (recipient == null) {
-      QuickAlert.show(
-        backgroundColor: Colors.white,
-        context: context,
-        type: QuickAlertType.error,
-        title: 'Error',
-        text: 'Please select a recipient to send money to',
-      );
-    }
-    else {
-      // _otpSendFromFirebase();
-      // _otpSendMoney(recipient!);
-      // sendMoneyToUser(recipient);
-      _buildSureDialog(recipient);
-    }
-  }
-
-  void _buildSureDialog(UserModel recipient) {
-    Get.defaultDialog(
-      backgroundColor: Colors.white,
-      title: 'Send Money',
-      content: Column(
-        children: [
-          Text('Are you sure you want to send money to ${recipient.name}'),
-          SizedBox(height: 10.0),
-          Text('Amount: ${controller.transferNominalController.text}'),
-          SizedBox(height: 10.0),
-          Text('Description: ${controller.descriptionController.text}'),
-        ],
-      ),
-      actions: [
-        ElevatedButton(
-          onPressed: () {
-            Get.back();
-          },
-          child: Text('Cancel'),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            Get.back();
-            sendMoneyToUser(recipient);
-          },
-          child: Text('Send'),
-        ),
-      ],
-    );
-  }
-
   void sendMoneyToUser(UserModel recipient) async {
     //   send and save statement in_out of users
     if (user != null) {
-      String enteredValue = controller.transferNominalController.text;
+      String enteredValue = transferNominalController.text;
 
-      int transferAmount = int.tryParse(enteredValue) ?? 0;
+      double transferAmount = double.parse(enteredValue);
 
       if (loggedInUser.balance != null &&
           loggedInUser.balance! >= transferAmount) {
         double updatedBalance = loggedInUser.balance! - transferAmount;
 
-        double recipientUpdatedBalance = (recipient.balance!) + transferAmount;
+        double recipientUpdatedBalance = (double.tryParse(recipient.balance.toString()) ?? 0.0) + transferAmount;
         //   update balance of sender and receiver and description of transaction
         await FirebaseFirestore.instance
             .collection('sellers')
@@ -252,8 +209,8 @@ class _SendMoneyViewState extends State<SendMoneyView> {
           'phone': recipient.phone ?? 'No phone',
           'email': recipient.email ?? 'No email',
           'type': "send",
-          'amount': controller.transferNominalController.text.trim(),
-          'description': controller.descriptionController.text.trim(),
+          'amount': transferNominalController.text.trim(),
+          'description': descriptionController.text.trim(),
           'created_at': DateTime.now(),
 
         });
@@ -268,8 +225,8 @@ class _SendMoneyViewState extends State<SendMoneyView> {
           'phone': sharedPreferences?.getString('phone') ?? 'No phone',
           'email': sharedPreferences?.getString('email') ?? 'No email',
           'type': "receive",
-          'amount': controller.transferNominalController.text.trim(),
-          'description': controller.descriptionController.text.trim(),
+          'amount': transferNominalController.text.trim(),
+          'description': descriptionController.text.trim(),
           'created_at': DateTime.now(),
         });
 
@@ -283,7 +240,7 @@ class _SendMoneyViewState extends State<SendMoneyView> {
             snackPosition: SnackPosition.BOTTOM);
 
         _buildDialogWithDataReceiver(
-            recipient.username, transferAmount, recipient.name!, controller.descriptionController.text.trim());
+            recipient.username, transferAmount.toInt(), recipient.name!, descriptionController.text.trim());
       } else {
         Get.snackbar('Error', 'Insufficient balance to send money',
             backgroundColor: Colors.red,
@@ -292,6 +249,107 @@ class _SendMoneyViewState extends State<SendMoneyView> {
       }
     }
   }
+
+  void _buildDialogSendMoney(UserModel recipient) {
+    QuickAlert.show(
+      backgroundColor: Colors.white,
+      context: context,
+      type: QuickAlertType.info,
+      title: 'Send Money',
+      // text: 'Enter amount to send',
+      textAlignment: TextAlign.center,
+      widget: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            TextFormField(
+              controller: transferNominalController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                labelText: 'Amount',
+                hintText: 'Enter amount',
+              ),
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'Please enter amount';
+                }
+                return null;
+              },
+            ),
+            SizedBox(height: 2.0),
+            TextField(
+              controller: descriptionController,
+              decoration: InputDecoration(
+                labelText: 'Description',
+                hintText: 'Enter description',
+              ),
+            ),
+          ],
+        ),
+      ),
+      onConfirmBtnTap: () {
+        Get.back();
+        _validateField(recipient);
+      },
+    );
+  }
+
+  _validateField(UserModel? recipient) {
+    if (transferNominalController.text.isEmpty) {
+      QuickAlert.show(
+        backgroundColor: Colors.white,
+        context: context,
+        type: QuickAlertType.error,
+        title: 'Error',
+        text: 'Please enter amount',
+      );
+    }else if (recipient == null) {
+      QuickAlert.show(
+        backgroundColor: Colors.white,
+        context: context,
+        type: QuickAlertType.error,
+        title: 'Error',
+        text: 'Please select a recipient to send money to',
+      );
+    }
+    else {
+      // _otpSendFromFirebase();
+      // _otpSendMoney(recipient!);
+      // sendMoneyToUser(recipient);
+      _sureYouWantToSendMoney(recipient);
+    }
+  }
+
+  void _sureYouWantToSendMoney(UserModel recipient) {
+    QuickAlert.show(
+      backgroundColor: Colors.white,
+      context: context,
+      type: QuickAlertType.confirm,
+      title: 'Send Money',
+      text: 'Are you sure you want to send money to ${recipient.name}?',
+      widget: Column(
+        children: [
+          Divider(),
+          ListTile(
+            leading: Icon(Icons.person),
+            title: Text('Name: ${recipient.name}'),
+            subtitle: Text('Phone: ${recipient.phone}'),
+          ),
+          ListTile(
+            leading: Icon(Icons.money),
+            title: Text('Amount: PKR ${transferNominalController.text}'),
+            subtitle: Text('Description: ${descriptionController.text}'),
+          ),
+        ],
+      ),
+      onConfirmBtnTap: () {
+        sendMoneyToUser(recipient);
+      },
+    );
+  }
+
 
   void _buildDialogWithDataReceiver(
       String? username, int transferAmount, String fullName, String description) {

@@ -23,7 +23,7 @@ class SendView extends StatefulWidget {
 class _SendViewState extends State<SendView> {
   final controller = Get.put(WalletController());
 
-  final _formKey = GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
   User? user = FirebaseAuth.instance.currentUser;
   UserModel loggedInUser = UserModel();
 

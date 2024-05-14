@@ -29,7 +29,6 @@ class _StatementViewState extends State<StatementView> {
 
   @override
   void initState() {
-    controller.statementInOut();
     super.initState();
     isLoading = false;
   }
