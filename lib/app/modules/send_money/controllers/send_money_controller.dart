@@ -56,11 +56,11 @@ class SendMoneyController extends GetxController {
     // sellers
     otherUsers.clear();
     await FirebaseFirestore.instance.collection('sellers').get().then((value) {
-      value.docs.forEach((element) {
+      for (var element in value.docs) {
         if (element.id != user!.uid) {
           otherUsers.add(UserModel.fromMap(element.data()));
         }
-      });
+      }
     });
     if (query.isEmpty) {
       searchList.clear();
@@ -69,11 +69,11 @@ class SendMoneyController extends GetxController {
       isSearching.value = true;
       searchList.clear();
       // if search name any type letter in search bar then show the result
-      otherUsers.forEach((element) {
+      for (var element in otherUsers) {
         if (element.name!.toLowerCase().contains(query.toLowerCase())) {
           searchList.add(element);
         }
-      });
+      }
     }
   }
 

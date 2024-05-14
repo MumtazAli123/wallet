@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:logger/logger.dart';
 import 'package:wallet/models/seller_model.dart';
 
 class WalletController extends GetxController {
@@ -27,10 +25,6 @@ class WalletController extends GetxController {
 
   var incomeList = [].obs;
 
-  @override
-  void onInit() {
-    super.onInit();
-  }
 
   void increment() => totalBalance.value++;
   void decrement(double parse) {

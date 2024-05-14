@@ -36,6 +36,7 @@ class _StatementViewState extends State<StatementView> {
     final lastYear = date.subtract(Duration(days: 365));
   }
 
+  @override
   void initState() {
     super.initState();
     controller.getStatement(

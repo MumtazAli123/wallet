@@ -119,4 +119,8 @@ class LoginController extends GetxController {
       }
     });
   }
+
+  void facebookSignIn() {
+
+  }
 }
