@@ -18,7 +18,6 @@ void main() async {
   await GetStorage.init();
   sharedPreferences = await SharedPreferences.getInstance();
 
-
   runApp(MyApp());
 }
 

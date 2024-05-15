@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:wallet/global/global.dart';
 import 'package:wallet/models/seller_model.dart';
 
 class WalletController extends GetxController {
@@ -13,6 +14,11 @@ class WalletController extends GetxController {
   var sendMoney = 0.0.obs;
 
   var type = ''.obs;
+
+  var name = ''.obs;
+  var phone = ''.obs;
+  var email = ''.obs;
+  var balance = ''.obs;
 
   var isRefresh = false.obs;
 
@@ -95,6 +101,15 @@ class WalletController extends GetxController {
   void clearAll() {
     clear();
     clearType();
+  }
+
+  void streamArticle() {
+    db.collection('sellers').doc(uid).snapshots().listen((event) {
+      name.value = event.data()?['name'] ?? '';
+      phone.value = event.data()?['phone'] ?? '';
+      email.value = event.data()?['email'] ?? '';
+      balance.value = event.data()?['balance'] ?? '';
+    });
   }
 
 }

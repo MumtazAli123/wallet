@@ -6,7 +6,7 @@
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
 	<string>Wallet</string>
-	<key>FLTEnableImpeller</key>
+    <key>FLTEnableImpeller</key>
     <false />
     <key>NSPhotoLibraryUsageDescription</key>
     <string>Allow access to your photos</string>
@@ -23,7 +23,7 @@
 	<key>CFBundleName</key>
 	<string>wallet</string>
 	<key>CFBundlePackageType</key>
-	<string>APPL</string>
+	<string>APPLY</string>
 	<key>CFBundleShortVersionString</key>
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>

@@ -78,17 +78,9 @@ class _HomeViewState extends State<HomeView> {
   // statement data
   void initState() {
     super.initState();
-    isLoading = true;
-    getAllData().then((value) {
-      setState(() {
-        isLoading = false;
-      });
-    });
-    getAllStatement().then((value) {
-      setState(() {
-        isLoading = false;
-      });
-    });
+    getAllData();
+    getAllStatement();
+
   }
 
   @override
@@ -106,10 +98,10 @@ class _HomeViewState extends State<HomeView> {
         : SingleChildScrollView(
             child: Column(
               children: [
-                _buildHeader(
-                    name ?? 'name', email ?? 'email', image ?? 'image'),
-                _buildBalance(balance ?? 'balance'),
-                _buildStatement(),
+                // _buildHeader(
+                //     name ?? 'name', email ?? 'email', image ?? 'image'),
+                // _buildBalance(balance ?? 'balance'),
+                // _buildStatement(),
               ],
             ),
           );

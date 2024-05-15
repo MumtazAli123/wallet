@@ -11,7 +11,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:wallet/app/modules/home/views/bottom_page_view.dart';
-import 'package:wallet/app/modules/home/views/home_view.dart';
+import 'package:wallet/app/modules/home/views/mob_home_view.dart';
 
 import '../../../../global/global.dart';
 import '../../../../models/user_model.dart';

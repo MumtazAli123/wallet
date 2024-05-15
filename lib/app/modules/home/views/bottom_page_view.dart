@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:fancy_bottom_navigation_plus/fancy_bottom_navigation_plus.dart';
 
 import 'package:get/get.dart';
-import 'package:wallet/app/modules/home/views/home_view.dart';
+import 'package:wallet/app/modules/home/views/mob_home_view.dart';
+import 'package:wallet/app/modules/home/views/web_home_view.dart';
 
 import '../../../../widgets/my_drawer.dart';
 import '../controllers/home_controller.dart';
@@ -16,11 +17,6 @@ class BottomPageView extends GetView {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: MyDrawer(),
-      appBar: AppBar(
-        title: Text('Home'),
-        centerTitle: true,
-      ),
       body: SizedBox.expand(
         child: PageView(
           pageSnapping: true,
@@ -29,7 +25,14 @@ class BottomPageView extends GetView {
             parent: NeverScrollableScrollPhysics(),
           ),
           children: [
-            HomeView(),
+            // HomeView(),
+            WebHomeView(),
+            Container(
+              color: Colors.blue,
+              child: Center(
+                child: Text('Page 0'),
+              ),
+            ),
             Container(
               color: Colors.red,
               child: Center(

@@ -46,6 +46,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.HOME,
+      // page: () => BottomPageView(),
       page: () => LayoutBuilder(builder: (context, constraints) {
         if (constraints.maxWidth < 600) {
           return BottomPageView();

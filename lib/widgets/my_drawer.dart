@@ -47,9 +47,9 @@ class _MyDrawerState extends State<MyDrawer> {
       otherAccountsPictures: [
         IconButton(
           onPressed: () {
-            controller.updateSellerName(
-              name: name,
-            );
+            // controller.updateSellerName(
+            //   name: name,
+            // );
           },
           icon: const Icon(Icons.edit),
         ),

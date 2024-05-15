@@ -13,7 +13,7 @@ dependencies:
   firebase_messaging: any
   firebase_storage: any
   firebase_core: ^2.31.0
-  camera: 0.10.6
+  camera: ^0.11.0
   get_storage: ^2.1.1
   provider: 6.1.2
   get: 4.6.6

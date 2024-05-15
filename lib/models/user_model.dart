@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserModel {
@@ -7,24 +6,26 @@ class UserModel {
   String? email;
   String? phone;
   double? balance;
+  double? lastTransaction;
   String? image;
   String? sellerType;
+
   String? createdAt;
   String? updatedAt;
   String? uid;
 
-  UserModel({
-    this.uid,
-    this.name,
-    this.username,
-    this.email,
-    this.phone,
-    this.image,
-    this.balance,
-    this.sellerType,
-    this.createdAt,
-    this.updatedAt
-  });
+  UserModel(
+      {this.uid,
+      this.name,
+      this.username,
+      this.email,
+      this.phone,
+      this.image,
+      this.balance,
+      this.lastTransaction,
+      this.sellerType,
+      this.createdAt,
+      this.updatedAt});
 
   // receiving data from the server
   factory UserModel.fromMap(map) {
@@ -35,17 +36,13 @@ class UserModel {
       name: map['name'],
       username: map['username'],
       image: map['image'],
-      balance: map['balance'],
+      balance: map['balance'] ,
+      lastTransaction: map['lastTransaction'],
       sellerType: map['sellerType'],
       createdAt: map['createdAt'],
       updatedAt: map['updatedAt'],
     );
   }
-
-
-
-
-
 
   // sending data to the server
 
@@ -58,10 +55,10 @@ class UserModel {
       'image': image,
       'username': username,
       'balance': balance,
+      'lastTransaction': lastTransaction,
       'sellerType': sellerType,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
-
     };
   }
 
@@ -74,6 +71,7 @@ class UserModel {
       username: doc['username'],
       image: doc['image'],
       balance: doc['balance'],
+      lastTransaction: doc['lastTransaction'],
       sellerType: doc['sellerType'],
       createdAt: doc['createdAt'],
       updatedAt: doc['updatedAt'],
