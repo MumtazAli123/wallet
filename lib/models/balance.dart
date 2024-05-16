@@ -1,10 +1,10 @@
 class BalanceModel{
   String? id;
   String? name;
-
+  String? phone;
   String? description;
   String? amount;
-  String? date;
+  String? created_at;
   String? type;
   String? category;
   String? userId;
@@ -24,7 +24,8 @@ class BalanceModel{
     this.name,
     this.description,
     this.amount,
-    this.date,
+    this.phone,
+    this.created_at,
     this.type,
     this.category,
     this.userId,
@@ -44,7 +45,8 @@ class BalanceModel{
     name = json['name'];
     description = json['description'];
     amount = json['amount'];
-    date = json['date'];
+    phone = json['phone'];
+    created_at = json['created_at'];
     type = json['type'];
     category = json['category'];
     userId = json['userId'];
@@ -60,13 +62,15 @@ class BalanceModel{
   }
 
 
+
   Map<String, dynamic> toJson(){
     final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['name'] = name;
     data['description'] = description;
     data['amount'] = amount;
-    data['date'] = date;
+    data['created_at'] = created_at;
+    data['phone'] = phone;
     data['type'] = type;
     data['category'] = category;
     data['userId'] = userId;

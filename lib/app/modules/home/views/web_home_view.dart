@@ -3,18 +3,24 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:get_time_ago/get_time_ago.dart';
+import 'package:quickalert/quickalert.dart';
 import 'package:wallet/global/global.dart';
 import 'package:wallet/widgets/currency_format.dart';
 
+import '../../../../models/balance.dart';
+import '../../../../models/user_model.dart';
 import '../../../../widgets/mix_widgets.dart';
 import '../../../../widgets/my_drawer.dart';
 import '../controllers/home_controller.dart';
 
 class WebHomeView extends GetView {
-  WebHomeView({super.key});
+  final UserModel? userModel;
+  WebHomeView({super.key, this.userModel});
 
   @override
   final controller = Get.put(HomeController());
+  final DateTime now = DateTime.now();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -72,13 +78,13 @@ class WebHomeView extends GetView {
             child: Padding(
               padding: const EdgeInsets.all(18.0),
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   wText("Welcome, ${sharedPreferences?.getString('name')}",
                       color: Colors.white, size: 20.0),
                   SizedBox(
-                    height: 30.0,
+                    height: 60.0,
                   ),
                   StreamBuilder(
                       stream: FirebaseFirestore.instance
@@ -108,6 +114,9 @@ class WebHomeView extends GetView {
                                     color: Colors.white,
                                     fontWeight: FontWeight.w500,
                                     fontSize: 12),
+                              ),
+                              SizedBox(
+                                height: 10.0,
                               ),
                               wText(
                                   // show first 3 and ... last 4 digits of phone number
@@ -183,6 +192,25 @@ class WebHomeView extends GetView {
                                 itemCount: 4,
                                 itemBuilder: (context, index) {
                                   return ListTile(
+                                    onTap: () {
+                                      _buildDetailDialog(
+                                          context,
+                                          BalanceModel(
+                                            name: snapshot.data?.docs[index]
+                                                ['name'],
+                                            description: snapshot.data?.docs[index]
+                                                ['description'],
+                                            amount: snapshot.data?.docs[index]
+                                                ['amount'],
+                                            phone: snapshot.data?.docs[index]
+                                                ['phone'],
+                                            type: snapshot.data?.docs[index]
+                                                ['type'],
+                                            created_at:
+                                                'Time: ${GetTimeAgo.parse(DateTime.parse(snapshot.data!.docs[index]['created_at'].toDate().toString()), locale: 'en')}'
+                                                '\nDate: ${DateTime.parse(snapshot.data!.docs[index]['created_at'].toDate().toString()).toString().substring(0, 16)}',
+                                          ));
+                                    },
                                     leading: CircleAvatar(
                                       child: Text(
                                           // name first letter
@@ -229,14 +257,15 @@ class WebHomeView extends GetView {
   _buildContent() {
     final size = MediaQuery.of(Get.context!).size;
     return Padding(
-      padding: const EdgeInsets.only(top: 22.0),
+      padding: const EdgeInsets.only(
+          top: 22.0, bottom: 22.0, left: 10.0, right: 10.0),
       child: Card(
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
         child: Container(
           // acquires 90% of the height of the screen
-          height: size.height * 0.8,
+          height: size.height * 0.6,
           width: 600,
           margin: EdgeInsets.all(15.0),
           child: Column(
@@ -250,46 +279,71 @@ class WebHomeView extends GetView {
                 ],
               ),
               Divider(),
-              Expanded(
-                  flex: 1,
-                  child: StreamBuilder(
-                    stream: FirebaseFirestore.instance
-                        .collection('sellers')
-                        .doc(sharedPreferences?.getString('uid'))
-                        .collection('statement')
-                        .orderBy('created_at', descending: true)
-                        .snapshots(),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return ListView.builder(
-                          itemCount: snapshot.data?.docs.length,
-                          itemBuilder: (context, index) {
-                            return ListTile(
-                              leading: CircleAvatar(
-                                child: Text(
-                                    // name first letter
-                                    snapshot.data?.docs[index]['name'] == null
-                                        ? ''
-                                        : snapshot.data?.docs[index]['name'][0]
-                                            .toUpperCase()),
-                              ),
-                              title: Text(snapshot.data?.docs[index]['name']),
-                              subtitle: Text(
-                                  snapshot.data?.docs[index]['description']),
+              controller.isLoading.value
+                  ? Center(child: CircularProgressIndicator())
+                  : Expanded(
+                      child: StreamBuilder(
+                        stream: FirebaseFirestore.instance
+                            .collection('sellers')
+                            .doc(sharedPreferences?.getString('uid'))
+                            .collection('statement')
+                            .orderBy('created_at', descending: true)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return ListView.builder(
+                              itemCount: snapshot.data!.docs.length,
+                              itemBuilder: (context, index) {
+                                return ListTile(
+                                  leading: CircleAvatar(
+                                    child: Text(
+                                        // name first letter
+                                        snapshot.data?.docs[index]['name'] ==
+                                                null
+                                            ? ''
+                                            : snapshot
+                                                .data?.docs[index]['name'][0]
+                                                .toUpperCase()),
+                                  ),
+                                  title:
+                                      Text(snapshot.data?.docs[index]['name']),
+                                  subtitle: Text(snapshot.data?.docs[index]
+                                      ['description']),
 
-                              //   type and amount
-                              trailing: wText(
-                                snapshot.data?.docs[index]['type'] == 'credit'
-                                    ? '+${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}'
-                                    : '-${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}',
-                              ),
+                                  //   type and amount
+                                  trailing: wText(
+                                    snapshot.data?.docs[index]['type'] ==
+                                            'credit'
+                                        ? '+${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}'
+                                        : '-${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}',
+                                  ),
+                                  onTap: () {
+                                    _buildDetailDialog(
+                                        context,
+                                        BalanceModel(
+                                          name: snapshot.data?.docs[index]
+                                              ['name'],
+                                          description: snapshot
+                                              .data?.docs[index]['description'],
+                                          amount: snapshot.data?.docs[index]
+                                              ['amount'],
+                                          phone: snapshot.data?.docs[index]
+                                              ['phone'],
+                                          type: snapshot.data?.docs[index]
+                                              ['type'],
+                                          created_at:
+                                              'Time: ${GetTimeAgo.parse(DateTime.parse(snapshot.data!.docs[index]['created_at'].toDate().toString()), locale: 'en')}'
+                                              '\nDate: ${DateTime.parse(snapshot.data!.docs[index]['created_at'].toDate().toString()).toString().substring(0, 16)}',
+                                        ));
+                                  },
+                                );
+                              },
                             );
-                          },
-                        );
-                      }
-                      return Text('No Transactions');
-                    },
-                  )),
+                          }
+                          return Text('No Transactions');
+                        },
+                      ),
+                    ),
             ],
           ),
         ),
@@ -310,6 +364,83 @@ class WebHomeView extends GetView {
         ],
       ),
     );
+  }
+
+  void _buildDetailDialog(BuildContext context, BalanceModel model) {
+    if (isMobile(context)) {
+      _buildDetailMobile(context, model);
+    } else {
+      _buildDetailDesktop(context, model);
+    }
+  }
+
+  isMobile(BuildContext context) {
+    return MediaQuery.of(context).size.width < 600;
+  }
+
+  _buildDetailMobile(BuildContext context, BalanceModel model) {
+    QuickAlert.show(
+        context: context,
+        type: QuickAlertType.info,
+        title: model.name,
+        text: "Details",
+        widget: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Divider(),
+            wText(
+              color: Colors.black,
+              "Amount: ${model.type == 'credit' ? '+${currencyFormat(double.parse(model.amount.toString()))}' : '- ${currencyFormat(double.parse(model.amount.toString()))}'}",
+            ),
+            Text("Purpose: ${model.description}",
+                style: TextStyle(color: Colors.black)),
+            //   phone number
+
+            Text("Type: ${model.type == 'credit' ? 'Credit' : 'Debit'}",
+                style: TextStyle(color: Colors.black)),
+            Text("Phone: ${model.phone}",
+                style: TextStyle(color: Colors.black)),
+            Text(
+              '${model.created_at}',
+              style: TextStyle(color: Colors.black),
+            ),
+          ],
+        ));
+  }
+
+  _buildDetailDesktop(BuildContext context, BalanceModel model) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(model.name ?? ''),
+            content: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text("Amount: ${model.amount}"),
+                Text(model.type == 'credit' ? 'Credit' : 'Debit'),
+                Text("Purpose: ${model.description}"),
+                Text("Type: ${model.type}"),
+                Text("Phone: ${model.phone}"),
+                //   date
+                Text(
+                  '${model.created_at}',
+                ),
+              ],
+            ),
+            actions: [
+              TextButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text('Close'))
+            ],
+          );
+        });
   }
 
   currencyFormat(double? balance) {

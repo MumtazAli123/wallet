@@ -14,6 +14,7 @@ class HomeController extends GetxController {
   var currentIndex = 0.obs;
 
   var isLoading = false.obs;
+  final isMobile = false.obs;
 
   UserModel loggedInUser = UserModel();
 
