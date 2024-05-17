@@ -26,7 +26,7 @@ class BottomPageView extends GetView {
           ),
           children: [
             // HomeView(),
-            WebHomeView(),
+            HomeView(),
             Container(
               color: Colors.blue,
               child: Center(

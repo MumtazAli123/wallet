@@ -11,6 +11,7 @@ import 'package:quickalert/widgets/quickalert_dialog.dart';
 
 import '../../../../global/global.dart';
 import '../../../../models/user_model.dart';
+import '../../../../widgets/mix_widgets.dart';
 import '../controllers/statement_controller.dart';
 
 class StatementView extends StatefulWidget {
@@ -36,113 +37,74 @@ class _StatementViewState extends State<StatementView> {
     final lastYear = date.subtract(Duration(days: 365));
   }
 
+  bool isLoading = false;
+
   @override
   void initState() {
     super.initState();
-    controller.getStatement(
-        widget.loggedInUser!.name.toString()
-    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("${widget.loggedInUser!.name}"),
+        title: Text(sharedPreferences!.getString('name')!),
         centerTitle: true,
       ),
-      body:  SingleChildScrollView(
-        child: StreamBuilder(
-            stream: FirebaseFirestore.instance
-                .collection('sellers')
-                .doc(user!.uid)
-                .collection('statement')
-                .orderBy('created_at', descending: true)
-                .snapshots(),
-            builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-              return ListView.builder(
-                itemExtent: 100,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: snapshot.data!.docs.length,
-                itemBuilder: (context, index) {
-                  return _buildStatementItem(snapshot.data!.docs[index]);
-                },
-              );
-            }),
-      ),
-    );
-  }
-  _buildStatementItem(param0) {
-    return Padding(
-      padding: const EdgeInsets.all(4.0),
-      child: Container(
-        width: 450,
-        alignment: Alignment.center,
-        margin: EdgeInsets.only(bottom: 10),
-        padding: EdgeInsets.all(10),
-        decoration: BoxDecoration(
-          color: Colors.grey[200],
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: ListTile(
-          onTap: () {
-            _buildDetailDialog(param0);
-          },
-          leading: CircleAvatar(
-            backgroundColor: Colors.blue,
-            child: Text(
-              "${param0['name'][0]}",
-              style: GoogleFonts.poppins(
-                fontSize: 18,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          title: Text(
-            "${param0['name']}",
-            style: GoogleFonts.poppins(
-              fontSize: 14,
-              color: Colors.black,
-            ),
-          ),
-          subtitle: Text(
-            GetTimeAgo.parse(
-                DateTime.parse(param0['created_at'].toDate().toString()),
-                locale: 'en'),
-          ),
-          trailing: Column(
-            children: [
-              Text(
-                "${param0['type'] == 'send' ? '-' : '+'} ${currencyFormat(double.parse(param0['amount'].toString()))}",
-                style: GoogleFonts.poppins(
-                  fontSize: 12,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(height: 5),
-              Text(
-                param0['type'] == 'send' ? 'Sent' : 'Received',
-              )
-            ],
-          ),
-        ),
-      ),
+      body: _buildBody(),
     );
   }
 
-  Future<void> _buildDetailDialog(param0) async {
-    // is mobile or tablet or desktop
-    return isMobile(context)
-        ? _buildDetailMobile(param0)
-        : _buildDetailDesktop(param0);
+  _buildBody(){
+    return isLoading == true
+        ? Center(child: CircularProgressIndicator())
+        : StreamBuilder(
+          stream: FirebaseFirestore.instance
+              .collection('sellers')
+              .doc(sharedPreferences?.getString('uid'))
+              .collection('statement')
+              .orderBy('created_at', descending: true)
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return ListView.builder(
+                itemCount: snapshot.data!.docs.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    onTap: () {
+                      isMobile(context)
+                          ? _buildDetailMobile(snapshot.data!.docs[index])
+                          : _buildDetailDesktop(snapshot.data!.docs[index]);
+                    },
+                    leading: CircleAvatar(
+                      child: Text(
+                        // name first letter
+                          snapshot.data?.docs[index]['name'] ==
+                              null
+                              ? ''
+                              : snapshot
+                              .data?.docs[index]['name'][0]
+                              .toUpperCase()),
+                    ),
+                    title:
+                    Text(snapshot.data?.docs[index]['name']),
+                    subtitle: Text(snapshot.data?.docs[index]
+                    ['description']),
+
+                    //   type and amount
+                    trailing: wText(
+                      snapshot.data?.docs[index]['type'] ==
+                          'send'
+                          ? '+${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}'
+                          : '-${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}',
+                    ),
+                  );
+                },
+              );
+            }
+            return wText('No Transactions');
+          },
+        );
   }
 
   isMobile(BuildContext context) {
@@ -176,7 +138,7 @@ class _StatementViewState extends State<StatementView> {
               ),
             ),
             Text(
-              'Type: ${param0['type']}',
+              'Type: ${param0['type'] == 'send' ? 'Received' : 'Sent'}',
               style: GoogleFonts.poppins(
                 fontSize: 15,
                 color: Colors.black,
@@ -240,7 +202,7 @@ class _StatementViewState extends State<StatementView> {
             ),
           ),
           Text(
-            'Type: ${param0['type']}',
+            'Type: ${param0['type'] == 'send' ? 'Received' : 'Sent'}',
             style: GoogleFonts.poppins(
               fontSize: 12,
             ),
