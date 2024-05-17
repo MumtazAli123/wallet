@@ -74,9 +74,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.SEND_MONEY,
-      page: () => SendMoneyView(
-        loggedInUser: UserModel(),
-      ),
+      page: () => SendMoneyView(),
       binding: SendMoneyBinding(),
     ),
   ];

@@ -32,6 +32,7 @@ class WalletController extends GetxController {
   var incomeList = [].obs;
 
 
+
   void increment() => totalBalance.value++;
   void decrement(double parse) {
     if (totalBalance.value > 0) {
@@ -79,6 +80,9 @@ class WalletController extends GetxController {
       'phone': userModel.phone,
       'type': 'income',
       'amount': addMoney.value,
+      'description': descriptionController.text.trim() == ''
+          ? 'No description'
+          : userModel.name,
       'created_at': DateTime.now(),
     });
     refresh();

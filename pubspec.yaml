@@ -29,6 +29,7 @@ dependencies:
   fancy_bottom_navigation_plus: 1.0.3
   flutter: 
     sdk: flutter
+  awesome_dialog: ^3.2.1
 
 dev_dependencies: 
   flutter_lints: ^4.0.0

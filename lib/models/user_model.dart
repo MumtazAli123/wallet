@@ -6,7 +6,7 @@ class UserModel {
   String? email;
   String? phone;
   double? balance;
-  double? lastTransaction;
+  String? lastTransaction;
   String? image;
   String? sellerType;
 

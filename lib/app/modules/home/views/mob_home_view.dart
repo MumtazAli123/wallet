@@ -209,8 +209,7 @@ class _HomeViewState extends State<HomeView> {
             SizedBox(height: 10),
             ElevatedButton(
               onPressed: () {
-                Get.to(() => SendMoneyView(
-                    loggedInUser: userModel!)); // userModel() is a function
+                Get.to(() => SendMoneyView()); // userModel() is a function
               },
               style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.symmetric(horizontal: 30),

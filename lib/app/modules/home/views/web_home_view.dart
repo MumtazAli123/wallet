@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -12,6 +13,7 @@ import '../../../../models/balance.dart';
 import '../../../../models/user_model.dart';
 import '../../../../widgets/mix_widgets.dart';
 import '../../../../widgets/my_drawer.dart';
+import '../../send_money/views/send_money_view.dart';
 import '../controllers/home_controller.dart';
 
 class WebHomeView extends GetView {
@@ -21,6 +23,9 @@ class WebHomeView extends GetView {
   @override
   final controller = Get.put(HomeController());
   final DateTime now = DateTime.now();
+  final user = FirebaseAuth.instance.currentUser;
+
+  UserModel? model;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,7 +86,7 @@ class WebHomeView extends GetView {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  wText("Welcome, ${sharedPreferences?.getString('name')}",
+                  wText("${sharedPreferences?.getString('name')}",
                       color: Colors.white, size: 20.0),
                   SizedBox(
                     height: 60.0,
@@ -89,7 +94,7 @@ class WebHomeView extends GetView {
                   StreamBuilder(
                       stream: FirebaseFirestore.instance
                           .collection('sellers')
-                          .doc(sharedPreferences?.getString('uid'))
+                          .doc(user!.uid)
                           .snapshots(),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
@@ -133,125 +138,142 @@ class WebHomeView extends GetView {
               ),
             ),
           ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              ElevatedButton.icon(
-                onPressed: () {},
-                label: wText('Add Money', color: Colors.white, size: 18.0),
-                icon: Icon(Icons.add, color: Colors.white),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue[900],
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                ),
-              ),
-              ElevatedButton.icon(
-                onPressed: () {},
-                label: wText('Send Money', color: Colors.white, size: 18.0),
-                icon: Icon(Icons.send, color: Colors.white),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue[900],
-                  padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                ),
-              ),
-            ],
-          ),
+          _buildAddSendMoneyButton(double, model),
           SizedBox(
             height: 20.0,
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              child: Container(
-                width: 600,
-                height: size.height * 0.4,
-                margin: EdgeInsets.all(20.0),
-                child: Column(
-                  children: [
-                    wText('Recent Transactions', size: 20.0),
-                    Divider(),
-                    Expanded(
-                      flex: 1,
-                      // just recent transactions list 10 items
-                      child: StreamBuilder(
-                        stream: FirebaseFirestore.instance
-                            .collection('sellers')
-                            .doc(sharedPreferences?.getString('uid'))
-                            .collection('statement')
-                            .orderBy('created_at', descending: true)
-                            .limit(10)
-                            .snapshots(),
-                        builder: (context, snapshot) {
-                          try {
-                            if (snapshot.hasData) {
-                              return ListView.builder(
-                                itemCount: 4,
-                                itemBuilder: (context, index) {
-                                  return ListTile(
-                                    onTap: () {
-                                      _buildDetailDialog(
-                                          context,
-                                          BalanceModel(
-                                            name: snapshot.data?.docs[index]
-                                                ['name'],
-                                            description: snapshot.data?.docs[index]
-                                                ['description'],
-                                            amount: snapshot.data?.docs[index]
-                                                ['amount'],
-                                            phone: snapshot.data?.docs[index]
-                                                ['phone'],
-                                            type: snapshot.data?.docs[index]
-                                                ['type'],
-                                            created_at:
-                                                'Time: ${GetTimeAgo.parse(DateTime.parse(snapshot.data!.docs[index]['created_at'].toDate().toString()), locale: 'en')}'
-                                                '\nDate: ${DateTime.parse(snapshot.data!.docs[index]['created_at'].toDate().toString()).toString().substring(0, 16)}',
-                                          ));
-                                    },
-                                    leading: CircleAvatar(
-                                      child: Text(
-                                          // name first letter
-                                          snapshot.data?.docs[index]['name'] ==
-                                                  null
-                                              ? ''
-                                              : snapshot
-                                                  .data?.docs[index]['name'][0]
-                                                  .toUpperCase()),
-                                    ),
-                                    title: Text(
-                                        snapshot.data?.docs[index]['name']),
-                                    subtitle: Text(snapshot.data?.docs[index]
-                                        ['description']),
+          _buildRecentTransactions(),
+        ],
+      ),
+    );
+  }
 
-                                    //   type and amount
-                                    trailing: wText(
-                                      snapshot.data?.docs[index]['type'] ==
-                                              'credit'
-                                          ? '+${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}'
-                                          : '-${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}',
-                                    ),
-                                  );
-                                },
-                              );
-                            }
-                          } catch (e) {
-                            print(e);
-                          }
-                          return Text('No Transactions');
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
+  _buildAddSendMoneyButton(Type double, model) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          ElevatedButton(
+            onPressed: () {
+              Get.to(() => SendMoneyView());
+            },
+            child: Text('Send Money'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Get.toNamed('/add-money');
+            },
+            child: Text('Add Money'),
           ),
         ],
       ),
     );
+  }
+
+  _buildRecentTransactions() {
+    final size = MediaQuery.of(Get.context!).size;
+    try {
+      return Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Container(
+          height: size.height * 0.4,
+          width: 600,
+          margin: EdgeInsets.all(10.0),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                height: 10.0),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  wText("Recent Transactions"),
+                ],
+              ),
+              Divider(),
+              controller.isLoading.value
+                  ? Center(child: CircularProgressIndicator())
+                  : Expanded(
+                      child: StreamBuilder(
+                        stream: FirebaseFirestore.instance
+                            .collection('sellers')
+                            .doc(user!.uid)
+                            .collection('statement')
+                            .where('created_at',
+                                isGreaterThanOrEqualTo: DateTime(
+                                    now.year, now.month, now.day, 0, 0, 0))
+                            .orderBy('created_at', descending: true)
+                            .limit(4)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return ListView.builder(
+                              itemCount: snapshot.data!.docs.length,
+                              itemBuilder: (context, index) {
+                                return ListTile(
+                                  leading: CircleAvatar(
+                                    child: Text(
+                                        // name first letter
+                                        snapshot.data?.docs[index]['name'] ==
+                                                null
+                                            ? ''
+                                            : snapshot
+                                                .data?.docs[index]['name'][0]
+                                                .toUpperCase()),
+                                  ),
+                                  title:
+                                      Text(snapshot.data?.docs[index]['name']),
+                                  subtitle: Text(snapshot.data?.docs[index]
+                                      ['description']),
+
+                                  //   type and amount
+                                  trailing: wText(
+                                    snapshot.data?.docs[index]['type'] ==
+                                            'send'
+                                        ? '+${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}'
+                                        : '-${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}',
+                                  ),
+                                  onTap: () {
+                                    _buildDetailDialog(
+                                        context,
+                                        BalanceModel(
+                                          name: snapshot.data?.docs[index]
+                                              ['name'],
+                                          description: snapshot
+                                              .data?.docs[index]['description'],
+                                          amount: snapshot.data?.docs[index]
+                                              ['amount'],
+                                          phone: snapshot.data?.docs[index]
+                                              ['phone'],
+                                          type: snapshot.data?.docs[index]
+                                              ['type'],
+                                          created_at:
+                                              'Time: ${GetTimeAgo.parse(DateTime.parse(snapshot.data!.docs[index]['created_at'].toDate().toString()), locale: 'en')}'
+                                              '\nDate: ${DateTime.parse(snapshot.data!.docs[index]['created_at'].toDate().toString()).toString().substring(0, 16)}',
+                                        ));
+                                  },
+                                );
+                              },
+                            );
+                          }
+                          return wText('No Transactions');
+                        },
+                      ),
+                    ),
+            ],
+          ),
+        ),
+      );
+    } catch (e) {
+      print(e);
+    }
   }
 
   _buildContent() {
@@ -260,12 +282,10 @@ class WebHomeView extends GetView {
       padding: const EdgeInsets.only(
           top: 22.0, bottom: 22.0, left: 10.0, right: 10.0),
       child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
+        elevation: 10.0,
         child: Container(
           // acquires 90% of the height of the screen
-          height: size.height * 0.6,
+          height: size.height * 0.8,
           width: 600,
           margin: EdgeInsets.all(15.0),
           child: Column(
@@ -313,7 +333,7 @@ class WebHomeView extends GetView {
                                   //   type and amount
                                   trailing: wText(
                                     snapshot.data?.docs[index]['type'] ==
-                                            'credit'
+                                            'send'
                                         ? '+${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}'
                                         : '-${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}',
                                   ),
@@ -340,7 +360,7 @@ class WebHomeView extends GetView {
                               },
                             );
                           }
-                          return Text('No Transactions');
+                          return wText('No Transactions');
                         },
                       ),
                     ),
@@ -353,15 +373,18 @@ class WebHomeView extends GetView {
 
   _buildFooter() {
     return Container(
-      height: 100,
-      color: Colors.red,
-      child: Row(
-        children: [
-          Text('Footer'),
-          Text('Footer'),
-          Text('Footer'),
-          Text('Footer'),
-        ],
+      alignment: Alignment.center,
+      color: Colors.blue,
+      // about wallet 10% of the height of the screen
+      child: SizedBox(
+        height: 100,
+        child: Center(
+          child: wText(
+              // about PaySaw wallet
+              'PaySaw Wallet'
+              '\n A digital wallet easy to use',
+              color: Colors.white, size: 20.0),
+        ),
       ),
     );
   }
@@ -392,13 +415,13 @@ class WebHomeView extends GetView {
             Divider(),
             wText(
               color: Colors.black,
-              "Amount: ${model.type == 'credit' ? '+${currencyFormat(double.parse(model.amount.toString()))}' : '- ${currencyFormat(double.parse(model.amount.toString()))}'}",
+              "Amount: ${model.type == 'send' ? '+${currencyFormat(double.parse(model.amount.toString()))}' : '- ${currencyFormat(double.parse(model.amount.toString()))}'}",
             ),
             Text("Purpose: ${model.description}",
                 style: TextStyle(color: Colors.black)),
             //   phone number
 
-            Text("Type: ${model.type == 'credit' ? 'Credit' : 'Debit'}",
+            Text("Type: ${model.type == 'send' ? 'Credit' : 'Debit'}",
                 style: TextStyle(color: Colors.black)),
             Text("Phone: ${model.phone}",
                 style: TextStyle(color: Colors.black)),

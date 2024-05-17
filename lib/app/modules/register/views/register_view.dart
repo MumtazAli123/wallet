@@ -1,6 +1,7 @@
 // ignore_for_file: avoid_print, use_build_context_synchronously, prefer_const_constructors
 
 import 'dart:io';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:fancy_password_field/fancy_password_field.dart';
@@ -402,39 +403,72 @@ class _RegisterViewState extends State<RegisterView> {
   }
 
   void _showPicker(BuildContext context) {
-    QuickAlert.show(
+    // QuickAlert.show(
+    //   context: context,
+    //   type: QuickAlertType.info,
+    //   title: 'Select Image',
+    //   widget: Column(
+    //     crossAxisAlignment: CrossAxisAlignment.center,
+    //     mainAxisAlignment: MainAxisAlignment.start,
+    //     children: [
+    //       Row(
+    //         mainAxisAlignment: MainAxisAlignment.center,
+    //         crossAxisAlignment: CrossAxisAlignment.center,
+    //         children: [
+    //           ElevatedButton(
+    //             onPressed: () {
+    //               _imgFromCamera();
+    //               Get.back();
+    //             },
+    //             child: const Text('Camera'),
+    //           ),
+    //           const SizedBox(width: 5),
+    //           ElevatedButton(
+    //             onPressed: () {
+    //               _imgFromGallery();
+    //               Get.back();
+    //             },
+    //             child: const Text('Gallery'),
+    //           ),
+    //         ],
+    //       ),
+    //     ],
+    //   ),
+    //   confirmBtnText: 'Cancel',
+    // );
+    AwesomeDialog(
+      width: 400,
+      showCloseIcon: true,
+      barrierColor: Colors.black.withOpacity(0.5),
       context: context,
-      type: QuickAlertType.info,
-      title: 'Select Image',
-      widget: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
+      dialogType: DialogType.info,
+      dialogBackgroundColor: Colors.blue[100],
+      animType: AnimType.leftSlide,
+      btnCancelOnPress: () {
+      },
+      btnCancelText: 'Cancel',
+      body: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ElevatedButton(
-                onPressed: () {
-                  _imgFromCamera();
-                  Get.back();
-                },
-                child: const Text('Camera'),
-              ),
-              const SizedBox(width: 10),
-              ElevatedButton(
-                onPressed: () {
-                  _imgFromGallery();
-                  Get.back();
-                },
-                child: const Text('Gallery'),
-              ),
-            ],
+          ElevatedButton(
+            onPressed: () {
+              _imgFromCamera();
+              Get.back();
+            },
+            child: const Text('Camera'),
+          ),
+          const SizedBox(width: 5),
+          ElevatedButton(
+            onPressed: () {
+              _imgFromGallery();
+              Get.back();
+            },
+            child: const Text('Gallery'),
           ),
         ],
       ),
-      confirmBtnText: 'Cancel',
-    );
+    ).show();
   }
 
   void _imgFromGallery() {

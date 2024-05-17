@@ -4,35 +4,25 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:quickalert/quickalert.dart';
 import 'package:wallet/models/user_model.dart';
 
-
 class SendMoneyController extends GetxController {
-  // var noteList = List.empty(growable: true).obs;
-  var searchList = List.empty(growable: true).obs;
-  var searchOtherUser = ''.obs;
   var isSearching = false.obs;
 
-  var searchProduct = ''.obs;
+  var searchList = List.empty(growable: true).obs;
 
-  final db = FirebaseFirestore.instance.collection("sellers").snapshots();
-
-  var otherUsers = List.empty(growable: true).obs;
-  var user = FirebaseAuth.instance.currentUser;
-
-
-  UserModel loggedInUser = UserModel();
-
-  final transferNominalController = TextEditingController();
-  final descriptionController = TextEditingController();
   final searchController = TextEditingController();
 
-  final count = 0.obs;
   var isLoading = true.obs;
+
+  var otherUsers = List<UserModel>.empty(growable: true).obs;
+
+  var selectedUser = UserModel().obs;
+
   @override
   void onInit() {
     super.onInit();
-    getOtherUsers('');
 
   }
 
@@ -45,37 +35,22 @@ class SendMoneyController extends GetxController {
   void onClose() {
     super.onClose();
     searchController.dispose();
-    transferNominalController.dispose();
-    descriptionController.dispose();
   }
-
-  void increment() => count.value++;
-  void decrement() => count.value--;
 
   void getOtherUsers(String query) async {
-    // sellers
-    otherUsers.clear();
-    await FirebaseFirestore.instance.collection('sellers').get().then((value) {
-      for (var element in value.docs) {
-        if (element.id != user!.uid) {
-          otherUsers.add(UserModel.fromMap(element.data()));
-        }
-      }
-    });
-    if (query.isEmpty) {
-      searchList.clear();
-      isSearching.value = false;
-    } else {
-      isSearching.value = true;
-      searchList.clear();
-      // if search name any type letter in search bar then show the result
-      for (var element in otherUsers) {
-        if (element.name!.toLowerCase().contains(query.toLowerCase())) {
-          searchList.add(element);
-        }
-      }
+    try {
+      isLoading(true);
+      await FirebaseFirestore.instance
+          .collection('sellers')
+          .orderBy('name')
+          .where('name', isGreaterThanOrEqualTo: query)
+          .where('name', isLessThan: '${query}z')
+          .get()
+          .then((value) => searchList.value = value.docs);
+    } catch (e) {
+      Get.snackbar('Error', e.toString());
+    } finally {
+      isLoading(false);
     }
   }
-
-
 }
