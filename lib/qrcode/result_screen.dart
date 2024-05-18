@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, avoid_print
 
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -18,14 +19,14 @@ class ResultScreen extends StatefulWidget {
   final String? qrData;
   final UserModel userModel;
 
-   const ResultScreen({super.key, required this.qrData, required this.userModel});
+  const ResultScreen(
+      {super.key, required this.qrData, required this.userModel});
 
   @override
   State<ResultScreen> createState() => _ResultScreenState();
 }
 
 class _ResultScreenState extends State<ResultScreen> {
-
   final transferNominalController = TextEditingController();
   final descriptionController = TextEditingController();
 
@@ -37,7 +38,6 @@ class _ResultScreenState extends State<ResultScreen> {
 
   final fb = FirebaseFirestore.instance;
   UserModel userModel = UserModel();
-
 
   @override
   void dispose() {
@@ -57,17 +57,17 @@ class _ResultScreenState extends State<ResultScreen> {
 
   Future<void> fetchLoggedInUserBalance(String uid) async {
     DocumentReference userDoc =
-    FirebaseFirestore.instance.collection('sellers').doc(uid);
+        FirebaseFirestore.instance.collection('sellers').doc(uid);
 
     DocumentSnapshot docSnapshot = await userDoc.get();
 
     if (docSnapshot.exists) {
       Map<String, dynamic>? userData =
-      docSnapshot.data() as Map<String, dynamic>?;
+          docSnapshot.data() as Map<String, dynamic>?;
 
       if (userData != null) {
         double userBalance =
-        (double.tryParse(userData['balance'].toString()) ?? 0.0);
+            (double.tryParse(userData['balance'].toString()) ?? 0.0);
 
         setState(() {
           loggedInUser.balance = userBalance;
@@ -78,7 +78,7 @@ class _ResultScreenState extends State<ResultScreen> {
 
   Future<void> fetchUserData() async {
     CollectionReference usersCollection =
-    FirebaseFirestore.instance.collection('sellers');
+        FirebaseFirestore.instance.collection('sellers');
 
     QuerySnapshot querySnapshot = await usersCollection.get();
 
@@ -86,7 +86,7 @@ class _ResultScreenState extends State<ResultScreen> {
 
     for (DocumentSnapshot documentSnapshot in querySnapshot.docs) {
       Map<String, dynamic> userData =
-      documentSnapshot.data() as Map<String, dynamic>;
+          documentSnapshot.data() as Map<String, dynamic>;
 
       String uid = documentSnapshot.id;
 
@@ -106,7 +106,6 @@ class _ResultScreenState extends State<ResultScreen> {
     }
   }
 
-
   String? qrData;
   String scanQrCode = '';
   String? qrResult = 'Not Yet Scanned';
@@ -116,14 +115,11 @@ class _ResultScreenState extends State<ResultScreen> {
 
   // result screen
 
-
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title:  Text('Qr Code'),
+        title: Text('Qr Code'),
         centerTitle: true,
       ),
       body: _buildBody(),
@@ -155,14 +151,19 @@ class _ResultScreenState extends State<ResultScreen> {
                       fit: BoxFit.cover,
                     ),
                   ),
-
                 ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
+                      decoration: BoxDecoration(
+                        color: Colors.blueAccent,
+                        borderRadius: BorderRadius.circular(20),
+                        shape: BoxShape.rectangle,
+                      ),
                       child: QrImageView(
+                        backgroundColor: Colors.grey,
                         data: "${widget.userModel.phone}",
                         version: QrVersions.auto,
                         size: 80.0,
@@ -182,81 +183,10 @@ class _ResultScreenState extends State<ResultScreen> {
               backgroundColor: Colors.blue,
               maximumSize: Size(200, 50),
               minimumSize: Size(200, 50),
-
             ),
             onPressed: () {
               controller2.selectedUser.value = widget.userModel;
-              showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                    title: Text(
-                        textAlign: TextAlign.center,
-                        'Send Money'),
-                    content: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          // send money to user
-                            "Send money to ${widget.userModel.name}"),
-                        SizedBox(height: 10.0),
-
-                        TextField(
-                          controller: transferNominalController,
-                          keyboardType: TextInputType.number,
-                          decoration: InputDecoration(
-                            prefixIcon: Icon(Icons.money),
-                            suffixIcon: IconButton(
-                              onPressed: () {
-                                transferNominalController.clear();
-                              },
-                              icon: Icon(Icons.clear),
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(20),
-
-                            ),
-                            hintText: 'Enter Amount',
-                          ),
-                        ),
-                        SizedBox(height: 10.0),
-                        TextField(
-                          controller: descriptionController,
-                          decoration: InputDecoration(
-                            prefixIcon: Icon(Icons.description),
-                            suffixIcon: IconButton(
-                              onPressed: () {
-                                descriptionController.clear();
-                              },
-                              icon: Icon(Icons.clear),
-                            ),
-                            border: OutlineInputBorder(
-
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            hintText: 'Description',
-                          ),
-                        ),
-                      ],
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pop(context);
-                        },
-                        child: Text('Cancel'),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          _onSubmit();
-                        },
-                        child: Text('Send'),
-                      ),
-                    ],
-                  );
-                },
-              );
-
+              _buildBottomSheet(widget.userModel);
             },
             child: wText('Send Money', color: Colors.white),
           ),
@@ -269,6 +199,7 @@ class _ResultScreenState extends State<ResultScreen> {
     UserModel? recipient = controller2.selectedUser.value;
     _validateField(recipient);
   }
+
   _validateField(UserModel? recipient) {
     if (transferNominalController.text.isEmpty) {
       QuickAlert.show(
@@ -278,7 +209,7 @@ class _ResultScreenState extends State<ResultScreen> {
         title: 'Error',
         text: 'Please enter amount',
       );
-    }else if (recipient == null) {
+    } else if (recipient == null) {
       QuickAlert.show(
         backgroundColor: Colors.white,
         context: context,
@@ -286,11 +217,12 @@ class _ResultScreenState extends State<ResultScreen> {
         title: 'Error',
         text: 'Please select a recipient',
       );
-    }
-    else {
+    } else {
       // _otpSendFromFirebase();
       // _otpSendMoney(recipient!);
-      sendMoneyToUser(recipient);
+      // sendMoneyToUser(recipient);
+      _buildSureDialog(
+          recipient, int.tryParse(transferNominalController.text) ?? 0);
     }
   }
 
@@ -330,7 +262,6 @@ class _ResultScreenState extends State<ResultScreen> {
           'amount': transferNominalController.text.trim(),
           'description': descriptionController.text.trim(),
           'created_at': DateTime.now(),
-
         });
 
         await FirebaseFirestore.instance
@@ -357,8 +288,8 @@ class _ResultScreenState extends State<ResultScreen> {
             colorText: Colors.white,
             snackPosition: SnackPosition.BOTTOM);
 
-        _buildDialogWithDataReceiver(
-            recipient.username, transferAmount, recipient.name!, recipient.phone!);
+        _buildDialogWithDataReceiver(recipient.username, transferAmount,
+            recipient.name!, recipient.phone!);
       } else {
         QuickAlert.show(
           backgroundColor: Colors.white,
@@ -375,23 +306,135 @@ class _ResultScreenState extends State<ResultScreen> {
     }
   }
 
+  void _buildSureDialog(UserModel recipient, int transferAmount) {
+    //   showDialog(
+    //     context: context,
+    //     builder: (context) {
+    //       return AlertDialog(
+    //         title: Text('Are you sure?'),
+    //         content: Column(
+    //           mainAxisSize: MainAxisSize.min,
+    //           children: [
+    //             Text(
+    //               'Send money to ${recipient.name}',
+    //               textAlign: TextAlign.center,
+    //             ),
+    //             SizedBox(height: 10.0),
+    //             Text(
+    //               'Amount: $transferAmount',
+    //               textAlign: TextAlign.center,
+    //             ),
+    //             SizedBox(height: 10.0),
+    //             Text(
+    //               'Description: ${descriptionController.text}',
+    //               textAlign: TextAlign.center,
+    //             ),
+    //           ],
+    //         ),
+    //         actions: [
+    //           TextButton(
+    //             onPressed: () {
+    //               Navigator.pop(context);
+    //             },
+    //             child: Text('Cancel'),
+    //           ),
+    //           TextButton(
+    //             onPressed: () {
+    //               _buildDialogWithDataReceiver(recipient.username, transferAmount,
+    //                   recipient.name!, recipient.phone!);
+    //             },
+    //             child: Text('Send'),
+    //           ),
+    //         ],
+    //       );
+    //     },
+    //   );
+    AwesomeDialog(
+      width: 400,
+      context: context,
+      dialogType: DialogType.info,
+      animType: AnimType.bottomSlide,
+      title: 'Are you sure?',
+      desc:
+          'Send money to ${recipient.name}\nAmount: $transferAmount\nDescription: ${descriptionController.text}',
+      btnCancelOnPress: () {},
+      btnOkText: "Confirm",
+      btnOkOnPress: () {
+        sendMoneyToUser(recipient);
+      },
+    ).show();
+  }
+
   void _buildDialogWithDataReceiver(
       String? email, int transferAmount, String fullName, String phone) {
     QuickAlert.show(
+      width: 300,
+      titleAlignment: TextAlign.center,
       backgroundColor: Colors.white,
       barrierDismissible: false,
       context: context,
       type: QuickAlertType.success,
       title: 'Success',
       text:
-      // 'Money sent to $fullName\nAmount: $transferAmount\n' '\nPhone $phone\nDescription: ${descriptionController.text}',
-      'Money sent to $fullName\nAmount: $transferAmount\nPhone $phone\nDescription: ${descriptionController.text}',
+          // 'Money sent to $fullName\nAmount: $transferAmount\n' '\nPhone $phone\nDescription: ${descriptionController.text}',
+          'Money sent to $fullName\nAmount: $transferAmount\nPhone $phone\nDescription: ${descriptionController.text}',
       textAlignment: TextAlign.start,
+
       onConfirmBtnTap: () {
         Get.offAll(() => BottomPageView());
       },
     );
   }
 
+  void _buildBottomSheet(UserModel userModel) {
+    //   if mobile rotate to landscape mode ask for use to rotate back to portrait mode
+    if (MediaQuery.of(context).size.width < 600) {
+      QuickAlert.show(
+        backgroundColor: Colors.white,
+        context: context,
+        type: QuickAlertType.info,
+        title: "Send Money",
+        text: 'Send money to ${userModel.name}',
+        onConfirmBtnTap: (){
+          Get.back();
+          _onSubmit();
+        },
+        confirmBtnText: 'Send',
+        widget: Form(
+          key: formKey,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: transferNominalController,
+                  keyboardType: TextInputType.number,
+                  decoration: InputDecoration(
+                    labelText: 'Amount',
+                    hintText: 'Enter amount',
+                  ),
+                ),
+                TextFormField(
+                  controller: descriptionController,
+                  decoration: InputDecoration(
+                    labelText: 'Description',
+                    hintText: 'Enter description',
+                  ),
+                ),
+                SizedBox(height: 10),
 
+              ],
+            ),
+          ),
+        ),
+      );
+    } else {
+      QuickAlert.show(
+        backgroundColor: Colors.white,
+        context: context,
+        type: QuickAlertType.error,
+        title: 'Error',
+        text: 'Please rotate back to portrait mode',
+      );
+    }
+  }
 }
