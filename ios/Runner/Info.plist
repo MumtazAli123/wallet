@@ -7,7 +7,11 @@
 	<key>CFBundleDisplayName</key>
 	<string>Wallet</string>
     <key>FLTEnableImpeller</key>
-    <false />
+    <false/>
+    <key>NSCameraUsageDescription</key>
+    <string>This app needs camera access to scan QR codes</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>This app needs photos access to get QR code from photo library</string>
     <key>NSPhotoLibraryUsageDescription</key>
     <string>Allow access to your photos</string>
     <key>NSCameraUsageDescription</key>

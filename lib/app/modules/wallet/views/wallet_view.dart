@@ -3,19 +3,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:get/get.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:quickalert/quickalert.dart';
-import 'package:wallet/app/modules/wallet/controllers/wallet_controller.dart';
-import 'package:wallet/app/modules/wallet/views/send_view.dart';
-import 'package:wallet/app/modules/wallet/views/topup_view.dart';
 
 import '../../../../models/user_model.dart';
-import '../../../../widgets/currency_format.dart';
-import '../../../../widgets/mix_widgets.dart';
-import '../../home/controllers/home_controller.dart';
-import '../../home/views/bottom_page_view.dart';
 
 class WalletView extends StatefulWidget {
   UserModel? loggedInUser;

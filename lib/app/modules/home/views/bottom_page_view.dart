@@ -5,9 +5,8 @@ import 'package:fancy_bottom_navigation_plus/fancy_bottom_navigation_plus.dart';
 
 import 'package:get/get.dart';
 import 'package:wallet/app/modules/home/views/mob_home_view.dart';
-import 'package:wallet/app/modules/home/views/web_home_view.dart';
 
-import '../../../../widgets/my_drawer.dart';
+import '../../../../qrcode/qrcode.dart';
 import '../controllers/home_controller.dart';
 
 class BottomPageView extends GetView {
@@ -33,12 +32,7 @@ class BottomPageView extends GetView {
                 child: Text('Page 0'),
               ),
             ),
-            Container(
-              color: Colors.red,
-              child: Center(
-                child: Text('Page 1'),
-              ),
-            ),
+            QrcodePage(),
             Container(
               color: Colors.green,
               child: Center(
@@ -58,7 +52,7 @@ class BottomPageView extends GetView {
             TabData(icon: const Icon(Icons.home), title: "Home"),
             // TabData(icon: const Icon(Icons.history), title: "History"),
             TabData(icon:  Icon(Icons.search), title: "Search"),
-            TabData(icon:  Icon(Icons.phone), title: "Phone"),
+            TabData(icon:  Icon(Icons.qr_code), title: "QrCode"),
             TabData(icon:  Icon(Icons.wallet), title: "Wallet"),
           ],
           key: controller.bottomNavigationKey,

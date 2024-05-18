@@ -16,7 +16,7 @@ class _MyDrawerState extends State<MyDrawer> {
 
   String name = sharedPreferences!.getString('name') ?? '';
   String email = sharedPreferences!.getString('email') ?? '';
-  String profileImage = sharedPreferences!.getString('image') ?? '';
+  String profileImage = sharedPreferences!.getString('image') ?? "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.cleanpng.com%2Fpng-computer-icons-user-profile-person-730537%2F&psig=AOvVaw1QX8MH26kPfq4tS6bH9YVm&ust=1716047055827000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCLjV586DlYYDFQAAAAAdAAAAABAJ";
   String phoneNumber = sharedPreferences!.getString('phone') ?? '';
 
   @override

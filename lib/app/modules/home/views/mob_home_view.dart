@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -125,7 +126,7 @@ class HomeView extends GetView {
                                 height: 10.0,
                               ),
                               wText(
-                                // show first 3 and ... last 4 digits of phone number
+                                  // show first 3 and ... last 4 digits of phone number
                                   "Account Number: ${snapshot.data!['phone'].toString().substring(0, 5)}...${snapshot.data!['phone'].toString().substring(7, 11)}",
                                   color: Colors.white,
                                   size: 14.0),
@@ -163,7 +164,8 @@ class HomeView extends GetView {
           ),
           ElevatedButton(
             onPressed: () {
-              Get.toNamed('/add-money');
+              // Get.toNamed('/add-money');
+              _buildDialogAddMoney();
             },
             child: Text('Add Money'),
           ),
@@ -190,8 +192,7 @@ class HomeView extends GetView {
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.min,
             children: [
-              SizedBox(
-                  height: 10.0),
+              SizedBox(height: 10.0),
               Padding(
                 padding: const EdgeInsets.only(left: 8.0, right: 8.0),
                 child: Row(
@@ -199,11 +200,13 @@ class HomeView extends GetView {
                   children: [
                     wText("Recent Transactions"),
                     Spacer(),
-                    TextButton(onPressed: (){
-                      Get.to(() => StatementView(
-                        loggedInUser: userModel,
-                      ));
-                    }, child: Text('View All'))
+                    TextButton(
+                        onPressed: () {
+                          Get.to(() => StatementView(
+                                loggedInUser: userModel,
+                              ));
+                        },
+                        child: Text('View All'))
                   ],
                 ),
               ),
@@ -211,78 +214,82 @@ class HomeView extends GetView {
               controller.isLoading.value
                   ? Center(child: CircularProgressIndicator())
                   : Expanded(
-                child: StreamBuilder(
-                  stream: FirebaseFirestore.instance
-                      .collection('sellers')
-                      .doc(user!.uid)
-                      .collection('statement')
-                      .where('created_at',
-                      isGreaterThanOrEqualTo: DateTime(
-                          now.year, now.month, now.day, 0, 0, 0))
-                      .orderBy('created_at', descending: true)
-                      .limit(5)
-                      .snapshots(),
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      return ListView.builder(
-                        itemCount: snapshot.data!.docs.length,
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            leading: CircleAvatar(
-                              child: Text(
-                                // name first letter
-                                  snapshot.data?.docs[index]['name'] ==
-                                      null
-                                      ? ''
-                                      : snapshot
-                                      .data?.docs[index]['name'][0]
-                                      .toUpperCase()),
-                            ),
-                            title:
-                            Text(snapshot.data?.docs[index]['name']),
-                            subtitle: Text(snapshot.data?.docs[index]
-                            ['description']),
+                      child: StreamBuilder(
+                        stream: FirebaseFirestore.instance
+                            .collection('sellers')
+                            .doc(user!.uid)
+                            .collection('statement')
+                            .where('created_at',
+                                isGreaterThanOrEqualTo: DateTime(
+                                    // recent transactions minimum 3 days
+                                    now.year,
+                                    now.month,
+                                    now.day - 3))
+                            .orderBy('created_at', descending: true)
+                            .limit(5)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return ListView.builder(
+                              itemCount: snapshot.data!.docs.length,
+                              itemBuilder: (context, index) {
+                                return ListTile(
+                                  leading: CircleAvatar(
+                                    child: Text(
+                                        // name first letter
+                                        snapshot.data?.docs[index]['name'] ==
+                                                null
+                                            ? ''
+                                            : snapshot
+                                                .data?.docs[index]['name'][0]
+                                                .toUpperCase()),
+                                  ),
+                                  title:
+                                      Text(snapshot.data?.docs[index]['name']),
+                                  subtitle: Text(snapshot.data?.docs[index]
+                                      ['description']),
 
-                            //   type and amount
-                            trailing: wText(
-                              snapshot.data?.docs[index]['type'] ==
-                                  'send'
-                                  ? '+${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}'
-                                  : '-${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}',
-                            ),
-                            onTap: () {
-                              _buildDetailDialog(
-                                  context,
-                                  BalanceModel(
-                                    name: snapshot.data?.docs[index]
-                                    ['name'],
-                                    description: snapshot
-                                        .data?.docs[index]['description'],
-                                    amount: snapshot.data?.docs[index]
-                                    ['amount'],
-                                    phone: snapshot.data?.docs[index]
-                                    ['phone'],
-                                    type: snapshot.data?.docs[index]
-                                    ['type'],
-                                    created_at:
-                                    'Time: ${GetTimeAgo.parse(DateTime.parse(snapshot.data!.docs[index]['created_at'].toDate().toString()), locale: 'en')}'
-                                        '\nDate: ${DateTime.parse(snapshot.data!.docs[index]['created_at'].toDate().toString()).toString().substring(0, 16)}',
-                                  ));
-                            },
-                          );
+                                  //   type and amount
+                                  trailing: wText(
+                                    snapshot.data?.docs[index]['type'] == 'send'
+                                        ? '+${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}'
+                                        : '-${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}',
+                                  ),
+                                  onTap: () {
+                                    _buildDetailDialog(
+                                        context,
+                                        BalanceModel(
+                                          name: snapshot.data?.docs[index]
+                                              ['name'],
+                                          description: snapshot
+                                              .data?.docs[index]['description'],
+                                          amount: snapshot.data?.docs[index]
+                                              ['amount'],
+                                          phone: snapshot.data?.docs[index]
+                                              ['phone'],
+                                          type: snapshot.data?.docs[index]
+                                              ['type'],
+                                          created_at:
+                                              'Time: ${GetTimeAgo.parse(DateTime.parse(snapshot.data!.docs[index]['created_at'].toDate().toString()), locale: 'en')}'
+                                              '\nDate: ${DateTime.parse(snapshot.data!.docs[index]['created_at'].toDate().toString()).toString().substring(0, 16)}',
+                                        ));
+                                  },
+                                );
+                              },
+                            );
+                          }
+                          return wText('No Transactions');
                         },
-                      );
-                    }
-                    return wText('No Transactions');
-                  },
-                ),
-              ),
+                      ),
+                    ),
             ],
           ),
         ),
       );
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 
@@ -295,9 +302,9 @@ class HomeView extends GetView {
         height: 100,
         child: Center(
           child: wText(
-            // about PaySaw wallet
+              // about PaySaw wallet
               'PaySaw Wallet'
-                  '\n A digital wallet easy to use',
+              '\n A digital wallet easy to use',
               color: Colors.white, size: 20.0),
         ),
       ),
@@ -385,5 +392,14 @@ class HomeView extends GetView {
     // as per thousand separator
     return balance?.toStringAsFixed(2).replaceAllMapped(
         RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},');
+  }
+
+  void _buildDialogAddMoney() {
+    QuickAlert.show(
+      context: Get.context!,
+      type: QuickAlertType.info,
+      title: 'Add Money',
+      text: 'We are working on this feature',
+    );
   }
 }

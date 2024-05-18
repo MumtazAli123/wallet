@@ -124,20 +124,15 @@ class _RegisterViewState extends State<RegisterView> {
                       fit: BoxFit.cover,
                     ),
                   )
-                : Container(
-                    decoration: const BoxDecoration(
-                      color: Colors.red,
-                      borderRadius: BorderRadius.all(
-                        Radius.circular(70),
-                      ),
-                    ),
-                    width: 140,
-                    height: 140,
+                : ClipRRect(
+                    borderRadius: BorderRadius.circular(70),
                     child: Image.asset(
                       'assets/images/bg.png',
+                      width: 140,
+                      height: 140,
                       fit: BoxFit.cover,
                     ),
-                  ),
+            ),
           ),
           Positioned(
             bottom: 0,
