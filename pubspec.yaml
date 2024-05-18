@@ -5,7 +5,12 @@ description: A new Flutter project.
 environment: 
   sdk: '>=3.3.4 <4.0.0'
 
-dependencies: 
+
+
+
+dependencies:
+  get:
+  path:
   cupertino_icons: ^1.0.6
   firebase_auth: any
   cloud_firestore: any
@@ -16,7 +21,7 @@ dependencies:
   camera: ^0.11.0
   get_storage: ^2.1.1
   provider: 6.1.2
-  get:
+#  get:
 
   google_fonts: 6.2.1
   shared_preferences: 2.2.3
@@ -31,8 +36,11 @@ dependencies:
   awesome_dialog: ^3.2.1
   mobile_scanner: ^5.1.1
 
+
   flutter: 
     sdk: flutter
+  qr_flutter: ^4.1.0
+  flutter_barcode_scanner: ^2.0.0
 
 
 dev_dependencies: 
