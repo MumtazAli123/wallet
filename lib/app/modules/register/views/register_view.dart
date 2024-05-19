@@ -194,6 +194,9 @@ class _RegisterViewState extends State<RegisterView> {
       focusNode: controller.nameFocus,
       keyboardType: TextInputType.text,
       textInputAction: TextInputAction.next,
+      inputFormatters: [
+        controller.upperCaseTextFormatter,
+      ],
       decoration: InputDecoration(
         helperText: 'Enter your name as per CNIC',
         labelText: 'Name',

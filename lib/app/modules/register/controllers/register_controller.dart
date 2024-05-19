@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:country_picker/country_picker.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -12,6 +13,7 @@ class RegisterController extends GetxController {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
+  final upperCaseTextFormatter = textUpperCaseTextFormatter();
   final username = TextEditingController();
 
   final GlobalKey<FormState>  formKey = GlobalKey<FormState>();
@@ -58,6 +60,32 @@ class RegisterController extends GetxController {
     confirmPasswordController.dispose();
     phoneController.dispose();
     username.dispose();
+  }
+
+  static textUpperCaseTextFormatter() {
+    // first letter use capital and other letter use small if type space then same logic apply
+    return TextInputFormatter.withFunction((oldValue, newValue) {
+      if (newValue.text.isEmpty) {
+        return newValue.copyWith(text: newValue.text);
+      } else if (newValue.text.length == 1) {
+        return newValue.copyWith(
+            text: newValue.text[0].toUpperCase() + newValue.text.substring(1));
+      }
+      return newValue.copyWith(
+          text: newValue.text[0].toUpperCase() +
+              newValue.text.substring(1).toLowerCase());
+    });
+  //     return TextInputFormatter.withFunction((oldValue, newValue) {
+    //       if (newValue.text.isEmpty) {
+    //         return newValue.copyWith(text: newValue.text);
+    //       } else if (newValue.text.length == 1) {
+    //         return newValue.copyWith(
+    //             text: newValue.text[0].toUpperCase() + newValue.text.substring(1));
+    //       }
+    //       return newValue.copyWith(
+    //           text: newValue.text[0].toUpperCase() +
+    //               newValue.text.substring(1).toLowerCase());
+    //     });
   }
 
 }
