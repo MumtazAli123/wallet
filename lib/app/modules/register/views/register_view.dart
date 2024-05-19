@@ -278,14 +278,9 @@ class _RegisterViewState extends State<RegisterView> {
     return TextFormField(
       controller: controller.phoneController,
       maxLength: 10,
-      // onChanged: (value) {
-      //   setState(() {
-      //     controller.phoneController.text = value;
-      //   });
-      // },
       onChanged: (value) {
         setState(() {
-          hintText = 'Email';
+          hintText = 'Phone';
         });
       },
       keyboardType: TextInputType.phone,
