@@ -25,7 +25,6 @@ class _LoginViewState extends State<LoginView> {
 
   final auth = FirebaseAuth.instance;
 
-  bool _obscureText = true;
 
   SellerModel? sellerModel = SellerModel();
 
@@ -228,7 +227,7 @@ class _LoginViewState extends State<LoginView> {
                   ),
                   child: const Icon(
                     Icons.done,
-                    // color: Colors.white,
+                    color: Colors.white,
                     size: 20,
                   ),
                 )
@@ -253,6 +252,7 @@ class _LoginViewState extends State<LoginView> {
       child: FancyPasswordField(
         controller: controller.passwordController,
         decoration: InputDecoration(
+          prefixIcon: Icon(Icons.lock),
           labelText: 'Password',
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(20.0),
