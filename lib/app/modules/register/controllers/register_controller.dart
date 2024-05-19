@@ -75,17 +75,6 @@ class RegisterController extends GetxController {
           text: newValue.text[0].toUpperCase() +
               newValue.text.substring(1).toLowerCase());
     });
-  //     return TextInputFormatter.withFunction((oldValue, newValue) {
-    //       if (newValue.text.isEmpty) {
-    //         return newValue.copyWith(text: newValue.text);
-    //       } else if (newValue.text.length == 1) {
-    //         return newValue.copyWith(
-    //             text: newValue.text[0].toUpperCase() + newValue.text.substring(1));
-    //       }
-    //       return newValue.copyWith(
-    //           text: newValue.text[0].toUpperCase() +
-    //               newValue.text.substring(1).toLowerCase());
-    //     });
   }
 
 }
