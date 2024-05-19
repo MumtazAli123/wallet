@@ -54,7 +54,7 @@ class BottomPageView extends GetView {
           tabs: [
             TabData(icon: const Icon(Icons.home), title: "Home"),
             // TabData(icon: const Icon(Icons.history), title: "History"),
-            TabData(icon:  Icon(Icons.search), title: "Search"),
+            TabData(icon:  Icon(Icons.search,), title: "Search"),
             TabData(icon:  Icon(Icons.qr_code), title: "QrCode"),
             TabData(icon:  Icon(Icons.wallet), title: "Wallet"),
             TabData(
