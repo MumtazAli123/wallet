@@ -8,6 +8,7 @@ import 'package:wallet/app/modules/home/views/mob_home_view.dart';
 import 'package:wallet/global/global.dart';
 
 import '../../../../qrcode/qrcode.dart';
+import '../../../../search/search_screen.dart';
 import '../../../../user_profile/user_profile.dart';
 import '../controllers/home_controller.dart';
 
@@ -28,12 +29,7 @@ class BottomPageView extends GetView {
           children: [
             // HomeView(),
             HomeView(),
-            Container(
-              color: Colors.blue,
-              child: Center(
-                child: Text('Page 0'),
-              ),
-            ),
+            SearchScreen(),
             QrcodePage(),
             Container(
               color: Colors.green,
