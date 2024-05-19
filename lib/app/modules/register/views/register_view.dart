@@ -502,6 +502,7 @@ class _RegisterViewState extends State<RegisterView> {
 
   Future<void> signUp(String email, String password) async {
     QuickAlert.show(
+      width: 400,
       context: context,
       type: QuickAlertType.loading,
       title: 'Please wait...',

@@ -11,7 +11,6 @@ import 'package:wallet/app/modules/home/views/bottom_page_view.dart';
 
 import '../../../../global/global.dart';
 import '../../../../models/user_model.dart';
-import '../../wallet/controllers/wallet_controller.dart';
 import '../controllers/send_money_controller.dart';
 
 class SendMoneyView extends StatefulWidget {
@@ -205,6 +204,7 @@ class _SendMoneyViewState extends State<SendMoneyView> {
 
   _buildTransferDialog(UserModel user) {
     QuickAlert.show(
+      width: 400.0,
       context: context,
       type: QuickAlertType.info,
       title: 'Send Money',
@@ -323,6 +323,7 @@ class _SendMoneyViewState extends State<SendMoneyView> {
             recipient.phone, transferAmount, recipient.name!);
       } else {
         QuickAlert.show(
+          width: 400.0,
           backgroundColor: Colors.white,
           context: context,
           type: QuickAlertType.error,
@@ -345,6 +346,7 @@ class _SendMoneyViewState extends State<SendMoneyView> {
   _validateField(UserModel? recipient) {
     if (transferNominalController.text.isEmpty) {
       QuickAlert.show(
+        width: 400.0,
         backgroundColor: Colors.white,
         context: context,
         type: QuickAlertType.error,
@@ -353,6 +355,7 @@ class _SendMoneyViewState extends State<SendMoneyView> {
       );
     } else if (recipient == null) {
       QuickAlert.show(
+        width: 400.0,
         backgroundColor: Colors.white,
         context: context,
         type: QuickAlertType.error,
@@ -369,6 +372,7 @@ class _SendMoneyViewState extends State<SendMoneyView> {
   void _buildDialogWithDataReceiver(
       String? phone, int transferAmount, String fullName) {
     QuickAlert.show(
+      width: 400.0,
       backgroundColor: Colors.white,
       barrierDismissible: false,
       context: context,
