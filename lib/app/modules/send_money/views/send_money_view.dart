@@ -22,10 +22,10 @@ class SendMoneyView extends StatefulWidget {
 }
 
 class _SendMoneyViewState extends State<SendMoneyView> {
-  final controller = Get.put(WalletController());
-  final controller2 = Get.put(SendMoneyController());
+  // final controller1 = Get.put(WalletController());
+  final controller = Get.put(SendMoneyController());
 
-  final formKey = GlobalKey<FormState>();
+  // final formKey = GlobalKey<FormState>();
   User? user = FirebaseAuth.instance.currentUser;
   UserModel loggedInUser = UserModel();
 
@@ -128,77 +128,8 @@ class _SendMoneyViewState extends State<SendMoneyView> {
                     subtitle: Text(otherUsers[index].email!),
                     trailing: Text("Pay Now"),
                     onTap: () {
-                      controller2.selectedUser.value = otherUsers[index];
-                      showDialog(
-                        context: context,
-                        builder: (context) {
-                          return AlertDialog(
-                            title: Text(
-                              textAlign: TextAlign.center,
-                                'Send Money'),
-                            content: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                    // send money to user
-                                    "Send money to ${otherUsers[index].name}"),
-                                SizedBox(height: 10.0),
-
-                                TextField(
-                                  controller: transferNominalController,
-                                  keyboardType: TextInputType.number,
-                                  decoration: InputDecoration(
-                                    prefixIcon: Icon(Icons.money),
-                                    suffixIcon: IconButton(
-                                      onPressed: () {
-                                        transferNominalController.clear();
-                                      },
-                                      icon: Icon(Icons.clear),
-                                    ),
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(20),
-
-                                    ),
-                                    hintText: 'Enter Amount',
-                                  ),
-                                ),
-                                SizedBox(height: 10.0),
-                                TextField(
-                                  controller: descriptionController,
-                                  decoration: InputDecoration(
-                                    prefixIcon: Icon(Icons.description),
-                                    suffixIcon: IconButton(
-                                      onPressed: () {
-                                        descriptionController.clear();
-                                      },
-                                      icon: Icon(Icons.clear),
-                                    ),
-                                    border: OutlineInputBorder(
-
-                                      borderRadius: BorderRadius.circular(20),
-                                    ),
-                                    hintText: 'Description',
-                                  ),
-                                ),
-                              ],
-                            ),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: Text('Cancel'),
-                              ),
-                              TextButton(
-                                onPressed: () {
-                                  _onSubmit();
-                                },
-                                child: Text('Send'),
-                              ),
-                            ],
-                          );
-                        },
-                      );
+                      controller.selectedUser.value = otherUsers[index];
+                      _buildTransferDialog(otherUsers[index]);
 
                     },
                   ),
@@ -210,8 +141,122 @@ class _SendMoneyViewState extends State<SendMoneyView> {
         },
         itemCount: otherUsers.length,
       ),
+      // body: _buildBody(),
     );
   }
+
+  _buildBody() {
+    //   search user and send money use search bar
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+
+          child: TextField(
+          //   do not search same use
+            controller: controller.searchController,
+            onChanged: controller.otherUsers.isEmpty
+                ? (value) {
+                    controller.searchUser(value);
+                  }
+                : null,
+            inputFormatters: [
+              controller.upperCaseTextFormatter,
+            ],
+            decoration: InputDecoration(
+              hintText: 'Search User',
+              prefixIcon: Icon(Icons.search),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+            ),
+
+          ),
+        ),
+        Expanded(
+          child: Obx(() {
+            if (controller.isLoading.value) {
+              return Center(
+                child: Text('Searching...'),
+              );
+            } else {
+              return ListView.builder(
+                itemCount: controller.searchOtherUserList.length,
+                itemBuilder: (context, index) {
+                  UserModel user = UserModel.fromMap(
+                      controller.searchOtherUserList[index].data() as Map<String, dynamic>);
+                  return ListTile(
+                    title: Text(user.name!),
+                    subtitle: Text(user.email!),
+                    trailing: Text('Pay Now'),
+                    onTap: () {
+                      controller.selectedUser.value = user;
+                      _buildTransferDialog(user);
+                    },
+                  );
+                },
+              );
+            }
+          }),
+        ),
+      ],
+    );
+  }
+
+  _buildTransferDialog(UserModel user) {
+    QuickAlert.show(
+      context: context,
+      type: QuickAlertType.info,
+      title: 'Send Money',
+      text: 'Send money to ${user.name}',
+      widget: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(height: 20.0),
+          TextField(
+            controller: transferNominalController,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              prefixIcon: Icon(Icons.money),
+              suffixIcon: IconButton(
+                onPressed: () {
+                  transferNominalController.clear();
+                },
+                icon: Icon(Icons.clear),
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              hintText: 'Enter Amount',
+            ),
+          ),
+          SizedBox(height: 10.0),
+          TextField(
+            controller: descriptionController,
+            decoration: InputDecoration(
+              prefixIcon: Icon(Icons.description),
+              suffixIcon: IconButton(
+                onPressed: () {
+                  descriptionController.clear();
+                },
+                icon: Icon(Icons.clear),
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              hintText: 'Description',
+            ),
+          ),
+        ],
+      ),
+      onConfirmBtnTap: () {
+        Get.back();
+        _onSubmit();
+      },
+      confirmBtnText: 'Send',
+    );
+  }
+
   void sendMoneyToUser(UserModel recipient) async {
     //   send and save statement in_out of users
     if (user != null) {
@@ -248,7 +293,6 @@ class _SendMoneyViewState extends State<SendMoneyView> {
           'amount': transferNominalController.text.trim(),
           'description': descriptionController.text.trim(),
           'created_at': DateTime.now(),
-
         });
 
         await FirebaseFirestore.instance
@@ -276,7 +320,7 @@ class _SendMoneyViewState extends State<SendMoneyView> {
             snackPosition: SnackPosition.BOTTOM);
 
         _buildDialogWithDataReceiver(
-            recipient.username, transferAmount, recipient.name!);
+            recipient.phone, transferAmount, recipient.name!);
       } else {
         QuickAlert.show(
           backgroundColor: Colors.white,
@@ -294,9 +338,10 @@ class _SendMoneyViewState extends State<SendMoneyView> {
   }
 
   void _onSubmit() {
-    UserModel? recipient = controller2.selectedUser.value;
+    UserModel? recipient = controller.selectedUser.value;
     _validateField(recipient);
   }
+
   _validateField(UserModel? recipient) {
     if (transferNominalController.text.isEmpty) {
       QuickAlert.show(
@@ -306,7 +351,7 @@ class _SendMoneyViewState extends State<SendMoneyView> {
         title: 'Error',
         text: 'Please enter amount',
       );
-    }else if (recipient == null) {
+    } else if (recipient == null) {
       QuickAlert.show(
         backgroundColor: Colors.white,
         context: context,
@@ -314,15 +359,15 @@ class _SendMoneyViewState extends State<SendMoneyView> {
         title: 'Error',
         text: 'Please select a recipient',
       );
-    }
-    else {
+    } else {
       // _otpSendFromFirebase();
       // _otpSendMoney(recipient!);
       sendMoneyToUser(recipient);
     }
   }
+
   void _buildDialogWithDataReceiver(
-      String? username, int transferAmount, String fullName) {
+      String? phone, int transferAmount, String fullName) {
     QuickAlert.show(
       backgroundColor: Colors.white,
       barrierDismissible: false,
@@ -330,13 +375,13 @@ class _SendMoneyViewState extends State<SendMoneyView> {
       type: QuickAlertType.success,
       title: 'Success',
       text:
-      'Money sent to $fullName\nAmount: $transferAmount\nRecipient: $username' +
-          '\n\nYou will be redirected to the home page',
+          // 'Money sent to $fullName\nAmount: $transferAmount\nRecipient: $phone' +
+          //     '\n\nYou will be redirected to the home page',
+          'Money sent to $fullName\nAmount: $transferAmount\nPhone: $phone',
       textAlignment: TextAlign.start,
       onConfirmBtnTap: () {
         Get.offAll(() => BottomPageView());
       },
     );
   }
-
 }
