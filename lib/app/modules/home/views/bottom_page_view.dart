@@ -5,8 +5,10 @@ import 'package:fancy_bottom_navigation_plus/fancy_bottom_navigation_plus.dart';
 
 import 'package:get/get.dart';
 import 'package:wallet/app/modules/home/views/mob_home_view.dart';
+import 'package:wallet/global/global.dart';
 
 import '../../../../qrcode/qrcode.dart';
+import '../../../../user_profile/user_profile.dart';
 import '../controllers/home_controller.dart';
 
 class BottomPageView extends GetView {
@@ -39,13 +41,14 @@ class BottomPageView extends GetView {
                 child: Text('Page 2'),
               ),
             ),
+            ProfileScreen(),
 
           ],
         ),
       ),
       bottomNavigationBar: Obx(
         () => FancyBottomNavigationPlus(
-          barheight: 60,
+          barheight: 80,
           circleColor: Colors.blue,
           // barBackgroundColor: Colors.purple,
           tabs: [
@@ -54,6 +57,15 @@ class BottomPageView extends GetView {
             TabData(icon:  Icon(Icons.search), title: "Search"),
             TabData(icon:  Icon(Icons.qr_code), title: "QrCode"),
             TabData(icon:  Icon(Icons.wallet), title: "Wallet"),
+            TabData(
+          //     user image
+              icon: CircleAvatar(
+                radius: 15,
+                backgroundImage: NetworkImage(
+                    '${sharedPreferences!.getString('image')}'),
+              ),
+              title: "Profile",
+            ),
           ],
           key: controller.bottomNavigationKey,
           initialSelection: controller.currentIndex.value,
