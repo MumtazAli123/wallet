@@ -91,15 +91,19 @@ class _RegisterViewState extends State<RegisterView> {
 
   _buildBody(BuildContext context) {
     return SafeArea(
-      child: Container(
-        padding: const EdgeInsets.all(10),
-        width: 400,
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              _buildImage(context),
-              _buildForm(context),
-            ],
+      child: Center(
+        child: Container(
+          padding: const EdgeInsets.all(10),
+          width: 600,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                _buildImage(context),
+                _buildForm(context),
+              ],
+            ),
           ),
         ),
       ),
@@ -164,24 +168,28 @@ class _RegisterViewState extends State<RegisterView> {
     return Container(
       margin: const EdgeInsets.only(top: 20),
       padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Form(
-        key: controller.formKey,
-        child: Column(
-          children: [
-            _nameField(),
-            SizedBox(height: 20.0),
-            _emailField(),
-            SizedBox(height: 20.0),
-            _phoneField(),
-            SizedBox(height: 20.0),
-            _passwordField(),
-            SizedBox(height: 10.0),
-            _confirmPasswordField(),
-            SizedBox(height: 30.0),
-            _registerButton(),
-            SizedBox(height: 10.0),
-            _loginLink(),
-          ],
+      child: Center(
+        child: Form(
+          key: controller.formKey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              _nameField(),
+              SizedBox(height: 20.0),
+              _emailField(),
+              SizedBox(height: 20.0),
+              _phoneField(),
+              SizedBox(height: 20.0),
+              _passwordField(),
+              SizedBox(height: 10.0),
+              _confirmPasswordField(),
+              SizedBox(height: 30.0),
+              _registerButton(),
+              SizedBox(height: 10.0),
+              _loginLink(),
+            ],
+          ),
         ),
       ),
     );
@@ -270,9 +278,14 @@ class _RegisterViewState extends State<RegisterView> {
     return TextFormField(
       controller: controller.phoneController,
       maxLength: 10,
+      // onChanged: (value) {
+      //   setState(() {
+      //     controller.phoneController.text = value;
+      //   });
+      // },
       onChanged: (value) {
         setState(() {
-          controller.phoneController.text = value;
+          hintText = 'Email';
         });
       },
       keyboardType: TextInputType.phone,
@@ -282,10 +295,7 @@ class _RegisterViewState extends State<RegisterView> {
       ),
       decoration: InputDecoration(
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: BorderSide(
-            color: Colors.black,
-          ),
+          borderRadius: BorderRadius.circular(10.0),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10),
@@ -401,72 +411,76 @@ class _RegisterViewState extends State<RegisterView> {
   }
 
   void _showPicker(BuildContext context) {
-    // QuickAlert.show(
-    //   context: context,
-    //   type: QuickAlertType.info,
-    //   title: 'Select Image',
-    //   widget: Column(
-    //     crossAxisAlignment: CrossAxisAlignment.center,
-    //     mainAxisAlignment: MainAxisAlignment.start,
-    //     children: [
-    //       Row(
-    //         mainAxisAlignment: MainAxisAlignment.center,
-    //         crossAxisAlignment: CrossAxisAlignment.center,
-    //         children: [
-    //           ElevatedButton(
-    //             onPressed: () {
-    //               _imgFromCamera();
-    //               Get.back();
-    //             },
-    //             child: const Text('Camera'),
-    //           ),
-    //           const SizedBox(width: 5),
-    //           ElevatedButton(
-    //             onPressed: () {
-    //               _imgFromGallery();
-    //               Get.back();
-    //             },
-    //             child: const Text('Gallery'),
-    //           ),
-    //         ],
-    //       ),
-    //     ],
-    //   ),
-    //   confirmBtnText: 'Cancel',
-    // );
-    AwesomeDialog(
+    QuickAlert.show(
       width: 400,
-      showCloseIcon: true,
-      barrierColor: Colors.black.withOpacity(0.5),
       context: context,
-      dialogType: DialogType.info,
-      dialogBackgroundColor: Colors.blue[100],
-      animType: AnimType.leftSlide,
-      btnCancelOnPress: () {
-      },
-      btnCancelText: 'Cancel',
-      body: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+      type: QuickAlertType.info,
+      title: 'Select Image',
+      text: 'Select image from gallery or camera',
+      widget: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          ElevatedButton(
-            onPressed: () {
-              _imgFromCamera();
-              Get.back();
-            },
-            child: const Text('Camera'),
-          ),
-          const SizedBox(width: 5),
-          ElevatedButton(
-            onPressed: () {
-              _imgFromGallery();
-              Get.back();
-            },
-            child: const Text('Gallery'),
+          Divider(),
+          SizedBox(height: 10.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  _imgFromCamera();
+                  Get.back();
+                },
+                child: const Text('Camera'),
+              ),
+              const SizedBox(width: 5),
+              ElevatedButton(
+                onPressed: () {
+                  _imgFromGallery();
+                  Get.back();
+                },
+                child: const Text('Gallery'),
+              ),
+            ],
           ),
         ],
       ),
-    ).show();
+      confirmBtnText: 'Cancel',
+    );
+    // AwesomeDialog(
+    //   width: 400,
+    //   showCloseIcon: true,
+    //   barrierColor: Colors.black.withOpacity(0.5),
+    //   context: context,
+    //   dialogType: DialogType.info,
+    //   dialogBackgroundColor: Colors.blue[100],
+    //   animType: AnimType.leftSlide,
+    //   btnCancelOnPress: () {
+    //   },
+    //   btnCancelText: 'Cancel',
+    //   body: Row(
+    //     mainAxisAlignment: MainAxisAlignment.center,
+    //     crossAxisAlignment: CrossAxisAlignment.center,
+    //     children: [
+    //       ElevatedButton(
+    //         onPressed: () {
+    //           _imgFromCamera();
+    //           Get.back();
+    //         },
+    //         child: const Text('Camera'),
+    //       ),
+    //       const SizedBox(width: 5),
+    //       ElevatedButton(
+    //         onPressed: () {
+    //           _imgFromGallery();
+    //           Get.back();
+    //         },
+    //         child: const Text('Gallery'),
+    //       ),
+    //     ],
+    //   ),
+    // ).show();
   }
 
   void _imgFromGallery() {
