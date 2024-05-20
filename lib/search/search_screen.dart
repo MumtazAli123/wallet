@@ -45,82 +45,6 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: AppBar(
-      //   title: Container(
-      //     margin: EdgeInsets.all(10.0),
-      //
-      //     height: 40.0,
-      //     child:  _isSearching ? _buildSearchField() : Text('Search'),
-      //   ),
-      //   actions: _buildActions(),
-      // ),
-      // body: _searchOtherUserList.isEmpty
-      //     ? Center(
-      //         child: Text(
-      //           _isSearching ? 'No users found' : 'Start searching',
-      //           style: TextStyle(fontSize: 20),
-      //         ),
-      //       )
-      //     : StreamBuilder(
-      //         stream: db.snapshots(),
-      //         builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-      //           if (snapshot.hasData) {
-      //             return ListView.builder(
-      //               itemCount: _searchOtherUserList.length,
-      //               itemBuilder: (context, index) {
-      //                 return Padding(
-      //                   padding: const EdgeInsets.all(8.0),
-      //                   child: Card(
-      //                     child: ListTile(
-      //                       leading: CircleAvatar(
-      //                         radius: 20.0,
-      //                         // user profile image box fit to cover
-      //                         child: Image.network(
-      //                             "${snapshot.data!.docs[index]['image']}",
-      //                             fit: BoxFit.cover, errorBuilder:
-      //                                 (BuildContext context, Object exception,
-      //                                     StackTrace? stackTrace) {
-      //                           return Icon(Icons.account_circle,
-      //                               size: 50, color: Colors.grey);
-      //                         }, loadingBuilder: (BuildContext context,
-      //                                 Widget child,
-      //                                 ImageChunkEvent? loadingProgress) {
-      //                           if (loadingProgress == null) {
-      //                             return child;
-      //                           } else {
-      //                             return Center(
-      //                               child: CircularProgressIndicator(
-      //                                 value:
-      //                                     loadingProgress.expectedTotalBytes !=
-      //                                             null
-      //                                         ? loadingProgress
-      //                                                 .cumulativeBytesLoaded /
-      //                                             loadingProgress
-      //                                                 .expectedTotalBytes!
-      //                                         : null,
-      //                               ),
-      //                             );
-      //                           }
-      //                         }),
-      //                       ),
-      //                       title: Text(_searchOtherUserList[index]),
-      //                       subtitle:
-      //                           Text('${snapshot.data!.docs[index]['name']}'),
-      //                       trailing: Icon(Icons.arrow_forward_ios),
-      //                       onTap: () {
-      //                         _buildTextFieldDialog(context, index);
-      //                       },
-      //                     ),
-      //                   ),
-      //                 );
-      //               },
-      //             );
-      //           } else {
-      //             return Center(
-      //               child: CircularProgressIndicator(),
-      //             );
-      //           }
-      //         }),
       body: _buildBody(),
     );
   }
@@ -160,6 +84,7 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
             child: Center(
               child: TextField(
+                maxLength: 13,
                 controller: _searchController,
                 keyboardType: TextInputType.phone,
                 // when finish type return the keyboard
