@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:wallet/app/modules/statement/views/statement_view.dart';
 
@@ -197,51 +198,57 @@ class _SearchScreenState extends State<SearchScreen> {
             .where('phone', isEqualTo: value)
             .get()
             .then((QuerySnapshot querySnapshot) {
-          querySnapshot.docs.forEach((doc) {
+          for (var doc in querySnapshot.docs) {
             _searchOtherUserList.add(doc['phone']);
             QuickAlert.show(
               context: context,
-              type: QuickAlertType.custom,
-              title: 'Success',
-              text: 'User found',
-              confirmBtnText: 'ok',
-              onConfirmBtnTap: () {
-                Get.back();
-                Get.to(() => StatementView());
-              },
-              widget: ListTile(
-                leading: CircleAvatar(
-                  radius: 20.0,
-                  child: Image.network(
-                    doc['image'],
-                    fit: BoxFit.cover,
-                    errorBuilder: (BuildContext context, Object exception,
-                        StackTrace? stackTrace) {
-                      return Icon(Icons.account_circle,
-                          size: 50, color: Colors.grey);
-                    },
-                    loadingBuilder: (BuildContext context, Widget child,
-                        ImageChunkEvent? loadingProgress) {
-                      if (loadingProgress == null) {
-                        return child;
-                      } else {
-                        return Center(
-                          child: CircularProgressIndicator(
-                            value: loadingProgress.expectedTotalBytes != null
-                                ? loadingProgress.cumulativeBytesLoaded /
-                                    loadingProgress.expectedTotalBytes!
-                                : null,
-                          ),
-                        );
-                      }
-                    },
+              animType: QuickAlertAnimType.slideInDown,
+              type: QuickAlertType.values[3],
+              title: 'User found',
+              text: 'Do you want to send money to this user? use Qr code',
+              widget: Column(
+                children: [
+                  // QrImage
+                  QrImageView(
+                    data: doc['phone'],
+                    size: 150,
                   ),
-                ),
-                title: Text(doc['name']),
-                subtitle: Text(doc['phone']),
+                  ListTile(
+                    leading: CircleAvatar(
+                      radius: 20.0,
+                      child: Image.network(
+                        doc['image'],
+                        fit: BoxFit.cover,
+                        errorBuilder: (BuildContext context, Object exception,
+                            StackTrace? stackTrace) {
+                          return Icon(Icons.account_circle,
+                              size: 50, color: Colors.grey);
+                        },
+                        loadingBuilder: (BuildContext context, Widget child,
+                            ImageChunkEvent? loadingProgress) {
+                          if (loadingProgress == null) {
+                            return child;
+                          } else {
+                            return Center(
+                              child: CircularProgressIndicator(
+                                value: loadingProgress.expectedTotalBytes != null
+                                    ? loadingProgress.cumulativeBytesLoaded /
+                                        loadingProgress.expectedTotalBytes!
+                                    : null,
+                              ),
+                            );
+                          }
+                        },
+                      ),
+                    ),
+                    title: Text(doc['name']),
+                    subtitle: Text(doc['phone']),
+                  ),
+                ],
               ),
+              showCancelBtn: false,
             );
-          });
+          }
         });
       }
     } catch (e) {
