@@ -8,6 +8,7 @@ import 'package:get_time_ago/get_time_ago.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:wallet/app/modules/home/views/bottom_page_view.dart';
 
 import '../../../../global/global.dart';
 import '../../../../models/user_model.dart';
@@ -48,6 +49,12 @@ class _StatementViewState extends State<StatementView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            Get.offAll(() => BottomPageView());
+          },
+        ),
         title: Text(sharedPreferences!.getString('name')!),
         centerTitle: true,
       ),

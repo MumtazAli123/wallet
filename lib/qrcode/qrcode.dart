@@ -33,21 +33,6 @@ class _QrcodePageState extends State<QrcodePage> {
   // when the user scans the QR code, the data will be displayed in the ResultScreen data get from the firebase
 
   void getResultsFromFirebase() {
-    // if same user scans the QR code, then it will not show the details
-    // FirebaseFirestore.instance
-    //     .collection('sellers')
-    //     .where('phone', isEqualTo: qrResult)
-    //     .get()
-    //     .then((QuerySnapshot querySnapshot) {
-    //   querySnapshot.docs.forEach((doc) {
-    //     UserModel userModel =
-    //         UserModel.fromMap(doc.data() as Map<String, dynamic>);
-    //     Get.to(ResultScreen(
-    //       userModel: userModel,
-    //       qrData: '',
-    //     ));
-    //   });
-    // });
     if (qrResult == sharedPreferences!.getString('phone')) {
       QuickAlert.show(context: context,
           type: QuickAlertType.error,
