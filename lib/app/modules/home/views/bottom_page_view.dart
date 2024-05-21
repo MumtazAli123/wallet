@@ -6,10 +6,12 @@ import 'package:fancy_bottom_navigation_plus/fancy_bottom_navigation_plus.dart';
 import 'package:get/get.dart';
 import 'package:wallet/app/modules/home/views/mob_home_view.dart';
 import 'package:wallet/global/global.dart';
+import 'package:wallet/widgets/my_drawer.dart';
 
 import '../../../../qrcode/qrcode.dart';
 import '../../../../search/search_screen.dart';
 import '../../../../user_profile/user_profile.dart';
+import '../../../../widgets/mix_widgets.dart';
 import '../controllers/home_controller.dart';
 
 class BottomPageView extends GetView {
@@ -19,6 +21,26 @@ class BottomPageView extends GetView {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: MyDrawer(),
+      appBar: AppBar(
+        title: Text('Wallet'.tr),
+        centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () {
+              // Get.to(() => UserProfile());
+            },
+            icon: Icon(Icons.notifications),
+          ),
+        //   language
+          IconButton(
+            onPressed: () {
+              _buildLanguageBottomSheet(context);
+            },
+            icon: Icon(Icons.language),
+          ),
+        ],
+      ),
       body: SizedBox.expand(
         child: PageView(
           pageSnapping: true,
@@ -44,15 +66,15 @@ class BottomPageView extends GetView {
       ),
       bottomNavigationBar: Obx(
         () => FancyBottomNavigationPlus(
-          barheight: 80,
+          barheight: 90,
           circleColor: Colors.blue,
           // barBackgroundColor: Colors.purple,
           tabs: [
-            TabData(icon: const Icon(Icons.home), title: "Home"),
+            TabData(icon: const Icon(Icons.home), title: "Home".tr),
             // TabData(icon: const Icon(Icons.history), title: "History"),
-            TabData(icon:  Icon(Icons.search,), title: "Search"),
-            TabData(icon:  Icon(Icons.qr_code), title: "QrCode"),
-            TabData(icon:  Icon(Icons.wallet), title: "Wallet"),
+            TabData(icon:  Icon(Icons.search,), title: "Search".tr),
+            TabData(icon:  Icon(Icons.qr_code), title: "QrCode".tr),
+            TabData(icon:  Icon(Icons.wallet), title: "Wallet".tr),
             TabData(
           //     user image
               icon: CircleAvatar(
@@ -60,7 +82,7 @@ class BottomPageView extends GetView {
                 backgroundImage: NetworkImage(
                     '${sharedPreferences!.getString('image')}'),
               ),
-              title: "Profile",
+              title: "Profile".tr,
             ),
           ],
           key: controller.bottomNavigationKey,
@@ -69,6 +91,142 @@ class BottomPageView extends GetView {
             controller.currentIndex.value = position;
             controller.pageController.jumpToPage(position);
           },
+        ),
+      ),
+    );
+  }
+
+  void _buildLanguageBottomSheet(BuildContext context) {
+    Get.bottomSheet(
+      Container(
+        height: Get.height * 0.5,
+        width: 600,
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(20),
+            topRight: Radius.circular(20),
+          ),
+        ),
+        child: Column(
+          children: [
+            const SizedBox(height: 20),
+            Container(
+              height: 5,
+              width: 50,
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor,
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Text(
+              'Choose Language'.tr,
+              style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Get.back();
+                    var locale = const Locale('en', 'US');
+                    Get.updateLocale(locale);
+                  },
+                  child: Container(
+                    height: 100,
+                    width: 100,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColorDark,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        wText('English'.tr, color: Colors.white),
+                      ],
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Get.back();
+                    // arabic
+                    var locale = const Locale('sd', 'PK');
+                    Get.updateLocale(locale);
+                  },
+                  child: Container(
+                    height: 100,
+                    width: 100,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColorDark,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        wText('Sindhi'.tr, color: Colors.white),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Get.back();
+                    // hindi
+                    var locale = const Locale('hi', 'IN');
+                    Get.updateLocale(locale);
+                  },
+                  child: Container(
+                    height: 100,
+                    width: 100,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColorDark,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        wText('Hindi'.tr, color: Colors.white),
+                      ],
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    Get.back();
+                    // arabic
+                    var locale = const Locale('ar', 'SA');
+                    Get.updateLocale(locale);
+                  },
+                  child: Container(
+                    height: 100,
+                    width: 100,
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).primaryColorDark,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        wText('Arabic'.tr, color: Colors.white),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );

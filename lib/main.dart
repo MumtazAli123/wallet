@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'app/routes/app_pages.dart';
 import 'firebase_options.dart';
 import 'global/global.dart';
+import 'language/translate.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,6 +35,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'Flutter Firebase',
+      translations: LanguageTranslate(),
+      locale: const Locale('en', 'US'),
+      fallbackLocale: const Locale('en', 'US'),
       defaultTransition: Transition.zoom,
       debugShowCheckedModeBanner: false,
       darkTheme: ThemeData.dark(),

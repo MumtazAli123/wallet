@@ -14,7 +14,6 @@ import 'package:wallet/widgets/currency_format.dart';
 import '../../../../models/balance.dart';
 import '../../../../models/user_model.dart';
 import '../../../../widgets/mix_widgets.dart';
-import '../../../../widgets/my_drawer.dart';
 import '../../send_money/views/send_money_view.dart';
 import '../controllers/home_controller.dart';
 
@@ -31,11 +30,6 @@ class HomeView extends GetView {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: MyDrawer(),
-      appBar: AppBar(
-        title: Text('Home'),
-        centerTitle: true,
-      ),
       body: SingleChildScrollView(
         child: Container(
           decoration: BoxDecoration(
@@ -196,7 +190,7 @@ class HomeView extends GetView {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  wText("Recent Transactions",
+                  wText("Recent Transactions.".tr,
                       color: Colors.black, size: 18.0),
                   Spacer(),
                   TextButton(
@@ -205,7 +199,7 @@ class HomeView extends GetView {
                               loggedInUser: userModel,
                             ));
                       },
-                      child: wText('View All', color: Colors.blue))
+                      child: wText('View All'.tr, color: Colors.blue))
                 ],
               ),
             ),
@@ -263,15 +257,15 @@ class HomeView extends GetView {
                                           context,
                                           BalanceModel(
                                             name: snapshot.data?.docs[index]
-                                                ['name'],
+                                                ['name'.tr],
                                             description: snapshot
-                                                .data?.docs[index]['description'],
+                                                .data?.docs[index]['description'.tr],
                                             amount: snapshot.data?.docs[index]
-                                                ['amount'],
+                                                ['amount'.tr],
                                             phone: snapshot.data?.docs[index]
-                                                ['phone'],
+                                                ['phone'.tr],
                                             type: snapshot.data?.docs[index]
-                                                ['type'],
+                                                ['type'.tr],
                                             created_at:
                                                 'Time: ${GetTimeAgo.parse(DateTime.parse(snapshot.data!.docs[index]['created_at'].toDate().toString()), locale: 'en')}'
                                                 '\nDate: ${DateTime.parse(snapshot.data!.docs[index]['created_at'].toDate().toString()).toString().substring(0, 16)}',
@@ -357,7 +351,7 @@ class HomeView extends GetView {
             ),
           ],
         ),
-      cancelBtnText: "Close",
+      cancelBtnText: "Close".tr,
       showConfirmBtn: false,
     );
 

@@ -130,7 +130,7 @@ class _StatementViewState extends State<StatementView> {
     return QuickAlert.show(
         context: context,
         type: QuickAlertType.values[3],
-        title: "${param0['name']}",
+        title: "${param0['name'.tr]}",
         text: 'Detail of the transaction',
         widget: Column(
           mainAxisAlignment: MainAxisAlignment.start,
