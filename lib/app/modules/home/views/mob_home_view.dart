@@ -177,113 +177,117 @@ class HomeView extends GetView {
   _buildRecentTransactions() {
     final size = MediaQuery.of(Get.context!).size;
     try {
-      return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          height: size.height * 0.4,
-          width: 600,
-          margin: EdgeInsets.all(10.0),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(height: 10.0),
-              Padding(
-                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    wText("Recent Transactions"),
-                    Spacer(),
-                    TextButton(
-                        onPressed: () {
-                          Get.to(() => StatementView(
-                                loggedInUser: userModel,
-                              ));
-                        },
-                        child: Text('View All'))
-                  ],
-                ),
+      return Container(
+        height: size.height * 0.4,
+        width: 600,
+        margin: EdgeInsets.all(10.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            SizedBox(height: 10.0),
+            Padding(
+              padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  wText("Recent Transactions",
+                      color: Colors.black, size: 18.0),
+                  Spacer(),
+                  TextButton(
+                      onPressed: () {
+                        Get.to(() => StatementView(
+                              loggedInUser: userModel,
+                            ));
+                      },
+                      child: wText('View All', color: Colors.blue))
+                ],
               ),
-              Divider(),
-              controller.isLoading.value
-                  ? Center(child: CircularProgressIndicator())
-                  : Expanded(
-                      child: StreamBuilder(
-                        stream: FirebaseFirestore.instance
-                            .collection('sellers')
-                            .doc(user!.uid)
-                            .collection('statement')
-                            .where('created_at',
-                                isGreaterThanOrEqualTo: DateTime(
-                                    // recent transactions minimum 3 days
-                                    now.year,
-                                    now.month,
-                                    now.day - 3))
-                            .orderBy('created_at', descending: true)
-                            .limit(5)
-                            .snapshots(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            return ListView.builder(
-                              itemCount: snapshot.data!.docs.length,
-                              itemBuilder: (context, index) {
-                                return ListTile(
-                                  leading: CircleAvatar(
-                                    child: Text(
-                                        // name first letter
-                                        snapshot.data?.docs[index]['name'] ==
-                                                null
-                                            ? ''
-                                            : snapshot
-                                                .data?.docs[index]['name'][0]
-                                                .toUpperCase()),
-                                  ),
-                                  title: Text(snapshot.data?.docs[index]['name']),
-                                  subtitle: Text(
-                                      GetTimeAgo.parse(DateTime.parse(snapshot.data!.docs[index]['created_at'].toDate().toString()), locale: 'en')
-                                  ),
+            ),
+            Divider(),
+            controller.isLoading.value
+                ? Center(child: CircularProgressIndicator())
+                : Expanded(
+                    child: StreamBuilder(
+                      stream: FirebaseFirestore.instance
+                          .collection('sellers')
+                          .doc(user!.uid)
+                          .collection('statement')
+                          .where('created_at',
+                              isGreaterThanOrEqualTo: DateTime(
+                                  // recent transactions minimum 3 days
+                                  now.year,
+                                  now.month,
+                                  now.day - 3))
+                          .orderBy('created_at', descending: true)
+                          .limit(5)
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          return ListView.builder(
+                            itemCount: snapshot.data!.docs.length,
+                            itemBuilder: (context, index) {
+                              return Padding(
+                                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                                child: Card(
+                                  elevation: 0.5,
+                                  child: ListTile(
+                                    leading: CircleAvatar(
+                                      child: Text(
+                                          // name first letter
+                                          snapshot.data?.docs[index]['name'] ==
+                                                  null
+                                              ? ''
+                                              : snapshot
+                                                  .data?.docs[index]['name'][0]
+                                                  .toUpperCase()),
+                                    ),
+                                    title: Text(snapshot.data?.docs[index]['name']),
+                                    subtitle: Text(
+                                        GetTimeAgo.parse(DateTime.parse(snapshot.data!.docs[index]['created_at'].toDate().toString()), locale: 'en')
+                                    ),
 
-                                  //   type and amount
-                                  trailing: wText(
-                                    snapshot.data?.docs[index]['type'] == 'send'
-                                        ? '+${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}'
-                                        : '-${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}',
+                                    //   type and amount
+                                    trailing: wText(
+                                      snapshot.data?.docs[index]['type'] == 'send'
+                                          ? '+${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}'
+                                          : '-${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}',
+                                    ),
+                                    onTap: () {
+                                      _buildDetailDialog(
+                                          context,
+                                          BalanceModel(
+                                            name: snapshot.data?.docs[index]
+                                                ['name'],
+                                            description: snapshot
+                                                .data?.docs[index]['description'],
+                                            amount: snapshot.data?.docs[index]
+                                                ['amount'],
+                                            phone: snapshot.data?.docs[index]
+                                                ['phone'],
+                                            type: snapshot.data?.docs[index]
+                                                ['type'],
+                                            created_at:
+                                                'Time: ${GetTimeAgo.parse(DateTime.parse(snapshot.data!.docs[index]['created_at'].toDate().toString()), locale: 'en')}'
+                                                '\nDate: ${DateTime.parse(snapshot.data!.docs[index]['created_at'].toDate().toString()).toString().substring(0, 16)}',
+                                          ));
+                                    },
                                   ),
-                                  onTap: () {
-                                    _buildDetailDialog(
-                                        context,
-                                        BalanceModel(
-                                          name: snapshot.data?.docs[index]
-                                              ['name'],
-                                          description: snapshot
-                                              .data?.docs[index]['description'],
-                                          amount: snapshot.data?.docs[index]
-                                              ['amount'],
-                                          phone: snapshot.data?.docs[index]
-                                              ['phone'],
-                                          type: snapshot.data?.docs[index]
-                                              ['type'],
-                                          created_at:
-                                              'Time: ${GetTimeAgo.parse(DateTime.parse(snapshot.data!.docs[index]['created_at'].toDate().toString()), locale: 'en')}'
-                                              '\nDate: ${DateTime.parse(snapshot.data!.docs[index]['created_at'].toDate().toString()).toString().substring(0, 16)}',
-                                        ));
-                                  },
-                                );
-                              },
-                            );
-                          }
-                          return wText('No Transactions');
-                        },
-                      ),
+                                ),
+                              );
+                            },
+                          );
+                        }
+                        return wText('No Transactions');
+                      },
                     ),
-            ],
-          ),
+                  ),
+          ],
         ),
       );
     } catch (e) {
@@ -326,7 +330,7 @@ class HomeView extends GetView {
   _buildDetailMobile(BuildContext context, BalanceModel model) {
     QuickAlert.show(
         context: context,
-        type: QuickAlertType.info,
+        type: QuickAlertType.values[3],
         title: model.name,
         text: "Details",
         widget: Column(
@@ -353,7 +357,8 @@ class HomeView extends GetView {
             ),
           ],
         ),
-      confirmBtnText: "Close",
+      cancelBtnText: "Close",
+      showConfirmBtn: false,
     );
 
   }

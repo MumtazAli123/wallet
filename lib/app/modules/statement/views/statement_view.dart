@@ -77,33 +77,40 @@ class _StatementViewState extends State<StatementView> {
               return ListView.builder(
                 itemCount: snapshot.data!.docs.length,
                 itemBuilder: (context, index) {
-                  return ListTile(
-                    onTap: () {
-                      isMobile(context)
-                          ? _buildDetailMobile(snapshot.data!.docs[index])
-                          : _buildDetailDesktop(snapshot.data!.docs[index]);
-                    },
-                    leading: CircleAvatar(
-                      child: Text(
-                        // name first letter
-                          snapshot.data?.docs[index]['name'] ==
-                              null
-                              ? ''
-                              : snapshot
-                              .data?.docs[index]['name'][0]
-                              .toUpperCase()),
-                    ),
-                    title:
-                    Text(snapshot.data?.docs[index]['name']),
-                    subtitle: Text(snapshot.data?.docs[index]
-                    ['description']),
+                  return Padding(
+                    padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                    child: Card(elevation: 0.5,
+                      child: ListTile(
+                        onTap: () {
+                          isMobile(context)
+                              ? _buildDetailMobile(snapshot.data!.docs[index])
+                              : _buildDetailDesktop(snapshot.data!.docs[index]);
+                        },
+                        leading: CircleAvatar(
+                          child: Text(
+                            // name first letter
+                              snapshot.data?.docs[index]['name'] ==
+                                  null
+                                  ? ''
+                                  : snapshot
+                                  .data?.docs[index]['name'][0]
+                                  .toUpperCase()),
+                        ),
+                        title:
+                        Text(snapshot.data?.docs[index]['name']),
+                        subtitle: Text(
+                            'Time: ${GetTimeAgo.parse(DateTime.parse(snapshot.data!.docs[index]['created_at'].toDate().toString()), locale: 'en')}'
 
-                    //   type and amount
-                    trailing: wText(
-                      snapshot.data?.docs[index]['type'] ==
-                          'send'
-                          ? '+${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}'
-                          : '-${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}',
+                        ),
+
+                        //   type and amount
+                        trailing: wText(
+                          snapshot.data?.docs[index]['type'] ==
+                              'send'
+                              ? '+${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}'
+                              : '-${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}',
+                        ),
+                      ),
                     ),
                   );
                 },
@@ -122,30 +129,29 @@ class _StatementViewState extends State<StatementView> {
     MediaQuery.of(context).size.width < 600;
     return QuickAlert.show(
         context: context,
-        type: QuickAlertType.custom,
-        title: 'Detail',
+        type: QuickAlertType.values[3],
+        title: "${param0['name']}",
         text: 'Detail of the transaction',
         widget: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Divider(),
-            Text(
-              'Name: ${param0['name']}',
-              style: GoogleFonts.poppins(
-                fontSize: 15,
-                color: Colors.black,
-              ),
-            ),
-            Text(
+            wText(
               'Amount: ${currencyFormat(double.parse(param0['amount'].toString()))}',
+              color: Colors.black,
+            ),
+            Text(
+              'Type: ${param0['type'] == 'send' ? 'Credit' : 'Debit'}',
               style: GoogleFonts.poppins(
                 fontSize: 15,
                 color: Colors.black,
               ),
             ),
+
             Text(
-              'Type: ${param0['type'] == 'send' ? 'Received' : 'Sent'}',
+              // description
+              'Purpose: ${param0['description'] ?? 'No Description'}',
               style: GoogleFonts.poppins(
                 fontSize: 15,
                 color: Colors.black,
@@ -155,14 +161,6 @@ class _StatementViewState extends State<StatementView> {
               param0['phone'] == null
                   ? 'Phone: Not Available'
                   : 'Phone: ${param0['phone']}',
-              style: GoogleFonts.poppins(
-                fontSize: 15,
-                color: Colors.black,
-              ),
-            ),
-            Text(
-              // description
-              'Purpose: ${param0['description'] ?? 'No Description'}',
               style: GoogleFonts.poppins(
                 fontSize: 15,
                 color: Colors.black,
@@ -184,7 +182,11 @@ class _StatementViewState extends State<StatementView> {
               ),
             )
           ],
-        ));
+        ),
+        cancelBtnText: 'Close',
+    //     cancel btn false
+      showConfirmBtn: false,
+    );
   }
 
   _buildDetailDesktop(param0) {
