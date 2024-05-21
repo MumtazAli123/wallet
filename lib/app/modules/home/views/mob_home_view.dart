@@ -244,10 +244,10 @@ class HomeView extends GetView {
                                                 .data?.docs[index]['name'][0]
                                                 .toUpperCase()),
                                   ),
-                                  title:
-                                      Text(snapshot.data?.docs[index]['name']),
-                                  subtitle: Text(snapshot.data?.docs[index]
-                                      ['description']),
+                                  title: Text(snapshot.data?.docs[index]['name']),
+                                  subtitle: Text(
+                                      GetTimeAgo.parse(DateTime.parse(snapshot.data!.docs[index]['created_at'].toDate().toString()), locale: 'en')
+                                  ),
 
                                   //   type and amount
                                   trailing: wText(
@@ -352,7 +352,10 @@ class HomeView extends GetView {
               style: TextStyle(color: Colors.black),
             ),
           ],
-        ));
+        ),
+      confirmBtnText: "Close",
+    );
+
   }
 
   _buildDetailDesktop(BuildContext context, BalanceModel model) {
