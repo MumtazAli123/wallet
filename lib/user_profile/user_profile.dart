@@ -7,11 +7,9 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/get_utils.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:quickalert/models/quickalert_type.dart';
-import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:quickalert/quickalert.dart';
 import 'package:wallet/global/global.dart';
 
-import '../utils/utils.dart';
 import '../widgets/mix_widgets.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -92,7 +90,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       flexibleSpace: FlexibleSpaceBar(
         title: isLoading
             ? CircularProgressIndicator()
-            :  Container(
+            : Container(
           margin: EdgeInsets.only(top: 5),
           padding: EdgeInsets.all(8),
           decoration: BoxDecoration(
@@ -135,40 +133,94 @@ class _ProfileScreenState extends State<ProfileScreen> {
             _email = data['email'];
             _phone = data['phone'];
             _image = data['image'];
+            _balance = (double.parse(data['balance'].toString())).toStringAsFixed(2);
             return Column(
               children: [
-                ListView(
-                  shrinkWrap: true,
-                  children: [
-                    ListTile(
-                      leading: Icon(Icons.person),
-                      title: Text('Name'),
-                      subtitle: Text(_name),
-                      trailing: Icon(Icons.edit),
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.email),
-                      title: Text('Email'),
-                      subtitle: Text(_email),
-                      trailing: IconButton(
-                        icon: Icon(Icons.edit),
+                Container(
+                  padding: EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          wText('Balance'.tr, size: 16),
+                          wText(_balance, size: 20),
+                        ],
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.refresh),
                         onPressed: () {
-                          // _showUpdateDialog('email', _email);
+                          _showUpdateDialog('balance', _balance);
                         },
                       ),
-                    ),
-                    ListTile(
-                      leading: Icon(Icons.phone),
-                      title: Text('Phone'),
-                      subtitle: Text(_phone),
-                      trailing: IconButton(
-                        icon: Icon(Icons.edit),
-                        onPressed: () {
-                          // _showUpdateDialog('phone', _phone);
-                        },
+                    ],
+                  ),
+                ),
+                SizedBox(height: 10),
+                // save profile data
+                Container(
+                  padding: EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          wText('Name'.tr, size: 16),
+                          wText(_name, size: 20),
+                        ],
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
+                ),
+                SizedBox(height: 10),
+                Container(
+                  padding: EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          wText('Email'.tr, size: 16),
+                          wText(_email, size: 20),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 10),
+                Container(
+                  padding: EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          wText('Phone'.tr, size: 16),
+                          wText(_phone, size: 20),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
                 SizedBox(height: 20),
                 ElevatedButton(
@@ -200,6 +252,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
     FirebaseAuth.instance.signOut();
     Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
   }
+
+  void _showUpdateDialog(String s, String balance) {
+    QuickAlert.show(context: context,
+        type: QuickAlertType.confirm,
+        title: 'Update Balance'.tr,
+       text: "You can update your balance here.",
+      widget:  TextField(
+        controller: TextEditingController(text: balance),
+        keyboardType: TextInputType.number,
+        decoration: InputDecoration(
+          hintText: 'Enter new balance'.tr,
+        ),
+      ),
+      showConfirmBtn: false,
+        cancelBtnText: "Update".tr,
+      cancelBtnTextStyle: TextStyle(color: Colors.green),
+    );
+  }
+
+
 }
 
 
