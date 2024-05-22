@@ -5,12 +5,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_utils/get_utils.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:wallet/global/global.dart';
 
 import '../utils/utils.dart';
+import '../widgets/mix_widgets.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -27,59 +29,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   bool isLoading = false;
 
-  final _name = '';
-  final _email = '';
-  final _phone = '';
-  final _image = '';
+  var _name = '';
+  var _email = '';
+  var _phone = '';
+  var _image = '';
+  var _balance = '';
 
-  void updateProfile() async {
-    if (_name.isEmpty || _email.isEmpty || _phone.isEmpty) {
-      QuickAlert.show(
-          context: context,
-          type: QuickAlertType.error,
-          title: 'Error',
-          text: 'All fields are required');
-      return;
-    }
-    setState(() {
-      isLoading = true;
-    });
-    try {
-      await db.doc(currentUserId).update({
-        'name': _name,
-        'email': _email,
-        'phone': _phone,
-        'image': _image,
-      });
-      QuickAlert.show(
-          context: context,
-          type: QuickAlertType.success,
-          title: 'Success',
-          text: 'Profile updated successfully');
-    } catch (e) {
-      QuickAlert.show(
-          context: context,
-          type: QuickAlertType.error,
-          title: 'Error',
-          text: 'An error occurred');
-    }
-    setState(() {
-      isLoading = false;
-    });
-  }
 
   FocusNode focusNode = FocusNode();
 
-  Uint8List? image;
-
-  void selectImage() async {
-    Uint8List? img = await pickImage(ImageSource.gallery);
-    if (img != null) {
-      setState(() {
-        image = img;
-      });
-    }
-  }
 
   @override
   void initState() {
@@ -130,8 +88,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
       floating: false,
       pinned: true,
       snap: false,
+      // title: Text('Profile'.tr),
       flexibleSpace: FlexibleSpaceBar(
-        title: Text('Profile'),
+        title: isLoading
+            ? CircularProgressIndicator()
+            :  Container(
+          margin: EdgeInsets.only(top: 5),
+          padding: EdgeInsets.all(8),
+          decoration: BoxDecoration(
+            color: Colors.black.withOpacity(0.5),
+            borderRadius: BorderRadius.circular(20),
+          ),
+          child: wText('Profile'.tr, color: Colors.white),
+        ),
         background: Image.network(
           sharedPreferences!.getString('image')!,
           fit: BoxFit.cover,
@@ -141,23 +110,96 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   _buildProfileDetails() {
+    return Padding(
+      padding: const EdgeInsets.all(16.0),
+      child: Column(
+        children: [
+          //   profile data show
+          _buildProfileData(),
+          SizedBox(height: 20),
+          // profile data update
+          // _buildProfileUpdate(),
+
+        ],
+      ),
+    );
+  }
+
+  _buildProfileData() {
     return StreamBuilder(
         stream: db.doc(currentUserId).snapshots(),
         builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
+          if (snapshot.hasData) {
+            var data = snapshot.data!.data() as Map<String, dynamic>;
+            _name = data['name'];
+            _email = data['email'];
+            _phone = data['phone'];
+            _image = data['image'];
+            return Column(
+              children: [
+                ListView(
+                  shrinkWrap: true,
+                  children: [
+                    ListTile(
+                      leading: Icon(Icons.person),
+                      title: Text('Name'),
+                      subtitle: Text(_name),
+                      trailing: Icon(Icons.edit),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.email),
+                      title: Text('Email'),
+                      subtitle: Text(_email),
+                      trailing: IconButton(
+                        icon: Icon(Icons.edit),
+                        onPressed: () {
+                          // _showUpdateDialog('email', _email);
+                        },
+                      ),
+                    ),
+                    ListTile(
+                      leading: Icon(Icons.phone),
+                      title: Text('Phone'),
+                      subtitle: Text(_phone),
+                      trailing: IconButton(
+                        icon: Icon(Icons.edit),
+                        onPressed: () {
+                          // _showUpdateDialog('phone', _phone);
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    _signOut();
+                  },
+                  child: isLoading
+                      ? CircularProgressIndicator()
+                      : wText('Sign Out'.tr, color: Colors.white),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    padding: EdgeInsets.all(16),
+                    minimumSize: Size(200, 50),
+
+                  ),
+                ),
+              ],
+            );
+          } else {
             return CircularProgressIndicator();
           }
-          final data = snapshot.data!.data() as Map<String, dynamic>;
-          return ListTile(
-            title: Text(data['name']),
-            subtitle: Text(data['email']),
-            trailing: IconButton(
-              icon: Icon(Icons.edit),
-              onPressed: () {
-                Navigator.pushNamed(context, '/edit_profile');
-              },
-            ),
-          );
         });
   }
+
+
+
+
+  void _signOut() {
+    FirebaseAuth.instance.signOut();
+    Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
+  }
 }
+
+

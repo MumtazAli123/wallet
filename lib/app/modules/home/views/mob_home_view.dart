@@ -82,10 +82,10 @@ class HomeView extends GetView {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  wText("${sharedPreferences?.getString('name')}",
-                      color: Colors.white, size: 20.0),
+                  // wText("${sharedPreferences?.getString('name')}",
+                  //     color: Colors.white, size: 20.0),
                   SizedBox(
-                    height: 60.0,
+                    height: 80.0,
                   ),
                   StreamBuilder(
                       stream: FirebaseFirestore.instance
@@ -98,7 +98,7 @@ class HomeView extends GetView {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               wText(
-                                  "Balance: PKR: ${currencyFormat(double.parse(snapshot.data!['balance'].toString()))}",
+                                  "Balance: PKR: ${currencyFormat(double.parse(snapshot.data!['balance'].toString()))}".tr,
                                   color: Colors.white,
                                   size: 20.0),
                               Divider(
@@ -121,13 +121,13 @@ class HomeView extends GetView {
                               ),
                               wText(
                                   // show first 3 and ... last 4 digits of phone number
-                                  "Account Number: ${snapshot.data!['phone'].toString().substring(0, 5)}...${snapshot.data!['phone'].toString().substring(7, 11)}",
+                                  "Account Number: ${snapshot.data!['phone'].toString().substring(0, 5)}...${snapshot.data!['phone'].toString().substring(7, 11)}".tr,
                                   color: Colors.white,
                                   size: 14.0),
                             ],
                           );
                         }
-                        return wText("Balance: \$0",
+                        return wText("Balance: \$0".tr,
                             color: Colors.white, size: 20.0);
                       })
                 ],
@@ -154,14 +154,14 @@ class HomeView extends GetView {
             onPressed: () {
               Get.to(() => SendMoneyView());
             },
-            child: Text('Send Money'),
+            child: Text('Send Money'.tr),
           ),
           ElevatedButton(
             onPressed: () {
               // Get.toNamed('/add-money');
               _buildDialogAddMoney();
             },
-            child: Text('Add Money'),
+            child: Text('Add Money'.tr),
           ),
         ],
       ),
@@ -190,7 +190,7 @@ class HomeView extends GetView {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  wText("Recent Transactions.".tr,
+                  wText("Recent Transactions".tr,
                       color: Colors.black, size: 18.0),
                   Spacer(),
                   TextButton(

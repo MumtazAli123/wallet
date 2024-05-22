@@ -5,8 +5,9 @@ import 'package:google_fonts/google_fonts.dart';
 bool isLoading = false;
 wText(String text, { Color? color, double size = 16}) {
   return Text(
+    textAlign: TextAlign.center,
     text,
-    style: GoogleFonts.roboto(
+    style: GoogleFonts.gabriela(
       fontSize: size,
       fontWeight: FontWeight.bold,
       color: color,

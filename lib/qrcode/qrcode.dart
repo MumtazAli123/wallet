@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
+import 'package:get/get_utils/get_utils.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:wallet/global/global.dart';
@@ -23,7 +24,7 @@ class QrcodePage extends StatefulWidget {
 class _QrcodePageState extends State<QrcodePage> {
   String? qrData;
   String scanQrCode = '';
-  String? qrResult = 'Not Yet Scanned';
+  String? qrResult = 'Not Yet Scanned'.tr;
   bool isQrScannedCompleted = false;
 
   void closedScanner() {
@@ -81,16 +82,22 @@ class _QrcodePageState extends State<QrcodePage> {
               });
             });
           },
-          child: wText('Scan QR Code', color: Colors.white, size: 20),
+          child: wText('Scan QR Code'.tr, color: Colors.white, size: 20),
         ),
       ),
       backgroundColor: Colors.white,
       appBar: AppBar(
+        centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title: Text("Welcome, ${sharedPreferences!.getString('name')!}",
-            style: TextStyle(color: Colors.black, fontSize: 20)),
-        centerTitle: true,
+        title:Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text("Welcome".tr, style: TextStyle(color: Colors.black, fontSize: 20),),
+            SizedBox(width: 10,),
+            wText(sharedPreferences!.getString('name')!.tr),
+    ],
+        ),
       ),
       body: _buildBody(),
     );
@@ -106,7 +113,7 @@ class _QrcodePageState extends State<QrcodePage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                'QR Code Scanner',
+                'QR Code Scanner'.tr,
                 style: TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,
@@ -116,14 +123,14 @@ class _QrcodePageState extends State<QrcodePage> {
                 height: 20,
               ),
               Text(
-                'Scan the QR code to get the details',
+                'Scan the QR code to get the details'.tr,
                 style: TextStyle(
                     fontSize: 15,
                     fontWeight: FontWeight.bold,
                     color: Colors.black),
               ),
               SizedBox(
-                height: 100.0),
+                height: 50.0),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: QrImageView(

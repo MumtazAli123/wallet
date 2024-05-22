@@ -23,7 +23,7 @@ class BottomPageView extends GetView {
     return Scaffold(
       drawer: MyDrawer(),
       appBar: AppBar(
-        title: Text('Wallet'.tr),
+        title: Text('PaySaw Wallet'.tr),
         centerTitle: true,
         actions: [
           IconButton(
