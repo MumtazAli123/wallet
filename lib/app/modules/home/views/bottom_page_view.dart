@@ -12,6 +12,7 @@ import '../../../../qrcode/qrcode.dart';
 import '../../../../search/search_screen.dart';
 import '../../../../user_profile/user_profile.dart';
 import '../../../../widgets/mix_widgets.dart';
+import '../../../../widgets/slider_pics.dart';
 import '../controllers/home_controller.dart';
 
 class BottomPageView extends GetView {
@@ -53,12 +54,7 @@ class BottomPageView extends GetView {
             HomeView(),
             SearchScreen(),
             QrcodePage(),
-            Container(
-              color: Colors.green,
-              child: Center(
-                child: Text('Page 2'),
-              ),
-            ),
+            SliderPics(),
             ProfileScreen(),
 
           ],

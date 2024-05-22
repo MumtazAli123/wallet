@@ -41,6 +41,7 @@ dependencies:
     sdk: flutter
   qr_flutter: ^4.1.0
   flutter_barcode_scanner: ^2.0.0
+  carousel_slider: ^4.2.1
 
 
 dev_dependencies: 
@@ -52,5 +53,6 @@ flutter:
   assets: 
     - assets/
     - assets/images/
+    - assets/slider/5.jpg
   uses-material-design: true
 
