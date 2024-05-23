@@ -53,7 +53,7 @@ flutter:
   assets: 
     - assets/
     - assets/images/
-    - assets/slider/0.jpg
+    - assets/slider/
     - assets/slider/2.jpg
 
   uses-material-design: true
