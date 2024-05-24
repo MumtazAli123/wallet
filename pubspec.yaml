@@ -6,8 +6,6 @@ environment:
   sdk: '>=3.3.4 <4.0.0'
 
 
-
-
 dependencies:
   get:
   path:
@@ -45,15 +43,23 @@ dependencies:
 
 
 dev_dependencies: 
-  flutter_lints: ^4.0.0
-  flutter_test: 
+  flutter_test:
     sdk: flutter
+  flutter_lints: ^4.0.0
+  flutter_launcher_icons: ^0.13.1
+
+flutter_icons:
+    android: true
+    ios: true
+    image_path: "assets/icons/icon.png"
+
 
 flutter: 
   assets: 
     - assets/
     - assets/images/
     - assets/slider/
+    - assets/icons/
     - assets/slider/2.jpg
 
   uses-material-design: true
