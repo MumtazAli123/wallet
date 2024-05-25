@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:quickalert/quickalert.dart';
+import 'package:wallet/app/modules/send_money/views/friends_model.dart';
+import 'package:wallet/models/balance.dart';
 import 'package:wallet/models/user_model.dart';
 
 import '../../../../global/global.dart';
@@ -111,17 +113,15 @@ class SendMoneyController extends GetxController {
   }
 
   static textUpperCaseTextFormatter() {
-    // first letter use capital and other letter use small
+    // every first word first letter use capital and other letter use small
     return TextInputFormatter.withFunction((oldValue, newValue) {
-      if (newValue.text.isEmpty) {
-        return newValue.copyWith(text: newValue.text);
-      } else if (newValue.text.length == 1) {
-        return newValue.copyWith(
-            text: newValue.text[0].toUpperCase() + newValue.text.substring(1));
+      if (newValue.text.isNotEmpty) {
+        if (oldValue.text.isEmpty || (oldValue.text.isNotEmpty && oldValue.text.endsWith(' '))) {
+          return newValue.copyWith(text: newValue.text.toUpperCase());
+        }
       }
-      return newValue.copyWith(
-          text: newValue.text[0].toUpperCase() +
-              newValue.text.substring(1).toLowerCase());
+      return newValue;
     });
   }
+
 }

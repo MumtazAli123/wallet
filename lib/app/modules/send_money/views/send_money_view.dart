@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:wallet/app/modules/home/views/bottom_page_view.dart';
+import 'package:wallet/app/modules/send_money/views/send_money_friends_view.dart';
 
 import '../../../../global/global.dart';
 import '../../../../models/user_model.dart';
@@ -35,6 +36,8 @@ class _SendMoneyViewState extends State<SendMoneyView> {
   final TextEditingController transferNominalController =
       TextEditingController();
   final descriptionController = TextEditingController();
+  final nameController = TextEditingController();
+  final phoneController = TextEditingController();
 
   UserModel userModel = UserModel();
 
@@ -110,6 +113,14 @@ class _SendMoneyViewState extends State<SendMoneyView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Get.to(() => SendMoneyToFriends(
+                user: userModel,
+          ));
+        },
+        child: Icon(Icons.add),
+      ),
       appBar: AppBar(
         title: Text('Send Money'),
         centerTitle: true,
@@ -388,4 +399,5 @@ class _SendMoneyViewState extends State<SendMoneyView> {
       },
     );
   }
+
 }
