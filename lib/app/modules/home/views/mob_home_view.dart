@@ -7,19 +7,19 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:quickalert/quickalert.dart';
-import 'package:wallet/app/modules/statement/views/statement_view.dart';
-import 'package:wallet/global/global.dart';
 import 'package:wallet/widgets/currency_format.dart';
 
 import '../../../../models/balance.dart';
 import '../../../../models/user_model.dart';
 import '../../../../widgets/mix_widgets.dart';
 import '../../send_money/views/send_money_view.dart';
+import '../../statement/views/time_statement_view.dart';
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView {
-  final UserModel? userModel;
-  HomeView({super.key, this.userModel});
+
+   HomeView({super.key});
+
 
   @override
   final controller = Get.put(HomeController());
@@ -195,9 +195,7 @@ class HomeView extends GetView {
                   Spacer(),
                   TextButton(
                       onPressed: () {
-                        Get.to(() => StatementView(
-                              loggedInUser: userModel,
-                            ));
+                        Get.to(() => TimeStatementView());
                       },
                       child: wText('View All'.tr, color: Colors.blue))
                 ],

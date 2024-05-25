@@ -14,6 +14,16 @@ wText(String text, { Color? color, double size = 16}) {
     ),
   );
 }
+aText(String text, { Color? color, double size = 16}) {
+  return Text(
+    text,
+    style: GoogleFonts.gabriela(
+      fontSize: size,
+      fontWeight: FontWeight.bold,
+      color: color,
+    ),
+  );
+}
 
 cText(String text, { Color? color, double size = 16}) {
   return Text(

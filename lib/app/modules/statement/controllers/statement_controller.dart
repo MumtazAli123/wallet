@@ -10,12 +10,14 @@ class StatementController extends GetxController {
   var isSearching = false.obs;
   var query = ''.obs;
 
+  var statementList = List.empty(growable: true).obs;
+
 
 
 
   void increment() => count.value++;
 
-  void getStatement(String query) {
+  void getStatement(String query, {required date, String? uid}) {
     // sellers
     searchList.clear();
     searchOtherUser.value = query;

@@ -9,6 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:wallet/app/modules/home/views/bottom_page_view.dart';
+import 'package:wallet/app/modules/login/views/login_view.dart';
 
 import '../../../../global/global.dart';
 import '../../../../models/user_model.dart';
@@ -56,10 +57,12 @@ class _StatementViewState extends State<StatementView> {
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.filter_list),
+            icon: Icon(Icons.lock_sharp),
             onPressed: () {
-              // defaultDateFilter();
-            },
+              fAuth.signOut().then((value) {
+                Get.offAll(() => LoginView());
+              });
+            }
           ),
         ],
         title: Text(sharedPreferences!.getString('name')!),
