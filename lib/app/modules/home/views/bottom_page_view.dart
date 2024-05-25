@@ -8,6 +8,7 @@ import 'package:wallet/app/modules/home/views/mob_home_view.dart';
 import 'package:wallet/global/global.dart';
 import 'package:wallet/widgets/my_drawer.dart';
 
+import '../../../../notification/notification_page.dart';
 import '../../../../qrcode/qrcode.dart';
 import '../../../../search/search_screen.dart';
 import '../../../../user_profile/user_profile.dart';
@@ -29,7 +30,7 @@ class BottomPageView extends GetView {
         actions: [
           IconButton(
             onPressed: () {
-              // Get.to(() => UserProfile());
+              Get.to(() => NotificationPage());
             },
             icon: Icon(Icons.notifications),
           ),
@@ -76,8 +77,9 @@ class BottomPageView extends GetView {
               icon: CircleAvatar(
                 radius: 15,
                 backgroundImage: NetworkImage(
-                    '${sharedPreferences!.getString('image')}'),
-              ),
+                    sharedPreferences!.getString('image') ?? 'https://pay-saw.com/storage/app/public/'),
+                  ),
+
               title: "Profile".tr,
             ),
           ],

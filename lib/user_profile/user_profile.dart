@@ -1,12 +1,10 @@
 // ignore_for_file: prefer_const_constructors , prefer_const_literals_to_create_immutables
 
-import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/get_utils.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:wallet/global/global.dart';
 

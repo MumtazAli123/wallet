@@ -12,6 +12,7 @@ class HomeController extends GetxController {
   GlobalKey bottomNavigationKey = GlobalKey();
 
   var currentIndex = 0.obs;
+  var imgUrl = 'https://pay-saw.com/storage/app/public/';
 
   var isLoading = false.obs;
   final isMobile = false.obs;

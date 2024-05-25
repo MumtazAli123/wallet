@@ -5,10 +5,9 @@ description: A new Flutter project.
 environment: 
   sdk: '>=3.3.4 <4.0.0'
 
-
-dependencies:
-  get:
-  path:
+dependencies: 
+  get: any
+  path: any
   cupertino_icons: ^1.0.6
   firebase_auth: any
   cloud_firestore: any
@@ -19,10 +18,8 @@ dependencies:
   camera: ^0.11.0
   get_storage: ^2.1.1
   provider: 6.1.2
-#  get:
-
   google_fonts: 6.2.1
-  shared_preferences: 2.2.3
+  shared_preferences: any
   timeago: 3.6.1
   quickalert: 1.1.0
   image_picker: 1.1.1
@@ -33,26 +30,23 @@ dependencies:
   fancy_bottom_navigation_plus: 1.0.3
   awesome_dialog: ^3.2.1
   mobile_scanner: ^5.1.1
-
-
-  flutter: 
-    sdk: flutter
   qr_flutter: ^4.1.0
   flutter_barcode_scanner: ^2.0.0
   carousel_slider: ^4.2.1
-
+  overlay_support: 2.1.0
+  flutter: 
+    sdk: flutter
 
 dev_dependencies: 
-  flutter_test:
-    sdk: flutter
   flutter_lints: ^4.0.0
   flutter_launcher_icons: ^0.13.1
+  flutter_test: 
+    sdk: flutter
 
-flutter_icons:
-    android: true
-    ios: true
-    image_path: "assets/icons/icon.png"
-
+flutter_icons: 
+  image_path: assets/icons/icon.png
+  android: true
+  ios: true
 
 flutter: 
   assets: 
@@ -61,6 +55,5 @@ flutter:
     - assets/slider/
     - assets/icons/
     - assets/slider/2.jpg
-
   uses-material-design: true
 

@@ -41,54 +41,49 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDjkR8ufdK1QNqXp_zScjbCGc7QIVDvhT0',
-    appId: '1:501667206572:web:508b02097a498858ded609',
-    messagingSenderId: '501667206572',
-    projectId: 'salae-efa45',
-    authDomain: 'salae-efa45.firebaseapp.com',
-    databaseURL: 'https://salae-efa45-default-rtdb.firebaseio.com',
-    storageBucket: 'salae-efa45.appspot.com',
-    measurementId: 'G-8K5CGRNQT2',
+    apiKey: 'AIzaSyC0E1-SH3zpto9OOa0yvRyneyatWxvYpak',
+    appId: '1:143539298390:web:08658d49128ef231d41bf7',
+    messagingSenderId: '143539298390',
+    projectId: 'zubi-pay',
+    authDomain: 'zubi-pay.firebaseapp.com',
+    storageBucket: 'zubi-pay.appspot.com',
+    measurementId: 'G-FNCV5FGHSR',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDM3ow4lh89xZf-5xAf3UdkelcA_SYz2Ms',
-    appId: '1:501667206572:android:27ca7d5ed71ccb1fded609',
-    messagingSenderId: '501667206572',
-    projectId: 'salae-efa45',
-    databaseURL: 'https://salae-efa45-default-rtdb.firebaseio.com',
-    storageBucket: 'salae-efa45.appspot.com',
+    apiKey: 'AIzaSyAv8WHaTiE-7ifD-ZmSafH5QDJTbtPS2mw',
+    appId: '1:143539298390:android:49bfd4e8c28fd9ead41bf7',
+    messagingSenderId: '143539298390',
+    projectId: 'zubi-pay',
+    storageBucket: 'zubi-pay.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyCL1tQqzJ072kCu6Wa7uEb22wIuDMMVgZo',
-    appId: '1:501667206572:ios:e855be9c8037f7abded609',
-    messagingSenderId: '501667206572',
-    projectId: 'salae-efa45',
-    databaseURL: 'https://salae-efa45-default-rtdb.firebaseio.com',
-    storageBucket: 'salae-efa45.appspot.com',
-    iosBundleId: 'paysaw.com.wallet',
+    apiKey: 'AIzaSyBwBnYb1PgAawATZs8o5O5n0oNLgMW5Bfk',
+    appId: '1:143539298390:ios:f87eb007054138ffd41bf7',
+    messagingSenderId: '143539298390',
+    projectId: 'zubi-pay',
+    storageBucket: 'zubi-pay.appspot.com',
+    iosBundleId: 'paysaw.com.zubipay',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyCL1tQqzJ072kCu6Wa7uEb22wIuDMMVgZo',
-    appId: '1:501667206572:ios:e855be9c8037f7abded609',
-    messagingSenderId: '501667206572',
-    projectId: 'salae-efa45',
-    databaseURL: 'https://salae-efa45-default-rtdb.firebaseio.com',
-    storageBucket: 'salae-efa45.appspot.com',
+    apiKey: 'AIzaSyBwBnYb1PgAawATZs8o5O5n0oNLgMW5Bfk',
+    appId: '1:143539298390:ios:7a5a25559ffe9252d41bf7',
+    messagingSenderId: '143539298390',
+    projectId: 'zubi-pay',
+    storageBucket: 'zubi-pay.appspot.com',
     iosBundleId: 'paysaw.com.wallet',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyDjkR8ufdK1QNqXp_zScjbCGc7QIVDvhT0',
-    appId: '1:501667206572:web:508b02097a498858ded609',
-    messagingSenderId: '501667206572',
-    projectId: 'salae-efa45',
-    authDomain: 'salae-efa45.firebaseapp.com',
-    databaseURL: 'https://salae-efa45-default-rtdb.firebaseio.com',
-    storageBucket: 'salae-efa45.appspot.com',
-    measurementId: 'G-8K5CGRNQT2',
+    apiKey: 'AIzaSyC0E1-SH3zpto9OOa0yvRyneyatWxvYpak',
+    appId: '1:143539298390:web:2fddbf3ef1b9291ed41bf7',
+    messagingSenderId: '143539298390',
+    projectId: 'zubi-pay',
+    authDomain: 'zubi-pay.firebaseapp.com',
+    storageBucket: 'zubi-pay.appspot.com',
+    measurementId: 'G-VGMNF32YBQ',
   );
 
 }
