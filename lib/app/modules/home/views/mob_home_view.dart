@@ -243,21 +243,36 @@ class HomeView extends GetView {
                                     subtitle: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
-                                        // balance
-                                        Text(
-                                          "Balance: PKR: ${currencyFormat(double.parse(snapshot.data!.docs[index]['balance'].toString()))}"
+                                        // balance type cr or dr
+                                        Row(
+                                          children: [
+
+                                            Text(
+                                                // amount
+                                                snapshot.data?.docs[index]['type'] ==
+                                                        'send'
+                                                    ? 'Rs.${currencyFormat(double.parse(snapshot.data!.docs[index]['balance'].toString()))}'
+                                                    : 'Rs.${currencyFormat(double.parse(snapshot.data!.docs[index]['balance'].toString()))}'),
+                                            SizedBox(width: 10.0),
+                                            Text(
+                                                snapshot.data?.docs[index]['type'] ==
+                                                    'send'
+                                                    ? 'Cr'
+                                                    : 'Dr'),
+                                          ],
                                         ),
                                         Text(
                                             GetTimeAgo.parse(DateTime.parse(snapshot.data!.docs[index]['created_at'].toDate().toString()), locale: 'en')
                                         ),
+
                                       ],
                                     ),
 
                                     //   type and amount
                                     trailing: wText(
                                       snapshot.data?.docs[index]['type'] == 'send'
-                                          ? '+${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}'
-                                          : '-${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}',
+                                          ? '+ ${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}'
+                                          : '- ${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}',
                                     ),
                                     onTap: () {
                                       _buildDetailDialog(
