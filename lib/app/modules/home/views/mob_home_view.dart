@@ -240,8 +240,17 @@ class HomeView extends GetView {
                                                   .toUpperCase()),
                                     ),
                                     title: Text(snapshot.data?.docs[index]['name']),
-                                    subtitle: Text(
-                                        GetTimeAgo.parse(DateTime.parse(snapshot.data!.docs[index]['created_at'].toDate().toString()), locale: 'en')
+                                    subtitle: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        // balance
+                                        Text(
+                                          "Balance: PKR: ${currencyFormat(double.parse(snapshot.data!.docs[index]['balance'].toString()))}"
+                                        ),
+                                        Text(
+                                            GetTimeAgo.parse(DateTime.parse(snapshot.data!.docs[index]['created_at'].toDate().toString()), locale: 'en')
+                                        ),
+                                      ],
                                     ),
 
                                     //   type and amount

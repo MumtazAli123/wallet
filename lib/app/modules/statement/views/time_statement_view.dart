@@ -127,25 +127,39 @@ class _TimeStatementViewState extends State<TimeStatementView> {
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, index) {
                 final data = snapshot.data!.docs[index];
-                return ListTile(
-                  onTap: () {
-                    _buildDetailMobile(data);
-                  },
-                  leading: CircleAvatar(
-                    child: Text(data['name'][0]),
-                  ),
-                  title: aText(data['name']),
-                  subtitle: Text(
-                    GetTimeAgo.parse(DateTime.parse(data['created_at'].toDate().toString()), locale: 'en'),
-                    style: GoogleFonts.gabriela(
-                      fontSize: 12,
-                      color: Colors.black,
+                return Padding(
+                  padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 4.0),
+                  child: Card(
+                    elevation: 2.5,
+                    child: ListTile(
+                      onTap: () {
+                        _buildDetailMobile(data);
+                      },
+                      leading: CircleAvatar(
+                        child: Text(data['name'][0]),
+                      ),
+                      title: aText(data['name']),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+
+                        children: [
+                          // balance
+                          Text("Balance: ${currencyFormat(double.parse(data['balance'].toString()))}"),
+                          Text(
+                            GetTimeAgo.parse(DateTime.parse(data['created_at'].toDate().toString()), locale: 'en'),
+                            style: GoogleFonts.gabriela(
+                              fontSize: 12,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
+                      ),
+                      trailing: aText(
+                        snapshot.data?.docs[index]['type'] == 'send'
+                            ? '+${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}'
+                            : '-${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}',
+                      ),
                     ),
-                  ),
-                  trailing: aText(
-                    snapshot.data?.docs[index]['type'] == 'send'
-                        ? '+${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}'
-                        : '-${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}',
                   ),
                 );
               },
@@ -175,25 +189,39 @@ class _TimeStatementViewState extends State<TimeStatementView> {
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, index) {
                 final data = snapshot.data!.docs[index];
-                return ListTile(
-                  onTap: () {
-                    _buildDetailMobile(data);
-                  },
-                  leading: CircleAvatar(
-                    child: Text(data['name'][0]),
-                  ),
-                  title: aText(data['name']),
-                  subtitle: Text(
-                    GetTimeAgo.parse(DateTime.parse(data['created_at'].toDate().toString()), locale: 'en'),
-                    style: GoogleFonts.gabriela(
-                      fontSize: 12,
-                      color: Colors.black,
+                return Padding(
+                  padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 4.0),
+                  child: Card(
+                    elevation: 2.5,
+                    child: ListTile(
+                      onTap: () {
+                        _buildDetailMobile(data);
+                      },
+                      leading: CircleAvatar(
+                        child: Text(data['name'][0]),
+                      ),
+                      title: aText(data['name']),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+
+                        children: [
+                          // balance
+                          Text("Balance: ${currencyFormat(double.parse(data['balance'].toString()))}"),
+                          Text(
+                            GetTimeAgo.parse(DateTime.parse(data['created_at'].toDate().toString()), locale: 'en'),
+                            style: GoogleFonts.gabriela(
+                              fontSize: 12,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
+                      ),
+                      trailing: aText(
+                        snapshot.data?.docs[index]['type'] == 'send'
+                            ? '+${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}'
+                            : '-${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}',
+                      ),
                     ),
-                  ),
-                  trailing: aText(
-                    snapshot.data?.docs[index]['type'] == 'send'
-                        ? '+${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}'
-                        : '-${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}',
                   ),
                 );
               },
@@ -223,25 +251,39 @@ class _TimeStatementViewState extends State<TimeStatementView> {
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, index) {
                 final data = snapshot.data!.docs[index];
-                return ListTile(
-                  onTap: () {
-                    _buildDetailMobile(data);
-                  },
-                  leading: CircleAvatar(
-                    child: Text(data['name'][0]),
-                  ),
-                  title: aText(data['name']),
-                  subtitle: Text(
-                    GetTimeAgo.parse(DateTime.parse(data['created_at'].toDate().toString()), locale: 'en'),
-                    style: GoogleFonts.gabriela(
-                      fontSize: 12,
-                      color: Colors.black,
+                return Padding(
+                  padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 4.0),
+                  child: Card(
+                    elevation: 2.5,
+                    child: ListTile(
+                      onTap: () {
+                        _buildDetailMobile(data);
+                      },
+                      leading: CircleAvatar(
+                        child: Text(data['name'][0]),
+                      ),
+                      title: aText(data['name']),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+
+                        children: [
+                          // balance
+                          Text("Balance: ${currencyFormat(double.parse(data['balance'].toString()))}"),
+                          Text(
+                            GetTimeAgo.parse(DateTime.parse(data['created_at'].toDate().toString()), locale: 'en'),
+                            style: GoogleFonts.gabriela(
+                              fontSize: 12,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ],
+                      ),
+                      trailing: aText(
+                        snapshot.data?.docs[index]['type'] == 'send'
+                            ? '+${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}'
+                            : '-${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}',
+                      ),
                     ),
-                  ),
-                  trailing: aText(
-                    snapshot.data?.docs[index]['type'] == 'send'
-                        ? '+${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}'
-                        : '-${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}',
                   ),
                 );
               },
