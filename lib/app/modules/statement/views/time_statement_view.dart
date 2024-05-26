@@ -7,6 +7,7 @@ import 'package:get_time_ago/get_time_ago.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:wallet/app/modules/statement/views/statement_view.dart';
 import 'package:wallet/global/global.dart';
 
@@ -144,7 +145,23 @@ class _TimeStatementViewState extends State<TimeStatementView> {
 
                         children: [
                           // balance
-                          Text("Balance: ${currencyFormat(double.parse(data['balance'].toString()))}"),
+                          Row(
+                            children: [
+
+                              Text(
+                                // amount
+                                  snapshot.data?.docs[index]['type'] ==
+                                      'send'
+                                      ? 'Rs.${currencyFormat(double.parse(snapshot.data!.docs[index]['balance'].toString()))}'
+                                      : 'Rs.${currencyFormat(double.parse(snapshot.data!.docs[index]['balance'].toString()))}'),
+                              SizedBox(width: 10.0),
+                              Text(
+                                  snapshot.data?.docs[index]['type'] ==
+                                      'send'
+                                      ? 'Cr'
+                                      : 'Dr'),
+                            ],
+                          ),
                           Text(
                             GetTimeAgo.parse(DateTime.parse(data['created_at'].toDate().toString()), locale: 'en'),
                             style: GoogleFonts.gabriela(
@@ -206,7 +223,23 @@ class _TimeStatementViewState extends State<TimeStatementView> {
 
                         children: [
                           // balance
-                          Text("Balance: ${currencyFormat(double.parse(data['balance'].toString()))}"),
+                          Row(
+                            children: [
+
+                              Text(
+                                // amount
+                                  snapshot.data?.docs[index]['type'] ==
+                                      'send'
+                                      ? 'Rs.${currencyFormat(double.parse(snapshot.data!.docs[index]['balance'].toString()))}'
+                                      : 'Rs.${currencyFormat(double.parse(snapshot.data!.docs[index]['balance'].toString()))}'),
+                              SizedBox(width: 10.0),
+                              Text(
+                                  snapshot.data?.docs[index]['type'] ==
+                                      'send'
+                                      ? 'Cr'
+                                      : 'Dr'),
+                            ],
+                          ),
                           Text(
                             GetTimeAgo.parse(DateTime.parse(data['created_at'].toDate().toString()), locale: 'en'),
                             style: GoogleFonts.gabriela(
@@ -265,10 +298,25 @@ class _TimeStatementViewState extends State<TimeStatementView> {
                       title: aText(data['name']),
                       subtitle: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-
                         children: [
                           // balance
-                          Text("Balance: ${currencyFormat(double.parse(data['balance'].toString()))}"),
+                          Row(
+                            children: [
+
+                              Text(
+                                // amount
+                                  snapshot.data?.docs[index]['type'] ==
+                                      'send'
+                                      ? 'Rs.${currencyFormat(double.parse(snapshot.data!.docs[index]['balance'].toString()))}'
+                                      : 'Rs.${currencyFormat(double.parse(snapshot.data!.docs[index]['balance'].toString()))}'),
+                              SizedBox(width: 10.0),
+                              Text(
+                                  snapshot.data?.docs[index]['type'] ==
+                                      'send'
+                                      ? 'Cr'
+                                      : 'Dr'),
+                            ],
+                          ),
                           Text(
                             GetTimeAgo.parse(DateTime.parse(data['created_at'].toDate().toString()), locale: 'en'),
                             style: GoogleFonts.gabriela(
@@ -349,7 +397,15 @@ class _TimeStatementViewState extends State<TimeStatementView> {
               fontSize: 15,
               color: Colors.black,
             ),
-          )
+          ),
+        SizedBox(height: 10.0),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              IconButton(onPressed: ()=> _shareDialog(param0),
+                  icon: Icon(Icons.share)),
+            ],
+          ),
         ],
       ),
       cancelBtnText: 'Close',
@@ -362,6 +418,22 @@ class _TimeStatementViewState extends State<TimeStatementView> {
     return parse.toStringAsFixed(2);
   }
 
+
+  _shareDialog(param0)async {
+    final box = context.findRenderObject() as RenderBox?;
+    // share dialog screen shot not a text
+    if (box != null) {
+      Share.share(
+          'Amount: ${currencyFormat(double.parse(param0['amount'].toString()))}\n'
+              'Type: ${param0['type'] == 'send' ? 'Credit' : 'Debit'}\n'
+              'Purpose: ${param0['description'] ?? 'No Description'}\n'
+              'Phone: ${param0['phone'] ?? 'Not Available'}\n'
+              'Time: ${GetTimeAgo.parse(DateTime.parse(param0['created_at'].toDate().toString()), locale: 'en')}\n'
+              'Date: ${DateTime.parse(param0['created_at'].toDate().toString()).toString().substring(0, 16)}',
+          sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
+    }
+
+  }
 
   
 }

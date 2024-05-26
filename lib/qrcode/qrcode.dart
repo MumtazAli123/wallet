@@ -1,5 +1,10 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:camera/camera.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
@@ -8,6 +13,8 @@ import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get/get_utils/get_utils.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:quickalert/quickalert.dart';
+import 'package:screenshot/screenshot.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:wallet/global/global.dart';
 import 'package:wallet/models/user_model.dart';
 import 'package:wallet/qrcode/result_screen.dart';
@@ -30,6 +37,9 @@ class _QrcodePageState extends State<QrcodePage> {
   void closedScanner() {
     isQrScannedCompleted = false;
   }
+
+ final ScreenshotController screenshotController = ScreenshotController();
+
 
   // when the user scans the QR code, the data will be displayed in the ResultScreen data get from the firebase
 
@@ -62,6 +72,24 @@ class _QrcodePageState extends State<QrcodePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        //
+      // final image = await screenshotController.captureFromWidget(widgetToImage());
+    // Share.shareXFiles([XFile.fromData(image)]);
+    // Share.share('Check out this QR code', subject: 'QR Code', sharePositionOrigin: Rect.fromLTWH(0, 0, 100, 100));
+    // if (image != null) {
+    //   print('Image saved to gallery');
+    // }
+        onPressed: () async{
+           // qrcode image share  to other apps
+          final image = await screenshotController.captureFromWidget(widgetToImage());
+          Share.shareXFiles([XFile.fromData(image)], text: 'Check out this QR code', subject: 'QR Code', sharePositionOrigin: Rect.fromLTWH(0, 0, 100, 100));
+          if (image != null) {
+            print('Image saved to gallery');
+          }
+        },
+        child: Icon(Icons.share),
+      ),
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.only(left: 60, right: 60, bottom: 40),
         child: ElevatedButton(
@@ -145,4 +173,33 @@ class _QrcodePageState extends State<QrcodePage> {
       ),
     );
   }
+
+  Widget widgetToImage() {
+    return Container(
+      color: Colors.white,
+      child: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: QrImageView(
+              data: sharedPreferences!.getString('phone')!,
+              version: QrVersions.auto,
+              size: 300.0,
+            ),
+          ),
+          SizedBox(
+            height: 20,
+          ),
+          Text(
+            'Scan the QR code to get the details'.tr,
+            style: TextStyle(
+                fontSize: 15,
+                fontWeight: FontWeight.bold,
+                color: Colors.black),
+          ),
+        ],
+      ),
+    );
+  }
+
 }
