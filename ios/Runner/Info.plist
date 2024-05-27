@@ -6,6 +6,8 @@
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>This app needs photos access to save QR code to photo library</string>
 	<key>CFBundleDisplayName</key>
 	<string>ZubiPay</string>
 	<key>CFBundleExecutable</key>

@@ -1,12 +1,8 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-
-import 'dart:io';
-import 'dart:typed_data';
-
-import 'package:camera/camera.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
@@ -14,7 +10,6 @@ import 'package:get/get_utils/get_utils.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:screenshot/screenshot.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:wallet/global/global.dart';
 import 'package:wallet/models/user_model.dart';
 import 'package:wallet/qrcode/result_screen.dart';
@@ -34,22 +29,26 @@ class _QrcodePageState extends State<QrcodePage> {
   String? qrResult = 'Not Yet Scanned'.tr;
   bool isQrScannedCompleted = false;
 
+  final GlobalKey _qrKey = GlobalKey();
+  bool dirExists = false;
+  dynamic externalDir = '/storage/emulated/0/Download/Qr_code';
+
   void closedScanner() {
     isQrScannedCompleted = false;
   }
 
- final ScreenshotController screenshotController = ScreenshotController();
-
+  final ScreenshotController screenshotController = ScreenshotController();
 
   // when the user scans the QR code, the data will be displayed in the ResultScreen data get from the firebase
 
   void getResultsFromFirebase() {
     if (qrResult == sharedPreferences!.getString('phone')) {
-      QuickAlert.show(context: context,
+      QuickAlert.show(
+          context: context,
           type: QuickAlertType.error,
           autoCloseDuration: Duration(seconds: 4),
           title: 'Error',
-      text: 'You cannot scan your own QR code');
+          text: 'You cannot scan your own QR code');
       Get.snackbar('Error', 'You cannot scan your own QR code');
     } else {
       FirebaseFirestore.instance
@@ -73,20 +72,9 @@ class _QrcodePageState extends State<QrcodePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        //
-      // final image = await screenshotController.captureFromWidget(widgetToImage());
-    // Share.shareXFiles([XFile.fromData(image)]);
-    // Share.share('Check out this QR code', subject: 'QR Code', sharePositionOrigin: Rect.fromLTWH(0, 0, 100, 100));
-    // if (image != null) {
-    //   print('Image saved to gallery');
-    // }
-        onPressed: () async{
-           // qrcode image share  to other apps
-          final image = await screenshotController.captureFromWidget(widgetToImage());
-          Share.shareXFiles([XFile.fromData(image)], text: 'Check out this QR code', subject: 'QR Code', sharePositionOrigin: Rect.fromLTWH(0, 0, 100, 100));
-          if (image != null) {
-            print('Image saved to gallery');
-          }
+        // qr code image share box size with 400x400 pixels and share the image to other apps
+        onPressed: () async {
+          // _captureAndSavePng();
         },
         child: Icon(Icons.share),
       ),
@@ -101,7 +89,7 @@ class _QrcodePageState extends State<QrcodePage> {
           ),
           onPressed: () {
             FlutterBarcodeScanner.scanBarcode(
-                '#ff6666', 'Cancel', true, ScanMode.QR)
+                    '#ff6666', 'Cancel', true, ScanMode.QR)
                 .then((value) {
               setState(() {
                 qrResult = value;
@@ -118,13 +106,18 @@ class _QrcodePageState extends State<QrcodePage> {
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
-        title:Row(
+        title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text("Welcome".tr, style: TextStyle(color: Colors.black, fontSize: 20),),
-            SizedBox(width: 10,),
+            Text(
+              "Welcome".tr,
+              style: TextStyle(color: Colors.black, fontSize: 20),
+            ),
+            SizedBox(
+              width: 10,
+            ),
             wText(sharedPreferences!.getString('name')!.tr),
-    ],
+          ],
         ),
       ),
       body: _buildBody(),
@@ -157,8 +150,7 @@ class _QrcodePageState extends State<QrcodePage> {
                     fontWeight: FontWeight.bold,
                     color: Colors.black),
               ),
-              SizedBox(
-                height: 50.0),
+              SizedBox(height: 50.0),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: QrImageView(
@@ -193,13 +185,10 @@ class _QrcodePageState extends State<QrcodePage> {
           Text(
             'Scan the QR code to get the details'.tr,
             style: TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-                color: Colors.black),
+                fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
           ),
         ],
       ),
     );
   }
-
 }
