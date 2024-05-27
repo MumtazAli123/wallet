@@ -1,11 +1,16 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:io';
+import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:screenshot/screenshot.dart';
@@ -18,6 +23,7 @@ import '../controllers/statement_controller.dart';
 
 class TimeStatementView extends StatefulWidget {
   const TimeStatementView({super.key});
+
 
   @override
   State<TimeStatementView> createState() => _TimeStatementViewState();
@@ -32,6 +38,8 @@ class _TimeStatementViewState extends State<TimeStatementView> {
   final ScreenshotController screenshotController = ScreenshotController();
 
   bool isLoading = false;
+  final Dio dio = Dio();
+  // bool loading = false;
 
   Future<void> getStatement(String query, {required date, String? uid}) async {
     final searchList = List.empty(growable: true);
@@ -403,7 +411,11 @@ class _TimeStatementViewState extends State<TimeStatementView> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               IconButton(
-                  onPressed: () => _capturePngAndSave(param0),
+                  onPressed: () async {
+                    final image =  await screenshotController.captureFromWidget(widgetToImage(param0));
+                    // await saveImage(image);
+                    saveAndShareImage(image);
+                  },
                   icon: Icon(Icons.share)),
             ],
           ),
@@ -419,29 +431,130 @@ class _TimeStatementViewState extends State<TimeStatementView> {
     return parse.toStringAsFixed(2);
   }
 
-  Future<void> _capturePngAndSave(param0) async {
-    // save to dialog to gallery
-    //   final image = await screenshotController.captureFromWidget(widgetToImage());
-    // Share.shareXFiles([XFile.fromData(image,mimeType: 'image/png')]);
-    // if (image != null) {
-    //   print('Image saved to gallery');
-    // }
-    try {
-      Share.share(
-          'Amount: ${currencyFormat(double.parse(param0['amount'].toString()))}\n'
-          'Name: ${param0['name']}\n'
-          'Type: ${param0['type'] == 'send' ? 'Credit' : 'Debit'}\n'
-          'Purpose: ${param0['description'] ?? 'No Description'}\n'
-          'Phone: ${param0['phone'] ?? 'Not Available'}\n'
-          'Time: ${GetTimeAgo.parse(DateTime.parse(param0['created_at'].toDate().toString()), locale: 'en')}\n'
-          'Date: ${DateTime.parse(param0['created_at'].toDate().toString()).toString().substring(0, 16)}');
-    } catch (e) {
-      QuickAlert.show(
-          context: Get.context!,
-          type: QuickAlertType.error,
-          autoCloseDuration: Duration(seconds: 4),
-          title: 'Error',
-          text: 'Failed to save QR code image to gallery');
-    }
+  Widget widgetToImage(param0){
+    return Screenshot(
+      controller: screenshotController,
+      child: Container(
+        // screen shot container
+        width: 500,
+        height: 500,
+        decoration: BoxDecoration(
+          color: Colors.black,
+        ),
+
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              // QuickAlert.show dialog screen shot
+              child:  AnimatedContainer(
+                padding: EdgeInsets.all(20),
+                duration: Duration(seconds: 1),
+                height: 350,
+                width: 400,
+                decoration: BoxDecoration(
+                  color: Colors.blue[900],
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Column(
+                  children: [
+                    Center(
+                      child: wText('${param0['name']}',
+                          color: Colors.white, size: 20),
+                    ),
+                    SizedBox(height: 20),
+                    Divider(color: Colors.white),
+                    SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        wText('Amount :', color: Colors.white),
+                        wText('${param0['amount']}', color: Colors.white),
+                      ],
+                    ),
+                    SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        wText('Type :', color: Colors.white),
+                        wText(param0['type'] == 'send' ? 'Credit' : 'Debit', color: Colors.white),
+                      ],
+                    ),
+                    SizedBox(height: 20),
+                    // description
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        wText('Purpose :', color: Colors.white),
+                        wText('${param0['description']}',
+                            color: Colors.white),
+                      ],
+                    ),
+                    SizedBox(height: 20),
+                    // phone
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        wText('Phone :', color: Colors.white),
+                        wText('${param0['phone']}', color: Colors.white),
+                      ],
+                    ),
+                    SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        wText('Time :', color: Colors.white),
+                        Text(
+                          'Time: ${GetTimeAgo.parse(DateTime.parse(param0['created_at'].toDate().toString()), locale: 'en')}',
+                          style: GoogleFonts.poppins(
+                            fontSize: 15,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        wText('Date :', color: Colors.white),
+                        Text(
+                          //   gate date time just date and time only without timezone
+                          'Date: ${DateTime.parse(param0['created_at'].toDate().toString()).toString().substring(0, 16)}',
+                          style: GoogleFonts.poppins(
+                            fontSize: 15,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SizedBox(
+              height: 20,
+            ),
+            Text(
+              // "Data to get the details".tr,
+              'Details of the transaction'.tr,
+              style: TextStyle(
+                  fontSize: 15, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      ),
+    );
   }
+
+  void saveAndShareImage(Uint8List bytes) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final image = File('${directory.path}/image.png');
+    image.writeAsBytesSync(bytes);
+    Share.shareXFiles([XFile(image.path)]);
+  }
+
 }

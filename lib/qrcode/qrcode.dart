@@ -1,18 +1,25 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get/get_utils/get_utils.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:screenshot/screenshot.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:wallet/global/global.dart';
 import 'package:wallet/models/user_model.dart';
 import 'package:wallet/qrcode/result_screen.dart';
+import 'dart:typed_data';
 
 import '../widgets/mix_widgets.dart';
 
@@ -28,10 +35,10 @@ class _QrcodePageState extends State<QrcodePage> {
   String scanQrCode = '';
   String? qrResult = 'Not Yet Scanned'.tr;
   bool isQrScannedCompleted = false;
+  final Dio dio = Dio();
+  bool loading = false;
 
-  final GlobalKey _qrKey = GlobalKey();
-  bool dirExists = false;
-  dynamic externalDir = '/storage/emulated/0/Download/Qr_code';
+
 
   void closedScanner() {
     isQrScannedCompleted = false;
@@ -39,8 +46,7 @@ class _QrcodePageState extends State<QrcodePage> {
 
   final ScreenshotController screenshotController = ScreenshotController();
 
-  // when the user scans the QR code, the data will be displayed in the ResultScreen data get from the firebase
-
+  // qr code
   void getResultsFromFirebase() {
     if (qrResult == sharedPreferences!.getString('phone')) {
       QuickAlert.show(
@@ -75,6 +81,11 @@ class _QrcodePageState extends State<QrcodePage> {
         // qr code image share box size with 400x400 pixels and share the image to other apps
         onPressed: () async {
           // _captureAndSavePng();
+         final image =  await screenshotController.captureFromWidget(widgetToImage());
+         // await saveImage(image);
+         saveAndShareImage(image);
+
+           
         },
         child: Icon(Icons.share),
       ),
@@ -167,28 +178,65 @@ class _QrcodePageState extends State<QrcodePage> {
   }
 
   Widget widgetToImage() {
-    return Container(
-      color: Colors.white,
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: QrImageView(
-              data: sharedPreferences!.getString('phone')!,
-              version: QrVersions.auto,
-              size: 300.0,
+    return Screenshot(
+      controller: screenshotController,
+      child: Container(
+        width: 400,
+        height: 400,
+        color: Colors.white,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: QrImageView(
+                data: sharedPreferences!.getString('phone')!,
+                version: QrVersions.auto,
+                size: 300.0,
+              ),
             ),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Text(
-            'Scan the QR code to get the details'.tr,
-            style: TextStyle(
-                fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
-          ),
-        ],
+            SizedBox(
+              height: 20,
+            ),
+            Text(
+              'Scan the QR code to get the details'.tr,
+              style: TextStyle(
+                  fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
+            ),
+          ],
+        ),
       ),
     );
+  }
+
+  Future<String> saveImage(Uint8List image) async {
+    final result = await ImageGallerySaver.saveImage(image);
+    if (result['isSuccess']) {
+      QuickAlert.show(
+          context: Get.context!,
+          type: QuickAlertType.success,
+          autoCloseDuration: Duration(seconds: 4),
+          title: 'Success',
+          text: 'Image saved successfully');
+      Get.snackbar('Success', 'Image saved successfully');
+    } else {
+      QuickAlert.show(
+          context: Get.context!,
+          type: QuickAlertType.error,
+          autoCloseDuration: Duration(seconds: 4),
+          title: 'Error',
+          text: 'Failed to save image');
+      Get.snackbar('Error', 'Failed to save image');
+    }
+    return result['filePath'];
+  }
+
+  void saveAndShareImage(Uint8List bytes) async{
+    final directory = await getApplicationDocumentsDirectory();
+    final image = File('${directory.path}/image.png');
+    image.writeAsBytesSync(bytes);
+    Share.shareXFiles([XFile(image.path)]);
   }
 }
