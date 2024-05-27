@@ -5,9 +5,11 @@ import 'package:fancy_bottom_navigation_plus/fancy_bottom_navigation_plus.dart';
 
 import 'package:get/get.dart';
 import 'package:wallet/app/modules/home/views/mob_home_view.dart';
+import 'package:wallet/app/modules/statement/views/wallet_view.dart';
 import 'package:wallet/global/global.dart';
 import 'package:wallet/widgets/my_drawer.dart';
 
+import '../../../../models/user_model.dart';
 import '../../../../notification/notification_page.dart';
 import '../../../../qrcode/qrcode.dart';
 import '../../../../search/search_screen.dart';
@@ -20,12 +22,13 @@ class BottomPageView extends GetView {
   const BottomPageView({super.key});
   @override
   get controller => Get.put(HomeController());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: MyDrawer(),
       appBar: AppBar(
-        title: Text('PaySaw Wallet'.tr),
+        title: wText('ZubiPay'.tr),
         centerTitle: true,
         actions: [
           IconButton(
@@ -53,7 +56,16 @@ class BottomPageView extends GetView {
           children: [
             // HomeView(),
             HomeView(),
-            SearchScreen(),
+            // SearchScreen(),
+            DigitalWalletView(
+              model: UserModel(
+                name: sharedPreferences!.getString('name') ?? '',
+                email: sharedPreferences!.getString('email') ?? '',
+                image: sharedPreferences!.getString('image') ?? '',
+                phone: sharedPreferences!.getString('phone') ?? '',
+                uid: sharedPreferences!.getString('uid') ?? '',
+              ),
+            ),
             QrcodePage(),
             SliderPics(),
             ProfileScreen(),

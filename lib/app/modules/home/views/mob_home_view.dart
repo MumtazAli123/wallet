@@ -17,7 +17,6 @@ import '../../statement/views/time_statement_view.dart';
 import '../controllers/home_controller.dart';
 
 class HomeView extends GetView {
-
    HomeView({super.key});
 
 
