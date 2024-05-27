@@ -95,7 +95,7 @@ class _DigitalWalletViewState extends State<DigitalWalletView> {
     return Container(
       padding: EdgeInsets.all(20.0),
       decoration: BoxDecoration(
-        color: Colors.white,
+        // color: Colors.white,
         borderRadius: BorderRadius.circular(10.0),
         boxShadow: [
           BoxShadow(
@@ -161,7 +161,7 @@ class _DigitalWalletViewState extends State<DigitalWalletView> {
     return Container(
       padding: EdgeInsets.all(20.0),
       decoration: BoxDecoration(
-        color: Colors.white,
+        // color: Colors.white,
         borderRadius: BorderRadius.circular(10.0),
         boxShadow: [
           BoxShadow(
@@ -198,7 +198,7 @@ class _DigitalWalletViewState extends State<DigitalWalletView> {
     return Container(
       padding: EdgeInsets.all(20.0),
       decoration: BoxDecoration(
-        color: Colors.white,
+        // color: Colors.white,
         borderRadius: BorderRadius.circular(10.0),
         boxShadow: [
           BoxShadow(
