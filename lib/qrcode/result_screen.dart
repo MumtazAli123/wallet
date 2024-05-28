@@ -96,6 +96,7 @@ class _ResultScreenState extends State<ResultScreen> {
           name: userData['name'],
           email: userData['email'],
           phone: userData['phone'],
+          image: userData['image'],
           uid: uid,
           balance: double.tryParse(userData['balance'].toString()) ?? 0.0,
         );
