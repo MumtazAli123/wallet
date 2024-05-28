@@ -15,6 +15,7 @@ import 'package:wallet/widgets/currency_format.dart';
 
 import '../../../../models/user_model.dart';
 import '../../../../widgets/mix_widgets.dart';
+import '../../send_money/views/send_money_view.dart';
 
 class DigitalWalletView extends StatefulWidget {
   DigitalWalletView({super.key});
@@ -98,7 +99,8 @@ class _DigitalWalletViewState extends State<DigitalWalletView> {
                     _buildHeader(),
                     SizedBox(height: 20.0),
                     _buildBalanceCard(),
-                    SizedBox(height: 20.0),
+                    SizedBox(height: 10.0),
+                    _buildAddSendMoneyButton(double, model),
                     _buildRecentTransactions(),
                     SizedBox(height: 20.0),
                     // discretion of user
@@ -196,6 +198,40 @@ class _DigitalWalletViewState extends State<DigitalWalletView> {
             ],
           ),
           SizedBox(height: 10.0),
+        ],
+      ),
+    );
+  }
+
+  _buildAddSendMoneyButton(Type double, model) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          ElevatedButton(
+            onPressed: () {
+              Get.to(() => SendMoneyView());
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue,
+            ),
+            child: isLoading == true
+                ? CircularProgressIndicator()
+                : wText('Send Money'.tr , color: Colors.white),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              // Get.toNamed('/add-money');
+              _buildDialogAddMoney();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green,
+            ),
+            child: isLoading == true
+                ? CircularProgressIndicator()
+                : wText('Add Money'.tr, color: Colors.white),
+          ),
         ],
       ),
     );
@@ -586,6 +622,15 @@ class _DigitalWalletViewState extends State<DigitalWalletView> {
       showConfirmBtn: false,
     );
 
+  }
+
+  void _buildDialogAddMoney() {
+    QuickAlert.show(
+      context: Get.context!,
+      type: QuickAlertType.info,
+      title: 'Add Money',
+      text: 'We are working on this feature',
+    );
   }
 }
 
