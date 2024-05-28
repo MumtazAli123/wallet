@@ -79,23 +79,36 @@ class _DigitalWalletViewState extends State<DigitalWalletView> {
             onRefresh: _refresh,
             child: Screenshot(
               controller: screenshotController,
-              child: ListView(
-                padding: EdgeInsets.all(20.0),
-                children: [
-                  // build header
-                  _buildHeader(),
-                  SizedBox(height: 20.0),
-                  _buildBalanceCard(),
-                  SizedBox(height: 20.0),
-                  _buildRecentTransactions(),
-                  SizedBox(height: 20.0),
-                  // discretion of user
+              child: Container(
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage('assets/images/login.png'),
+                    fit: BoxFit.cover,
+                  ),
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [Colors.black, Colors.blue],
+                  ),
+                ),
+                child: ListView(
+                  padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+                  children: [
+                    // build header
+                    _buildHeader(),
+                    SizedBox(height: 20.0),
+                    _buildBalanceCard(),
+                    SizedBox(height: 20.0),
+                    _buildRecentTransactions(),
+                    SizedBox(height: 20.0),
+                    // discretion of user
 
-                  _buildProfile(),
+                    _buildProfile(),
 
-                  SizedBox(height: 20.0),
-                  _buildFooter(),
-                ],
+                    SizedBox(height: 20.0),
+                    _buildFooter(),
+                  ],
+                ),
               ),
             ),
           );
@@ -316,7 +329,7 @@ class _DigitalWalletViewState extends State<DigitalWalletView> {
     return Container(
       padding: EdgeInsets.all(20.0),
       decoration: BoxDecoration(
-        // color: Colors.white,
+        color: Theme.of(context).primaryColor,
         borderRadius: BorderRadius.circular(10.0),
         boxShadow: [
           BoxShadow(
@@ -333,6 +346,7 @@ class _DigitalWalletViewState extends State<DigitalWalletView> {
             'Powered by PaySaw Digital Wallet'.tr,
             style: GoogleFonts.poppins(
               fontSize: 12.0,
+              color: Colors.white,
               fontWeight: FontWeight.w400,
             ),
           ),
@@ -341,6 +355,7 @@ class _DigitalWalletViewState extends State<DigitalWalletView> {
             '© ${now.year} - paysaw.com.',
             style: GoogleFonts.poppins(
               fontSize: 12.0,
+              color: Colors.white,
               fontWeight: FontWeight.w400,
             ),
           ),
@@ -363,6 +378,7 @@ class _DigitalWalletViewState extends State<DigitalWalletView> {
           'Digital Wallet'.tr,
           style: GoogleFonts.gabriela(
             fontSize: 24.0,
+            color: Colors.white,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -380,7 +396,7 @@ class _DigitalWalletViewState extends State<DigitalWalletView> {
               );
             });
           },
-          icon: Icon(Icons.camera_alt),
+          icon: Icon(Icons.camera_alt, color: Colors.white),
         ),
       ],
     );
@@ -391,7 +407,6 @@ class _DigitalWalletViewState extends State<DigitalWalletView> {
     try {
       return Container(
         height: size.height * 0.6,
-        margin: EdgeInsets.all(5.0),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10.0),
         ),

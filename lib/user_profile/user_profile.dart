@@ -77,7 +77,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   controller: descController,
                   maxLength: 130,
                   focusNode: focusNode,
-                  maxLines: 5,
+                  maxLines: 3,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(),
                       hintText: sharedPreferences!.getString('description' )?? 'Add Description'
@@ -115,9 +115,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   _buildBody() {
-    return isLoading
-        ? Center(child: CircularProgressIndicator())
-        : RefreshIndicator(
+    return  RefreshIndicator(
             onRefresh: _refresh,
             child: Center(
               child: GestureDetector(
