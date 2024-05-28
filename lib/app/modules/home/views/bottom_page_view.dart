@@ -55,9 +55,9 @@ class BottomPageView extends GetView {
           ),
           children: [
             // HomeView(),
-            HomeView(),
-            // SearchScreen(),
+            // HomeView(),
             DigitalWalletView(),
+            SearchScreen(),
             QrcodePage(),
             SliderPics(),
             ProfileScreen(),
