@@ -61,6 +61,7 @@ class _DigitalWalletViewState extends State<DigitalWalletView> {
     getUserData();
     // get statement
     _refresh();
+
   }
 
   @override
@@ -74,7 +75,12 @@ class _DigitalWalletViewState extends State<DigitalWalletView> {
   _buildBody() {
     return isLoading
         ? Center(
-            child: CircularProgressIndicator(),
+            child: AnimatedContainer(
+              duration: Duration(milliseconds: 500),
+              height: 100.0,
+              width: 100.0,
+              child: Text('Loading...'.tr),
+            ),
           )
         : RefreshIndicator(
             onRefresh: _refresh,
@@ -138,6 +144,8 @@ class _DigitalWalletViewState extends State<DigitalWalletView> {
         ],
       ),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -261,7 +261,7 @@ class _ResultScreenState extends State<ResultScreen> {
           "balance": updatedBalance,
           'type': "receive",
           'amount': transferNominalController.text.trim(),
-          'description': descriptionController.text.trim(),
+          'description': descriptionController.text.trim() ?? 'No description',
           'created_at': DateTime.now(),
         });
 
@@ -277,7 +277,7 @@ class _ResultScreenState extends State<ResultScreen> {
           "balance": recipientUpdatedBalance,
           'type': "send",
           'amount': transferNominalController.text.trim(),
-          'description': descriptionController.text.trim(),
+          'description': descriptionController.text.trim() ?? 'No description',
           'created_at': DateTime.now(),
         });
 

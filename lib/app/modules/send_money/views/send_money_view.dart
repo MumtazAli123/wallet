@@ -39,6 +39,9 @@ class _SendMoneyViewState extends State<SendMoneyView> {
   final nameController = TextEditingController();
   final phoneController = TextEditingController();
 
+  String? description = '';
+
+
   UserModel userModel = UserModel();
 
   FirebaseFirestore firestore = FirebaseFirestore.instance;
@@ -303,7 +306,8 @@ class _SendMoneyViewState extends State<SendMoneyView> {
           "balance": updatedBalance,
           'type': "receive",
           'amount': transferNominalController.text.trim(),
-          'description': descriptionController.text.trim(),
+          //  if description is empty then set default value
+          'description': descriptionController.text.trim() ?? 'No description',
           'created_at': DateTime.now(),
         });
 
@@ -319,7 +323,7 @@ class _SendMoneyViewState extends State<SendMoneyView> {
           "balance": recipientUpdatedBalance,
           'type': "send",
           'amount': transferNominalController.text.trim(),
-          'description': descriptionController.text.trim(),
+          'description': descriptionController.text.trim() ?? 'No description',
           'created_at': DateTime.now(),
         });
 
