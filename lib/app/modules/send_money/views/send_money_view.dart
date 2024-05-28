@@ -103,6 +103,7 @@ class _SendMoneyViewState extends State<SendMoneyView> {
           name: userData['name'],
           email: userData['email'],
           phone: userData['phone'],
+          image: userData['image'],
           uid: uid,
           balance: double.tryParse(userData['balance'].toString()) ?? 0.0,
         );
@@ -303,6 +304,7 @@ class _SendMoneyViewState extends State<SendMoneyView> {
           'name': recipient.name,
           'phone': recipient.phone ?? 'No phone',
           'email': recipient.email ?? 'No email',
+          "image": recipient.image ?? 'No image',
           "balance": updatedBalance,
           'type': "receive",
           'amount': transferNominalController.text.trim(),
@@ -320,6 +322,7 @@ class _SendMoneyViewState extends State<SendMoneyView> {
           'name': sharedPreferences!.getString('name'),
           'phone': sharedPreferences!.getString('phone') ?? 'No phone',
           'email': sharedPreferences!.getString('email') ?? 'No email',
+          "image": sharedPreferences!.getString('image') ?? 'No image',
           "balance": recipientUpdatedBalance,
           'type': "send",
           'amount': transferNominalController.text.trim(),

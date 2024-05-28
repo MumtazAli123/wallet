@@ -1,11 +1,14 @@
 // ignore_for_file: prefer_const_constructors , prefer_const_literals_to_create_immutables
 
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:wallet/global/global.dart';
 
@@ -29,6 +32,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final descController = TextEditingController();
 
   bool isLoading = false;
+  ImagePicker imagePicker = ImagePicker();
+  PickedFile? pickedFile;
+  String? imageUrl;
+  XFile? image;
 
   var _name = '';
   var _email = '';
@@ -125,22 +132,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      Container(
-                        padding: EdgeInsets.symmetric(vertical: 5.0),
-                        height: 100.0,
-                        width: 100.0,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: Colors.blue,
-                            width: 2.0,
+                      Stack(
+                        children: [
+                          // if image not found then show placeholder image
+                          MixWidgets.buildAvatar(sharedPreferences!.getString('image') ?? 'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png', 70.0),
+
+                          Positioned(
+                            top: 95.0,
+                            right: 0.0,
+                            bottom: -9.0,
+                            child: IconButton(
+                              icon: CircleAvatar(
+                                radius: 25.0,
+                                  child: Icon(Icons.camera_alt)),
+                              onPressed: () {
+                                _buildImageEditAndSave();
+                              }
+                            ),
                           ),
-                        ),
-                        child: MixWidgets.buildAvatar(
-                          sharedPreferences!.getString('image') ?? '',
-                          100.0,
-                        ),
+                        ],
                       ),
+
                       wText(
                         _name,
                         size: 20.0,
@@ -505,6 +517,106 @@ class _ProfileScreenState extends State<ProfileScreen> {
           fontWeight: FontWeight.w500,
         ),
       ),
+    );
+  }
+
+  void _buildImageEditAndSave() {
+    QuickAlert.show(
+      context: context,
+      type: QuickAlertType.confirm,
+      title: 'Update Image'.tr,
+      text: "You can update your image here.",
+      widget: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          IconButton(
+            icon: CircleAvatar(
+              radius: 40.0,
+              backgroundColor: Colors.blue,
+              child: Icon(Icons.camera_alt, color: Colors.white),
+            ),
+            onPressed: () {
+              _pickImage(ImageSource.camera);
+              Get.back();
+
+            },
+          ),
+          IconButton(
+            icon: CircleAvatar(
+              radius: 40.0,
+              backgroundColor: Colors.green,
+              child: Icon(Icons.image, color: Colors.white),
+            ),
+            onPressed: () {
+              _pickImage(ImageSource.gallery);
+              Get.back();
+            },
+          ),
+        ],
+      ),
+      showConfirmBtn: false,
+      cancelBtnText: "Close".tr,
+      onCancelBtnTap: () {
+        //  when loading show quick alert loading dialog box and get back to the screen
+        Get.back();
+      },
+    );
+  }
+
+  void _pickImage(ImageSource camera) {
+    imagePicker.pickImage(source: camera).then((value) {
+      setState(() {
+        image = value;
+      });
+      if (image != null) {
+        _uploadImage();
+      //  when loading show quick alert loading dialog box and get back to the screen
+        _quickAlertLoading();
+
+      }
+    });
+  }
+
+  void _uploadImage() {
+    storage.child('sellers').child(user!.uid).putFile(File (image!.path)).then((value) {
+      value.ref.getDownloadURL().then((value){
+        db.doc(user!.uid).update({
+          'image': value,
+        });
+        sharedPreferences!.setString('image', value);
+        QuickAlert.show(
+          barrierDismissible: false,
+          context: context,
+          type: QuickAlertType.success,
+          title: 'Image Updated'.tr,
+          text: "Your image has been updated successfully.",
+          showConfirmBtn: true,
+          showCancelBtn: false,
+          confirmBtnText: "Update".tr,
+          onConfirmBtnTap: () {
+            // Get.back and refresh the screen
+            _refresh();
+            Get.back();
+          },
+        );
+      });
+    });
+  }
+
+  void _quickAlertLoading() {
+    QuickAlert.show(
+      autoCloseDuration: Duration(seconds: 2),
+      context: context,
+      type: QuickAlertType.loading,
+      title: 'Loading'.tr,
+      width: 400,
+      text: "Please wait while we are updating your image.",
+      showConfirmBtn: false,
+      onCancelBtnTap: () {
+        // Get.back and refresh the screen
+        Get.back();
+      },
     );
   }
 

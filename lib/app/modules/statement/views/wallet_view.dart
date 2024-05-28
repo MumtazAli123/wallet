@@ -509,17 +509,12 @@ class _DigitalWalletViewState extends State<DigitalWalletView> {
                                   child: Card(
                                     elevation: 12,
                                     child: ListTile(
-                                      leading: CircleAvatar(
-                                        child: Text(
-                                            // name first letter
-                                            snapshot.data?.docs[index]
-                                                        ['name'] ==
-                                                    null
-                                                ? ''
-                                                : snapshot.data
-                                                    ?.docs[index]['name'][0]
-                                                    .toUpperCase()),
-                                      ),
+                                      leading: MixWidgets.buildAvatar(
+                                          // get user image from firebase
+                                          isLoading == true
+                                              ? 'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png'
+                                              : snapshot.data?.docs[index]['image'].toString(),
+                                          20.0),
                                       title: Text(
                                           snapshot.data?.docs[index]['name']),
                                       subtitle: Column(
