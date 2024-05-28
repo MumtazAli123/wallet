@@ -9,7 +9,8 @@ class UserModel {
   String? lastTransaction;
   String? image;
   String? sellerType;
-
+  String? status;
+  String? description;
   String? createdAt;
   String? updatedAt;
   String? uid;
@@ -22,6 +23,8 @@ class UserModel {
       this.phone,
       this.image,
       this.balance,
+      this.status,
+      this.description,
       this.lastTransaction,
       this.sellerType,
       this.createdAt,
@@ -37,12 +40,15 @@ class UserModel {
       username: map['username'],
       image: map['image'],
       balance: map['balance'] ,
+      description: map['description'],
       lastTransaction: map['lastTransaction'],
       sellerType: map['sellerType'],
+      status: map['status'],
       createdAt: map['createdAt'],
       updatedAt: map['updatedAt'],
     );
   }
+
 
 
   // sending data to the server
@@ -58,6 +64,8 @@ class UserModel {
       'balance': balance,
       'lastTransaction': lastTransaction,
       'sellerType': sellerType,
+      'description': description,
+      'status': status,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
     };
@@ -72,8 +80,10 @@ class UserModel {
       username: doc['username'],
       image: doc['image'],
       balance: doc['balance'],
+      description: doc['description'],
       lastTransaction: doc['lastTransaction'],
       sellerType: doc['sellerType'],
+      status: doc['status'],
       createdAt: doc['createdAt'],
       updatedAt: doc['updatedAt'],
     );

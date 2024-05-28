@@ -57,15 +57,7 @@ class BottomPageView extends GetView {
             // HomeView(),
             HomeView(),
             // SearchScreen(),
-            DigitalWalletView(
-              model: UserModel(
-                name: sharedPreferences!.getString('name') ?? '',
-                email: sharedPreferences!.getString('email') ?? '',
-                image: sharedPreferences!.getString('image') ?? '',
-                phone: sharedPreferences!.getString('phone') ?? '',
-                uid: sharedPreferences!.getString('uid') ?? '',
-              ),
-            ),
+            DigitalWalletView(),
             QrcodePage(),
             SliderPics(),
             ProfileScreen(),

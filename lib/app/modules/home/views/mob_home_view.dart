@@ -26,6 +26,8 @@ class HomeView extends GetView {
   final user = FirebaseAuth.instance.currentUser;
 
   UserModel? model;
+
+  var isLoading = false.obs;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -42,11 +44,10 @@ class HomeView extends GetView {
               colors: [Colors.black, Colors.blue],
             ),
           ),
-          child: Wrap(
-            alignment: WrapAlignment.center,
+          child: Column(
             children: [
               _buildHeader(),
-              // _buildContent(),
+              _buildContent(),
               _buildFooter(),
             ],
           ),
@@ -153,14 +154,24 @@ class HomeView extends GetView {
             onPressed: () {
               Get.to(() => SendMoneyView());
             },
-            child: Text('Send Money'.tr),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.blue,
+            ),
+            child: controller.isLoading.value
+                ? CircularProgressIndicator()
+                : wText('Send Money'.tr , color: Colors.white),
           ),
           ElevatedButton(
             onPressed: () {
               // Get.toNamed('/add-money');
               _buildDialogAddMoney();
             },
-            child: Text('Add Money'.tr),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green,
+            ),
+            child: controller.isLoading.value
+                ? CircularProgressIndicator()
+                : wText('Add Money'.tr, color: Colors.white),
           ),
         ],
       ),
@@ -171,8 +182,9 @@ class HomeView extends GetView {
     final size = MediaQuery.of(Get.context!).size;
     try {
       return Container(
-        height: size.height * 0.4,
         width: 600,
+        height: size.height * 0.4,
+
         margin: EdgeInsets.all(10.0),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -204,104 +216,104 @@ class HomeView extends GetView {
             controller.isLoading.value
                 ? Center(child: CircularProgressIndicator())
                 : Expanded(
-                    child: StreamBuilder(
-                      stream: FirebaseFirestore.instance
-                          .collection('sellers')
-                          .doc(user!.uid)
-                          .collection('statement')
-                          .where('created_at',
-                              isGreaterThanOrEqualTo: DateTime(
-                                  // recent transactions minimum 3 days
-                                  now.year,
-                                  now.month,
-                                  now.day - 3))
-                          .orderBy('created_at', descending: true)
-                          .limit(5)
-                          .snapshots(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return ListView.builder(
-                            itemCount: snapshot.data!.docs.length,
-                            itemBuilder: (context, index) {
-                              return Padding(
-                                padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                                child: Card(
-                                  elevation: 0.5,
-                                  child: ListTile(
-                                    leading: CircleAvatar(
-                                      child: Text(
-                                          // name first letter
-                                          snapshot.data?.docs[index]['name'] ==
-                                                  null
-                                              ? ''
-                                              : snapshot
-                                                  .data?.docs[index]['name'][0]
-                                                  .toUpperCase()),
-                                    ),
-                                    title: Text(snapshot.data?.docs[index]['name']),
-                                    subtitle: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        // balance type cr or dr
-                                        Row(
-                                          children: [
-
-                                            Text(
-                                                // amount
-                                                snapshot.data?.docs[index]['type'] ==
-                                                        'send'
-                                                    ? 'Rs.${currencyFormat(double.parse(snapshot.data!.docs[index]['balance'].toString()))}'
-                                                    : 'Rs.${currencyFormat(double.parse(snapshot.data!.docs[index]['balance'].toString()))}'),
-                                            SizedBox(width: 10.0),
-                                            Text(
-                                                snapshot.data?.docs[index]['type'] ==
-                                                    'send'
-                                                    ? 'Cr'
-                                                    : 'Dr'),
-                                          ],
-                                        ),
-                                        Text(
-                                            GetTimeAgo.parse(DateTime.parse(snapshot.data!.docs[index]['created_at'].toDate().toString()), locale: 'en')
-                                        ),
-
-                                      ],
-                                    ),
-
-                                    //   type and amount
-                                    trailing: wText(
-                                      snapshot.data?.docs[index]['type'] == 'send'
-                                          ? '+ ${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}'
-                                          : '- ${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}',
-                                    ),
-                                    onTap: () {
-                                      _buildDetailDialog(
-                                          context,
-                                          BalanceModel(
-                                            name: snapshot.data?.docs[index]
-                                                ['name'.tr],
-                                            description: snapshot
-                                                .data?.docs[index]['description'.tr],
-                                            amount: snapshot.data?.docs[index]
-                                                ['amount'.tr],
-                                            phone: snapshot.data?.docs[index]
-                                                ['phone'.tr],
-                                            type: snapshot.data?.docs[index]
-                                                ['type'.tr],
-                                            created_at:
-                                                'Time: ${GetTimeAgo.parse(DateTime.parse(snapshot.data!.docs[index]['created_at'].toDate().toString()), locale: 'en')}'
-                                                '\nDate: ${DateTime.parse(snapshot.data!.docs[index]['created_at'].toDate().toString()).toString().substring(0, 16)}',
-                                          ));
-                                    },
+                  child: StreamBuilder(
+                    stream: FirebaseFirestore.instance
+                        .collection('sellers')
+                        .doc(user!.uid)
+                        .collection('statement')
+                        .where('created_at',
+                            isGreaterThanOrEqualTo: DateTime(
+                                // recent transactions minimum 3 days
+                                now.year,
+                                now.month,
+                                now.day - 3))
+                        .orderBy('created_at', descending: true)
+                        .limit(5)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasData) {
+                        return ListView.builder(
+                          itemCount: snapshot.data!.docs.length,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.only(left: 8.0, right: 8.0),
+                              child: Card(
+                                elevation: 0.5,
+                                child: ListTile(
+                                  leading: CircleAvatar(
+                                    child: Text(
+                                        // name first letter
+                                        snapshot.data?.docs[index]['name'] ==
+                                                null
+                                            ? ''
+                                            : snapshot
+                                                .data?.docs[index]['name'][0]
+                                                .toUpperCase()),
                                   ),
+                                  title: Text(snapshot.data?.docs[index]['name']),
+                                  subtitle: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      // balance type cr or dr
+                                      Row(
+                                        children: [
+                  
+                                          Text(
+                                              // amount
+                                              snapshot.data?.docs[index]['type'] ==
+                                                      'send'
+                                                  ? 'Rs.${currencyFormat(double.parse(snapshot.data!.docs[index]['balance'].toString()))}'
+                                                  : 'Rs.${currencyFormat(double.parse(snapshot.data!.docs[index]['balance'].toString()))}'),
+                                          SizedBox(width: 10.0),
+                                          Text(
+                                              snapshot.data?.docs[index]['type'] ==
+                                                  'send'
+                                                  ? 'Cr'
+                                                  : 'Dr'),
+                                        ],
+                                      ),
+                                      Text(
+                                          GetTimeAgo.parse(DateTime.parse(snapshot.data!.docs[index]['created_at'].toDate().toString()), locale: 'en')
+                                      ),
+                  
+                                    ],
+                                  ),
+                  
+                                  //   type and amount
+                                  trailing: wText(
+                                    snapshot.data?.docs[index]['type'] == 'send'
+                                        ? '+ ${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}'
+                                        : '- ${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}',
+                                  ),
+                                  onTap: () {
+                                    _buildDetailDialog(
+                                        context,
+                                        BalanceModel(
+                                          name: snapshot.data?.docs[index]
+                                              ['name'.tr],
+                                          description: snapshot
+                                              .data?.docs[index]['description'.tr],
+                                          amount: snapshot.data?.docs[index]
+                                              ['amount'.tr],
+                                          phone: snapshot.data?.docs[index]
+                                              ['phone'.tr],
+                                          type: snapshot.data?.docs[index]
+                                              ['type'.tr],
+                                          created_at:
+                                              'Time: ${GetTimeAgo.parse(DateTime.parse(snapshot.data!.docs[index]['created_at'].toDate().toString()), locale: 'en')}'
+                                              '\nDate: ${DateTime.parse(snapshot.data!.docs[index]['created_at'].toDate().toString()).toString().substring(0, 16)}',
+                                        ));
+                                  },
                                 ),
-                              );
-                            },
-                          );
-                        }
-                        return wText('No Transactions');
-                      },
-                    ),
+                              ),
+                            );
+                          },
+                        );
+                      }
+                      return wText('No Transactions');
+                    },
                   ),
+                ),
           ],
         ),
       );
@@ -314,17 +326,24 @@ class HomeView extends GetView {
 
   _buildFooter() {
     return Container(
+      padding: EdgeInsets.all(10.0),
       alignment: Alignment.center,
       color: Colors.blue,
       // about wallet 10% of the height of the screen
       child: SizedBox(
         height: 100,
-        child: Center(
-          child: wText(
-              // about PaySaw wallet
-              'PaySaw Wallet'
-              '\n A digital wallet easy to use',
-              color: Colors.white, size: 20.0),
+        child:  Column(
+          children: [
+            wText(
+              'Powered by ZubiPay Digital Wallet'.tr,
+              color: Colors.white,
+            ),
+            SizedBox(height: 10.0),
+            wText(
+              '© ${now.year} - ZubiPay Digital Wallet.',
+              color: Colors.white,
+            ),
+          ],
         ),
       ),
     );
@@ -423,6 +442,77 @@ class HomeView extends GetView {
       type: QuickAlertType.info,
       title: 'Add Money',
       text: 'We are working on this feature',
+    );
+  }
+
+  _buildContent() {
+    return Container(
+      alignment: Alignment.center,
+      height: 200,
+      margin: EdgeInsets.all(10.0),
+      padding: EdgeInsets.all(10.0),
+      decoration: BoxDecoration(
+        color: Colors.black,
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      child: Center(
+        child: StreamBuilder(
+          stream: FirebaseFirestore.instance
+              .collection('sellers')
+              .doc(user!.uid)
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    wText(
+                        "Name: ${snapshot.data!['name']}",
+                        color: Colors.white,
+                        size: 20.0),
+                    wText(
+                        "Email: ${snapshot.data!['email']}",
+                        color: Colors.white,
+                        size: 20.0),
+                    wText(
+                        "Phone: ${snapshot.data!['phone']}",
+                        color: Colors.white,
+                        size: 20.0),
+                   Row(
+                     mainAxisAlignment: MainAxisAlignment.center,
+                     children: [
+                       wText('Status:  ', color: Colors.white, size: 20.0),
+                       wText(
+                         "${snapshot.data!['status']}" == 'approved' ? 'Active' : 'Inactive',
+                           color: Colors.white,
+                           size: 20.0),
+                       SizedBox(width: 10.0),
+                     //    if status is approved then show green color else red color
+                       Container(
+                         height: 18.0,
+                         width: 18.0,
+                         decoration: BoxDecoration(
+                           color: snapshot.data!['status'] == 'approved' ? Colors.green : Colors.red,
+                           shape: BoxShape.circle
+                         ),
+                         child: Icon(
+                           snapshot.data!['status'] == 'approved' ? Icons.check : Icons.close,
+                           color: Colors.white,
+                           size: 14.0,
+                         ),
+                        ),
+
+                     ],
+                    ),
+                  ],
+                ),
+              );
+            }
+            return wText('No data');
+          },
+        ),
+      ),
     );
   }
 }

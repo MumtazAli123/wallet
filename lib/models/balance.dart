@@ -4,19 +4,14 @@ class BalanceModel{
   String? phone;
   String? description;
   String? amount;
+  String? balance;
   String? created_at;
   String? type;
   String? category;
   String? userId;
   String? accountNumber;
   String? accountType;
-  String? recentTransactionType;
-  String? recentTransactionAmount;
-  String? recentTransactionDate;
-  String? recentTransactionTime;
-  String? recentTransactionName;
-  String? recentTransactionDescription;
-  String? recentTransactionId;
+
 
 
   BalanceModel({
@@ -24,6 +19,7 @@ class BalanceModel{
     this.name,
     this.description,
     this.amount,
+    this.balance,
     this.phone,
     this.created_at,
     this.type,
@@ -31,20 +27,32 @@ class BalanceModel{
     this.userId,
     this.accountNumber,
     this.accountType,
-    this.recentTransactionType,
-    this.recentTransactionAmount,
-    this.recentTransactionDate,
-    this.recentTransactionTime,
-    this.recentTransactionName,
-    this.recentTransactionDescription,
-    this.recentTransactionId,
+
   });
+
+  factory BalanceModel.fromMap(map) {
+    return BalanceModel(
+      id: map['id'],
+      name: map['name'],
+      description: map['description'],
+      amount: map['amount'],
+      balance: map['balance'],
+      phone: map['phone'],
+      created_at: map['created_at'],
+      type: map['type'],
+      category: map['category'],
+      userId: map['userId'],
+      accountNumber: map['accountNumber'],
+      accountType: map['accountType'],
+    );
+  }
 
   BalanceModel.fromJson(Map<String, dynamic> json){
     id = json['id'];
     name = json['name'];
     description = json['description'];
     amount = json['amount'];
+    balance = json['balance'];
     phone = json['phone'];
     created_at = json['created_at'];
     type = json['type'];
@@ -52,16 +60,7 @@ class BalanceModel{
     userId = json['userId'];
     accountNumber = json['accountNumber'];
     accountType = json['accountType'];
-    recentTransactionType = json['recentTransactionType'];
-    recentTransactionAmount = json['recentTransactionAmount'];
-    recentTransactionDate = json['recentTransactionDate'];
-    recentTransactionTime = json['recentTransactionTime'];
-    recentTransactionName = json['recentTransactionName'];
-    recentTransactionDescription = json['recentTransactionDescription'];
-    recentTransactionId = json['recentTransactionId'];
   }
-
-
 
   Map<String, dynamic> toJson(){
     final Map<String, dynamic> data = <String, dynamic>{};
@@ -69,20 +68,16 @@ class BalanceModel{
     data['name'] = name;
     data['description'] = description;
     data['amount'] = amount;
-    data['created_at'] = created_at;
+    data['balance'] = balance;
     data['phone'] = phone;
+    data['created_at'] = created_at;
     data['type'] = type;
     data['category'] = category;
     data['userId'] = userId;
     data['accountNumber'] = accountNumber;
     data['accountType'] = accountType;
-    data['recentTransactionType'] = recentTransactionType;
-    data['recentTransactionAmount'] = recentTransactionAmount;
-    data['recentTransactionDate'] = recentTransactionDate;
-    data['recentTransactionTime'] = recentTransactionTime;
-    data['recentTransactionName'] = recentTransactionName;
-    data['recentTransactionDescription'] = recentTransactionDescription;
-    data['recentTransactionId'] = recentTransactionId;
     return data;
   }
+
+
 }
