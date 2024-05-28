@@ -172,11 +172,13 @@ class _DigitalWalletViewState extends State<DigitalWalletView> {
               wText(
                 'PKR - '.tr,
                 color: Colors.white,
+                size: 12.0,
               ),
               wText(
                 // NumberToWord().convert(snapshot.data!['balance'].toInt()),
                 NumberToWord().convert((model!.balance!.toInt())),
                 color: Colors.white,
+                size: 14.0,
               ),
             ],
           ),
