@@ -337,9 +337,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       onPressed: () {
         _signOut();
       },
-      child: isLoading
-          ? CircularProgressIndicator()
-          : wText('Sign Out'.tr, color: Colors.white),
+      child: wText('Sign Out'.tr, color: Colors.white),
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.blue,
         padding: EdgeInsets.all(16),
