@@ -43,6 +43,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   var _image = '';
   var _balance = '';
 
+
+
   FocusNode focusNode = FocusNode();
   Future<void> _refresh() async {
     setState(() {
@@ -153,9 +155,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ],
                       ),
 
+                      SizedBox(height: 10.0),
+
                       wText(
-                        _name,
-                        size: 20.0,
+                        "Balance: $_balance PKR",
+                        size: 16.0,
                       ),
                       // icon button for update profile whatsapp  fb, insta
                       _buildSocialIcons(),
@@ -389,7 +393,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           IconButton(
-            icon: Icon(Icons.phone),
+            icon: urlLauncher('assets/images/whatsapp.png', 'https://wa.me/$_phone', 'Whatsapp'),
             onPressed: () {
               QuickAlert.show(
                 context: context,
@@ -410,7 +414,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             },
           ),
           IconButton(
-            icon: Icon(Icons.email),
+            // email
+            icon: urlLauncher('assets/images/email.png', 'mailto:$_email', 'Email'),
             onPressed: () {
               QuickAlert.show(
                 context: context,
@@ -431,7 +436,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             },
           ),
           IconButton(
-            icon: Icon(Icons.image),
+            // call
+            icon: urlLauncher('assets/images/call.png', 'tel:$_phone', 'Call'),
             onPressed: () {
               QuickAlert.show(
                 context: context,
