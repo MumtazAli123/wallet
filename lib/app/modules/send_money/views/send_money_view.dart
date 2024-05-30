@@ -404,7 +404,8 @@ class _SendMoneyViewState extends State<SendMoneyView> {
           'Money sent to $fullName\nAmount: $transferAmount\nPhone: $phone',
       textAlignment: TextAlign.start,
       onConfirmBtnTap: () {
-        Get.offAll(() => BottomPageView());
+        Get.offAllNamed('/home');
+        // Get.offAll(() => BottomPageView());
       },
     );
   }

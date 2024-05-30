@@ -386,7 +386,8 @@ class _ResultScreenState extends State<ResultScreen> {
       textAlignment: TextAlign.start,
 
       onConfirmBtnTap: () {
-        Get.offAll(() => BottomPageView());
+        Get.offAllNamed('/home');
+        // Get.offAll(() => BottomPageView());
       },
     );
   }

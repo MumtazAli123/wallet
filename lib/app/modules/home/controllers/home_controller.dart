@@ -14,10 +14,13 @@ class HomeController extends GetxController {
   var currentIndex = 0.obs;
   var imgUrl = 'https://pay-saw.com/storage/app/public/';
 
+  final user = FirebaseAuth.instance.currentUser;
+  final db = FirebaseFirestore.instance.collection("sellers").snapshots();
+
   var isLoading = false.obs;
   final isMobile = false.obs;
 
-  UserModel loggedInUser = UserModel();
+  UserModel userModel = UserModel();
 
   var searchList = List.empty(growable: true).obs;
   var searchOtherUser = ''.obs;
@@ -26,11 +29,8 @@ class HomeController extends GetxController {
   var searchProduct = ''.obs;
   final searchController = TextEditingController();
   //
-  final db = FirebaseFirestore.instance.collection("sellers").snapshots();
 
   var otherUsers = List.empty(growable: true).obs;
-  var user = FirebaseAuth.instance.currentUser;
-
   final balance = 0.obs;
 
   void increment() => balance.value++;
@@ -51,6 +51,7 @@ class HomeController extends GetxController {
   void onClose() {
     pageController.dispose();
   }
+
 
   void changePage(int index) {
     currentIndex.value = index;
