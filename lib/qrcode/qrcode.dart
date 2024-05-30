@@ -2,7 +2,9 @@
 
 
 import 'dart:io';
+import 'dart:math';
 
+import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -44,6 +46,16 @@ class _QrcodePageState extends State<QrcodePage> {
     isQrScannedCompleted = false;
   }
 
+  Random random = new Random();
+  List sounds = [
+    'SEU4_Kick_31.wav',
+    'SEU4_Ride_08.wav',
+    'SEU4_Snare_26.wav',
+    'SEU4_Tom_07.wav'
+  ];
+  int soundPosition = 0;
+  final player = AudioPlayer();
+
   final ScreenshotController screenshotController = ScreenshotController();
 
   // qr code
@@ -84,6 +96,9 @@ class _QrcodePageState extends State<QrcodePage> {
          final image =  await screenshotController.captureFromWidget(widgetToImage());
          // await saveImage(image);
          saveAndShareImage(image);
+         setState(() {
+            player.play(AssetSource(sounds[soundPosition]));
+         });
 
            
         },
@@ -105,7 +120,9 @@ class _QrcodePageState extends State<QrcodePage> {
               setState(() {
                 qrResult = value;
                 isQrScannedCompleted = true;
+                player.play(AssetSource(sounds[soundPosition]));
                 getResultsFromFirebase();
+
               });
             });
           },
@@ -113,24 +130,6 @@ class _QrcodePageState extends State<QrcodePage> {
         ),
       ),
       backgroundColor: Colors.white,
-      appBar: AppBar(
-        centerTitle: true,
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "Welcome".tr,
-              style: TextStyle(color: Colors.black, fontSize: 20),
-            ),
-            SizedBox(
-              width: 10,
-            ),
-            wText(sharedPreferences!.getString('name')!.tr),
-          ],
-        ),
-      ),
       body: _buildBody(),
     );
   }
@@ -147,12 +146,12 @@ class _QrcodePageState extends State<QrcodePage> {
               Text(
                 'QR Code Scanner'.tr,
                 style: TextStyle(
-                    fontSize: 20,
+                    fontSize: 20.0,
                     fontWeight: FontWeight.bold,
                     color: Colors.blue),
               ),
               SizedBox(
-                height: 20,
+                height: 20.0
               ),
               Text(
                 'Scan the QR code to get the details'.tr,
@@ -170,6 +169,20 @@ class _QrcodePageState extends State<QrcodePage> {
                   size: 300.0,
                 ),
               ),
+              SizedBox(
+                height: 20.0,
+              ),
+              Text(
+                'Your QR Code'.tr,
+                style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black),
+              ),
+              SizedBox(
+                height: 20.0,
+              ),
+              
             ],
           ),
         ),

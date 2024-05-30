@@ -67,5 +67,6 @@ flutter:
     - assets/slider/
     - assets/icons/
     - assets/slider/2.jpg
+    - assets/audio/SEU4_Ride_08.wav
   uses-material-design: true
 

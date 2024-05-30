@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:wallet/global/global.dart';
 
@@ -37,13 +38,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String? imageUrl;
   XFile? image;
 
-  var _name = '';
-  var _email = '';
-  var _phone = '';
-  var _image = '';
-  var _balance = '';
-
-
+  var name = sharedPreferences!.getString('name');
+  var _email = sharedPreferences!.getString('email');
+  var _phone = sharedPreferences!.getString('phone');
+  var _image = sharedPreferences!.getString('image');
+  var balance = '';
 
   FocusNode focusNode = FocusNode();
   Future<void> _refresh() async {
@@ -51,7 +50,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       isLoading = true;
     });
   }
-
 
   @override
   void initState() {
@@ -70,116 +68,117 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _buildBody(),
-      appBar: AppBar(
-        actions: [
-          IconButton(
-            icon: Icon(Icons.edit),
-            onPressed: () async{
-              QuickAlert.show(
-                context: context,
-                type: QuickAlertType.confirm,
-                title: 'Update Description'.tr,
-                text: "You can update your description here.",
-                widget: TextField(
-                  controller: descController,
-                  maxLength: 130,
-                  focusNode: focusNode,
-                  maxLines: 3,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(),
-                      hintText: sharedPreferences!.getString('description' )?? 'Add Description'
-                  ),
-                ),
-                showConfirmBtn: true,
-                confirmBtnText: "Update".tr,
-                onConfirmBtnTap: () {
-                  // update description
+    return GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: RefreshIndicator(
+          onRefresh: _refresh,
+          child: SafeArea(
+            child: Scaffold(
+                body: _buildBody(),
+                appBar: AppBar(
+                  actions: [
+                    IconButton(
+                      icon: Icon(Icons.edit),
+                      onPressed: () async {
+                        QuickAlert.show(
+                          context: context,
+                          type: QuickAlertType.confirm,
+                          title: 'Update Description'.tr,
+                          text: "You can update your description here.",
+                          widget: TextField(
+                            controller: descController,
+                            maxLength: 130,
+                            focusNode: focusNode,
+                            maxLines: 3,
+                            decoration: InputDecoration(
+                                border: OutlineInputBorder(),
+                                hintText: sharedPreferences!
+                                        .getString('description') ??
+                                    'Add Description'),
+                          ),
+                          showConfirmBtn: true,
+                          confirmBtnText: "Update".tr,
+                          onConfirmBtnTap: () {
+                            // update description
 
-                  db.doc(user!.uid).update({
-                    'description': descController.text,
-                  });
-                  sharedPreferences!.setString('description', descController.text);
-                  Get.back();
-                  QuickAlert.show(
-                    context: context,
-                    type: QuickAlertType.success,
-                    title: 'Description Updated'.tr,
-                    text: "Your description has been updated successfully.",
-                    showConfirmBtn: false,
-                    cancelBtnText: "Close".tr,
-                    showCancelBtn: true,
-
-                  );
-                },
-                cancelBtnTextStyle: TextStyle(color: Colors.green),
-              );
-            },
+                            db.doc(user!.uid).update({
+                              'description': descController.text,
+                            });
+                            sharedPreferences!
+                                .setString('description', descController.text);
+                            Get.back();
+                            QuickAlert.show(
+                              context: context,
+                              type: QuickAlertType.success,
+                              title: 'Description Updated'.tr,
+                              text:
+                                  "Your description has been updated successfully.",
+                              showConfirmBtn: false,
+                              cancelBtnText: "Close".tr,
+                              showCancelBtn: true,
+                            );
+                          },
+                          cancelBtnTextStyle: TextStyle(color: Colors.green),
+                        );
+                      },
+                    ),
+                  ],
+                )),
           ),
-
-        ],
-      )
-    );
+        ));
   }
 
   _buildBody() {
-    return  RefreshIndicator(
-            onRefresh: _refresh,
-            child: Center(
-              child: GestureDetector(
-                onTap: () {
-                  FocusScope.of(context).unfocus();
-                },
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Stack(
-                        children: [
-                          // if image not found then show placeholder image
-                          MixWidgets.buildAvatar(sharedPreferences!.getString('image') ?? 'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png', 70.0),
+    return Center(
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Stack(
+              children: [
+                // if image not found then show placeholder image
+                MixWidgets.buildAvatar(
+                    sharedPreferences!.getString('image') ??
+                        'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png',
+                    70.0),
 
-                          Positioned(
-                            top: 95.0,
-                            right: 0.0,
-                            bottom: -9.0,
-                            child: IconButton(
-                              icon: CircleAvatar(
-                                radius: 25.0,
-                                  child: Icon(Icons.camera_alt)),
-                              onPressed: () {
-                                _buildImageEditAndSave();
-                              }
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      SizedBox(height: 10.0),
-
-                      wText(
-                        "Balance: $_balance PKR",
-                        size: 16.0,
-                      ),
-                      // icon button for update profile whatsapp  fb, insta
-                      _buildSocialIcons(),
-                      // build follow and following count and like count
-                      _buildFollowAndLikeCount(),
-                      // description add and edit
-                      _buildDescriptionEdit(),
-                      // ranking stars
-
-                      MixWidgets.buildRatingStars(4.5),
-
-
-                      _buildProfileDetails(),
-                    ],
-                  ),
+                Positioned(
+                  top: 95.0,
+                  right: 0.0,
+                  bottom: -9.0,
+                  child: IconButton(
+                      icon: CircleAvatar(
+                          radius: 25.0, child: Icon(Icons.camera_alt)),
+                      onPressed: () {
+                        _buildImageEditAndSave();
+                      }),
                 ),
-              ),
+              ],
             ),
-          );
 
+            SizedBox(height: 10.0),
+
+            wText(
+              // name and balance
+              sharedPreferences!.getString('name') ?? 'Name',
+              size: 16.0,
+            ),
+            // icon button for update profile whatsapp  fb, inst
+            _buildSocialIcons(),
+            // build follow and following count and like count
+            _buildFollowAndLikeCount(),
+            // description add and edit
+            _buildDescriptionEdit(),
+            // ranking stars
+
+            MixWidgets.buildRatingStars(4.5),
+
+            _buildProfileDetails(),
+          ],
+        ),
+      ),
+    );
   }
 
   _buildProfileDetails() {
@@ -221,11 +220,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
           builder: (context, AsyncSnapshot<DocumentSnapshot> snapshot) {
             if (snapshot.hasData) {
               var data = snapshot.data!.data() as Map<String, dynamic>;
-              _name = data['name'];
+              name = data['name'];
               _email = data['email'];
               _phone = data['phone'];
               _image = data['image'];
-              _balance =
+              balance =
                   (double.parse(data['balance'].toString())).toStringAsFixed(2);
 
               return Column(
@@ -251,7 +250,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     padding: const EdgeInsets.symmetric(horizontal: 3.0),
                     child: Row(
                       children: [
-                        MixWidgets.buildAvatar(data['image'] ?? '', 50.0),
+                        // qr code
+                        QrImageView(
+                          data: sharedPreferences!.getString('phone')!,
+                          size: 100.0,
+                        ),
                         SizedBox(width: 10.0),
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -261,7 +264,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               size: 16.0,
                             ),
                             wText(
-                              data['phone'],
+                              // phone number show first 5 digits and last 4 digits
+                              'Phone: ${data["phone"]!.toString().substring(0, 5)}****${data["phone"]!.toString().substring(9, 13)}',
                               size: 14.0,
                             ),
                           ],
@@ -326,13 +330,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ],
                   ),
                   SizedBox(height: 10.0),
-                  //   crreat at
+                  //   create at
                   Row(
                     children: [
                       Icon(Icons.calendar_today),
                       SizedBox(width: 10.0),
                       wText(
-                        // jsut show date and time not need to show full date
+                        // just show date and time not need to show full date
                         'Created At: ${data["createdAt"]!.toString().substring(0, 16)}',
                       ),
                     ],
@@ -367,24 +371,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
   }
 
-  void _showUpdateDialog(String s, String balance) {
-    QuickAlert.show(
-      context: context,
-      type: QuickAlertType.confirm,
-      title: 'Update Balance'.tr,
-      text: "You can update your balance here.",
-      widget: TextField(
-        controller: TextEditingController(text: balance),
-        keyboardType: TextInputType.number,
-        decoration: InputDecoration(
-          hintText: 'Enter new balance'.tr,
-        ),
-      ),
-      showConfirmBtn: false,
-      cancelBtnText: "Update".tr,
-      cancelBtnTextStyle: TextStyle(color: Colors.green),
-    );
-  }
 
   _buildSocialIcons() {
     return Padding(
@@ -393,7 +379,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           IconButton(
-            icon: urlLauncher('assets/images/whatsapp.png', 'https://wa.me/$_phone', 'Whatsapp'),
+            icon: urlLauncher('assets/images/whatsapp.png',
+                'https://wa.me/$_phone', 'Whatsapp'),
             onPressed: () {
               QuickAlert.show(
                 context: context,
@@ -415,7 +402,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
           IconButton(
             // email
-            icon: urlLauncher('assets/images/email.png', 'mailto:$_email', 'Email'),
+            icon: urlLauncher(
+                'assets/images/email.png', 'mailto:$_email', 'Email'),
             onPressed: () {
               QuickAlert.show(
                 context: context,
@@ -478,7 +466,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 'Followers'.tr,
                 size: 16.0,
               ),
-
             ],
           ),
           SizedBox(width: 20),
@@ -492,7 +479,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 'Following'.tr,
                 size: 16.0,
               ),
-
             ],
           ),
           SizedBox(width: 20),
@@ -506,13 +492,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 'Likes'.tr,
                 size: 16.0,
               ),
-
             ],
           ),
         ],
       ),
     );
   }
+
   _buildDescriptionEdit() {
     return Center(
       child: Text(
@@ -545,7 +531,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             onPressed: () {
               _pickImage(ImageSource.camera);
               Get.back();
-
             },
           ),
           IconButton(
@@ -577,16 +562,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
       });
       if (image != null) {
         _uploadImage();
-      //  when loading show quick alert loading dialog box and get back to the screen
+        //  when loading show quick alert loading dialog box and get back to the screen
         _quickAlertLoading();
-
       }
     });
   }
 
   void _uploadImage() {
-    storage.child('sellers').child(user!.uid).putFile(File (image!.path)).then((value) {
-      value.ref.getDownloadURL().then((value){
+    storage
+        .child('sellers')
+        .child(user!.uid)
+        .putFile(File(image!.path))
+        .then((value) {
+      value.ref.getDownloadURL().then((value) {
         db.doc(user!.uid).update({
           'image': value,
         });
@@ -625,6 +613,4 @@ class _ProfileScreenState extends State<ProfileScreen> {
       },
     );
   }
-
-
 }
