@@ -305,6 +305,20 @@ class _DigitalWalletViewState extends State<DigitalWalletView> {
                 ),
               ),
             //   created at
+            //   ListTile(
+            //     leading: Icon(Icons.date_range),
+            //     title: Text('Created At: ${sharedPreferences!.getString('createdAt').toString().substring(0, 16)}', )
+            // //     title: Text('Created At: ${ sharedPreferences!.getString('createdAt').toString().substring(0, 16)}',
+            // //   ),
+            //   ),
+          // if platform is ios  then show created at
+              if (defaultTargetPlatform == TargetPlatform.iOS)
+                ListTile(
+                  leading: Icon(Icons.date_range),
+                  title: aText(
+                    size: 14.0,
+                      "Created @ ${sharedPreferences!.getString('createdAt').toString().substring(0, 16)} ")
+              ),
             ],
           ),
         ),
