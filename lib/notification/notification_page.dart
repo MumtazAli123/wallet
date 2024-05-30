@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, prefer_const_constructors
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -67,7 +68,7 @@ class _NotificationPageState extends State<NotificationPage> {
         );
       }
     });
-
+    
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       PushNotification notification = PushNotification(
         title: message.notification!.title!,
@@ -78,7 +79,24 @@ class _NotificationPageState extends State<NotificationPage> {
         _totalNotifications++;
       });
     });
+
+    // Get any messages which caused the application to open from terminated state
+    RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
+    if (initialMessage != null) {
+      PushNotification notification = PushNotification(
+        title: initialMessage.notification?.title ?? '',
+        body: initialMessage.notification?.body ?? '',
+      );
+      setState(() {
+        _notificationInfo = notification;
+        _totalNotifications++;
+      });
+    }
+
   }
+  // stream to listen to incoming messages
+
+
 
   @override
   void initState() {

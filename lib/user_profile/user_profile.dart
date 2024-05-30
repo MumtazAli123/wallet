@@ -82,46 +82,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     IconButton(
                       icon: Icon(Icons.edit),
                       onPressed: () async {
-                        QuickAlert.show(
-                          context: context,
-                          type: QuickAlertType.confirm,
-                          title: 'Update Description'.tr,
-                          text: "You can update your description here.",
-                          widget: TextField(
-                            controller: descController,
-                            maxLength: 130,
-                            focusNode: focusNode,
-                            maxLines: 3,
-                            decoration: InputDecoration(
-                                border: OutlineInputBorder(),
-                                hintText: sharedPreferences!
-                                        .getString('description') ??
-                                    'Add Description'),
-                          ),
-                          showConfirmBtn: true,
-                          confirmBtnText: "Update".tr,
-                          onConfirmBtnTap: () {
-                            // update description
-
-                            db.doc(user!.uid).update({
-                              'description': descController.text,
-                            });
-                            sharedPreferences!
-                                .setString('description', descController.text);
-                            Get.back();
-                            QuickAlert.show(
-                              context: context,
-                              type: QuickAlertType.success,
-                              title: 'Description Updated'.tr,
-                              text:
-                                  "Your description has been updated successfully.",
-                              showConfirmBtn: false,
-                              cancelBtnText: "Close".tr,
-                              showCancelBtn: true,
-                            );
-                          },
-                          cancelBtnTextStyle: TextStyle(color: Colors.green),
-                        );
+                        _updateDescription();
                       },
                     ),
                   ],
@@ -611,6 +572,50 @@ class _ProfileScreenState extends State<ProfileScreen> {
         // Get.back and refresh the screen
         Get.back();
       },
+    );
+  }
+
+  void _updateDescription() {
+    QuickAlert.show(
+      context: context,
+      type: QuickAlertType.confirm,
+      title: 'Update Description'.tr,
+      text: "You can update your description here.",
+      widget: TextField(
+        controller: descController,
+        maxLength: 100,
+        maxLines: 2,
+        keyboardType: TextInputType.text,
+        decoration: InputDecoration(
+          border: OutlineInputBorder(),
+          hintText: 'Enter new description'.tr,
+        ),
+      ),
+      showConfirmBtn: false,
+      cancelBtnText: "Update".tr,
+      onCancelBtnTap: () {
+        db.doc(user!.uid).update({
+          'description': descController.text,
+        });
+        sharedPreferences!.setString('description', descController.text);
+        Get.back();
+        QuickAlert.show(
+          context: context,
+          barrierDismissible: false,
+          type: QuickAlertType.success,
+          title: 'Description Updated'.tr,
+          text: "Your description has been updated successfully.",
+          showConfirmBtn: true,
+          showCancelBtn: false,
+          confirmBtnText: "Close".tr,
+          onConfirmBtnTap: () {
+            // Get.back and refresh the screen
+            _refresh();
+            Get.back();
+          },
+        );
+      },
+      cancelBtnTextStyle: TextStyle(color: Colors.green),
     );
   }
 }
