@@ -161,6 +161,21 @@ class _LoginViewState extends State<LoginView> {
                             ),
                           ),
                           SizedBox(height: 20),
+                          // Row(
+                          //   mainAxisAlignment: MainAxisAlignment.center,
+                          //   children: [
+                          //     Text('Don\'t have an account?'),
+                          //     TextButton(
+                          //       onPressed: () {
+                          //         Get.toNamed('/register');
+                          //       },
+                          //       child: Text('Register',
+                          //           style: TextStyle(color: Colors.blue)),
+                          //     ),
+                          //   ],
+                          // ),
+                        //   if platform is ios and android
+                          if (GetPlatform.isIOS || GetPlatform.isAndroid)
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
