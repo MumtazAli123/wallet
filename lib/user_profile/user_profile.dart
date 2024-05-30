@@ -13,7 +13,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:wallet/global/global.dart';
 
-import '../app/modules/statement/views/wallet_view.dart';
+import '../app/modules/home/views/wallet_view.dart';
 import '../widgets/mix_widgets.dart';
 
 class ProfileScreen extends StatefulWidget {

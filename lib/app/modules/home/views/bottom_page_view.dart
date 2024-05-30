@@ -5,7 +5,7 @@ import 'package:fancy_bottom_navigation_plus/fancy_bottom_navigation_plus.dart';
 
 import 'package:get/get.dart';
 import 'package:wallet/app/modules/home/views/mob_home_view.dart';
-import 'package:wallet/app/modules/statement/views/wallet_view.dart';
+import 'package:wallet/app/modules/home/views/wallet_view.dart';
 import 'package:wallet/global/global.dart';
 import 'package:wallet/widgets/my_drawer.dart';
 
