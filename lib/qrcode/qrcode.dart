@@ -47,14 +47,25 @@ class _QrcodePageState extends State<QrcodePage> {
   }
 
   Random random = new Random();
-  List sounds = [
-    'SEU4_Kick_31.wav',
-    'SEU4_Ride_08.wav',
-    'SEU4_Snare_26.wav',
-    'SEU4_Tom_07.wav'
-  ];
+  // List sounds = [
+  //   'SEU4_Kick_31.wav',
+  //   'SEU4_Ride_08.wav',
+  //   'SEU4_Snare_26.wav',
+  //   'SEU4_Tom_07.wav'
+  // ];
   int soundPosition = 0;
   final player = AudioPlayer();
+  String kick = 'SEU4_Ride_08.wav';
+  List<Color> colours = [
+    Colors.white,
+    Colors.teal,
+    Colors.black,
+    Colors.pinkAccent,
+    Colors.red,
+    Colors.purple
+  ];
+  int appBar = 0;
+  int scaffold = 0;
 
   final ScreenshotController screenshotController = ScreenshotController();
 
@@ -89,6 +100,7 @@ class _QrcodePageState extends State<QrcodePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: colours[scaffold],
       floatingActionButton: FloatingActionButton(
         // qr code image share box size with 400x400 pixels and share the image to other apps
         onPressed: () async {
@@ -97,7 +109,7 @@ class _QrcodePageState extends State<QrcodePage> {
          // await saveImage(image);
          saveAndShareImage(image);
          setState(() {
-            player.play(AssetSource(sounds[soundPosition]));
+            player.play(AssetSource(kick));
          });
 
            
@@ -120,7 +132,7 @@ class _QrcodePageState extends State<QrcodePage> {
               setState(() {
                 qrResult = value;
                 isQrScannedCompleted = true;
-                player.play(AssetSource(sounds[soundPosition]));
+                player.play(AssetSource(kick));
                 getResultsFromFirebase();
 
               });
@@ -129,7 +141,22 @@ class _QrcodePageState extends State<QrcodePage> {
           child: wText('Scan QR Code'.tr, color: Colors.white, size: 20),
         ),
       ),
-      backgroundColor: Colors.white,
+      appBar: AppBar(
+
+        title: Text('QR Code Scanner'.tr),
+        centerTitle: true,
+        backgroundColor: colours[appBar],
+        actions: [
+          IconButton(
+            onPressed: () {
+              setState(() {
+                appBar = random.nextInt(6);
+              });
+            },
+            icon: Icon(Icons.color_lens),
+          ),
+        ],
+      ),
       body: _buildBody(),
     );
   }
@@ -143,16 +170,6 @@ class _QrcodePageState extends State<QrcodePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
-                'QR Code Scanner'.tr,
-                style: TextStyle(
-                    fontSize: 20.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue),
-              ),
-              SizedBox(
-                height: 20.0
-              ),
               Text(
                 'Scan the QR code to get the details'.tr,
                 style: TextStyle(
@@ -182,7 +199,7 @@ class _QrcodePageState extends State<QrcodePage> {
               SizedBox(
                 height: 20.0,
               ),
-              
+
             ],
           ),
         ),
