@@ -23,7 +23,7 @@ dependencies:
   shared_preferences: any
   timeago: 3.6.1
   quickalert: 1.1.0
-  image_picker: 1.1.1
+  image_picker: ^1.1.2
   fancy_password_field: 2.0.6
   country_picker: ^2.0.26
   get_time_ago: 1.3.1

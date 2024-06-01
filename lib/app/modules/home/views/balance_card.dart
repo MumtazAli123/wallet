@@ -45,24 +45,37 @@ class _BalanceCardState extends State<BalanceCard> {
   _buildBody() {
     return SafeArea(
         child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-                child: Column(
-                        children: [
-                          _buildBalanceCard(),
-                          SizedBox(height: 10.0),
-                          _buildButton(),
-                          SizedBox(height: 10.0),
-                          _buildRecentTransactions(),
-                          SizedBox(height: 10.0),
-                          _buildProfile(),
-                          SizedBox(height: 10.0),
+              child: Center(
+                child: Container(
+                  width: 500,
+                  padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(10.0),
+                    image: DecorationImage(
+                      image: AssetImage('assets/images/login.png'),
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            _buildBalanceCard(),
+                            SizedBox(height: 10.0),
+                            _buildButton(),
+                            SizedBox(height: 10.0),
+                            _buildRecentTransactions(),
+                            SizedBox(height: 10.0),
+                            _buildProfile(),
+                            SizedBox(height: 10.0),
 
-                          _buildFooter(),
-                          // _buildTransactionCard(),
-                          //
-                          // _buildFooter(),
-                        ],
+                            _buildFooter(),
+                            // _buildTransactionCard(),
+                            //
+                            // _buildFooter(),
+                          ],
+                  ),
                 ),
               ),
             ));
