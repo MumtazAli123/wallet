@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors , prefer_const_literals_to_create_immutables
 
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -12,8 +13,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:wallet/global/global.dart';
+import 'package:http/http.dart' as http;
 
 import '../app/modules/home/views/wallet_view.dart';
+import '../notification/notification_page.dart';
 import '../widgets/mix_widgets.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -37,6 +40,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   PickedFile? pickedFile;
   String? imageUrl;
   XFile? image;
+  var statusCode = 0;
 
   var name = sharedPreferences!.getString('name');
   var _email = sharedPreferences!.getString('email');
@@ -45,6 +49,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   var balance = '';
 
   FocusNode focusNode = FocusNode();
+
   Future<void> _refresh() async {
     setState(() {
       isLoading = true;
@@ -610,6 +615,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
           confirmBtnText: "Close".tr,
           onConfirmBtnTap: () {
             // Get.back and refresh the screen
+            // send notification to the user that description has been updated
+            const message = 'Your description has been updated successfully.';
+            sendNotification(message);
+
             _refresh();
             Get.back();
           },
@@ -618,4 +627,74 @@ class _ProfileScreenState extends State<ProfileScreen> {
       cancelBtnTextStyle: TextStyle(color: Colors.green),
     );
   }
+
+  void sendNotification(String message) {
+    db.doc(user!.uid).get().then((value) {
+      var data = value.data() as Map<String, dynamic>;
+      var token = data['token'];
+      var name = data['name'];
+      var image = data['image'];
+      var phone = data['phone'];
+      var email = data['email'];
+      var description = data['description'];
+      var status = data['status'];
+      var createdAt = data['createdAt'];
+      var balance = data['balance'];
+
+      var notification = {
+        'title': 'Description Updated',
+        'body': message,
+        'image': image,
+        'name': name,
+        'phone': phone,
+        'email': email,
+        'description': description,
+        'status': status,
+        'createdAt': createdAt,
+        'balance': balance,
+      };
+
+      sendPushNotification(token, notification);
+    });
+  }
+
+  void sendPushNotification(token, Map<String, dynamic> notification) {
+    var url = 'https://fcm.googleapis.com/fcm/send';
+    var header = {
+      'Content-Type': 'application/json',
+      'Authorization ': 'key=$NotificationPage.serverKey',
+    };
+    var request = {
+      'notification': {
+        'title': notification['title'],
+        'body': notification['body'],
+        'image': notification['image'],
+      },
+      'priority': 'high',
+      'data': {
+        'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+        'id': '1',
+        'status': 'done',
+        'name': notification['name'],
+        'phone': notification['phone'],
+        'email': notification['email'],
+        'description': notification['description'],
+        'status': notification['status'],
+        'createdAt': notification['createdAt'],
+        'balance': notification['balance'],
+      },
+      'to': token,
+    };
+
+    http.post(Uri.parse(url), headers: header, body: jsonEncode(request)).then(
+          (response) {
+        if (response.statusCode == 200) {
+          print('Notification sent successfully');
+        } else {
+          print('Failed to send notification');
+        }
+      },
+    );
+  }
 }
+

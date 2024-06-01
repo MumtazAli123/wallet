@@ -30,6 +30,10 @@ class CurrencyFormat {
       symbol: 'PKR: ',
     ).format(value);
   }
+
+  format() {
+    return null;
+  }
 }
 
 

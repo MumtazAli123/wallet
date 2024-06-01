@@ -8,6 +8,7 @@ environment:
 dependencies: 
   get: any
   path: any
+  http: any
   cupertino_icons: ^1.0.6
   firebase_auth: any
   cloud_firestore: any

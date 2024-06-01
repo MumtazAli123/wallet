@@ -54,9 +54,8 @@ class BottomPageView extends GetView {
             parent: NeverScrollableScrollPhysics(),
           ),
           children: [
-            // HomeView(),
-            // HomeView(),
-            DigitalWalletView(),
+            HomeView(),
+            // DigitalWalletView(),
             SearchScreen(),
             QrcodePage(),
             SliderPics(),

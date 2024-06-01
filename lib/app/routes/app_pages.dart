@@ -58,9 +58,7 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.WALLET,
-      page: () => WalletView(
-        loggedInUser: UserModel(),
-      ),
+      page: () => WalletView(),
       binding: WalletBinding(),
     ),
     GetPage(

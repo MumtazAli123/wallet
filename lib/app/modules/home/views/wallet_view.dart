@@ -20,7 +20,8 @@ import '../../send_money/views/send_money_view.dart';
 import '../controllers/home_controller.dart';
 
 class DigitalWalletView extends StatefulWidget {
-  DigitalWalletView({super.key});
+  final UserModel? model;
+  DigitalWalletView({super.key, this.model});
 
   @override
   State<DigitalWalletView> createState() => _DigitalWalletViewState();

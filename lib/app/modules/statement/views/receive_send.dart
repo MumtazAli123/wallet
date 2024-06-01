@@ -20,15 +20,14 @@ import 'package:wallet/global/global.dart';
 import '../../../../widgets/mix_widgets.dart';
 import '../controllers/statement_controller.dart';
 
-class TimeStatementView extends StatefulWidget {
-  const TimeStatementView({super.key});
-
+class ReceiveSendMoney extends StatefulWidget {
+  const ReceiveSendMoney({super.key});
 
   @override
-  State<TimeStatementView> createState() => _TimeStatementViewState();
+  State<ReceiveSendMoney> createState() => _ReceiveSendMoneyState();
 }
 
-class _TimeStatementViewState extends State<TimeStatementView> {
+class _ReceiveSendMoneyState extends State<ReceiveSendMoney> {
   final controller = Get.put(StatementController());
   String? uid = fAuth.currentUser!.uid;
   final user = fAuth.currentUser;
@@ -69,7 +68,7 @@ class _TimeStatementViewState extends State<TimeStatementView> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 2,
       child: Scaffold(
         appBar: AppBar(
           actions: [
@@ -89,9 +88,9 @@ class _TimeStatementViewState extends State<TimeStatementView> {
           centerTitle: true,
           bottom: TabBar(
             tabs: [
-              Tab(text: 'Today'.tr),
-              Tab(text: 'Last 7 days'.tr),
-              Tab(text: 'Last 30 days'.tr),
+              Tab(text: 'Receive'.tr),
+              Tab(text: 'Send'.tr),
+
             ],
           ),
         ),
@@ -102,9 +101,9 @@ class _TimeStatementViewState extends State<TimeStatementView> {
 
   _buildBody() {
     return TabBarView(children: [
-      _buildTabViewToday('today'),
-      _buildTabViewWeek('week'),
-      _buildTabViewLastMonth('month'),
+      _buildSendViewWeek('send'),
+      _buildReceiveViewToday('receive'),
+
     ]);
   }
 
@@ -115,18 +114,16 @@ class _TimeStatementViewState extends State<TimeStatementView> {
     );
   }
 
-  _buildTabViewToday(String s) {
-    return isLoading == true
-        ? Center(child: CircularProgressIndicator())
-        : StreamBuilder(
+  _buildReceiveViewToday(String s) {
+    return StreamBuilder(
+      // date wise show data type receive
             stream: FirebaseFirestore.instance
                 .collection('sellers')
                 .doc(sharedPreferences?.getString('uid'))
                 .collection('statement')
-                .where('created_at',
-                    isGreaterThanOrEqualTo: date.subtract(Duration(days: 1)))
-                .orderBy('created_at', descending: true)
+                .where('type', isEqualTo: s)
                 .snapshots(),
+
             builder: (context, snapshot) {
               if (snapshot.hasData) {
                 return ListView.builder(
@@ -193,18 +190,14 @@ class _TimeStatementViewState extends State<TimeStatementView> {
             });
   }
 
-  _buildTabViewWeek(String s) {
+  _buildSendViewWeek(String s) {
     //  show data today from firestore
-    return isLoading == true
-        ? Center(child: CircularProgressIndicator())
-        : StreamBuilder(
+    return StreamBuilder(
             stream: FirebaseFirestore.instance
                 .collection('sellers')
                 .doc(sharedPreferences?.getString('uid'))
                 .collection('statement')
-                .where('created_at',
-                    isGreaterThanOrEqualTo: date.subtract(Duration(days: 7)))
-                .orderBy('created_at', descending: true)
+                .where('type', isEqualTo: s)
                 .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
@@ -228,22 +221,6 @@ class _TimeStatementViewState extends State<TimeStatementView> {
                           subtitle: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // balance
-                              Row(
-                                children: [
-                                  Text(
-                                      // amount
-                                      snapshot.data?.docs[index]['type'] ==
-                                              'send'
-                                          ? 'Rs.${currencyFormat(double.parse(snapshot.data!.docs[index]['balance'].toString()))}'
-                                          : 'Rs.${currencyFormat(double.parse(snapshot.data!.docs[index]['balance'].toString()))}'),
-                                  SizedBox(width: 10.0),
-                                  Text(snapshot.data?.docs[index]['type'] ==
-                                          'send'
-                                      ? 'Cr'
-                                      : 'Dr'),
-                                ],
-                              ),
                               Text(
                                 GetTimeAgo.parse(
                                     DateTime.parse(
@@ -251,85 +228,7 @@ class _TimeStatementViewState extends State<TimeStatementView> {
                                     locale: 'en'),
                                 style: GoogleFonts.gabriela(
                                   fontSize: 12,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ],
-                          ),
-                          trailing: aText(
-                            snapshot.data?.docs[index]['type'] == 'send'
-                                ? '+${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}'
-                                : '-${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}',
-                          ),
-                        ),
-                      ),
-                    );
-                  },
-                );
-              } else {
-                return Center(child: CircularProgressIndicator());
-              }
-            });
-  }
-
-  _buildTabViewLastMonth(String s) {
-    return isLoading == true
-        ? Center(child: CircularProgressIndicator())
-        : StreamBuilder(
-            stream: FirebaseFirestore.instance
-                .collection('sellers')
-                .doc(sharedPreferences?.getString('uid'))
-                .collection('statement')
-                .where('created_at',
-                    isGreaterThanOrEqualTo: date.subtract(Duration(days: 30)))
-                .orderBy('created_at', descending: true)
-                .snapshots(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return ListView.builder(
-                  itemCount: snapshot.data!.docs.length,
-                  itemBuilder: (context, index) {
-                    final data = snapshot.data!.docs[index];
-                    return Padding(
-                      padding: const EdgeInsets.only(
-                          left: 8.0, right: 8.0, top: 4.0),
-                      child: Card(
-                        elevation: 2.5,
-                        child: ListTile(
-                          onTap: () {
-                            _buildDetailMobile(data);
-                          },
-                          leading: CircleAvatar(
-                            child: Text(data['name'][0]),
-                          ),
-                          title: aText(data['name']),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // balance
-                              Row(
-                                children: [
-                                  Text(
-                                      // amount
-                                      snapshot.data?.docs[index]['type'] ==
-                                              'send'
-                                          ? 'Rs.${currencyFormat(double.parse(snapshot.data!.docs[index]['balance'].toString()))}'
-                                          : 'Rs.${currencyFormat(double.parse(snapshot.data!.docs[index]['balance'].toString()))}'),
-                                  SizedBox(width: 10.0),
-                                  Text(snapshot.data?.docs[index]['type'] ==
-                                          'send'
-                                      ? 'Cr'
-                                      : 'Dr'),
-                                ],
-                              ),
-                              Text(
-                                GetTimeAgo.parse(
-                                    DateTime.parse(
-                                        data['created_at'].toDate().toString()),
-                                    locale: 'en'),
-                                style: GoogleFonts.gabriela(
-                                  fontSize: 12,
-                                  color: Colors.black,
+                                  color: Colors.white,
                                 ),
                               ),
                             ],
@@ -411,7 +310,8 @@ class _TimeStatementViewState extends State<TimeStatementView> {
             children: [
               IconButton(
                   onPressed: () async {
-                    final image =  await screenshotController.captureFromWidget(widgetToImage(param0));
+                    final image = await screenshotController
+                        .captureFromWidget(widgetToImage(param0));
                     // await saveImage(image);
                     saveAndShareImage(image);
                   },
@@ -430,7 +330,7 @@ class _TimeStatementViewState extends State<TimeStatementView> {
     return parse.toStringAsFixed(2);
   }
 
-  Widget widgetToImage(param0){
+  Widget widgetToImage(param0) {
     return Screenshot(
       controller: screenshotController,
       child: Container(
@@ -449,7 +349,7 @@ class _TimeStatementViewState extends State<TimeStatementView> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               // QuickAlert.show dialog screen shot
-              child:  AnimatedContainer(
+              child: AnimatedContainer(
                 padding: EdgeInsets.all(20),
                 duration: Duration(seconds: 1),
                 height: 350,
@@ -479,7 +379,8 @@ class _TimeStatementViewState extends State<TimeStatementView> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         wText('Type :', color: Colors.white),
-                        wText(param0['type'] == 'send' ? 'Credit' : 'Debit', color: Colors.white),
+                        wText(param0['type'] == 'send' ? 'Credit' : 'Debit',
+                            color: Colors.white),
                       ],
                     ),
                     SizedBox(height: 20),
@@ -488,8 +389,7 @@ class _TimeStatementViewState extends State<TimeStatementView> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         wText('Purpose :', color: Colors.white),
-                        wText('${param0['description']}',
-                            color: Colors.white),
+                        wText('${param0['description']}', color: Colors.white),
                       ],
                     ),
                     SizedBox(height: 20),
@@ -540,8 +440,7 @@ class _TimeStatementViewState extends State<TimeStatementView> {
             Text(
               // "Data to get the details".tr,
               'Details of the transaction'.tr,
-              style: TextStyle(
-                  fontSize: 15, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -555,5 +454,4 @@ class _TimeStatementViewState extends State<TimeStatementView> {
     image.writeAsBytesSync(bytes);
     Share.shareXFiles([XFile(image.path)]);
   }
-
 }

@@ -89,6 +89,8 @@ class LanguageTranslate extends Translations {
       'hello': 'هيلو',
       'Not Yet Scanned': 'اڃا تائين اسڪين ٿيل ناهي',
       'Welcome': 'خوش آمديد',
+      'Receive Money': 'وصول ڪيل پئسا',
+      "Account Number :" : "اڪائونٽ نمبر",
       "QR Code Scanner": " ڪيو آر ڪوڊاسڪينر",
       'Scan QR Code': 'QR ڪوڊ اسڪين ڪريو',
       'Scan the QR code to get the details': 'تفصيل حاصل ڪرڻ لاء QR ڪوڊ اسڪين ڪريو',

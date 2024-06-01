@@ -17,6 +17,13 @@ wText(String text, { Color? color, double size = 16}) {
     ),
   );
 }
+eText(String s, {required Color color}) {
+  return Text(
+    s,
+    style: TextStyle(color: color),
+  );
+}
+
 aText(String text, { Color? color, double size = 16}) {
   return Text(
     text,
