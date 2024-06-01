@@ -45,24 +45,27 @@ class _BalanceCardState extends State<BalanceCard> {
   _buildBody() {
     return SafeArea(
         child: SingleChildScrollView(
-      child: Column(
-        children: [
-          _buildBalanceCard(),
-          SizedBox(height: 10.0),
-          _buildButton(),
-          SizedBox(height: 10.0),
-          _buildRecentTransactions(),
-          SizedBox(height: 10.0),
-          _buildProfile(),
-          SizedBox(height: 10.0),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+                child: Column(
+                        children: [
+                          _buildBalanceCard(),
+                          SizedBox(height: 10.0),
+                          _buildButton(),
+                          SizedBox(height: 10.0),
+                          _buildRecentTransactions(),
+                          SizedBox(height: 10.0),
+                          _buildProfile(),
+                          SizedBox(height: 10.0),
 
-          _buildFooter(),
-          // _buildTransactionCard(),
-          //
-          // _buildFooter(),
-        ],
-      ),
-    ));
+                          _buildFooter(),
+                          // _buildTransactionCard(),
+                          //
+                          // _buildFooter(),
+                        ],
+                ),
+              ),
+            ));
   }
 
   _buildBalanceCard() {
@@ -199,136 +202,133 @@ class _BalanceCardState extends State<BalanceCard> {
   _buildRecentTransactions() {
     final size = MediaQuery.of(Get.context!).size;
     try {
-      return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Card(
-          elevation: 14,
-          child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
-            height: size.height * 0.6,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10.0),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.center,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(height: 10.0),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8.0, right: 4.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      wText("Recent Transactions".tr, size: 18.0),
-                      Spacer(),
-                      TextButton(
-                          onPressed: () {
-                            Get.to(() => TimeStatementView());
-                          },
-                          child: wText('View All'.tr, color: Colors.blue))
-                    ],
-                  ),
+      return Card(
+        elevation: 14,
+        child: Container(
+          margin: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+          height: size.height * 0.6,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(height: 10.0),
+              Padding(
+                padding: const EdgeInsets.only(left: 8.0, right: 4.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    wText("Recent Transactions".tr, size: 18.0),
+                    Spacer(),
+                    TextButton(
+                        onPressed: () {
+                          Get.to(() => TimeStatementView());
+                        },
+                        child: wText('View All'.tr, color: Colors.blue))
+                  ],
                 ),
-                // Divider(),
-                Expanded(
-                  child: StreamBuilder(
-                    stream: FirebaseFirestore.instance
-                        .collection('sellers')
-                        .doc(user!.uid)
-                        .collection('statement')
-                        .where('created_at',
-                            isGreaterThanOrEqualTo: DateTime(
-                                // recent transactions minimum 3 days
-                                now.year,
-                                now.month,
-                                now.day - 3))
-                        .orderBy('created_at', descending: true)
-                        .limit(5)
-                        .snapshots(),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return ListView.builder(
-                          itemCount: snapshot.data!.docs.length,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding:
-                                  const EdgeInsets.only(left: 8.0, right: 8.0),
-                              child: Card(
-                                elevation: 5,
-                                child: ListTile(
-                                    leading: MixWidgets.buildAvatar(
-                                        // get user image from firebase
-                                        isLoading == true
-                                            ? 'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png'
-                                            : snapshot
-                                                .data?.docs[index]['image']
-                                                .toString(),
-                                        20.0),
-                                    title: Text(
-                                        snapshot.data?.docs[index]['name']),
-                                    subtitle: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        // balance type cr or dr
-                                        Row(
-                                          children: [
-                                            Text(
-                                                // amount
-                                                snapshot.data?.docs[index]
-                                                            ['type'] ==
-                                                        'send'
-                                                    ? 'Rs.${currencyFormat(double.parse(snapshot.data!.docs[index]['balance'].toString()))}'
-                                                    : 'Rs.${currencyFormat(double.parse(snapshot.data!.docs[index]['balance'].toString()))}'),
-                                            SizedBox(width: 10.0),
-                                            Text(snapshot.data?.docs[index]
-                                                        ['type'] ==
-                                                    'send'
-                                                ? 'Cr'
-                                                : 'Dr'),
-                                          ],
-                                        ),
-                                        Text(GetTimeAgo.parse(
-                                            DateTime.parse(snapshot
-                                                .data!.docs[index]['created_at']
-                                                .toDate()
-                                                .toString()),
-                                            locale: 'en')),
-                                      ],
-                                    ),
-
-                                    //   type and amount
-                                    trailing: wText(
-                                      snapshot.data?.docs[index]['type'] ==
-                                              'send'
-                                          ? '+ ${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}'
-                                          : '- ${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}',
-                                    ),
-                                    onTap: () {
-                                      _buildDialogTran(
-                                          snapshot.data?.docs[index]['name'],
-                                          snapshot.data?.docs[index]['amount'],
-                                          snapshot.data?.docs[index]['type'],
-                                          snapshot
-                                              .data?.docs[index]['created_at']
-                                              .toDate()
+              ),
+              // Divider(),
+              Expanded(
+                child: StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection('sellers')
+                      .doc(user!.uid)
+                      .collection('statement')
+                      .where('created_at',
+                          isGreaterThanOrEqualTo: DateTime(
+                              // recent transactions minimum 3 days
+                              now.year,
+                              now.month,
+                              now.day - 3))
+                      .orderBy('created_at', descending: true)
+                      .limit(5)
+                      .snapshots(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return ListView.builder(
+                        itemCount: snapshot.data!.docs.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding:
+                                const EdgeInsets.only(left: 8.0, right: 8.0),
+                            child: Card(
+                              elevation: 5,
+                              child: ListTile(
+                                  leading: MixWidgets.buildAvatar(
+                                      // get user image from firebase
+                                      isLoading == true
+                                          ? 'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png'
+                                          : snapshot
+                                              .data?.docs[index]['image']
                                               .toString(),
-                                          snapshot.data?.docs[index]['phone'],
-                                          snapshot.data?.docs[index]
-                                              ['description']);
-                                    }),
-                              ),
-                            );
-                          },
-                        );
-                      }
-                      return wText('No Transactions');
-                    },
-                  ),
+                                      20.0),
+                                  title: Text(
+                                      snapshot.data?.docs[index]['name']),
+                                  subtitle: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      // balance type cr or dr
+                                      Row(
+                                        children: [
+                                          Text(
+                                              // amount
+                                              snapshot.data?.docs[index]
+                                                          ['type'] ==
+                                                      'send'
+                                                  ? 'Rs.${currencyFormat(double.parse(snapshot.data!.docs[index]['balance'].toString()))}'
+                                                  : 'Rs.${currencyFormat(double.parse(snapshot.data!.docs[index]['balance'].toString()))}'),
+                                          SizedBox(width: 10.0),
+                                          Text(snapshot.data?.docs[index]
+                                                      ['type'] ==
+                                                  'send'
+                                              ? 'Cr'
+                                              : 'Dr'),
+                                        ],
+                                      ),
+                                      Text(GetTimeAgo.parse(
+                                          DateTime.parse(snapshot
+                                              .data!.docs[index]['created_at']
+                                              .toDate()
+                                              .toString()),
+                                          locale: 'en')),
+                                    ],
+                                  ),
+
+                                  //   type and amount
+                                  trailing: wText(
+                                    snapshot.data?.docs[index]['type'] ==
+                                            'send'
+                                        ? '+ ${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}'
+                                        : '- ${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}',
+                                  ),
+                                  onTap: () {
+                                    _buildDialogTran(
+                                        snapshot.data?.docs[index]['name'],
+                                        snapshot.data?.docs[index]['amount'],
+                                        snapshot.data?.docs[index]['type'],
+                                        snapshot
+                                            .data?.docs[index]['created_at']
+                                            .toDate()
+                                            .toString(),
+                                        snapshot.data?.docs[index]['phone'],
+                                        snapshot.data?.docs[index]
+                                            ['description']);
+                                  }),
+                            ),
+                          );
+                        },
+                      );
+                    }
+                    return wText('No Transactions');
+                  },
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       );
