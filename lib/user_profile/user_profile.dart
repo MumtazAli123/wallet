@@ -218,6 +218,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         // qr code
                         QrImageView(
+                          backgroundColor: Colors.white,
                           data: sharedPreferences!.getString('phone')!,
                           size: 100.0,
                         ),

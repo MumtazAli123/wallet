@@ -16,6 +16,7 @@ import 'package:wallet/app/modules/home/views/mob_home_view.dart';
 
 import '../../../../global/global.dart';
 import '../../../../models/user_model.dart';
+import '../../../../widgets/mix_widgets.dart';
 import '../controllers/register_controller.dart';
 
 class RegisterView extends StatefulWidget {
@@ -84,8 +85,13 @@ class _RegisterViewState extends State<RegisterView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _buildBody(context),
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        body: _buildBody(context),
+      ),
     );
   }
 
@@ -347,6 +353,7 @@ class _RegisterViewState extends State<RegisterView> {
     return FancyPasswordField(
       controller: controller.passwordController,
       decoration: InputDecoration(
+        prefixIcon: Icon(Icons.lock),
         labelText: 'Password',
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
@@ -365,6 +372,7 @@ class _RegisterViewState extends State<RegisterView> {
     return FancyPasswordField(
       controller: controller.confirmPasswordController,
       decoration: InputDecoration(
+        prefixIcon: Icon(Icons.lock),
         labelText: 'Confirm Password',
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
@@ -386,7 +394,18 @@ class _RegisterViewState extends State<RegisterView> {
           fromValidation();
         }
       },
-      child: const Text('Register'),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.green,
+        padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+      child: isLoading
+          ? const CircularProgressIndicator(
+              color: Colors.white,
+            )
+          :  wText('Register',  color: Colors.white, size: 18.0),
     );
   }
 

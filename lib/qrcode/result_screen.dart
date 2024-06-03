@@ -164,7 +164,7 @@ class _ResultScreenState extends State<ResultScreen> {
                         shape: BoxShape.rectangle,
                       ),
                       child: QrImageView(
-                        backgroundColor: Colors.grey,
+                        backgroundColor: Colors.white,
                         data: "${widget.userModel.phone}",
                         version: QrVersions.auto,
                         size: 80.0,
@@ -312,48 +312,6 @@ class _ResultScreenState extends State<ResultScreen> {
   }
 
   void _buildSureDialog(UserModel recipient, int transferAmount) {
-    //   showDialog(
-    //     context: context,
-    //     builder: (context) {
-    //       return AlertDialog(
-    //         title: Text('Are you sure?'),
-    //         content: Column(
-    //           mainAxisSize: MainAxisSize.min,
-    //           children: [
-    //             Text(
-    //               'Send money to ${recipient.name}',
-    //               textAlign: TextAlign.center,
-    //             ),
-    //             SizedBox(height: 10.0),
-    //             Text(
-    //               'Amount: $transferAmount',
-    //               textAlign: TextAlign.center,
-    //             ),
-    //             SizedBox(height: 10.0),
-    //             Text(
-    //               'Description: ${descriptionController.text}',
-    //               textAlign: TextAlign.center,
-    //             ),
-    //           ],
-    //         ),
-    //         actions: [
-    //           TextButton(
-    //             onPressed: () {
-    //               Navigator.pop(context);
-    //             },
-    //             child: Text('Cancel'),
-    //           ),
-    //           TextButton(
-    //             onPressed: () {
-    //               _buildDialogWithDataReceiver(recipient.username, transferAmount,
-    //                   recipient.name!, recipient.phone!);
-    //             },
-    //             child: Text('Send'),
-    //           ),
-    //         ],
-    //       );
-    //     },
-    //   );
     AwesomeDialog(
       width: 400,
       context: context,
@@ -380,6 +338,7 @@ class _ResultScreenState extends State<ResultScreen> {
       context: context,
       type: QuickAlertType.success,
       title: 'Success',
+      textColor: Colors.black,
       text:
           // 'Money sent to $fullName\nAmount: $transferAmount\n' '\nPhone $phone\nDescription: ${descriptionController.text}',
           'Money sent to $fullName\nAmount: $transferAmount\nPhone $phone\nDescription: ${descriptionController.text}',
@@ -396,7 +355,7 @@ class _ResultScreenState extends State<ResultScreen> {
     //   if mobile rotate to landscape mode ask for use to rotate back to portrait mode
     if (MediaQuery.of(context).size.width < 600) {
       QuickAlert.show(
-        backgroundColor: Colors.white,
+        // backgroundColor: Colors.white,
         context: context,
         type: QuickAlertType.info,
         title: "Send Money",
@@ -412,16 +371,20 @@ class _ResultScreenState extends State<ResultScreen> {
             child: Column(
               children: [
                 TextFormField(
+                  style: TextStyle(fontSize: 20, color: Colors.black),
                   controller: transferNominalController,
                   keyboardType: TextInputType.number,
                   decoration: InputDecoration(
+                    labelStyle: TextStyle(fontSize: 14, color: Colors.black),
                     labelText: 'Amount',
                     hintText: 'Enter amount',
                   ),
                 ),
                 TextFormField(
+                  style: TextStyle(fontSize: 20, color: Colors.black),
                   controller: descriptionController,
                   decoration: InputDecoration(
+                    labelStyle: TextStyle(fontSize: 14, color: Colors.black),
                     labelText: 'Description',
                     hintText: 'Enter description',
                   ),

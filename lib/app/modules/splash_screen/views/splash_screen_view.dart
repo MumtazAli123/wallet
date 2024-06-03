@@ -50,7 +50,7 @@ class _SplashScreenViewState extends State<SplashScreenView> {
       body: Container(
         decoration: const BoxDecoration(
           image: DecorationImage(
-            image: AssetImage('assets/images/bg.png'),
+            image: AssetImage('assets/zubipay.png'),
             fit: BoxFit.cover,
           ),
         ),

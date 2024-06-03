@@ -28,6 +28,7 @@ class _LoginViewState extends State<LoginView> {
 
   SellerModel? sellerModel = SellerModel();
 
+
   var hintText = 'Email';
 
   bool isLoading = false;
@@ -46,8 +47,13 @@ class _LoginViewState extends State<LoginView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _buildBody(),
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        body: _buildBody(),
+      ),
     );
   }
 
