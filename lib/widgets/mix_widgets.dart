@@ -93,7 +93,7 @@ urlLauncher(String imgPath, String url, String title) {
             width: 40,
             height: 40,
           ),
-          wText(title, size: 10),
+          wText(title, size: 10, color: Colors.black),
         ],
       ),
     ),
