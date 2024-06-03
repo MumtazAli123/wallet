@@ -13,8 +13,8 @@ import 'package:wallet/widgets/mix_widgets.dart';
 
 
 class SendMoneyToFriends extends StatefulWidget {
-  UserModel? user;
-  SendMoneyToFriends({super.key, this.user});
+  final UserModel? user;
+  const SendMoneyToFriends({super.key, this.user});
 
   @override
   State<SendMoneyToFriends> createState() => _SendMoneyToFriendsState();

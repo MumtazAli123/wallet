@@ -18,6 +18,7 @@ class _SearchScreenState extends State<SearchScreen> {
   final TextEditingController _searchController = TextEditingController();
 
   final List<String> _searchOtherUserList = [];
+  String query = '';
   final currentUserId = FirebaseAuth.instance.currentUser!.uid;
   final db = FirebaseFirestore.instance.collection('sellers');
 
@@ -44,63 +45,43 @@ class _SearchScreenState extends State<SearchScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _buildBody(),
+      body: _buildBody(_searchController.text.trim()),
+      appBar: _buildAppBar(),
     );
   }
 
-  _buildBody() {
-    return NestedScrollView(
-        headerSliverBuilder: (context, innerBoxIsScrolled) {
-          return [
-            _buildSliverAppBar(),
-          ];
-        },
-        body: Center(
-          child: GestureDetector(
-            onTap: () {
-              FocusScope.of(context).unfocus();
-            },
-            // child: Text('Search'),
-          ),
-        ));
-  }
-
-  _buildSliverAppBar() {
-    return SliverAppBar(
+  _buildAppBar() {
+    return AppBar(
+      // title: Text('Search'),
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(90.0),
         // search Box , on background image
         child: Container(
           height: 90.0,
           margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-          child: Container(
-            padding: EdgeInsets.all(10.0),
-            height: 40,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: Colors.grey[200],
-              borderRadius: BorderRadius.circular(15),
-            ),
-            child: Center(
-              child: TextField(
-                maxLength: 13,
-                controller: _searchController,
-                keyboardType: TextInputType.phone,
-                // when finish type return the keyboard
-                textInputAction: TextInputAction.search,
-                decoration: InputDecoration(
-                  helperText: 'Search by phone like +923123456789',
-                  hintText: 'Search',
-                  hintStyle: TextStyle(color: Colors.black),
-                  border: InputBorder.none,
-                  prefixIcon: Icon(Icons.search),
+          child: Center(
+            child: TextField(
+              maxLength: 13,
+              controller: _searchController,
+              keyboardType: TextInputType.phone,
+              // when finish type return the keyboard
+              textInputAction: TextInputAction.search,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                onChanged: (value) {
-                  if (value.isNotEmpty) {
-                    _search(value);
-                  }
-                },
+                helperText: 'Search by phone like +923123456789',
+                hintText: 'Search',
+                hintStyle: TextStyle(color: Colors.black),
+                prefixIcon: Icon(Icons.search),
               ),
+              onChanged: (value) {
+                if (value.isNotEmpty) {
+                  // _search(value);
+                  otherUserSearchAll(value);
+
+                }
+              },
             ),
           ),
         ),
@@ -108,7 +89,23 @@ class _SearchScreenState extends State<SearchScreen> {
     );
   }
 
-  void _search(String value) {
+  _buildBody(String value) {
+    db.where('phone', isEqualTo: value).get().then((QuerySnapshot querySnapshot) {
+      for (var doc in querySnapshot.docs) {
+        _searchOtherUserList.add(doc['phone']);
+        return ListView.builder(
+          itemCount: _searchOtherUserList.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+              title: Text(doc['phone'],),
+            );
+          },
+        );
+      }
+    });
+  }
+
+  Future<void> otherUserSearchAll(String value)async{
     try {
       if (value == currentUserId) {
         QuickAlert.show(
@@ -117,11 +114,7 @@ class _SearchScreenState extends State<SearchScreen> {
             title: 'Error',
             text: 'You cannot search yourself');
       } else {
-        FirebaseFirestore.instance
-            .collection('sellers')
-            .where('phone', isEqualTo: value)
-            .get()
-            .then((QuerySnapshot querySnapshot) {
+        db.where('phone', isEqualTo: value).get().then((QuerySnapshot querySnapshot) {
           for (var doc in querySnapshot.docs) {
             _searchOtherUserList.add(doc['phone']);
             QuickAlert.show(
@@ -157,7 +150,7 @@ class _SearchScreenState extends State<SearchScreen> {
                               child: CircularProgressIndicator(
                                 value: loadingProgress.expectedTotalBytes != null
                                     ? loadingProgress.cumulativeBytesLoaded /
-                                        loadingProgress.expectedTotalBytes!
+                                    loadingProgress.expectedTotalBytes!
                                     : null,
                               ),
                             );
@@ -183,6 +176,7 @@ class _SearchScreenState extends State<SearchScreen> {
       }
     }
   }
+
 }
 
 class SendMoneyScreen extends StatelessWidget {
