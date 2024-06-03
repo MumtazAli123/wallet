@@ -47,12 +47,7 @@ class _QrcodePageState extends State<QrcodePage> {
   }
 
   Random random = new Random();
-  // List sounds = [
-  //   'SEU4_Kick_31.wav',
-  //   'SEU4_Ride_08.wav',
-  //   'SEU4_Snare_26.wav',
-  //   'SEU4_Tom_07.wav'
-  // ];
+
   int soundPosition = 0;
   final player = AudioPlayer();
   String kick = 'SEU4_Ride_08.wav';
@@ -231,7 +226,7 @@ class _QrcodePageState extends State<QrcodePage> {
               height: 20,
             ),
             Text(
-              'Scan the QR code to get the details'.tr,
+              'Scan the QR Code: ${sharedPreferences!.getString('name')}'.tr,
               style: TextStyle(
                   fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
             ),
