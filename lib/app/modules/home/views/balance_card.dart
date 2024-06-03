@@ -192,7 +192,7 @@ class _BalanceCardState extends State<BalanceCard> {
             height: 100,
             width: 100,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Theme.of(context).scaffoldBackgroundColor,
               borderRadius: BorderRadius.circular(10),
               boxShadow: [
                 BoxShadow(
@@ -206,7 +206,7 @@ class _BalanceCardState extends State<BalanceCard> {
             child: Icon(send, color: Colors.blue, size: 30),
           ),
           SizedBox(height: 10),
-          wText(s, size: 14),
+          wText(s, size: 14, color: Colors.white),
         ],
       ),
     );
