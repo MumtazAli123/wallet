@@ -493,6 +493,7 @@ class _BalanceCardState extends State<BalanceCard> {
 
   _buildFooter() {
     return Container(
+      width: double.infinity,
       padding: EdgeInsets.all(20.0),
       decoration: BoxDecoration(
         color: Theme.of(context).primaryColor,
