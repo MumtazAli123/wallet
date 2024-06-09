@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wallet/app/modules/home/controllers/home_controller.dart';
 
+import '../addressScreen/address_screen.dart';
 import '../global/global.dart';
 
 class MyDrawer extends StatefulWidget {
@@ -68,6 +69,14 @@ class _MyDrawerState extends State<MyDrawer> {
           title:  Text(email),
           onTap: () {
             Navigator.of(context).pushNamed('/home');
+          },
+        ),
+        ListTile(
+          // address
+          leading: const Icon(Icons.location_on),
+          title: const Text('Address'),
+          onTap: () {
+            Get.to(() => const AddressScreen());
           },
         ),
         ListTile(
