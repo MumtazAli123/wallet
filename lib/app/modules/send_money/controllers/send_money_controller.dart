@@ -30,15 +30,7 @@ class SendMoneyController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    searchController.addListener(() {
-      if (searchController.text.isNotEmpty) {
-        isSearching(true);
-        searchUser(searchController.text);
-      } else {
-        isSearching(false);
-        otherUsers.clear();
-      }
-    });
+    getOtherUsers('');
   }
 
   @override

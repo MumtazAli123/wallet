@@ -1,7 +1,9 @@
-// ignore_for_file: prefer_const_constructors , prefer_const_literals_to_create_immutables
-
 import 'package:flutter/cupertino.dart';
+
 import 'package:get/get.dart';
+
+import 'package:wallet/app/modules/save_friends/bindings/save_friends_binding.dart';
+import 'package:wallet/app/modules/save_friends/views/save_friends_view.dart';
 
 import '../../models/user_model.dart';
 import '../modules/home/bindings/home_binding.dart';
@@ -20,6 +22,7 @@ import '../modules/statement/views/statement_view.dart';
 import '../modules/wallet/bindings/wallet_binding.dart';
 import '../modules/wallet/views/wallet_view.dart';
 
+// ignore_for_file: prefer_const_constructors , prefer_const_literals_to_create_immutables
 
 part 'app_routes.dart';
 
@@ -74,6 +77,13 @@ class AppPages {
       name: _Paths.SEND_MONEY,
       page: () => SendMoneyView(),
       binding: SendMoneyBinding(),
+    ),
+    GetPage(
+      name: _Paths.SAVE_FRIENDS,
+      page: () => SaveFriendsView(
+            otherUser: [],
+      ),
+      binding: SaveFriendsBinding(),
     ),
   ];
 }

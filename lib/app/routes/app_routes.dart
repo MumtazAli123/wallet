@@ -11,6 +11,7 @@ abstract class Routes {
   static const BOTTOM_PAGE = _Paths.BOTTOM_PAGE;
   static const STATEMENT = _Paths.STATEMENT;
   static const SEND_MONEY = _Paths.SEND_MONEY;
+  static const SAVE_FRIENDS = _Paths.SAVE_FRIENDS;
 }
 
 abstract class _Paths {
@@ -23,4 +24,5 @@ abstract class _Paths {
   static const BOTTOM_PAGE = '/bottom-page';
   static const STATEMENT = '/statement';
   static const SEND_MONEY = '/send-money';
+  static const SAVE_FRIENDS = '/save-friends';
 }

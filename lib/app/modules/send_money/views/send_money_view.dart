@@ -120,7 +120,8 @@ class _SendMoneyViewState extends State<SendMoneyView> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Get.to(() => SendMoneyToFriends(
-                user: userModel,
+                otherUser: otherUsers,
+                amount: loggedInUser.balance!.toDouble(),
           ));
         },
         child: Icon(Icons.add),

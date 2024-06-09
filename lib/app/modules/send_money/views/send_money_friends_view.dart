@@ -11,10 +11,14 @@ import 'package:wallet/global/global.dart';
 import 'package:wallet/models/user_model.dart';
 import 'package:wallet/widgets/mix_widgets.dart';
 
+import '../../save_friends/views/save_friends_view.dart';
+
 
 class SendMoneyToFriends extends StatefulWidget {
-  final UserModel? user;
-  const SendMoneyToFriends({super.key, this.user});
+  final User? user;
+  final List<UserModel> otherUser;
+  final double? amount;
+  const SendMoneyToFriends({super.key, this.user, required this.otherUser, this.amount});
 
   @override
   State<SendMoneyToFriends> createState() => _SendMoneyToFriendsState();
@@ -33,6 +37,7 @@ class _SendMoneyToFriendsState extends State<SendMoneyToFriends> {
   final loggedInUser = UserModel();
   List<UserModel> otherUsers = [];
   User? user = FirebaseAuth.instance.currentUser;
+  UserModel? userModel = UserModel();
 
   @override
   void dispose() {
@@ -45,16 +50,9 @@ class _SendMoneyToFriendsState extends State<SendMoneyToFriends> {
 
   @override
   void initState() {
-
-    //isLoading duration = Duration(seconds: 2);
-    isLoading = false;
-
-
     super.initState();
-    fetchUserData();
-    if (user != null) {
-      fetchLoggedInUserBalance(user!.uid);
-    }
+    // fetchUserData();
+    fetchLoggedInUserBalance(user!.uid);
   }
 
   Future<void> fetchLoggedInUserBalance(String uid) async {
@@ -85,17 +83,14 @@ class _SendMoneyToFriendsState extends State<SendMoneyToFriends> {
     QuerySnapshot querySnapshot = await usersCollection.get();
 
     otherUsers.clear();
-
     for (DocumentSnapshot documentSnapshot in querySnapshot.docs) {
       Map<String, dynamic> userData =
           documentSnapshot.data() as Map<String, dynamic>;
-
       String uid = documentSnapshot.id;
 
       if (uid != user?.uid) {
         UserModel user = UserModel.fromMap(userData);
         user.uid = uid;
-
         otherUsers.add(user);
       }
 
@@ -106,88 +101,30 @@ class _SendMoneyToFriendsState extends State<SendMoneyToFriends> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: Colors.green,
+        onPressed: () {
+
+          Get.to(() => SaveFriendsView(
+                sellerUid: user!.uid,
+                amount: loggedInUser.balance!.toDouble(),
+                otherUser: otherUsers,
+              ));
+        },
+        label: wText('Save Friends', color: Colors.white),
+        icon: Icon(Icons.add, color: Colors.white),
+      ),
       appBar: AppBar(
         title: Text(sharedPreferences!.getString('name')!),
         centerTitle: true,
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                TextFormField(
-                  controller: nameController,
-                  decoration: InputDecoration(
-                    labelText: 'Name',
-                    hintText: 'Enter name',
-                  ),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Name is required';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 20),
-                TextFormField(
-                  controller: phoneController,
-                  decoration: InputDecoration(
-                    labelText: 'Phone',
-                    hintText: 'Enter phone',
-                  ),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Phone is required';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 20),
-                TextFormField(
-                  controller: amountController,
-                  decoration: InputDecoration(
-                    labelText: 'Amount',
-                    hintText: 'Enter amount',
-                  ),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Amount is required';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 20),
-                TextFormField(
-                  controller: descriptionController,
-                  decoration: InputDecoration(
-                    labelText: 'Description',
-                    hintText: 'Enter description',
-                  ),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Description is required';
-                    }
-                    return null;
-                  },
-                ),
-                SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    _buildShowDialog(context);
-                  },
-                  child: isLoading
-                      ? CircularProgressIndicator()
-                      : Text('Send Money'),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
+      body: _buildBody(context),
     );
   }
+
+ Widget _buildBody(BuildContext context) {
+    return Container();
+ }
 
   void sendMoney(String text, String text2, double parse, String text3,
       {required String name,
@@ -205,7 +142,7 @@ class _SendMoneyToFriendsState extends State<SendMoneyToFriends> {
     FirebaseFirestore.instance
         .collection('sellers')
         .doc(user!.uid)
-        .collection('transactions')
+        .collection('statement')
         .add({
       'name': name,
       'phone': phone,

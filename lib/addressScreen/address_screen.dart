@@ -16,7 +16,15 @@ class _AddressScreenState extends State<AddressScreen> {
     );
   }
 
-  _buildAppBar() {}
+  _buildAppBar() {
+    return AppBar(
+      title: Text('Address'),
+    );
+  }
 
-  _buildBody() {}
+  _buildBody() {
+    return Center(
+      child: Text('Address Screen'),
+    );
+  }
 }
