@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:wallet/app/modules/send_money/views/friends_model.dart';
+import 'package:wallet/models/address_model.dart';
 import 'package:wallet/models/balance.dart';
 import 'package:wallet/models/user_model.dart';
 
@@ -24,6 +25,7 @@ class SendMoneyController extends GetxController {
   var otherUsers = List<UserModel>.empty(growable: true).obs;
 
   var selectedUser = UserModel().obs;
+  var selectedUserF = AddressModel().obs;
 
   final upperCaseTextFormatter = textUpperCaseTextFormatter();
 

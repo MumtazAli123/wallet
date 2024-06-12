@@ -261,10 +261,21 @@ class _LoginViewState extends State<LoginView> {
           if (value!.isEmpty) {
             return 'Email is required';
           }
-          return null;
+          return emailValidator(value);
         },
+        autovalidateMode: AutovalidateMode.onUserInteraction,
       ),
     );
+  }
+
+  String? emailValidator(String? email) {
+    // do not show emoji keyboard
+    RegExp emailRegExp = RegExp(r'^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$');
+    final isEmailValid = emailRegExp.hasMatch(email ?? '');
+    if (!isEmailValid) {
+      return 'Please enter a valid email';
+    }
+    return null;
   }
 
   _passwordField() {

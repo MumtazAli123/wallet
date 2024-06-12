@@ -48,6 +48,11 @@ class LoginController extends GetxController {
       Get.snackbar('Error', 'Please enter valid email', snackPosition: SnackPosition.TOP, backgroundColor: Colors.red, colorText: Colors.white);
       return;
     }
+    // in email do not use emoji
+    else if(GetUtils.hasMatch(emailController.text , r'[^\x00-\x7F]+')) {
+      Get.snackbar('Error', 'Please enter valid email', snackPosition: SnackPosition.TOP, backgroundColor: Colors.red, colorText: Colors.white);
+      return;
+    }
     else if(passwordController.text.isEmpty) {
       Get.snackbar('Error', 'Please enter password');
       return;

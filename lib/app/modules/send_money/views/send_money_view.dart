@@ -7,11 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
-import 'package:wallet/app/modules/home/views/bottom_page_view.dart';
 import 'package:wallet/app/modules/send_money/views/send_money_friends_view.dart';
 
 import '../../../../global/global.dart';
 import '../../../../models/user_model.dart';
+import '../../../../widgets/mix_widgets.dart';
 import '../controllers/send_money_controller.dart';
 
 class SendMoneyView extends StatefulWidget {
@@ -24,7 +24,6 @@ class SendMoneyView extends StatefulWidget {
 class _SendMoneyViewState extends State<SendMoneyView> {
   // final controller1 = Get.put(WalletController());
   final controller = Get.put(SendMoneyController());
-
   // final formKey = GlobalKey<FormState>();
   User? user = FirebaseAuth.instance.currentUser;
   UserModel loggedInUser = UserModel();
@@ -117,14 +116,16 @@ class _SendMoneyViewState extends State<SendMoneyView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           Get.to(() => SendMoneyToFriends(
-                otherUser: otherUsers,
+                // otherUser: otherUsers,
                 amount: loggedInUser.balance!.toDouble(),
           ));
         },
-        child: Icon(Icons.add),
+        backgroundColor: Colors.green,
+        label: wText('Send Money to Friends', color: Colors.white),
+        icon: Icon(Icons.send, color: Colors.white),
       ),
       appBar: AppBar(
         title: Text('Send Money'),
@@ -308,6 +309,8 @@ class _SendMoneyViewState extends State<SendMoneyView> {
           "image": recipient.image ?? 'No image',
           "balance": updatedBalance,
           'type': "receive",
+          'status': 'success',
+          'transaction_id': DateTime.now().millisecondsSinceEpoch.toString(),
           'amount': transferNominalController.text.trim(),
           //  if description is empty then set default value
           'description': descriptionController.text.trim() ?? 'No description',
@@ -326,6 +329,8 @@ class _SendMoneyViewState extends State<SendMoneyView> {
           "image": sharedPreferences!.getString('image') ?? 'No image',
           "balance": recipientUpdatedBalance,
           'type': "send",
+          'status': 'success',
+          'transaction_id': DateTime.now().millisecondsSinceEpoch.toString(),
           'amount': transferNominalController.text.trim(),
           'description': descriptionController.text.trim() ?? 'No description',
           'created_at': DateTime.now(),

@@ -3,7 +3,7 @@ PODS:
     - Flutter
   - camera_avfoundation (0.0.1):
     - Flutter
-  - cloud_firestore (5.0.0):
+  - cloud_firestore (5.0.1):
     - Firebase/Firestore (= 10.27.0)
     - firebase_core
     - Flutter
@@ -24,22 +24,22 @@ PODS:
   - Firebase/Storage (10.27.0):
     - Firebase/CoreOnly
     - FirebaseStorage (~> 10.27.0)
-  - firebase_auth (5.0.0):
+  - firebase_auth (5.1.0):
     - Firebase/Auth (= 10.27.0)
     - firebase_core
     - Flutter
-  - firebase_core (3.0.0):
+  - firebase_core (3.1.0):
     - Firebase/CoreOnly (= 10.27.0)
     - Flutter
-  - firebase_database (11.0.0):
+  - firebase_database (11.0.1):
     - Firebase/Database (= 10.27.0)
     - firebase_core
     - Flutter
-  - firebase_messaging (15.0.0):
+  - firebase_messaging (15.0.1):
     - Firebase/Messaging (= 10.27.0)
     - firebase_core
     - Flutter
-  - firebase_storage (12.0.0):
+  - firebase_storage (12.0.1):
     - Firebase/Storage (= 10.27.0)
     - firebase_core
     - Flutter
@@ -309,13 +309,13 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   audioplayers_darwin: 877d9a4d06331c5c374595e46e16453ac7eafa40
   camera_avfoundation: 759172d1a77ae7be0de08fc104cfb79738b8a59e
-  cloud_firestore: 8cbdffc6eec66f2c2e67f19e4c6f9a872c222d19
+  cloud_firestore: 33319d8646cb250b3385e5fea751bd36232561b5
   Firebase: 26b040b20866a55f55eb3611b9fcf3ae64816b86
-  firebase_auth: 17ce83d25a062b2a594e5dfce91a4ad36e3739d5
-  firebase_core: 5926464bbb028fef87d2443369b73ada2a8a3608
-  firebase_database: 198aa154bf3e5b5fb599ac7579021dca4f06a3b8
-  firebase_messaging: 17bc029302b3342daa1c5905a1ee4258bcf47572
-  firebase_storage: ff66671828d524fc9e36f30cd7ed1909036324c7
+  firebase_auth: fd0c6e0ea74d07460c762e05e04334364e84414b
+  firebase_core: 483cfad66d24d8f3c233f31db4263830c625c909
+  firebase_database: 83da766d1212bb35a8e291b0f48df709aebbdee8
+  firebase_messaging: e60c0694699d8a2e56a319e043709583f6544123
+  firebase_storage: b968b216552ca4948120f8d3b54585cb854d20cf
   FirebaseAppCheckInterop: 0dd062c9926a76332ca5711dbed6f1a9ac540b54
   FirebaseAuth: 77a012b7e08042bf44d0db835ca2e86e6ca7bbd3
   FirebaseAuthInterop: 0344acef098654eaf59f6add4c93254349bc5de4
