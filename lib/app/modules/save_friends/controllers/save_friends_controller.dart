@@ -2,13 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:wallet/global/global.dart';
 import 'package:wallet/models/address_model.dart';
 import 'package:wallet/models/user_model.dart';
 
-import '../../send_money/views/send_money_friends_view.dart';
 
 class SaveFriendsController extends GetxController {
   TextEditingController nameController = TextEditingController();
@@ -20,6 +18,8 @@ class SaveFriendsController extends GetxController {
   final TextEditingController transferNominalController =
   TextEditingController();
   final descriptionController = TextEditingController();
+  UserModel loggedInUser = UserModel();
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   var description = '';
   double? amount;
@@ -47,55 +47,18 @@ class SaveFriendsController extends GetxController {
   );
 
   final formKey = GlobalKey<FormState>();
+  List<UserModel> otherUsers = [];
   bool isLoading = false;
 
   final count = 0.obs;
-  UserModel? user;
-
-  Future<void> fetchLoggedInUserBalance(String uid) async {
-    FirebaseFirestore.instance
-        .collection('sellers')
-        .doc(uid)
-        .get()
-        .then((value) {
-      if (value.exists) {
-        user = UserModel(
-          uid: value['uid'],
-          name: value['name'],
-          phone: value['phone'],
-          balance: value['balance'],
-        );
-        print('user: $user');
-        update();
-      }
-    });
-  }
-
-  Future<void> fetchUserData() async {
-    FirebaseFirestore.instance
-        .collection('sellers')
-        .doc(sharedPreferences!.getString('uid'))
-        .get()
-        .then((value) {
-      if (value.exists) {
-        user = UserModel(
-          uid: value['uid'],
-          name: value['name'],
-          phone: value['phone'],
-          balance: value['balance'],
-        );
-        print('user: $user');
-        update();
-      }
-    });
-  }
+  UserModel? userModel;
 
 
   @override
   void onInit() {
     super.onInit();
-    fetchUserData();
-    fetchLoggedInUserBalance(sharedPreferences!.getString('uid')!);
+    print('SaveFriendsController onInit');
+
   }
 
   @override
@@ -154,74 +117,72 @@ class SaveFriendsController extends GetxController {
     });
   }
 
-  void sendMoneyToFriends(BuildContext context, AddressModel addressModel) {
+  void sendMoneyToFriends(AddressModel addressModel) {
     QuickAlert.show(
-      type: QuickAlertType.custom,
-      context: context,
-      title: 'Send Money',
+      context: Get.overlayContext!,
+      title: 'Send Money to ${addressModel.name}',
+      text: 'Enter amount and description',
+      type: QuickAlertType.info,
       width: 400,
       widget: Column(
         children: [
           TextFormField(
             controller: transferNominalController,
             keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-              labelText: 'Transfer Nominal',
+            decoration: const InputDecoration(
+              labelText: 'Amount',
               hintText: 'Enter amount',
             ),
+            onChanged: (value) {
+              amount = double.parse(value);
+            },
           ),
           TextFormField(
             controller: descriptionController,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: 'Description',
               hintText: 'Enter description',
             ),
+            onChanged: (value) {
+              description = value;
+            },
           ),
         ],
       ),
+      confirmBtnText: 'Send',
       onConfirmBtnTap: () {
-        if (transferNominalController.text.isEmpty) {
-          Get.snackbar('Error', 'Please enter amount');
-        } else {
-          amount = double.parse(transferNominalController.text);
-          description = descriptionController.text;
-          if (amount! > 0) {
-            if (amount! <= addressModel.balance!) {
-              FirebaseFirestore.instance
-                  .collection('sellers')
-                  .doc(sharedPreferences!.getString('uid'))
-                  .collection('transactions')
-                  .doc(DateTime.now().millisecondsSinceEpoch.toString())
-                  .set({
-                'uid': addressModel.addressId,
-                'name': addressModel.name,
-                'phone': addressModel.phone,
-                'address': addressModel.address,
-                'city': addressModel.fCity,
-                'country': addressModel.country,
-                'amount': amount,
-                'description': description,
-                'timestamp': DateTime.now().millisecondsSinceEpoch,
-              }).then((value) {
-                FirebaseFirestore.instance
-                    .collection('sellers')
-                    .doc(sharedPreferences!.getString('uid'))
-                    .collection('friends')
-                    .doc(addressModel.addressId)
-                    .update({
-                  'balance': addressModel.balance! - amount!,
-                }).then((value) {
-                  Get.back();
-                  Get.snackbar('Success', 'Money sent successfully');
-                });
-              });
-            } else {
-              Get.snackbar('Error', 'Insufficient balance');
-            }
-          } else {
-            Get.snackbar('Error', 'Please enter valid amount');
-          }
-        }
+        Get.back();
+        buildWeAreWorkingOnIt( loggedInUser);
+      },
+    );
+  }
+
+  void buildWeAreWorkingOnIt(UserModel userModel) {
+    QuickAlert.show(
+      context: Get.overlayContext!,
+      title: 'We are working on it',
+      text: 'This feature is under development',
+      type: QuickAlertType.info,
+      width: 400,
+      widget: Column(
+        children: [
+          Divider(),
+           SizedBox(height: 10.0),
+           Text(
+              'Dear : ${sharedPreferences!.getString('name')}\n'
+              'We are working on this feature. We will notify you once it is ready to use.\n\n'
+                  'Thank you for your patience.\n\n'
+                  'Regards\n'
+                  'Wallet Team',
+
+
+              style: const TextStyle(fontSize: 16),
+            ),
+        ],
+      ),
+      confirmBtnText: 'Ok',
+      onConfirmBtnTap: () {
+        Get.back();
       },
     );
   }

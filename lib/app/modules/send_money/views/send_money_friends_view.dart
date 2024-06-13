@@ -225,7 +225,7 @@ class _SendMoneyToFriendsState extends State<SendMoneyToFriends> {
                                   controller.selectedUser.value =
                                       otherUsers[index];
                                   saveController.sendMoneyToFriends(
-                                      context, addressModel);
+                                       addressModel);
                                 },
                               ),
                             ),
