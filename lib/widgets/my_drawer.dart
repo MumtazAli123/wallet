@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wallet/app/modules/home/controllers/home_controller.dart';
+import 'package:wallet/widgets/privacy_policy.dart';
 
 import '../addressScreen/address_screen.dart';
 import '../global/global.dart';
@@ -95,10 +96,10 @@ class _MyDrawerState extends State<MyDrawer> {
         ),
 
         ListTile(
-          leading: const Icon(Icons.local_airport),
-          title: const Text('Flights'),
+          leading: const Icon(Icons.privacy_tip),
+          title: const Text('Privacy Policy'),
           onTap: () {
-            Navigator.of(context).pushNamed('/flights');
+            Get.to(() => const PrivacyPolicyScreen());
           },
         ),
         ListTile(

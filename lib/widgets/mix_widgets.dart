@@ -37,6 +37,7 @@ aText(String text, { Color? color, double size = 16}) {
 
 cText(String text, { Color? color, double size = 16}) {
   return Text(
+    textAlign: TextAlign.start,
     text,
     style: GoogleFonts.paprika(
       fontSize: size,
