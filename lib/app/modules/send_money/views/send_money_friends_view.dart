@@ -14,6 +14,7 @@ import 'package:wallet/widgets/mix_widgets.dart';
 
 import '../../../../models/address_model.dart';
 import '../../save_friends/controllers/save_friends_controller.dart';
+import '../../save_friends/views/friends_design.dart';
 import '../../save_friends/views/save_friends_view.dart';
 import '../controllers/send_money_controller.dart';
 
@@ -21,7 +22,8 @@ class SendMoneyToFriends extends StatefulWidget {
   final User? user;
   // final List<UserModel> otherUser;
   final double? amount;
-  const SendMoneyToFriends({super.key, this.user, this.amount});
+  final String? sellerUid;
+  const SendMoneyToFriends({super.key, this.user, this.amount, this.sellerUid});
 
   @override
   State<SendMoneyToFriends> createState() => _SendMoneyToFriendsState();
@@ -159,79 +161,103 @@ class _SendMoneyToFriendsState extends State<SendMoneyToFriends> {
                     .snapshots(),
                 builder: (context, AsyncSnapshot dataSnapShot) {
                   // if data
-                  if (dataSnapShot.connectionState == ConnectionState.waiting) {
-                    return Center(
-                        child: wText(
-                      'Loading...',
-                    ));
+                  // if (dataSnapShot.connectionState == ConnectionState.waiting) {
+                  //   return Center(
+                  //       child: wText(
+                  //     'Loading...',
+                  //   ));
+                  // } else {
+                  //   return ListView.builder(
+                  //     itemCount: dataSnapShot.data.docs.length,
+                  //     itemBuilder: (context, index) {
+                  //       DocumentSnapshot documentSnapshot =
+                  //           dataSnapShot.data.docs[index];
+                  //       AddressModel addressModel = AddressModel.fromJson(
+                  //           documentSnapshot.data() as Map<String, dynamic>);
+                  //       return Padding(
+                  //         padding: EdgeInsets.symmetric(
+                  //             horizontal: 8.0, vertical: 4.0),
+                  //         child: Card(
+                  //           child: Slidable(
+                  //             endActionPane:
+                  //                 ActionPane(motion: ScrollMotion(), children: [
+                  //               SlidableAction(
+                  //                 onPressed: (context) {
+                  //                   saveController.deleteFriend(
+                  //                       documentSnapshot.id);
+                  //                 },
+                  //                 label: 'Delete',
+                  //                 icon: Icons.delete,
+                  //                 flex: 2,
+                  //                 backgroundColor: Colors.red,
+                  //
+                  //               ),
+                  //             ]),
+                  //             child: ListTile(
+                  //               leading: CircleAvatar(
+                  //                 child: Text(addressModel.name![0]),
+                  //               ),
+                  //               title: Text("Name: ${addressModel.name}"),
+                  //               subtitle: Column(
+                  //                 crossAxisAlignment: CrossAxisAlignment.start,
+                  //                 children: [
+                  //                   Text('Phone: ${addressModel.phone}'),
+                  //                   Text("City: ${addressModel.fCity}"),
+                  //                   Text(addressModel.address!),
+                  //                 ],
+                  //               ),
+                  //               trailing: address.counter == index
+                  //                   ? Icon(Icons.check_circle,
+                  //                       color: Colors.green)
+                  //                   : Container(
+                  //                       width: 20,
+                  //                       height: 20,
+                  //                       decoration: BoxDecoration(
+                  //                         shape: BoxShape.circle,
+                  //                         border:
+                  //                             Border.all(color: Colors.green),
+                  //                       ),
+                  //                     ),
+                  //               onTap: () {
+                  //                 // address.showSelectedFriends(index);
+                  //                 Provider.of<AddressChanger>(context,
+                  //                         listen: false)
+                  //                     .showSelectedFriends(index);
+                  //                 // _buildTransMoneyDialog(context, addressModel);
+                  //                 controller.selectedUser.value =
+                  //                     otherUsers[index];
+                  //                 saveController.sendMoneyToFriends(
+                  //                      addressModel);
+                  //               },
+                  //             ),
+                  //           ),
+                  //         ),
+                  //       );
+                  //     },
+                  //   );
+                  if (dataSnapShot.hasData) {
+                    if (dataSnapShot.data.docs.length > 0) {
+                      return ListView.builder(
+                        itemBuilder: (context, index) {
+                          return FriendsDesignWidget(
+                            addressModel: AddressModel.fromJson(
+                                dataSnapShot.data.docs[index].data()
+                                    as Map<String, dynamic>),
+                            index: address.count,
+                            value: index,
+                            addressId: dataSnapShot.data.docs[index].id,
+                            amount: widget.amount,
+                            sellerUid: widget.sellerUid,
+                          );
+                        },
+                        itemCount: dataSnapShot.data.docs.length,
+                      );
+                    } else {
+                      return Container();
+                    }
                   } else {
-                    return ListView.builder(
-                      itemCount: dataSnapShot.data.docs.length,
-                      itemBuilder: (context, index) {
-                        DocumentSnapshot documentSnapshot =
-                            dataSnapShot.data.docs[index];
-                        AddressModel addressModel = AddressModel.fromJson(
-                            documentSnapshot.data() as Map<String, dynamic>);
-                        return Padding(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 8.0, vertical: 4.0),
-                          child: Card(
-                            child: Slidable(
-                              endActionPane:
-                                  ActionPane(motion: ScrollMotion(), children: [
-                                SlidableAction(
-                                  onPressed: (context) {
-                                    saveController.deleteFriend(
-                                        documentSnapshot.id);
-                                  },
-                                  label: 'Delete',
-                                  icon: Icons.delete,
-                                  flex: 2,
-                                  backgroundColor: Colors.red,
-
-                                ),
-                              ]),
-                              child: ListTile(
-                                leading: CircleAvatar(
-                                  child: Text(addressModel.name![0]),
-                                ),
-                                title: Text("Name: ${addressModel.name}"),
-                                subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Phone: ${addressModel.phone}'),
-                                    Text("City: ${addressModel.fCity}"),
-                                    Text(addressModel.address!),
-                                  ],
-                                ),
-                                trailing: address.counter == index
-                                    ? Icon(Icons.check_circle,
-                                        color: Colors.green)
-                                    : Container(
-                                        width: 20,
-                                        height: 20,
-                                        decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          border:
-                                              Border.all(color: Colors.green),
-                                        ),
-                                      ),
-                                onTap: () {
-                                  // address.showSelectedFriends(index);
-                                  Provider.of<AddressChanger>(context,
-                                          listen: false)
-                                      .showSelectedFriends(index);
-                                  // _buildTransMoneyDialog(context, addressModel);
-                                  controller.selectedUser.value =
-                                      otherUsers[index];
-                                  saveController.sendMoneyToFriends(
-                                       addressModel);
-                                },
-                              ),
-                            ),
-                          ),
-                        );
-                      },
+                    return Center(
+                      child: Text('No friends added'),
                     );
                   }
                 }),
@@ -358,5 +384,4 @@ class _SendMoneyToFriendsState extends State<SendMoneyToFriends> {
       },
     );
   }
-
 }
