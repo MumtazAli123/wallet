@@ -394,18 +394,14 @@ class _RegisterViewState extends State<RegisterView> {
           fromValidation();
         }
       },
+      child: wText('Register',  color: Colors.white, size: 18.0),
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.green,
         padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(20),
         ),
-      ),
-      child: isLoading
-          ? const CircularProgressIndicator(
-              color: Colors.white,
-            )
-          :  wText('Register',  color: Colors.white, size: 18.0),
+      )
     );
   }
 

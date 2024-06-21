@@ -44,9 +44,14 @@ class _SearchScreenState extends State<SearchScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _buildBody(_searchController.text.trim()),
-      appBar: _buildAppBar(),
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        body: _buildBody(_searchController.text.trim()),
+        appBar: _buildAppBar(),
+      ),
     );
   }
 
@@ -72,7 +77,6 @@ class _SearchScreenState extends State<SearchScreen> {
                 ),
                 helperText: 'Search by phone like +923123456789',
                 hintText: 'Search',
-                hintStyle: TextStyle(color: Colors.black),
                 prefixIcon: Icon(Icons.search),
               ),
               onChanged: (value) {
