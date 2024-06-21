@@ -11,7 +11,7 @@ class HomeController extends GetxController {
   PageController pageController = PageController();
   GlobalKey bottomNavigationKey = GlobalKey();
 
-  var currentIndex = 0.obs;
+  var currentIndex = 3.obs;
   var imgUrl = 'https://pay-saw.com/storage/app/public/';
 
   final user = FirebaseAuth.instance.currentUser;
