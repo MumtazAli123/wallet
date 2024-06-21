@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 
 import 'package:wallet/app/modules/save_friends/bindings/save_friends_binding.dart';
 import 'package:wallet/app/modules/save_friends/views/save_friends_view.dart';
+import 'package:wallet/app/modules/shops/bindings/shops_binding.dart';
+import 'package:wallet/app/modules/shops/views/shops_view.dart';
 
 import '../../models/user_model.dart';
 import '../modules/home/bindings/home_binding.dart';
@@ -81,9 +83,14 @@ class AppPages {
     GetPage(
       name: _Paths.SAVE_FRIENDS,
       page: () => SaveFriendsView(
-            otherUser: [],
+        otherUser: [],
       ),
       binding: SaveFriendsBinding(),
+    ),
+    GetPage(
+      name: _Paths.SHOPS,
+      page: () => ShopsView(),
+      binding: ShopsBinding(),
     ),
   ];
 }

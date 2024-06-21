@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:wallet/app/modules/home/views/mob_home_view.dart';
 import 'package:wallet/app/modules/home/views/wallet_view.dart';
 import 'package:wallet/app/modules/home/views/web_home_view.dart';
+import 'package:wallet/app/modules/shops/views/shops_view.dart';
 import 'package:wallet/global/global.dart';
 import 'package:wallet/widgets/my_drawer.dart';
 
@@ -59,7 +60,8 @@ class BottomPageView extends GetView {
             // DigitalWalletView(),
             SearchScreen(),
             QrcodePage(),
-            SliderPics(),
+            ShopsView(),
+            // SliderPics(),
             ProfileScreen(),
 
           ],
