@@ -39,7 +39,9 @@ class HomeController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    pageController = PageController();
+    // pageController = PageController();
+    pageController = PageController(initialPage: currentIndex.value);
+
   }
 
   @override
