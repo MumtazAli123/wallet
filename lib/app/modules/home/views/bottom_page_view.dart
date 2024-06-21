@@ -30,9 +30,13 @@ class BottomPageView extends GetView {
     return Scaffold(
       drawer: MyDrawer(),
       appBar: AppBar(
-        title: wText('ZubiPay'.tr),
-        centerTitle: true,
+        title: wText('ZubiPay'.tr, size: 20),
+        centerTitle: false,
         actions: [
+          IconButton(
+            icon: Icon(Icons.search),
+            onPressed: () {},
+          ),
           IconButton(
             onPressed: () {
               Get.to(() => NotificationPage());

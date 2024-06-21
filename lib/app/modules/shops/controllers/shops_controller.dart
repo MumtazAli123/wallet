@@ -1,12 +1,18 @@
 import 'package:get/get.dart';
 
 class ShopsController extends GetxController {
-  //TODO: Implement ShopsController
+
+  var shops = [].obs;
+  var isLoading = true.obs;
+  var isShopsEmpty = false.obs;
+
+
 
   final count = 0.obs;
   @override
   void onInit() {
     super.onInit();
+
   }
 
   @override

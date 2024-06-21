@@ -615,4 +615,16 @@ class MixWidgets {
       ],
     );
   }
+
+  static loading() {
+    return Center(
+      child: Text('Loading...'),
+    );
+  }
+
+  static emptyData() {
+    return Center(
+      child: Text('No Data'),
+    );
+  }
 }
