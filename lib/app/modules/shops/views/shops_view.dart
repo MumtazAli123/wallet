@@ -18,6 +18,12 @@ class ShopsView extends GetView<ShopsController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          // Get.toNamed(Routes.CART);
+        }, label: Text('Cart'),
+        icon: Icon(Icons.shopping_cart),
+      ),
       body: _buildBody(),
     );
   }
