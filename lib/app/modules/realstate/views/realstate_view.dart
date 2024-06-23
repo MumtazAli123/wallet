@@ -3,8 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:wallet/app/modules/realstate/views/realstate_ui_desigin.dart';
 import 'package:wallet/app/modules/realstate/views/upload_realstate_view.dart';
-import 'package:wallet/global/global.dart';
 import 'package:wallet/models/realstate_model.dart';
 import 'package:wallet/widgets/mix_widgets.dart';
 
@@ -28,36 +28,25 @@ class RealStateView extends GetView<RealStateController> {
         ),
       ),
       body: _buildBody(),
+      appBar: _buildAppBar(),
     );
   }
 
+  _buildAppBar() {
+    return AppBar(
+      leading: IconButton(
+        onPressed: () {
+          Get.offAllNamed('/home');
+        },
+        icon: const Icon(Icons.arrow_back),
+      ),
+      title: wText('Real State'),
+      centerTitle: true,
+    );
+  }
   _buildBody() {
     return SafeArea(
-      child: NestedScrollView(
-          headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-            return <Widget>[
-              SliverAppBar(
-                leading: IconButton(
-                  icon: const Icon(Icons.arrow_back),
-                  onPressed: () {
-                    Get.offAllNamed('/home');
-                  },
-                ),
-                expandedHeight: 200.0,
-                floating: false,
-                pinned: true,
-                flexibleSpace: FlexibleSpaceBar(
-                  centerTitle: true,
-                  title: Text("Real State"),
-                  background: Image.network(
-                    "${sharedPreferences!.getString('image')}",
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-            ];
-          },
-          body: _buildRealStateList()),
+      child: _buildRealStateList(),
     );
   }
 
@@ -71,7 +60,7 @@ class RealStateView extends GetView<RealStateController> {
             itemBuilder: (context, index) {
               final RealStateModel model = RealStateModel.fromJson(
                   snapshot.data!.docs[index].data() as Map<String, dynamic>);
-              return HotelsUiDesignWidget(model: model, context: context);
+              return RealStateUiDesignWidget(model: model, context: context);
             },
           );
         } else {
@@ -81,79 +70,4 @@ class RealStateView extends GetView<RealStateController> {
     );
   }
 
-  HotelsUiDesignWidget(
-      {required RealStateModel model, required BuildContext context}) {
-    return Container(
-      margin: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: controller.isUpLoading.isTrue
-            ? Colors.grey.withOpacity(0.5)
-            : Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 5,
-            blurRadius: 7,
-            offset: const Offset(0, 3), // changes position of shadow
-          ),
-        ],
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            height: 200,
-            width: double.infinity,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              image: DecorationImage(
-                image: NetworkImage(model.image.toString()),
-                fit: BoxFit.cover,
-              ),
-            ),
-            child: Align(
-              alignment: Alignment.topRight,
-              child: IconButton(
-                onPressed: () {
-                  controller.deleteRealState(model.realStateId.toString());
-                  controller.realStateList.remove(model);
-                },
-                icon: const Icon(
-                  Icons.delete,
-                  color: Colors.red,
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(height: 10),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              ListTile(
-                leading: Icon(
-                  Icons.home,
-                  color: Colors.orange,
-                ),
-                title: aText(model.realStateType.toString(), size: 20),
-                subtitle: aText(model.condition.toString(), size: 16),
-                trailing: aText(model.description.toString(), size: 16),
-              ),
-              ListTile(
-                leading: Icon(
-                  Icons.location_on,
-                  color: Colors.orange,
-
-                ),
-                title: aText(model.city.toString(), size: 20),
-                trailing: aText(model.state.toString(), size: 16),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
 }
