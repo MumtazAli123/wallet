@@ -13,6 +13,7 @@ abstract class Routes {
   static const SEND_MONEY = _Paths.SEND_MONEY;
   static const SAVE_FRIENDS = _Paths.SAVE_FRIENDS;
   static const SHOPS = _Paths.SHOPS;
+  static const REALSTATE = _Paths.REALSTATE;
 }
 
 abstract class _Paths {
@@ -27,4 +28,5 @@ abstract class _Paths {
   static const SEND_MONEY = '/send-money';
   static const SAVE_FRIENDS = '/save-friends';
   static const SHOPS = '/shops';
+  static const REALSTATE = '/realstate';
 }

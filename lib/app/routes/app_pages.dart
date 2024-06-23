@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:get/get.dart';
 
+import 'package:wallet/app/modules/realstate/bindings/realstate_binding.dart';
+import 'package:wallet/app/modules/realstate/views/realstate_view.dart';
 import 'package:wallet/app/modules/save_friends/bindings/save_friends_binding.dart';
 import 'package:wallet/app/modules/save_friends/views/save_friends_view.dart';
 import 'package:wallet/app/modules/shops/bindings/shops_binding.dart';
@@ -91,6 +93,11 @@ class AppPages {
       name: _Paths.SHOPS,
       page: () => ShopsView(),
       binding: ShopsBinding(),
+    ),
+    GetPage(
+      name: _Paths.REALSTATE,
+      page: () => RealStateView(),
+      binding: RealstateBinding(),
     ),
   ];
 }

@@ -2,11 +2,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:quickalert/quickalert.dart';
 
-import '../../../../global/global.dart';
 import '../../../../widgets/mix_widgets.dart';
-import '../../../routes/app_pages.dart';
-import '../../home/views/wallet_view.dart';
 import '../controllers/shops_controller.dart';
 
 class ShopsView extends GetView<ShopsController> {
@@ -19,10 +17,11 @@ class ShopsView extends GetView<ShopsController> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: Colors.orange,
         onPressed: () {
-          // Get.toNamed(Routes.CART);
-        }, label: Text('Cart'),
-        icon: Icon(Icons.shopping_cart),
+          _buildDialogProducts( context);
+        }, label: wText('Add',color: Colors.white),
+        icon: Icon(Icons.add,color: Colors.white,),
       ),
       body: _buildBody(),
     );
@@ -185,6 +184,36 @@ class ShopsView extends GetView<ShopsController> {
           color: Colors.orange,
         ),
       ),
+    );
+  }
+
+  void _buildDialogProducts(BuildContext context) {
+    QuickAlert.show(
+        context: context,
+        type: QuickAlertType.custom,
+        title: 'Add Product',
+        width: 400,
+        text: 'Add Product to your shop',
+        confirmBtnColor: Colors.red,
+        confirmBtnText: 'Cancel',
+        widget: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Divider(),
+            // Add Real state
+            TextButton.icon(onPressed: (){
+              Get.toNamed('/realstate');
+
+            }, icon: Icon(Icons.home), label: Text('Add Real state')),
+            SizedBox(height: 10.0),
+            // Add Car
+            TextButton.icon(onPressed: (){}, icon: Icon(Icons.car_rental), label: Text('Add Vehicle')),
+            SizedBox(height: 10.0),
+            // Add Product
+            TextButton.icon(onPressed: (){}, icon: Icon(Icons.shopping_cart), label: Text('Add Product')),
+            SizedBox(height: 10.0),
+          ],
+        ),
     );
   }
 }

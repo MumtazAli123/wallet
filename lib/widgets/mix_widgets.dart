@@ -35,6 +35,76 @@ aText(String text, { Color? color, double size = 16}) {
   );
 }
 
+wTitleMedium({required String title, required String subtitle}) {
+  return Column(
+    children: [
+      Text(
+        title,
+        style:  GoogleFonts.daiBannaSil(
+            fontSize: 20, color: Colors.white, fontWeight: FontWeight.bold),
+      ),
+      const SizedBox(
+        height: 10,
+      ),
+      Text(
+        subtitle,
+        style: const TextStyle(
+          fontSize: 14,
+          color: Colors.white,
+        ),
+      ),
+    ],
+  );
+}
+
+wCustomButton({required int width, required String text, required IconData icon, required Null Function() onPressed}) {
+  return Container(
+    width: width.toDouble(),
+    padding: const EdgeInsets.all(10),
+    child: ElevatedButton(
+      onPressed: onPressed,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Colors.blue,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, color: Colors.white, size: 20),
+          const SizedBox(
+            width: 10,
+          ),
+          wText(text, color: Colors.white),
+        ],
+      ),
+    ),
+  );
+}
+
+wAppLoading(BuildContext context) {
+  return const SimpleDialog(
+    children: [
+      Center(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(
+              width: 10,
+            ),
+            Text("Uploading..."),
+          ],
+        ),
+      ),
+    ],
+  );
+}
+
+wLinearProgressBar(BuildContext context) {
+  return const LinearProgressIndicator(
+    backgroundColor: Colors.red,
+  );
+}
+
 cText(String text, { Color? color, double size = 16}) {
   return Text(
     textAlign: TextAlign.start,

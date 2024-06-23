@@ -1,110 +1,102 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class HotelsModel {
-  String? hotelId;
+class RealStateModel {
+  String? realStateId;
   String? sellerName;
   String? phone;
   String? sellerId;
   String? email;
-  String? hotelName;
+  String? realStateName;
   String? city;
   String? image;
-  String? rooms;
+  String? state;
   String? description;
   String? startingFrom;
-  String? bar;
-  String? restaurant;
+  String? realStateType;
+  String? realStateStatus;
   String? gym;
   String? pool;
   String? spa;
   String? parking;
-  String? wifi;
-  String? breakfast;
+  String? condition;
   String? rating;
   String? status;
-  String? hotelType;
   Timestamp? publishedDate;
   Timestamp? updatedAt;
 
-  HotelsModel({
-    this.hotelId,
+  RealStateModel({
+    this.realStateId,
     this.sellerName,
     this.sellerId,
     this.phone,
     this.email,
-    this.hotelName,
+    this.realStateName,
     this.city,
     this.image,
-    this.rooms,
+    this.state,
     this.description,
     this.startingFrom,
-    this.bar,
-    this.restaurant,
+    this.realStateType,
+    this.realStateStatus,
     this.gym,
     this.pool,
     this.spa,
     this.parking,
-    this.wifi,
-    this.breakfast,
+    this.condition,
     this.rating,
     this.status,
-    this.hotelType,
     this.publishedDate,
     this.updatedAt,
   });
 
   toJson() {
     return {
-      'hotelId': hotelId,
+      'realStateId': realStateId,
       'sellerName': sellerName,
       'sellerId': sellerId,
       'phone': phone,
       'email': email,
-      'hotelName': hotelName,
+      'realStateName': realStateName,
       'city': city,
       'image': image,
-      'rooms': rooms,
+      'state': state,
       'description': description,
       'startingFrom': startingFrom,
-      'bar': bar,
-      'restaurant': restaurant,
+      'realStateType': realStateType,
+      'realStateStatus': realStateStatus,
       'gym': gym,
       'pool': pool,
       'spa': spa,
       'parking': parking,
-      'wifi': wifi,
-      'breakfast': breakfast,
+      'condition': condition,
       'rating': rating,
       'status': status,
-      'hotelType': hotelType,
       'publishedDate': publishedDate,
       'updatedAt': updatedAt,
     };
   }
 
-  HotelsModel.fromJson(Map<String, dynamic> json) {
-    hotelId = json['hotelId'];
+  RealStateModel.fromJson(Map<String, dynamic> json) {
+    realStateId = json['realStateId'];
     sellerName = json['sellerName'];
     sellerId = json['sellerId'];
     phone = json['phone'];
     email = json['email'];
-    hotelName = json['hotelName'];
+    realStateName = json['realStateName'];
     city = json['city'];
     image = json['image'];
-    rooms = json['rooms'];
+    state = json['state'];
     description = json['description'];
     startingFrom = json['startingFrom'];
-    bar = json['bar'];
-    restaurant = json['restaurant'];
+    realStateType = json['realStateType'];
+    realStateStatus = json['realStateStatus'];
     gym = json['gym'];
     pool = json['pool'];
     spa = json['spa'];
     parking = json['parking'];
-    wifi = json['wifi'];
-    breakfast = json['breakfast'];
+    condition = json['condition'];
     rating = json['rating'];
     status = json['status'];
-    hotelType = json['hotelType'];
     publishedDate = json['publishedDate'];
     updatedAt = json['updatedAt'];
   }
