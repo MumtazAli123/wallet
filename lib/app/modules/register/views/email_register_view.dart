@@ -20,10 +20,9 @@ class _EmailRegisterViewState extends State<EmailRegisterView> {
   final controller = Get.put(RegisterController());
   bool isOtpScreen = false;
 
-  EmailAuth emailAuth =  EmailAuth(sessionName: "Sample session");
+  EmailAuth emailAuth = EmailAuth(sessionName: "Sample session");
 
   var textFieldIcon = "email";
-
 
   void sendOTP() async {
     bool result = await emailAuth.sendOtp(
@@ -37,7 +36,8 @@ class _EmailRegisterViewState extends State<EmailRegisterView> {
 
   void verifyOTP() async {
     bool result = emailAuth.validateOtp(
-        recipientMail: controller.emailController.text, userOtp: controller.otpController.text);
+        recipientMail: controller.emailController.text,
+        userOtp: controller.otpController.text);
     if (result) {
       if (kDebugMode) {
         print('OTP verified');
@@ -70,16 +70,16 @@ class _EmailRegisterViewState extends State<EmailRegisterView> {
               TextFormField(
                 controller: controller.emailController,
                 decoration: InputDecoration(
-                  labelText: 'Email',
-                  prefixIcon: Icon(Icons.email),
-                  suffixIcon: textFieldIcon == "email"
-                      ? TextButton(onPressed: (){
-                        controller.sendOtp( controller.emailController.text.trim());
-                  }, child: Text('Send OTP'))
-                      : Text('')
-
-
-                ),
+                    labelText: 'Email',
+                    prefixIcon: Icon(Icons.email),
+                    suffixIcon: textFieldIcon == "email"
+                        ? TextButton(
+                            onPressed: () {
+                              controller.sendOtp(
+                                  controller.emailController.text.trim());
+                            },
+                            child: Text('Send OTP'))
+                        : Text('')),
                 onTap: () {
                   setState(() {
                     textFieldIcon = "email";
@@ -98,15 +98,17 @@ class _EmailRegisterViewState extends State<EmailRegisterView> {
               TextFormField(
                 controller: controller.otpController,
                 decoration: InputDecoration(
-                  labelText: 'OTP',
-                  prefixIcon: Icon(Icons.lock),
-                  suffixIcon: textFieldIcon == "otp"
-                      ? TextButton(onPressed: (){
-                        controller.verifyOtp(controller.emailController.text.trim(), controller.otpController.text.trim());
-                  }, child: Text('Verify OTP'))
-                      : Text('')
-
-                ),
+                    labelText: 'OTP',
+                    prefixIcon: Icon(Icons.lock),
+                    suffixIcon: textFieldIcon == "otp"
+                        ? TextButton(
+                            onPressed: () {
+                              controller.verifyOtp(
+                                  controller.emailController.text.trim(),
+                                  controller.otpController.text.trim());
+                            },
+                            child: Text('Verify OTP'))
+                        : Text('')),
                 onTap: () {
                   setState(() {
                     textFieldIcon = "otp";
@@ -133,7 +135,7 @@ class _EmailRegisterViewState extends State<EmailRegisterView> {
               ),
               SizedBox(height: 20.0),
               wText(
-                  "Status: ${controller.status.value}",
+                "Status: ${controller.status.value}",
               ),
             ],
           ),
@@ -183,5 +185,4 @@ class _EmailRegisterViewState extends State<EmailRegisterView> {
       ),
     );
   }
-
 }
