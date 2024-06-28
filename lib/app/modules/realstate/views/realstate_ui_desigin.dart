@@ -1,3 +1,4 @@
+// ignore_for_file: prefer_const_constructors , prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -21,7 +22,7 @@ class _RealStateUiDesignWidgetState extends State<RealStateUiDesignWidget> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Get.toNamed('/realstate-details', arguments: widget.model);
+        _buildBottomSheet(context, widget.model);
       },
       child: Container(
         margin: const EdgeInsets.all(10),
@@ -95,6 +96,61 @@ class _RealStateUiDesignWidgetState extends State<RealStateUiDesignWidget> {
         ),
 
       ),
+    );
+  }
+
+  void _buildBottomSheet(BuildContext context, RealStateModel? model) {
+    showModalBottomSheet(
+      clipBehavior: Clip.antiAlias,
+      showDragHandle: true,
+      isDismissible: true,
+      context: context,
+      builder: (context) {
+        return Column(
+          children: [
+            Container(
+              margin: const EdgeInsets.all(10),
+              padding: const EdgeInsets.all(10),
+              height: 100,
+              // width: double.infinity,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                image: DecorationImage(
+                  image: NetworkImage(model!.image.toString()),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.home),
+              title: aText(model.realStateType.toString(), size: 20),
+              subtitle: aText(model.description.toString(), size: 12),
+              trailing: aText(model.realStateStatus.toString(), size: 16),
+            ),
+            ListTile(
+              leading: const Icon(Icons.location_on),
+              title: aText(model.city.toString(), size: 20),
+              trailing: aText(model.state.toString(), size: 16),
+            ),
+            ListTile(
+              leading:  const Icon(
+                Icons.phone,
+                color: Colors.orange,),
+              title: aText(model.phone.toString(), size: 20),
+            ),
+            const SizedBox(height: 10),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+              ),
+              onPressed: () {
+                Get.toNamed('/moreDetails', arguments: model);
+              },
+              child:  wText('Add to More Details', color: Colors.white),
+            ),
+          ],
+        );
+      },
     );
   }
 }

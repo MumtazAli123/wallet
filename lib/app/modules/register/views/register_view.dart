@@ -1,9 +1,9 @@
 // ignore_for_file: avoid_print, use_build_context_synchronously, prefer_const_constructors
 
 import 'dart:io';
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_picker/country_picker.dart';
+import 'package:email_auth/email_auth.dart';
 import 'package:fancy_password_field/fancy_password_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -70,6 +70,67 @@ class _RegisterViewState extends State<RegisterView> {
     controller.confirmPasswordController.clear();
   }
 
+  uploadFormScreen() {
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        body: _buildBody(context),
+      ),
+    );
+  }
+
+  otpDefaultScreen() {
+    return Scaffold(
+        body: Center(
+      child: Column(
+      //   otp screen design
+      children: [
+        const SizedBox(height: 100),
+        const Text(
+          'OTP Verification',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 20),
+        const Text(
+          'Please enter the OTP sent to your on email ',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 20),
+        const Text(
+          'Enter OTP',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 20),
+        const Text(
+          'Resend OTP',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+        const SizedBox(height: 20),
+        ElevatedButton(
+          onPressed: () {
+            Get.back();
+          },
+          child: const Text('Submit'),
+        ),
+      ],
+      )),
+    );
+  }
+
   @override
   void initState() {
     isLoading = true;
@@ -83,17 +144,18 @@ class _RegisterViewState extends State<RegisterView> {
     controller.nameFocus.requestFocus();
   }
 
+
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        FocusScope.of(context).unfocus();
-      },
-      child: Scaffold(
-        body: _buildBody(context),
+    // return isLoading ? otpDefaultScreen() : uploadFormScreen();
+    return isLoading ? const Scaffold(
+      body: Center(
+        child: CircularProgressIndicator(),
       ),
-    );
+    ) : uploadFormScreen();
   }
+
+
 
   _buildBody(BuildContext context) {
     return SafeArea(

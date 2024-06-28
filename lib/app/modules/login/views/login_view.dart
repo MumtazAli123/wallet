@@ -9,6 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:wallet/models/seller_model.dart';
 
 import '../../../../widgets/mix_widgets.dart';
+import '../../register/views/email_register_view.dart';
 import '../controllers/login_controller.dart';
 
 class LoginView extends StatefulWidget {
@@ -167,20 +168,6 @@ class _LoginViewState extends State<LoginView> {
                             ),
                           ),
                           SizedBox(height: 20),
-                          // Row(
-                          //   mainAxisAlignment: MainAxisAlignment.center,
-                          //   children: [
-                          //     Text('Don\'t have an account?'),
-                          //     TextButton(
-                          //       onPressed: () {
-                          //         Get.toNamed('/register');
-                          //       },
-                          //       child: Text('Register',
-                          //           style: TextStyle(color: Colors.blue)),
-                          //     ),
-                          //   ],
-                          // ),
-                        //   if platform is ios and android
                           if (GetPlatform.isIOS || GetPlatform.isAndroid)
                           Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -188,7 +175,8 @@ class _LoginViewState extends State<LoginView> {
                               Text('Don\'t have an account?'),
                               TextButton(
                                 onPressed: () {
-                                  Get.toNamed('/register');
+                                  // Get.toNamed('/register');
+                                  Get.to(() => EmailRegisterView());
                                 },
                                 child: Text('Register',
                                     style: TextStyle(color: Colors.blue)),

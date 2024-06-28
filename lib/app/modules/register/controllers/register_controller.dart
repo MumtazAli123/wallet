@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:country_picker/country_picker.dart';
+import 'package:email_auth/email_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -14,15 +15,20 @@ class RegisterController extends GetxController {
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
   final upperCaseTextFormatter = textUpperCaseTextFormatter();
+  final TextEditingController otpController = TextEditingController();
   final username = TextEditingController();
 
-  final GlobalKey<FormState>  formKey = GlobalKey<FormState>();
+  EmailAuth emailAuth =  EmailAuth(sessionName: "Sample session");
+
+
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   File? image;
   ImagePicker? imagePicker;
   String imageUrl = '';
 
 
   final FocusNode nameFocus = FocusNode();
+
 
   var countryCode = '';
   var flagUri = '';
@@ -38,6 +44,13 @@ class RegisterController extends GetxController {
     displayNameNoCountryCode: "PK",
     e164Key: "",
   );
+
+  Map<String, String> get remoteServerConfiguration => {
+    'server': 'smtp.gmail.com',
+    'port': '587',
+    'email': 'kad.dadu@gmail.com',
+    'password': 'Mart@2022',
+  };
 
   @override
   void onInit() {
@@ -75,6 +88,29 @@ class RegisterController extends GetxController {
           text: newValue.text[0].toUpperCase() +
               newValue.text.substring(1).toLowerCase());
     });
+  }
+
+  var status = "".obs;
+
+
+  Future<void> sendOtp(String email) async {
+
+   var res = await emailAuth.sendOtp(recipientMail: email);
+    if (res) {
+      status.value = "OTP sent";
+    } else {
+      status.value = "OTP not sent";
+    }
+  }
+
+
+ Future <void> verifyOtp(String email, String otp) async {
+    var res = emailAuth.validateOtp(recipientMail: email, userOtp: otp);
+    if (res) {
+      status.value = "OTP verified";
+    } else {
+      status.value = "Invalid OTP";
+    }
   }
 
 }
