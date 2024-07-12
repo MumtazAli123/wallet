@@ -64,6 +64,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '143539298390',
     projectId: 'zubi-pay',
     storageBucket: 'zubi-pay.appspot.com',
+    androidClientId: '143539298390-52ha07rm2sed63gfds0coei1jdreaus3.apps.googleusercontent.com',
+    iosClientId: '143539298390-1d24jg3tgpq0upb62m29gr1belfdcnlj.apps.googleusercontent.com',
     iosBundleId: 'paysaw.com.zubipay',
   );
 
@@ -73,6 +75,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '143539298390',
     projectId: 'zubi-pay',
     storageBucket: 'zubi-pay.appspot.com',
+    androidClientId: '143539298390-52ha07rm2sed63gfds0coei1jdreaus3.apps.googleusercontent.com',
+    iosClientId: '143539298390-tv1vv8rgcu3425cnma7ujb8ntgvc5v3a.apps.googleusercontent.com',
     iosBundleId: 'paysaw.com.wallet',
   );
 

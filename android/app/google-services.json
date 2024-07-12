@@ -7,12 +7,25 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:143539298390:android:49bfd4e8c28fd9ead41bf7",
+        "mobilesdk_app_id": "1:143539298390:android:068229c4fa94a824d41bf7",
         "android_client_info": {
-          "package_name": "paysaw.com.wallet"
+          "package_name": "com.paysaw.chatty"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "143539298390-fj0ucvlqcjsnuko0nemsh74ji4cpc2a3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.paysaw.chatty",
+            "certificate_hash": "ed99e7be32b17c5a14508defbda22322679a2396"
+          }
+        },
+        {
+          "client_id": "143539298390-41ejqg0jbmhl03d722rcug0lv9bs7hl3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAv8WHaTiE-7ifD-ZmSafH5QDJTbtPS2mw"
@@ -20,7 +33,63 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "143539298390-41ejqg0jbmhl03d722rcug0lv9bs7hl3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "143539298390-0ct1l2v99e0h23bqk2otpb50u40alu08.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "paysaw.com.paysaw"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:143539298390:android:49bfd4e8c28fd9ead41bf7",
+        "android_client_info": {
+          "package_name": "paysaw.com.wallet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "143539298390-52ha07rm2sed63gfds0coei1jdreaus3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "paysaw.com.wallet",
+            "certificate_hash": "ed99e7be32b17c5a14508defbda22322679a2396"
+          }
+        },
+        {
+          "client_id": "143539298390-41ejqg0jbmhl03d722rcug0lv9bs7hl3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAv8WHaTiE-7ifD-ZmSafH5QDJTbtPS2mw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "143539298390-41ejqg0jbmhl03d722rcug0lv9bs7hl3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "143539298390-0ct1l2v99e0h23bqk2otpb50u40alu08.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "paysaw.com.paysaw"
+              }
+            }
+          ]
         }
       }
     }

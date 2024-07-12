@@ -1,10 +1,21 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:getwidget/components/avatar/gf_avatar.dart';
+import 'package:getwidget/components/button/gf_button.dart';
+import 'package:getwidget/components/tabs/gf_tabbar.dart';
+import 'package:getwidget/components/tabs/gf_tabbar_view.dart';
+import 'package:getwidget/shape/gf_avatar_shape.dart';
+import 'package:getwidget/shape/gf_button_shape.dart';
+import 'package:getwidget/size/gf_size.dart';
+import 'package:getwidget/types/gf_button_type.dart';
 import 'package:quickalert/quickalert.dart';
+import 'package:wallet/models/realstate_model.dart';
 
 import '../../../../widgets/mix_widgets.dart';
+import '../../realstate/views/show_realstate.dart';
 import '../controllers/shops_controller.dart';
 
 class ShopsView extends GetView<ShopsController> {
@@ -51,30 +62,6 @@ class ShopsView extends GetView<ShopsController> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              Row(
-                children: [
-                  // IconButton(
-                  //   icon: Icon(Icons.search),
-                  //   onPressed: () {},
-                  // ),
-                  // IconButton(
-                  //   icon: Icon(Icons.notifications),
-                  //   onPressed: () {},
-                  // ),
-                  // IconButton(
-                  //   icon: Icon(Icons.shopping_cart),
-                  //   onPressed: () {
-                  //     // Get.toNamed(Routes.CART);
-                  //   },
-                  // ),
-                  // IconButton(
-                  //   icon: Icon(Icons.account_balance_wallet),
-                  //   onPressed: () {
-                  //     // Get.to(WalletView());
-                  //   },
-                  // ),
-                ],
-              ),
             ],
           ),
           SizedBox(height: 10),
@@ -98,12 +85,30 @@ class ShopsView extends GetView<ShopsController> {
   _buildCategories() {
     return Container(
       height: 50,
-      child: ListView.builder(
+      child: ListView(
         scrollDirection: Axis.horizontal,
-        itemCount: 10,
-        itemBuilder: (context, index) {
-          return _buildCategoryItem();
-        },
+        children: [
+          SizedBox(width: 10),
+          _buildCategoryItem(name: 'All', selected: true),
+          SizedBox(width: 10),
+          _buildCategoryItem(
+            icon: Icons.fastfood,
+              name: 'RealState', onTap: () {
+            Get.to(() => ShowRealstate());
+          }),
+          SizedBox(width: 10),
+          _buildCategoryItem(name: 'Vehicle', onTap: () {
+            print('Clothes');
+          }),
+          SizedBox(width: 10),
+          _buildCategoryItem(name: 'Electronics', onTap: () {
+            print('Electronics');
+          }),
+          SizedBox(width: 10),
+          _buildCategoryItem(name: 'Furniture', onTap: () {
+            print('Furniture');
+          }),
+        ],
       ),
     );
   }
@@ -163,17 +168,19 @@ class ShopsView extends GetView<ShopsController> {
     );
   }
 
-  _buildCategoryItem() {
-    return Container(
-      margin: EdgeInsets.only(right: 10),
-      padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(10),
+  _buildCategoryItem({required String name, bool selected = false, Function()? onTap, IconData? icon}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: GFAvatar(
+        backgroundColor: selected ? Colors.green : Colors.grey[200],
+        shape: GFAvatarShape.standard,
+        size: 60,
+        child: wText(name, color: selected ? Colors.white : Colors.black),
       ),
-      child: Text('Category'),
     );
+
   }
+
 
   ratingBar(int i) {
     return Row(
@@ -216,4 +223,5 @@ class ShopsView extends GetView<ShopsController> {
         ),
     );
   }
+
 }
