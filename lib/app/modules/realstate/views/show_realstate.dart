@@ -97,7 +97,7 @@ class _ShowRealstateState extends State<ShowRealstate> {
         icon: Icon(Icons.favorite),
       ),
       image: Image.network(doc['image']),
-      content: Text('Realstate Name: ${doc['sellerName']}'),
+      content: Text('Realstate Agent: ${doc['sellerName']}'),
       buttonBar: GFButtonBar(
         children: [
           // GFButton(
