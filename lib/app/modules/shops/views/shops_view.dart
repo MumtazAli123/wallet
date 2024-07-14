@@ -1,50 +1,116 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:getwidget/components/alert/gf_alert.dart';
 import 'package:getwidget/components/avatar/gf_avatar.dart';
 import 'package:getwidget/components/button/gf_button.dart';
-import 'package:getwidget/components/tabs/gf_tabbar.dart';
-import 'package:getwidget/components/tabs/gf_tabbar_view.dart';
+import 'package:getwidget/components/button/gf_button_bar.dart';
+import 'package:getwidget/components/list_tile/gf_list_tile.dart';
 import 'package:getwidget/shape/gf_avatar_shape.dart';
-import 'package:getwidget/shape/gf_button_shape.dart';
-import 'package:getwidget/size/gf_size.dart';
-import 'package:getwidget/types/gf_button_type.dart';
 import 'package:quickalert/quickalert.dart';
-import 'package:wallet/models/realstate_model.dart';
 
 import '../../../../widgets/mix_widgets.dart';
 import '../../realstate/views/show_realstate.dart';
 import '../controllers/shops_controller.dart';
 
-class ShopsView extends GetView<ShopsController> {
+class ShopsView extends StatefulWidget {
   ShopsView({super.key});
 
   @override
+  State<ShopsView> createState() => _ShopsViewState();
+}
+
+class _ShopsViewState extends State<ShopsView> {
   final controller = Get.put(ShopsController());
+  bool isLoading = false;
+  final Dio dio = Dio();
+
+  @override
+  void initState() {
+    super.initState();
+    controller.fetchShops();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: Colors.orange,
-        onPressed: () {
-          _buildDialogProducts( context);
-        }, label: wText('Add',color: Colors.white),
-        icon: Icon(Icons.add,color: Colors.white,),
+    return DefaultTabController(
+      length: 5,
+      child: Scaffold(
+        // floatingActionButton: FloatingActionButton.extended(
+        //   backgroundColor: Colors.orange,
+        //   onPressed: () {
+        //     _buildDialogProducts(context);
+        //   },
+        //   label: wText('Add', color: Colors.white),
+        //   icon: Icon(
+        //     Icons.add,
+        //     color: Colors.white,
+        //   ),
+        // ),
+        body: _buildBody(),
       ),
-      body: _buildBody(),
     );
   }
 
   Widget _buildBody() {
-    return Column(
-      children: [
-        _buildHeader(),
-        _buildShops(),
-      ],
-    );
+    return NestedScrollView(
+        headerSliverBuilder: (context, innerBoxIsScrolled) {
+          return [
+            SliverAppBar(
+              centerTitle: false,
+              title: wText('Shops', size: 24),
+              floating: true,
+              snap: true,
+              pinned: true,
+              actions: [
+                IconButton(
+                  icon: Icon(Icons.add),
+                  onPressed: () {
+                    _buildDialogProducts(context);
+                  },
+                ),
+              ],
+              bottom: TabBar(
+                labelColor: Colors.orange,
+                controller: controller.tabController,
+                automaticIndicatorColorAdjustment: true,
+                isScrollable: true,
+                tabs: [
+                  Tab(
+                    icon: Icon(Icons.all_inbox),
+                      text: 'All'),
+                  Tab(icon: Icon(Icons.real_estate_agent), text: 'RealState'),
+                  Tab(
+                      icon: Icon(Icons.car_rental),
+                      text: 'Vehicle'),
+                  Tab(
+                      icon: Icon(Icons.shopping_cart),
+                      text: 'Electronics'),
+                  Tab(
+                      icon: Icon(Icons.chair),
+                      text: 'Furniture'),
+                ],
+              ),
+            ),
+          ];
+        },
+        body: TabBarView(
+          children: [
+            _buildShops(),
+            ShowRealstate(),
+            Container(),
+            Container(),
+            Container(),
+          ],
+        ));
+    // return Column(
+    //   children: [
+    //     _buildHeader(),
+    //     _buildShops(),
+    //   ],
+    // );
   }
 
   _buildHeader() {
@@ -83,7 +149,7 @@ class ShopsView extends GetView<ShopsController> {
   }
 
   _buildCategories() {
-    return Container(
+    return SizedBox(
       height: 50,
       child: ListView(
         scrollDirection: Axis.horizontal,
@@ -92,22 +158,17 @@ class ShopsView extends GetView<ShopsController> {
           _buildCategoryItem(name: 'All', selected: true),
           SizedBox(width: 10),
           _buildCategoryItem(
-            icon: Icons.fastfood,
-              name: 'RealState', onTap: () {
-            Get.to(() => ShowRealstate());
-          }),
+              icon: Icons.fastfood,
+              name: 'RealState',
+              onTap: () {
+                Get.to(() => ShowRealstate());
+              }),
           SizedBox(width: 10),
-          _buildCategoryItem(name: 'Vehicle', onTap: () {
-            print('Clothes');
-          }),
+          _buildCategoryItem(name: 'Vehicle', onTap: () {}),
           SizedBox(width: 10),
-          _buildCategoryItem(name: 'Electronics', onTap: () {
-            print('Electronics');
-          }),
+          _buildCategoryItem(name: 'Electronics', onTap: () {}),
           SizedBox(width: 10),
-          _buildCategoryItem(name: 'Furniture', onTap: () {
-            print('Furniture');
-          }),
+          _buildCategoryItem(name: 'Furniture', onTap: () {}),
         ],
       ),
     );
@@ -168,7 +229,11 @@ class ShopsView extends GetView<ShopsController> {
     );
   }
 
-  _buildCategoryItem({required String name, bool selected = false, Function()? onTap, IconData? icon}) {
+  _buildCategoryItem(
+      {required String name,
+      bool selected = false,
+      Function()? onTap,
+      IconData? icon}) {
     return GestureDetector(
       onTap: onTap,
       child: GFAvatar(
@@ -178,9 +243,7 @@ class ShopsView extends GetView<ShopsController> {
         child: wText(name, color: selected ? Colors.white : Colors.black),
       ),
     );
-
   }
-
 
   ratingBar(int i) {
     return Row(
@@ -195,33 +258,53 @@ class ShopsView extends GetView<ShopsController> {
   }
 
   void _buildDialogProducts(BuildContext context) {
-    QuickAlert.show(
-        context: context,
-        type: QuickAlertType.custom,
-        title: 'Add Product',
-        width: 400,
-        text: 'Add Product to your shop',
-        confirmBtnColor: Colors.red,
-        confirmBtnText: 'Cancel',
-        widget: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Divider(),
-            // Add Real state
-            TextButton.icon(onPressed: (){
-              Get.toNamed('/realstate');
+    showDialog(context: context,
+        builder: (context) {
+          return GFAlert(
+            title: 'Add Product',
+            content: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children:[
+                Divider(),
+                SizedBox(height: 10.0),
+                // Add Real state
+                TextButton.icon(
+                    onPressed: () {
+                      Get.toNamed('/realstate');
+                    },
+                    icon: Icon(Icons.real_estate_agent, color: Get.theme.primaryColor,),
+                    label: wText('Add Real state', color: Get.theme.primaryColor)),
+                SizedBox(height: 10.0),
+                // Add Car
+                TextButton.icon(
+                    onPressed: () {},
+                    icon: Icon(Icons.car_rental, color: Get.theme.primaryColor,),
+                    label: wText('Add Vehicle', color: Get.theme.primaryColor)),
+                SizedBox(height: 10.0),
+                // Add Product
+                TextButton.icon(
+                    onPressed: () {},
+                    icon: Icon(Icons.shopping_cart, color: Get.theme.primaryColor,),
+                    label: wText('Add Shop', color: Get.theme.primaryColor)),
+                SizedBox(height: 10.0),
 
-            }, icon: Icon(Icons.home), label: Text('Add Real state')),
-            SizedBox(height: 10.0),
-            // Add Car
-            TextButton.icon(onPressed: (){}, icon: Icon(Icons.car_rental), label: Text('Add Vehicle')),
-            SizedBox(height: 10.0),
-            // Add Product
-            TextButton.icon(onPressed: (){}, icon: Icon(Icons.shopping_cart), label: Text('Add Product')),
-            SizedBox(height: 10.0),
-          ],
-        ),
+              ]
+            ),
+            bottomBar: GFButtonBar(
+              children: [
+                GFButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  text: 'Cancel',
+                  color: Colors.red,
+                ),
+              ],
+            ),
+          );
+        }
     );
   }
-
 }

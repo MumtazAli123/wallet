@@ -4,12 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/components/avatar/gf_avatar.dart';
-import 'package:getwidget/components/button/gf_button.dart';
 import 'package:getwidget/components/button/gf_button_bar.dart';
 import 'package:getwidget/components/card/gf_card.dart';
 import 'package:getwidget/components/list_tile/gf_list_tile.dart';
 
-import '../../../../widgets/mix_widgets.dart';
 import '../../shops/controllers/shops_controller.dart';
 
 class ShowRealstate extends StatefulWidget {
@@ -33,9 +31,6 @@ class _ShowRealstateState extends State<ShowRealstate> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: wText('Realstate'),
-      ),
       body: _buildBody(),
     );
   }
@@ -69,12 +64,37 @@ class _ShowRealstateState extends State<ShowRealstate> {
       semanticContainer: true,
       clipBehavior: Clip.antiAliasWithSaveLayer,
       showImage: true,
-      colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.darken),
-
+      colorFilter:
+          ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.darken),
       title: GFListTile(
-          title: Text('Realstate ${doc['realStateType']}'),
-          subTitle: Text('For ${doc['realStateStatus']}'),
-          icon: Icon(Icons.favorite),
+        title: Row(
+          children: [
+            controller.user!.photoURL != null
+                ? GFAvatar(
+                    backgroundImage: NetworkImage(controller.user!.photoURL!),
+                  )
+                : GFAvatar(
+                    size: 15,
+                    child: Text("${doc['realStateType'][0]}"),
+                  ),
+            SizedBox(width: 10.0),
+            Text(doc['realStateType'] + ' For ' + doc['realStateStatus'])
+          ],
+        ),
+        subTitle: Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: Row(
+            children: [
+              Icon(
+                Icons.location_on,
+                color: Colors.blueAccent,
+              ),
+              SizedBox(width: 10.0),
+              Text('City: ${doc['city']}'),
+            ],
+          ),
+        ),
+        icon: Icon(Icons.favorite),
       ),
       image: Image.network(doc['image']),
       content: Text('Realstate Name: ${doc['sellerName']}'),
