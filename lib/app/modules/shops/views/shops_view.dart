@@ -55,62 +55,12 @@ class _ShopsViewState extends State<ShopsView> {
   }
 
   Widget _buildBody() {
-    return NestedScrollView(
-        headerSliverBuilder: (context, innerBoxIsScrolled) {
-          return [
-            SliverAppBar(
-              centerTitle: false,
-              title: wText('Shops', size: 24),
-              floating: true,
-              snap: true,
-              pinned: true,
-              actions: [
-                IconButton(
-                  icon: Icon(Icons.add),
-                  onPressed: () {
-                    _buildDialogProducts(context);
-                  },
-                ),
-              ],
-              bottom: TabBar(
-                labelColor: Colors.orange,
-                controller: controller.tabController,
-                automaticIndicatorColorAdjustment: true,
-                isScrollable: true,
-                tabs: [
-                  Tab(
-                    icon: Icon(Icons.all_inbox),
-                      text: 'All'),
-                  Tab(icon: Icon(Icons.real_estate_agent), text: 'RealState'),
-                  Tab(
-                      icon: Icon(Icons.car_rental),
-                      text: 'Vehicle'),
-                  Tab(
-                      icon: Icon(Icons.shopping_cart),
-                      text: 'Electronics'),
-                  Tab(
-                      icon: Icon(Icons.chair),
-                      text: 'Furniture'),
-                ],
-              ),
-            ),
-          ];
-        },
-        body: TabBarView(
-          children: [
-            _buildShops(),
-            ShowRealstate(),
-            Container(),
-            Container(),
-            Container(),
-          ],
-        ));
-    // return Column(
-    //   children: [
-    //     _buildHeader(),
-    //     _buildShops(),
-    //   ],
-    // );
+    return Column(
+      children: [
+        _buildHeader(),
+        _buildShops(),
+      ],
+    );
   }
 
   _buildHeader() {
@@ -130,7 +80,6 @@ class _ShopsViewState extends State<ShopsView> {
               ),
             ],
           ),
-          SizedBox(height: 10),
           _buildCategories(),
         ],
       ),

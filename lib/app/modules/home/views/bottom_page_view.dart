@@ -29,26 +29,21 @@ class BottomPageView extends GetView {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: MyDrawer(),
+      // appbar 3rd index not show
       appBar: AppBar(
-        title: wText('ZubiPay'.tr, size: 20),
-        centerTitle: false,
+        title: Text('PaySaw'),
         actions: [
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {},
-          ),
           IconButton(
             onPressed: () {
               Get.to(() => NotificationPage());
             },
-            icon: Icon(Icons.notifications),
+            icon: const Icon(Icons.notifications),
           ),
-        //   language
           IconButton(
             onPressed: () {
               _buildLanguageBottomSheet(context);
             },
-            icon: Icon(Icons.language),
+            icon: const Icon(Icons.language),
           ),
         ],
       ),
@@ -77,7 +72,7 @@ class BottomPageView extends GetView {
           circleColor: Colors.blue,
           // barBackgroundColor: Colors.purple,
           tabs: [
-            TabData(icon: const Icon(Icons.home), title: "Home".tr),
+            TabData(icon: const Icon(Icons.wallet), title: "Wallet".tr),
             // TabData(icon: const Icon(Icons.history), title: "History"),
             TabData(icon:  Icon(Icons.search,), title: "Search".tr),
             TabData(icon:  Icon(Icons.qr_code), title: "QrCode".tr),

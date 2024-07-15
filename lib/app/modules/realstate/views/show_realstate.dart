@@ -1,13 +1,21 @@
 // ignore_for_file: prefer_const_constructors , prefer_const_literals_to_create_immutables
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getwidget/components/alert/gf_alert.dart';
 import 'package:getwidget/components/avatar/gf_avatar.dart';
 import 'package:getwidget/components/button/gf_button_bar.dart';
 import 'package:getwidget/components/card/gf_card.dart';
 import 'package:getwidget/components/list_tile/gf_list_tile.dart';
+import 'package:wallet/app/modules/realstate/views/realstate_view.dart';
+import 'package:wallet/app/modules/realstate/views/tabbar/all_realstate.dart';
+import 'package:wallet/app/modules/realstate/views/tabbar/apartment.dart';
+import 'package:wallet/app/modules/realstate/views/tabbar/land_view.dart';
+import 'package:wallet/app/modules/realstate/views/tabbar/offices_view.dart';
+import 'package:wallet/app/modules/realstate/views/tabbar/shops_view.dart';
+import 'package:wallet/app/modules/realstate/views/tabbar/villas.dart';
 
+import '../../../../widgets/mix_widgets.dart';
 import '../../shops/controllers/shops_controller.dart';
 
 class ShowRealstate extends StatefulWidget {
@@ -30,30 +38,92 @@ class _ShowRealstateState extends State<ShowRealstate> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _buildBody(),
+    return DefaultTabController(
+      length: 6,
+      child: SafeArea(
+        child: Scaffold(
+          body: _buildBody(),
+        ),
+      ),
     );
   }
 
   _buildBody() {
-    return StreamBuilder(
-        stream: controller.realStateStream(),
-        builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
-          }
-          if (snapshot.hasData) {
-            if (snapshot.data!.docs.isEmpty) {
-              return Center(child: Text('No Realstate found'));
-            }
-            return ListView.builder(
-                itemCount: snapshot.data!.docs.length,
-                itemBuilder: (context, index) {
-                  return _buildRealstateCard(snapshot.data!.docs[index]);
-                });
-          }
-          return Center(child: Text('No Realstate found'));
-        });
+    return NestedScrollView(
+        headerSliverBuilder: (context, innerBoxIsScrolled) {
+          return [
+            SliverAppBar(
+              centerTitle: false,
+              title: wText('Real State', size: 24),
+              floating: true,
+              snap: true,
+              pinned: true,
+              actions: [
+                IconButton(
+                  icon: Icon(Icons.add),
+                  onPressed: () {
+                    _buildDialogProducts(context);
+                  },
+                ),
+              ],
+              bottom: TabBar(
+                labelColor: Colors.green[800],
+                controller: controller.tabController,
+                automaticIndicatorColorAdjustment: true,
+                isScrollable: true,
+                tabs: [
+                  Tab(
+                      icon: Icon(Icons.all_inbox),
+                      text: 'All'),
+                  Tab(icon: Icon(Icons.real_estate_agent), text: 'Villas'),
+                  Tab(
+                      icon: Icon(Icons.apartment),
+                      text: 'Apartment'),
+                  Tab(
+                      icon: Icon(Icons.landscape),
+                      text: 'Land'),
+                  // offices
+                  Tab(
+                      icon: Icon(Icons.business),
+                      text: 'Offices'),
+                  Tab(
+                      icon: Icon(Icons.shopping_bag),
+                      text: 'Shops'),
+                ],
+              ),
+            ),
+
+          ];
+        },
+        body: TabBarView(
+          children: [
+            AllRealstate(),
+            VillasView(),
+            Apartment(),
+            LandView(),
+            OfficesView(),
+            ShopsViewPage(),
+          ],
+        )
+    );
+    // return StreamBuilder(
+    //     stream: controller.realStateStream(),
+    //     builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
+    //       if (snapshot.connectionState == ConnectionState.waiting) {
+    //         return Center(child: CircularProgressIndicator());
+    //       }
+    //       if (snapshot.hasData) {
+    //         if (snapshot.data!.docs.isEmpty) {
+    //           return Center(child: Text('No Realstate found'));
+    //         }
+    //         return ListView.builder(
+    //             itemCount: snapshot.data!.docs.length,
+    //             itemBuilder: (context, index) {
+    //               return _buildRealstateCard(snapshot.data!.docs[index]);
+    //             });
+    //       }
+    //       return Center(child: Text('No Realstate found'));
+    //     });
   }
 
   _buildRealstateCard(doc) {
@@ -62,7 +132,6 @@ class _ShowRealstateState extends State<ShowRealstate> {
         borderRadius: BorderRadius.circular(10),
       ),
       semanticContainer: true,
-      clipBehavior: Clip.antiAliasWithSaveLayer,
       showImage: true,
       colorFilter:
           ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.darken),
@@ -108,5 +177,55 @@ class _ShowRealstateState extends State<ShowRealstate> {
         ],
       ),
     );
+  }
+
+  void _buildDialogProducts(BuildContext context) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return GFAlert(
+            title: 'Add Product',
+            content: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Divider(),
+                SizedBox(height: 10.0),
+                // Add Real state
+                TextButton.icon(
+                    onPressed: () {
+                      Get.to(() => RealStateView());
+                    },
+                    icon: Icon(Icons.add),
+                    label: Text('Add Realstate')),
+                SizedBox(height: 10.0),
+                // Add Vehicle
+                TextButton.icon(
+                    onPressed: () {
+                      Get.toNamed('/addVehicle');
+                    },
+                    icon: Icon(Icons.add),
+                    label: Text('Add Vehicle')),
+                SizedBox(height: 10.0),
+                // Add Electronics
+                TextButton.icon(
+                    onPressed: () {
+                      Get.toNamed('/addElectronics');
+                    },
+                    icon: Icon(Icons.add),
+                    label: Text('Add Electronics')),
+                SizedBox(height: 10.0),
+                // Add Furniture
+                TextButton.icon(
+                    onPressed: () {
+                      Get.toNamed('/addFurniture');
+                    },
+                    icon: Icon(Icons.add),
+                    label: Text('Add Furniture')),
+              ],
+            ),
+          );
+        });
   }
 }

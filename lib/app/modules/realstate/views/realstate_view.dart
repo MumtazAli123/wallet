@@ -46,7 +46,10 @@ class RealStateView extends GetView<RealStateController> {
   }
   _buildBody() {
     return SafeArea(
-      child: _buildRealStateList(),
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 48.0),
+        child: _buildRealStateList(),
+      ),
     );
   }
 

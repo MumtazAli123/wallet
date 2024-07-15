@@ -9,7 +9,6 @@ import '../../../../global/global.dart';
 import '../../../../models/realstate_model.dart';
 
 class RealStateController extends GetxController {
-
   final TextEditingController realStateNameController = TextEditingController();
 
   String? realStateAmenitiesValue = 'Gym';
@@ -21,18 +20,14 @@ class RealStateController extends GetxController {
   var isUpLoading = false.obs;
   var downloadImageUrl = "".obs;
   var realStateList = <RealStateModel>[].obs;
-  var realStateUniqueID = DateTime
-      .now()
-      .millisecondsSinceEpoch
-      .toString()
-      .obs;
+  var realStateUniqueID = DateTime.now().millisecondsSinceEpoch.toString().obs;
 
   final user = FirebaseAuth.instance.currentUser;
 
   @override
   void onInit() {
     super.onInit();
-    print('RealStateController');
+    houseDataStream();
   }
 
   @override
@@ -51,7 +46,7 @@ class RealStateController extends GetxController {
         .snapshots();
   }
 
-//   delete
+  //   delete
   deleteRealState(String realStateId) async {
     try {
       await FirebaseFirestore.instance
@@ -60,20 +55,62 @@ class RealStateController extends GetxController {
           .collection("realState")
           .doc(realStateId)
           .delete()
-        .then((value) {
+          .then((value) {
         FirebaseFirestore.instance
             .collection("realState")
             .doc(realStateId)
             .delete();
-        Get.snackbar("Success", "Real State Deleted Successfully", backgroundColor: Colors.red, colorText: Colors.white);
-
-
+        Get.snackbar("Success", "Real State Deleted Successfully",
+            backgroundColor: Colors.red, colorText: Colors.white);
       });
-
     } catch (e) {
       print(e);
     }
   }
 
+  //   get all data realState
+  allStateStream() {
+    // realState database
+    return FirebaseFirestore.instance.collection("realState").snapshots();
+  }
 
+//   get data just house
+  houseDataStream() {
+    return FirebaseFirestore.instance
+        .collection("realState")
+        .where('realStateType', isEqualTo: 'House')
+        .snapshots();
+  }
+
+//   get data apartment
+  apartmentDataStream() {
+    return FirebaseFirestore.instance
+        .collection("realState")
+        .where('realStateType', isEqualTo: 'Apartment')
+        .snapshots();
+  }
+
+  //  get data land
+  landDataStream() {
+    return FirebaseFirestore.instance
+        .collection("realState")
+        .where('realStateType', isEqualTo: 'Land')
+        .snapshots();
+  }
+
+  // get data office
+  officeDataStream() {
+    return FirebaseFirestore.instance
+        .collection("realState")
+        .where('realStateType', isEqualTo: 'Office')
+        .snapshots();
+  }
+
+  // get data shop
+  shopDataStream() {
+    return FirebaseFirestore.instance
+        .collection("realState")
+        .where('realStateType', isEqualTo: 'Shop')
+        .snapshots();
+  }
 }
