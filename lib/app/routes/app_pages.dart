@@ -8,6 +8,7 @@ import 'package:wallet/app/modules/save_friends/bindings/save_friends_binding.da
 import 'package:wallet/app/modules/save_friends/views/save_friends_view.dart';
 import 'package:wallet/app/modules/shops/bindings/shops_binding.dart';
 import 'package:wallet/app/modules/shops/views/shops_view.dart';
+import 'package:wallet/models/realstate_model.dart';
 
 import '../../models/user_model.dart';
 import '../modules/home/bindings/home_binding.dart';
@@ -15,6 +16,7 @@ import '../modules/home/views/bottom_page_view.dart';
 import '../modules/home/views/web_home_view.dart';
 import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
+import '../modules/realstate/views/realstate_edit_view.dart';
 import '../modules/register/bindings/register_binding.dart';
 import '../modules/register/views/register_view.dart';
 import '../modules/send_money/bindings/send_money_binding.dart';
@@ -99,5 +101,10 @@ class AppPages {
       page: () => RealStateView(),
       binding: RealstateBinding(),
     ),
+    GetPage(
+        name: _Paths.REALSTATE_EDIT_VIEW,
+        page: () => RealstateEditView(model: RealStateModel()),
+        binding: RealstateBinding()
+    )
   ];
 }

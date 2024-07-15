@@ -14,6 +14,7 @@ abstract class Routes {
   static const SAVE_FRIENDS = _Paths.SAVE_FRIENDS;
   static const SHOPS = _Paths.SHOPS;
   static const REALSTATE = _Paths.REALSTATE;
+  static const REALSTATE_EDIT_VIEW = _Paths.REALSTATE_EDIT_VIEW;
 }
 
 abstract class _Paths {
@@ -29,4 +30,5 @@ abstract class _Paths {
   static const SAVE_FRIENDS = '/save-friends';
   static const SHOPS = '/shops';
   static const REALSTATE = '/realstate';
+  static const REALSTATE_EDIT_VIEW = '/realstate-edit';
 }

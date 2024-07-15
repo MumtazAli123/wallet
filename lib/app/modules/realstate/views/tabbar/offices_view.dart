@@ -37,63 +37,61 @@ class OfficesView extends GetView<RealStateController> {
         });
   }
 
-  Widget _buildRealstateCard(doc) {
+  _buildRealstateCard(doc) {
     return GFCard(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(10),
       ),
       semanticContainer: true,
       showImage: true,
-      image: Image.network(doc['image']),
       colorFilter:
-          ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.darken),
+      ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.darken),
       title: GFListTile(
         title: Row(
           children: [
-            controller.countryValue.value == 'India'
+            controller.user!.photoURL != null
                 ? GFAvatar(
-                    backgroundImage: NetworkImage(controller.user!.photoURL!),
-                  )
+              backgroundImage: NetworkImage(controller.user!.photoURL!),
+            )
                 : GFAvatar(
-                    size: 15,
-                    child: Text("${doc['realStateType'][0]}"),
-                  ),
+              size: 15,
+              child: Text("${doc['realStateType'][0]}"),
+            ),
             SizedBox(width: 10.0),
             Text(doc['realStateType'] + ' For ' + doc['realStateStatus'])
           ],
         ),
         subTitle: Padding(
           padding: const EdgeInsets.only(top: 8.0),
-          child: Text(doc['description']),
+          child: Row(
+            children: [
+              Icon(
+                Icons.location_on,
+                color: Colors.blueAccent,
+              ),
+              SizedBox(width: 10.0),
+              Text('City: ${doc['city']}'),
+            ],
+          ),
         ),
+        icon: Icon(Icons.favorite),
       ),
+      image: Image.network(doc['image']),
+      content: Text('Realstate Agent: ${doc['sellerName']}'),
       buttonBar: GFButtonBar(
-        children: <Widget>[
-          GFButton(
-            onPressed: () {
-              Get.toNamed('/realstate-detail', arguments: doc);
-            },
-            text: 'View',
-            color: Colors.blue,
-          ),
-          GFButton(
-            onPressed: () {
-              Get.toNamed('/realstate-edit', arguments: doc);
-            },
-            text: 'Edit',
-            color: Colors.green,
-          ),
-          GFButton(
-            onPressed: () {
-             _buildAlertDialog(doc.id);
-            },
-            text: 'Delete',
-            color: Colors.red,
-          ),
+        children: [
+          // GFButton(
+          //   onPressed: () {
+          //     controller.deleteRealState(doc['realStateId']);
+          //   },
+          //   text: 'Scholarship',
+          //   color: Colors.green,
+          // ),
         ],
       ),
     );
   }
+
 
   void _buildAlertDialog(id) {
     QuickAlert.show(

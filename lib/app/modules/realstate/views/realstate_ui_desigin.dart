@@ -9,6 +9,8 @@ import 'package:getwidget/components/card/gf_card.dart';
 import 'package:getwidget/components/list_tile/gf_list_tile.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
+import 'package:wallet/app/modules/realstate/views/realstate_edit_view.dart';
+import 'package:wallet/app/modules/realstate/views/realstate_view.dart';
 import 'package:wallet/models/realstate_model.dart';
 
 import '../../../../widgets/mix_widgets.dart';
@@ -158,7 +160,9 @@ class _RealStateUiDesignWidgetState extends State<RealStateUiDesignWidget> {
             ),
             GFButton(
               onPressed: () {
-                Get.toNamed('/realstate-edit', arguments: widget.model);
+                Get.to(() => RealstateEditView(
+                  model: widget.model!,
+                ));
               },
               text: 'Edit',
               color: Colors.green,
