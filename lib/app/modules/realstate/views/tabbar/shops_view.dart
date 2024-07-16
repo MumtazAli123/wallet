@@ -8,6 +8,7 @@ import 'package:getwidget/components/button/gf_button_bar.dart';
 import 'package:getwidget/components/card/gf_card.dart';
 import 'package:getwidget/components/list_tile/gf_list_tile.dart';
 
+import '../../../../../widgets/mix_widgets.dart';
 import '../../controllers/realstate_controller.dart';
 
 class ShopsViewPage extends GetView<RealStateController> {
@@ -28,65 +29,11 @@ class ShopsViewPage extends GetView<RealStateController> {
             return ListView.builder(
                 itemCount: snapshot.data.docs.length,
                 itemBuilder: (context, index) {
-                  return _buildRealstateCard(snapshot.data.docs[index]);
+                  return wBuildRealstateCard(snapshot.data.docs[index]);
                 });
           }
           return Center(child: Text('No Realstate found'));
         });
   }
 
-  _buildRealstateCard(doc) {
-    return GFCard(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      semanticContainer: true,
-      showImage: true,
-      colorFilter:
-      ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.darken),
-      title: GFListTile(
-        title: Row(
-          children: [
-            controller.user!.photoURL != null
-                ? GFAvatar(
-              backgroundImage: NetworkImage(controller.user!.photoURL!),
-            )
-                : GFAvatar(
-              size: 15,
-              child: Text("${doc['realStateType'][0]}"),
-            ),
-            SizedBox(width: 10.0),
-            Text(doc['realStateType'] + ' For ' + doc['realStateStatus'])
-          ],
-        ),
-        subTitle: Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: Row(
-            children: [
-              Icon(
-                Icons.location_on,
-                color: Colors.blueAccent,
-              ),
-              SizedBox(width: 10.0),
-              Text('City: ${doc['city']}'),
-            ],
-          ),
-        ),
-        icon: Icon(Icons.favorite),
-      ),
-      image: Image.network(doc['image']),
-      content: Text('Realstate Agent: ${doc['sellerName']}'),
-      buttonBar: GFButtonBar(
-        children: [
-          // GFButton(
-          //   onPressed: () {
-          //     controller.deleteRealState(doc['realStateId']);
-          //   },
-          //   text: 'Scholarship',
-          //   color: Colors.green,
-          // ),
-        ],
-      ),
-    );
-  }
 }
