@@ -46,6 +46,7 @@ class _UploadRealstateViewState extends State<UploadRealstateView> {
   String? countryValue = "";
   String? stateValue = "";
   String? cityValue = "";
+  String? likeCount = "5";
 
   final defaultCountry = RealStateModel(city: 'Pk', realStateName: 'Please select country');
 
@@ -114,6 +115,7 @@ class _UploadRealstateViewState extends State<UploadRealstateView> {
       "parking": parkingValue,
       "furnishing": furnishingValue,
       "condition": conditionValue,
+      "likeCount": "5",
       "realStateStatus": realStateStatusValue,
       "status": "available",
       "publishedDate": DateTime.now(),
@@ -130,6 +132,7 @@ class _UploadRealstateViewState extends State<UploadRealstateView> {
         "email": sharedPreferences!.getString("email"),
         "phone": sharedPreferences!.getString("phone"),
         "image": downloadImageUrl,
+        "likeCount": "5",
         "description": descriptionController.text.trim(),
         "startingFrom": startingFromController.text.trim(),
         "parking": parkingValue,

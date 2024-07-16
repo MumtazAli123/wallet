@@ -36,6 +36,27 @@ class RealStateController extends GetxController {
 
   var realStateModel = RealStateModel().obs;
 
+  var likeCount = 0.obs;
+  var isLiked = false.obs;
+
+  void likeUnlike(doc) {
+    if (isLiked.value) {
+      FirebaseFirestore.instance
+          .collection("realState")
+          .doc(doc['realStateId'])
+          .update({'likeCount': FieldValue.increment(-1)});
+      isLiked.value = false;
+    } else {
+      FirebaseFirestore.instance
+          .collection("realState")
+          .doc(doc['realStateId'])
+          .update({'likeCount': FieldValue.increment(1)});
+      isLiked.value = true;
+    }
+  }
+
+
+
 
   @override
   void onInit() {
@@ -153,4 +174,51 @@ class RealStateController extends GetxController {
   void updateRealState(RealStateModel model) {
     realStateModel.value = model;
   }
+
+  void updateRating(doc, double value) {
+    FirebaseFirestore.instance
+        .collection("realState")
+        .doc(doc['realStateId'])
+        .update({'rating': value});
+  }
+
+  getRealState(id) {
+    return FirebaseFirestore.instance
+        .collection("realState")
+        .doc(id)
+        .get()
+        .then((value) => value.data());
+  }
+
+
+  removeLike(doc, String uid) {
+    FirebaseFirestore.instance
+        .collection("realState")
+        .doc(doc)
+        .update({'likeCount': FieldValue.increment(-1)});
+    FirebaseFirestore.instance
+        .collection("realState")
+        .doc(doc)
+        .collection("likes")
+        .doc(uid)
+        .delete();
+  }
+
+  addLike(doc, String uid) {
+    FirebaseFirestore.instance
+        .collection("realState")
+        .doc(doc)
+        .update({'likeCount': FieldValue.increment(1)});
+    FirebaseFirestore.instance
+        .collection("realState")
+        .doc(doc)
+        .collection("likes")
+        .doc(uid)
+        .set({'like': true});
+  }
+
+  void likeRealState(doc) {
+    addLike(doc, user!.uid);
+  }
+
 }

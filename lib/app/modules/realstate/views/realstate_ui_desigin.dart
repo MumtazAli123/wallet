@@ -11,6 +11,7 @@ import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:wallet/app/modules/realstate/views/realstate_edit_view.dart';
 import 'package:wallet/app/modules/realstate/views/realstate_view.dart';
+import 'package:wallet/app/modules/realstate/views/tabbar/realstate_view_page.dart';
 import 'package:wallet/models/realstate_model.dart';
 
 import '../../../../widgets/mix_widgets.dart';
@@ -153,7 +154,8 @@ class _RealStateUiDesignWidgetState extends State<RealStateUiDesignWidget> {
           children: <Widget>[
             GFButton(
               onPressed: () {
-                Get.toNamed('/realstate-detail', arguments: widget.model);
+                Get.to(() => RealstateViewPage(
+                    rsModel: RealStateModel.fromJson(widget.model!.toJson()), doc: '',));
               },
               text: 'View',
               color: Colors.blue,

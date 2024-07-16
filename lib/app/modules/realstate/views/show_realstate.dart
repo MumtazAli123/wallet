@@ -40,71 +40,71 @@ class _ShowRealstateState extends State<ShowRealstate> {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 6,
-      child: SafeArea(
-        child: Scaffold(
-          body: _buildBody(),
-        ),
+      child: Scaffold(
+        body: _buildBody(),
       ),
     );
   }
 
   _buildBody() {
-    return NestedScrollView(
-        headerSliverBuilder: (context, innerBoxIsScrolled) {
-          return [
-            SliverAppBar(
-              centerTitle: false,
-              title: wText('Real State', size: 24),
-              floating: true,
-              snap: true,
-              pinned: true,
-              actions: [
-                IconButton(
-                  icon: Icon(Icons.add),
-                  onPressed: () {
-                    _buildDialogProducts(context);
-                  },
-                ),
-              ],
-              bottom: TabBar(
-                labelColor: Colors.green[800],
-                controller: controller.tabController,
-                automaticIndicatorColorAdjustment: true,
-                isScrollable: true,
-                tabs: [
-                  Tab(
-                      icon: Icon(Icons.all_inbox),
-                      text: 'All'),
-                  Tab(icon: Icon(Icons.real_estate_agent), text: 'Villas'),
-                  Tab(
-                      icon: Icon(Icons.apartment),
-                      text: 'Apartment'),
-                  Tab(
-                      icon: Icon(Icons.landscape),
-                      text: 'Land'),
-                  // offices
-                  Tab(
-                      icon: Icon(Icons.business),
-                      text: 'Offices'),
-                  Tab(
-                      icon: Icon(Icons.shopping_bag),
-                      text: 'Shops'),
+    return SafeArea(
+      child: NestedScrollView(
+          headerSliverBuilder: (context, innerBoxIsScrolled) {
+            return [
+              SliverAppBar(
+                centerTitle: false,
+                title: wText('Real State', size: 24),
+                floating: true,
+                snap: true,
+                pinned: true,
+                actions: [
+                  IconButton(
+                    icon: Icon(Icons.add),
+                    onPressed: () {
+                      _buildDialogProducts(context);
+                    },
+                  ),
                 ],
+                bottom: TabBar(
+                  labelColor: Colors.green[800],
+                  controller: controller.tabController,
+                  automaticIndicatorColorAdjustment: true,
+                  isScrollable: true,
+                  tabs: [
+                    Tab(
+                        icon: Icon(Icons.all_inbox),
+                        text: 'All'),
+                    Tab(icon: Icon(Icons.real_estate_agent), text: 'Villas'),
+                    Tab(
+                        icon: Icon(Icons.apartment),
+                        text: 'Apartment'),
+                    Tab(
+                        icon: Icon(Icons.landscape),
+                        text: 'Land'),
+                    // offices
+                    Tab(
+                        icon: Icon(Icons.business),
+                        text: 'Offices'),
+                    Tab(
+                        icon: Icon(Icons.shopping_bag),
+                        text: 'Shops'),
+                  ],
+                ),
               ),
-            ),
-
-          ];
-        },
-        body: TabBarView(
-          children: [
-            AllRealstate(),
-            VillasView(),
-            Apartment(),
-            LandView(),
-            OfficesView(),
-            ShopsViewPage(),
-          ],
-        )
+      
+            ];
+          },
+          body: TabBarView(
+            children: [
+              AllRealstate(),
+              VillasView(),
+              Apartment(),
+              LandView(),
+              OfficesView(),
+              ShopsViewPage(),
+            ],
+          )
+      ),
     );
     // return StreamBuilder(
     //     stream: controller.realStateStream(),

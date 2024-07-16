@@ -10,8 +10,10 @@ class RealStateModel {
   String? city;
   String? image;
   String? state;
+  String? country;
   String? description;
   String? startingFrom;
+  String? furnishing;
   String? realStateType;
   String? realStateStatus;
   String? gym;
@@ -34,8 +36,10 @@ class RealStateModel {
     this.city,
     this.image,
     this.state,
+    this.country,
     this.description,
     this.startingFrom,
+    this.furnishing,
     this.realStateType,
     this.realStateStatus,
     this.gym,
@@ -49,6 +53,8 @@ class RealStateModel {
     this.updatedAt,
   });
 
+
+
   toJson() {
     return {
       'realStateId': realStateId,
@@ -60,8 +66,10 @@ class RealStateModel {
       'city': city,
       'image': image,
       'state': state,
+      'country': country,
       'description': description,
       'startingFrom': startingFrom,
+      'furnishing': furnishing,
       'realStateType': realStateType,
       'realStateStatus': realStateStatus,
       'gym': gym,
@@ -86,6 +94,7 @@ class RealStateModel {
     city = json['city'];
     image = json['image'];
     state = json['state'];
+    country = json['country'];
     description = json['description'];
     startingFrom = json['startingFrom'];
     realStateType = json['realStateType'];
@@ -95,6 +104,7 @@ class RealStateModel {
     spa = json['spa'];
     parking = json['parking'];
     condition = json['condition'];
+    furnishing = json['furnishing'];
     rating = json['rating'];
     status = json['status'];
     publishedDate = json['publishedDate'];

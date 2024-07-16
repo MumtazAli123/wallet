@@ -1,13 +1,9 @@
 // ignore_for_file: prefer_const_constructors , prefer_const_literals_to_create_immutables
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:getwidget/components/avatar/gf_avatar.dart';
-import 'package:getwidget/components/button/gf_button_bar.dart';
-import 'package:getwidget/components/card/gf_card.dart';
-import 'package:getwidget/components/list_tile/gf_list_tile.dart';
 
+import '../../../../../widgets/mix_widgets.dart';
 import '../../controllers/realstate_controller.dart';
 
 class AllRealstate extends StatefulWidget {
@@ -45,7 +41,8 @@ class _AllRealstateState extends State<AllRealstate> {
               return ListView.builder(
                   itemCount: snapshot.data.docs.length,
                   itemBuilder: (context, index) {
-                    return _buildRealstateCard(snapshot.data.docs[index]);
+                    return wBuildRealstateCard(snapshot.data.docs[index]);
+
                   });
             }
             return Center(child: Text('No Realstate found'));
@@ -54,57 +51,20 @@ class _AllRealstateState extends State<AllRealstate> {
 
     );
   }
-  _buildRealstateCard(doc) {
-    return GFCard(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      semanticContainer: true,
-      showImage: true,
-      colorFilter:
-      ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.darken),
-      title: GFListTile(
-        title: Row(
-          children: [
-            controller.user!.photoURL != null
-                ? GFAvatar(
-              backgroundImage: NetworkImage(controller.user!.photoURL!),
-            )
-                : GFAvatar(
-              size: 15,
-              child: Text("${doc['realStateType'][0]}"),
-            ),
-            SizedBox(width: 10.0),
-            Text(doc['realStateType'] + ' For ' + doc['realStateStatus'])
-          ],
-        ),
-        subTitle: Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: Row(
-            children: [
-              Icon(
-                Icons.location_on,
-                color: Colors.blueAccent,
-              ),
-              SizedBox(width: 10.0),
-              Text('City: ${doc['city']}'),
-            ],
-          ),
-        ),
-        icon: Icon(Icons.favorite),
-      ),
-      image: Image.network(doc['image']),
-      content: Text('Realstate Agent: ${doc['sellerName']}'),
-      buttonBar: GFButtonBar(
-        children: [
-          // GFButton(
-          //   onPressed: onTap,
-          //   text: 'Scholarship',
-          //   color: Colors.green,
-          // ),
-        ],
+}
+
+class RealStateViewPage extends GetView<RealStateController>{
+  const RealStateViewPage({super.key,});
+
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Page"),
       ),
     );
+
   }
 
 }

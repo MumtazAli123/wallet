@@ -175,8 +175,8 @@ class _LoginViewState extends State<LoginView> {
                               Text('Don\'t have an account?'),
                               TextButton(
                                 onPressed: () {
-                                  // Get.toNamed('/register');
-                                  Get.to(() => EmailRegisterView());
+                                  Get.toNamed('/register');
+                                  // Get.to(() => EmailRegisterView());
                                 },
                                 child: Text('Register',
                                     style: TextStyle(color: Colors.blue)),
