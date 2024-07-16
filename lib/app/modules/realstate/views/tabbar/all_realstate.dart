@@ -53,18 +53,3 @@ class _AllRealstateState extends State<AllRealstate> {
   }
 }
 
-class RealStateViewPage extends GetView<RealStateController>{
-  const RealStateViewPage({super.key,});
-
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text("Page"),
-      ),
-    );
-
-  }
-
-}

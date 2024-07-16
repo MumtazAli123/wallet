@@ -2,7 +2,6 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:getwidget/components/avatar/gf_avatar.dart';
 import 'package:getwidget/components/button/gf_button_bar.dart';
 import 'package:getwidget/components/card/gf_card.dart';
@@ -11,10 +10,8 @@ import 'package:getwidget/components/rating/gf_rating.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:like_button/like_button.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:wallet/app/modules/realstate/controllers/realstate_controller.dart';
 import 'package:wallet/models/realstate_model.dart';
 
-import '../app/modules/realstate/views/tabbar/all_realstate.dart';
 import '../app/modules/realstate/views/tabbar/realstate_view_page.dart';
 
 bool isLoading = false;
@@ -210,7 +207,6 @@ urlLauncherA(String url){
 
 
 wBuildRealstateCard(doc) {
-  final controller = Get.find<RealStateController>();
   return GestureDetector(
     onTap: () {
       Get.to(() => RealstateViewPage(
@@ -236,7 +232,7 @@ wBuildRealstateCard(doc) {
             SizedBox(
               width: 10,
             ),
-            Text("${doc['realStateType']} For" + " ${doc['realStateStatus']}"),
+            Text("${doc['realStateType']} For" " ${doc['realStateStatus']}"),
           ],
         ),
         subTitle: Padding(
