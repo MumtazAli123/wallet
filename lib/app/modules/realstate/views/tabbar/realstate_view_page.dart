@@ -98,31 +98,34 @@ class RealstateViewPage extends GetView<RealStateController> {
                 trailing: aText(rsModel.country.toString(), size: 12),
               ),
               //     contact details
-              ListTile(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10)),
-                splashColor: Colors.green,
-                onTap: (){
-                  launch("tel:${rsModel.phone.toString()}");
-                },
-                leading: const Icon(Icons.phone),
-                title: aText("Phone: ${rsModel.phone.toString()}"),
-                  trailing: const Icon(Icons.arrow_forward_ios),
-                subtitle: const Text("Click to call", style: TextStyle(fontSize: 12))
-
-              ),
-              ListTile(
-                onTap: () {
-                  launch("mailto:${rsModel.email.toString()}");
-                },
-                splashColor: Colors.green,
-                shape: RoundedRectangleBorder(
+              Card(
+                child: ListTile(
+                  shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10)),
-                leading: const Icon(Icons.contact_mail),
-                title: aText("Email: ${rsModel.email.toString()}"),
-                subtitle: const Text("Click to send email", style: TextStyle(fontSize: 12)),
-                trailing: const Icon(Icons.send),
-
+                  splashColor: Colors.green,
+                  onTap: (){
+                    launch("tel:${rsModel.phone.toString()}");
+                  },
+                  leading: const Icon(Icons.phone),
+                  title: aText("Phone: ${rsModel.phone.toString()}"),
+                    trailing: const Icon(Icons.arrow_forward_ios),
+                  subtitle: const Text("Click to call", style: TextStyle(fontSize: 12))
+                
+                ),
+              ),
+                child: ListTile(
+                  onTap: () {
+                    launch("mailto:${rsModel.email.toString()}");
+                  },
+                  splashColor: Colors.green,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10)),
+                  leading: const Icon(Icons.contact_mail),
+                  title: aText("Email: ${rsModel.email.toString()}"),
+                  subtitle: const Text("Click to send email", style: TextStyle(fontSize: 12)),
+                  trailing: const Icon(Icons.send),
+                
+                ),
               ),
             ]),
           ),
@@ -226,7 +229,7 @@ class RealstateViewPage extends GetView<RealStateController> {
                       launch("mailto:${rsModel.email.toString()}");
                     },
                     leading: const Icon(Icons.contact_mail),
-                    title: aText("Email: ${rsModel.email.toString()}"),
+                    title: aText("Email: ${rsModel.email.toString()}?text= ${rsModel.realStateType.toString()} \nFor ${rsModel.realStateStatus.toString()} \nCondition: ${rsModel.furnishing.toString()} \nNow: ${rsModel.condition.toString()} \nDescription: ${rsModel.description.toString()} \nCity: ${rsModel.city.toString()} \nState: ${rsModel.state.toString()} \nCountry: ${rsModel.country.toString()} \nHello, I am interested in your property. Can you please provide me more details?"),
                     subtitle: const Text("Click to send email",
                         style: TextStyle(fontSize: 12)),
                   ),
