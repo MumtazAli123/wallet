@@ -167,6 +167,8 @@ class RealStateController extends GetxController {
   shopDataStream() {
     return FirebaseFirestore.instance
         .collection("realState")
+        // date wise data
+        // .orderBy('date', descending: true)
         .where('realStateType', isEqualTo: 'Shop')
         .snapshots();
   }

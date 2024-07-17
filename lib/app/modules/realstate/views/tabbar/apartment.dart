@@ -39,7 +39,7 @@ class _ApartmentState extends State<Apartment> {
             return ListView.builder(
                 itemCount: snapshot.data.docs.length,
                 itemBuilder: (context, index) {
-                  return _buildRealstateCard(snapshot.data.docs[index]);
+                  return wBuildRealstateCard(snapshot.data.docs[index]);
                 });
           }
           return Center(child: Text('No Realstate found'));

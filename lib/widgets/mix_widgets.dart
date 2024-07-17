@@ -220,6 +220,7 @@ wBuildRealstateCard(doc) {
       ),
       semanticContainer: true,
       showImage: true,
+      // showOverlayImage: true,
       colorFilter:
           ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.darken),
       title: GFListTile(
@@ -254,7 +255,12 @@ wBuildRealstateCard(doc) {
           isLiked: false,
         ),
       ),
-      image: Image.network(doc['image']),
+      image: Image.network(
+        doc['image'],
+        fit: BoxFit.cover,
+      ),
+      boxFit: BoxFit.cover,
+
       content: Text('Realstate Agent: ${doc['sellerName']}'),
       buttonBar: GFButtonBar(
         alignment: WrapAlignment.start,

@@ -7,6 +7,8 @@ import 'package:getwidget/components/avatar/gf_avatar.dart';
 import 'package:getwidget/components/button/gf_button_bar.dart';
 import 'package:getwidget/components/card/gf_card.dart';
 import 'package:getwidget/components/list_tile/gf_list_tile.dart';
+import 'package:getwidget/components/tabs/gf_tabbar.dart';
+import 'package:getwidget/components/tabs/gf_tabbar_view.dart';
 import 'package:wallet/app/modules/realstate/views/realstate_view.dart';
 import 'package:wallet/app/modules/realstate/views/tabbar/all_realstate.dart';
 import 'package:wallet/app/modules/realstate/views/tabbar/apartment.dart';
@@ -66,6 +68,7 @@ class _ShowRealstateState extends State<ShowRealstate> {
                   ),
                 ],
                 bottom: TabBar(
+                  tabAlignment: TabAlignment.center,
                   labelColor: Colors.green[800],
                   controller: controller.tabController,
                   automaticIndicatorColorAdjustment: true,
@@ -91,19 +94,29 @@ class _ShowRealstateState extends State<ShowRealstate> {
                   ],
                 ),
               ),
-      
             ];
           },
-          body: TabBarView(
-            children: [
-              AllRealstate(),
-              VillasView(),
-              Apartment(),
-              LandView(),
-              OfficesView(),
-              ShopsViewPage(),
-            ],
-          )
+          // body: TabBarView(
+          //   children: [
+          //     AllRealstate(),
+          //     VillasView(),
+          //     Apartment(),
+          //     LandView(),
+          //     OfficesView(),
+          //     ShopsViewPage(),
+          //   ],
+          // )
+        body: GFTabBarView(
+          controller: controller.tabController,
+          children: [
+            AllRealstate(),
+            VillasView(),
+            Apartment(),
+            LandView(),
+            OfficesView(),
+            ShopsViewPage(),
+          ],
+        ),
       ),
     );
     // return StreamBuilder(
