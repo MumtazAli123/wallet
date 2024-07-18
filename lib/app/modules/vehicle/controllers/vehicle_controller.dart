@@ -31,7 +31,7 @@ class VehicleController extends GetxController {
   List<String> vehicleStatus = ['Sale', 'Rent', 'Lease', 'Other'];
   List<String> vehicleAmenities = ['AC', 'Heater', 'Power Steering', 'Power Windows', 'ABS', 'Air Bags', 'Central Locking', 'Immobilizer', 'Keyless Entry', 'CD Player', 'DVD Player', 'Navigation System', 'Alloy Rims', 'Sun Roof', 'Leather Seats', 'Other'];
   List<String> vehicleColor = ['Black', 'White', 'Silver', 'Grey', 'Blue', 'Red', 'Green', 'Yellow', 'Orange', 'Purple', 'Brown', 'Other'];
-  List<String> vehicleBodyType = ['Sedan', 'Hatchback', 'SUV', 'MPV', 'Crossover', 'Coupe', 'Convertible', 'Pickup', 'Van', 'Truck', 'Other'];
+  List<String> vehicleBodyType = ['Sedan', 'Hatchback', 'SUV', 'MPV', 'Crossover', 'Coupe', 'Convertible', 'Pickup', 'Van','Bike', 'Truck', 'Other'];
 
   // vehicle type value
   String? vehicleTypeValue;

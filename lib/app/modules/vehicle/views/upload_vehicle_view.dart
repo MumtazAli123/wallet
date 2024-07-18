@@ -109,6 +109,30 @@ class _UploadVehicleViewState extends State<UploadVehicleView> {
                   hintText: "Enter Showroom Name",
                   prefixIcon: Icons.home),
             ),
+            // vehicle type
+            Padding(padding: const EdgeInsets.all(8.0),
+              child: DropdownButtonFormField(
+                decoration: InputDecoration(
+                  labelText: "Vehicle Type",
+                  hintText: "Select Vehicle Type",
+                  prefixIcon: const Icon(Icons.directions_car),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                value: controller.vehicleTypeValue,
+                onChanged: (value) {
+                  controller.vehicleTypeValue = value.toString();
+                  setState(() {});
+                },
+                items: controller.vehicleType.map((e) {
+                  return DropdownMenuItem(
+                    child: Text(e),
+                    value: e,
+                  );
+                }).toList(),
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: wTextField(
@@ -153,30 +177,6 @@ class _UploadVehicleViewState extends State<UploadVehicleView> {
                   setState(() {});
                 },
                 items: controller.vehicleModel.map((e) {
-                  return DropdownMenuItem(
-                    child: Text(e),
-                    value: e,
-                  );
-                }).toList(),
-              ),
-            ),
-            // vehicle type
-            Padding(padding: const EdgeInsets.all(8.0),
-              child: DropdownButtonFormField(
-                decoration: InputDecoration(
-                  labelText: "Vehicle Type",
-                  hintText: "Select Vehicle Type",
-                  prefixIcon: const Icon(Icons.directions_car),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                value: controller.vehicleTypeValue,
-                onChanged: (value) {
-                  controller.vehicleTypeValue = value.toString();
-                  setState(() {});
-                },
-                items: controller.vehicleType.map((e) {
                   return DropdownMenuItem(
                     child: Text(e),
                     value: e,
@@ -281,29 +281,29 @@ class _UploadVehicleViewState extends State<UploadVehicleView> {
               ),
             ),
             // vehicle amenities
-            Padding(padding: const EdgeInsets.all(8.0),
-              child: DropdownButtonFormField(
-                decoration: InputDecoration(
-                  labelText: "Vehicle Amenities",
-                  hintText: "Select Vehicle Amenities",
-                  prefixIcon: const Icon(Icons.directions_car),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                value: controller.vehicleAmenitiesValue,
-                onChanged: (value) {
-                  controller.vehicleAmenitiesValue = value.toString();
-                  setState(() {});
-                },
-                items: controller.vehicleAmenities.map((e) {
-                  return DropdownMenuItem(
-                    child: Text(e),
-                    value: e,
-                  );
-                }).toList(),
-              ),
-            ),
+            // Padding(padding: const EdgeInsets.all(8.0),
+            //   child: DropdownButtonFormField(
+            //     decoration: InputDecoration(
+            //       labelText: "Vehicle Amenities",
+            //       hintText: "Select Vehicle Amenities",
+            //       prefixIcon: const Icon(Icons.directions_car),
+            //       border: OutlineInputBorder(
+            //         borderRadius: BorderRadius.circular(10),
+            //       ),
+            //     ),
+            //     value: controller.vehicleAmenitiesValue,
+            //     onChanged: (value) {
+            //       controller.vehicleAmenitiesValue = value.toString();
+            //       setState(() {});
+            //     },
+            //     items: controller.vehicleAmenities.map((e) {
+            //       return DropdownMenuItem(
+            //         child: Text(e),
+            //         value: e,
+            //       );
+            //     }).toList(),
+            //   ),
+            // ),
             // vehicle color
             Padding(padding: const EdgeInsets.all(8.0),
               child: DropdownButtonFormField(
@@ -363,7 +363,7 @@ class _UploadVehicleViewState extends State<UploadVehicleView> {
                   prefixIcon: Icons.description),
             ),
 
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
 
