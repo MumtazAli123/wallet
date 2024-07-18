@@ -215,9 +215,7 @@ wBuildRealstateCard(doc) {
       // Get.to(() => RealstateViewPage(rsModel: RealStateModel.fromJson(doc.data())));
     },
     child: GFCard(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
+      elevation: 5,
       semanticContainer: true,
       showImage: true,
       // showOverlayImage: true,
@@ -257,6 +255,8 @@ wBuildRealstateCard(doc) {
       ),
       image: Image.network(
         doc['image'],
+        height: 350,
+        width: double.infinity,
         fit: BoxFit.cover,
       ),
       boxFit: BoxFit.cover,

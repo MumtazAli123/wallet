@@ -10,7 +10,6 @@ import 'package:getwidget/components/list_tile/gf_list_tile.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:wallet/app/modules/realstate/views/realstate_edit_view.dart';
-import 'package:wallet/app/modules/realstate/views/realstate_view.dart';
 import 'package:wallet/app/modules/realstate/views/tabbar/realstate_view_page.dart';
 import 'package:wallet/models/realstate_model.dart';
 

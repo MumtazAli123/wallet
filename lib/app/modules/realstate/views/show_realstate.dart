@@ -2,13 +2,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:getwidget/components/alert/gf_alert.dart';
 import 'package:getwidget/components/avatar/gf_avatar.dart';
+import 'package:getwidget/components/button/gf_button.dart';
 import 'package:getwidget/components/button/gf_button_bar.dart';
 import 'package:getwidget/components/card/gf_card.dart';
 import 'package:getwidget/components/list_tile/gf_list_tile.dart';
-import 'package:getwidget/components/tabs/gf_tabbar.dart';
 import 'package:getwidget/components/tabs/gf_tabbar_view.dart';
+import 'package:quickalert/quickalert.dart';
 import 'package:wallet/app/modules/realstate/views/realstate_view.dart';
 import 'package:wallet/app/modules/realstate/views/tabbar/all_realstate.dart';
 import 'package:wallet/app/modules/realstate/views/tabbar/apartment.dart';
@@ -193,52 +193,24 @@ class _ShowRealstateState extends State<ShowRealstate> {
   }
 
   void _buildDialogProducts(BuildContext context) {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return GFAlert(
-            title: 'Add Product',
-            content: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Divider(),
-                SizedBox(height: 10.0),
-                // Add Real state
-                TextButton.icon(
-                    onPressed: () {
-                      Get.to(() => RealStateView());
-                    },
-                    icon: Icon(Icons.add),
-                    label: Text('Add Realstate')),
-                SizedBox(height: 10.0),
-                // Add Vehicle
-                TextButton.icon(
-                    onPressed: () {
-                      Get.toNamed('/addVehicle');
-                    },
-                    icon: Icon(Icons.add),
-                    label: Text('Add Vehicle')),
-                SizedBox(height: 10.0),
-                // Add Electronics
-                TextButton.icon(
-                    onPressed: () {
-                      Get.toNamed('/addElectronics');
-                    },
-                    icon: Icon(Icons.add),
-                    label: Text('Add Electronics')),
-                SizedBox(height: 10.0),
-                // Add Furniture
-                TextButton.icon(
-                    onPressed: () {
-                      Get.toNamed('/addFurniture');
-                    },
-                    icon: Icon(Icons.add),
-                    label: Text('Add Furniture')),
-              ],
-            ),
-          );
-        });
+    QuickAlert.show(context: context,
+        type: QuickAlertType.custom,
+        title: 'Add Realstate',
+        text: 'Upload Realstate to sell or rent it out to customers',
+       width: 400,
+      showConfirmBtn: false,
+      widget: Column(
+        children: [
+          Divider(),
+          GFButton(
+            onPressed: () {
+              Get.to(() => RealStateView());
+            },
+            text: 'Upload Realstate',
+            color: Colors.green,
+          ),
+        ],
+      )
+    );
   }
 }

@@ -71,10 +71,10 @@ class _DigitalWalletViewState extends State<DigitalWalletView> {
         body: Container(
           height: Get.height,
           decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/images/bg.png'),
-              fit: BoxFit.cover,
-            ),
+            // image: DecorationImage(
+            //   image: AssetImage('assets/images/bg.png'),
+            //   fit: BoxFit.cover,
+            // ),
           ),
           child: RefreshIndicator(
             onRefresh: _refresh,

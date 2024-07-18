@@ -15,6 +15,8 @@ abstract class Routes {
   static const SHOPS = _Paths.SHOPS;
   static const REALSTATE = _Paths.REALSTATE;
   static const REALSTATE_EDIT_VIEW = _Paths.REALSTATE_EDIT_VIEW;
+  static const VEHICLE = _Paths.VEHICLE;
+  static const PRODUCTS = _Paths.PRODUCTS;
 }
 
 abstract class _Paths {
@@ -31,4 +33,6 @@ abstract class _Paths {
   static const SHOPS = '/shops';
   static const REALSTATE = '/realstate';
   static const REALSTATE_EDIT_VIEW = '/realstate-edit';
+  static const VEHICLE = '/vehicle';
+  static const PRODUCTS = '/products';
 }

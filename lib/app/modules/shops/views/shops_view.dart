@@ -7,16 +7,16 @@ import 'package:getwidget/components/alert/gf_alert.dart';
 import 'package:getwidget/components/avatar/gf_avatar.dart';
 import 'package:getwidget/components/button/gf_button.dart';
 import 'package:getwidget/components/button/gf_button_bar.dart';
-import 'package:getwidget/components/list_tile/gf_list_tile.dart';
 import 'package:getwidget/shape/gf_avatar_shape.dart';
-import 'package:quickalert/quickalert.dart';
 
 import '../../../../widgets/mix_widgets.dart';
+import '../../products/views/show_products_view.dart';
 import '../../realstate/views/show_realstate.dart';
+import '../../vehicle/views/show_vehicle_view.dart';
 import '../controllers/shops_controller.dart';
 
 class ShopsView extends StatefulWidget {
-  ShopsView({super.key});
+  const ShopsView({super.key});
 
   @override
   State<ShopsView> createState() => _ShopsViewState();
@@ -38,17 +38,18 @@ class _ShopsViewState extends State<ShopsView> {
     return DefaultTabController(
       length: 5,
       child: Scaffold(
-        // floatingActionButton: FloatingActionButton.extended(
-        //   backgroundColor: Colors.orange,
-        //   onPressed: () {
-        //     _buildDialogProducts(context);
-        //   },
-        //   label: wText('Add', color: Colors.white),
-        //   icon: Icon(
-        //     Icons.add,
-        //     color: Colors.white,
-        //   ),
-        // ),
+        floatingActionButton: FloatingActionButton.extended(
+
+          backgroundColor: Colors.green,
+          onPressed: () {
+            _buildDialogProducts(context);
+          },
+          label: wText('Add', color: Colors.white),
+          icon: Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
+        ),
         body: _buildBody(),
       ),
     );
@@ -56,6 +57,8 @@ class _ShopsViewState extends State<ShopsView> {
 
   Widget _buildBody() {
     return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         _buildHeader(),
         _buildShops(),
@@ -67,6 +70,8 @@ class _ShopsViewState extends State<ShopsView> {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -80,6 +85,7 @@ class _ShopsViewState extends State<ShopsView> {
               ),
             ],
           ),
+          SizedBox(height: 10.0),
           _buildCategories(),
         ],
       ),
@@ -98,27 +104,41 @@ class _ShopsViewState extends State<ShopsView> {
   }
 
   _buildCategories() {
-    return SizedBox(
-      height: 50,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        children: [
-          SizedBox(width: 10),
-          _buildCategoryItem(name: 'All', selected: true),
-          SizedBox(width: 10),
-          _buildCategoryItem(
-              icon: Icons.fastfood,
-              name: 'RealState',
+    return Center(
+      child: SizedBox(
+        height: 50,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Expanded(child: _buildCategoryItem(
+              onTap: () {
+                controller.fetchShops();
+              },
+                name: 'All', selected: true
+            )),
+            SizedBox(width: 10.0),
+            Expanded(child: _buildCategoryItem(
               onTap: () {
                 Get.to(() => ShowRealstate());
-              }),
-          SizedBox(width: 10),
-          _buildCategoryItem(name: 'Vehicle', onTap: () {}),
-          SizedBox(width: 10),
-          _buildCategoryItem(name: 'Electronics', onTap: () {}),
-          SizedBox(width: 10),
-          _buildCategoryItem(name: 'Furniture', onTap: () {}),
-        ],
+
+              },
+                name: 'Real State')),
+            SizedBox(width: 10.0),
+            Expanded(child: _buildCategoryItem(
+              onTap: () {
+                Get.toNamed('/vehicle');
+              },
+                name: 'Vehicle')),
+            SizedBox(width: 10.0),
+            Expanded(child: _buildCategoryItem(
+                onTap: () {
+                  Get.toNamed('/products');
+                },
+                name: 'Products')),
+            // Expanded(child: _buildCategoryItem(name: 'Others')),
+
+          ]
+        ),
       ),
     );
   }
@@ -228,15 +248,19 @@ class _ShopsViewState extends State<ShopsView> {
                 SizedBox(height: 10.0),
                 // Add Car
                 TextButton.icon(
-                    onPressed: () {},
+                    onPressed: () {
+                      Get.to(() => ShowVehicleView());
+                    },
                     icon: Icon(Icons.car_rental, color: Get.theme.primaryColor,),
                     label: wText('Add Vehicle', color: Get.theme.primaryColor)),
                 SizedBox(height: 10.0),
                 // Add Product
                 TextButton.icon(
-                    onPressed: () {},
+                    onPressed: () {
+                      Get.to(() => ShowProductsView());
+                    },
                     icon: Icon(Icons.shopping_cart, color: Get.theme.primaryColor,),
-                    label: wText('Add Shop', color: Get.theme.primaryColor)),
+                    label: wText('Add Products', color: Get.theme.primaryColor)),
                 SizedBox(height: 10.0),
 
               ]

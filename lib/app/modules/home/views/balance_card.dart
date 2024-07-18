@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_time_ago/get_time_ago.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:wallet/app/modules/home/views/wallet_view.dart';
@@ -18,8 +19,8 @@ import '../../statement/views/time_statement_view.dart';
 import '../../wallet/views/wallet_view.dart';
 
 class BalanceCard extends StatefulWidget {
-  UserModel? model;
-  BalanceCard({super.key, this.model});
+  final UserModel? model;
+  const BalanceCard({super.key, this.model});
 
   @override
   State<BalanceCard> createState() => _BalanceCardState();
@@ -38,47 +39,60 @@ class _BalanceCardState extends State<BalanceCard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // backgroundColor: Colors.black,
       body: _buildBody(),
     );
   }
 
   _buildBody() {
     return SafeArea(
-        child: SingleChildScrollView(
-              child: Center(
-                child: Container(
-                  width: 500,
-                  padding: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10.0),
-                    image: DecorationImage(
-                      image: AssetImage('assets/images/login.png'),
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            _buildBalanceCard(),
-                            SizedBox(height: 10.0),
-                            _buildButton(),
-                            SizedBox(height: 10.0),
-                            _buildRecentTransactions(),
-                            SizedBox(height: 10.0),
-                            _buildProfile(),
-                            SizedBox(height: 10.0),
-
-                            _buildFooter(),
-                            // _buildTransactionCard(),
-                            //
-                            // _buildFooter(),
-                          ],
-                  ),
-                ),
-              ),
-            ));
+      child: SingleChildScrollView(
+        // design GFWidet
+        child: GFCard(
+          color: Get.theme.scaffoldBackgroundColor,
+          padding: EdgeInsets.all(5.0),
+          content: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              _buildBalanceCard(),
+              SizedBox(height: 10.0),
+              _buildButton(),
+              SizedBox(height: 10.0),
+              _buildRecentTransactions(),
+              SizedBox(height: 10.0),
+              _buildProfile(),
+              SizedBox(height: 10.0),
+              _buildFooter(),
+            ],
+          ),
+        ),
+      ),
+    );
+    // return SafeArea(
+    //     child: SingleChildScrollView(
+    //           child: Center(
+    //             child: Column(
+    //               mainAxisAlignment: MainAxisAlignment.center,
+    //               crossAxisAlignment: CrossAxisAlignment.center,
+    //                     children: [
+    //                       _buildBalanceCard(),
+    //                       SizedBox(height: 10.0),
+    //                       _buildButton(),
+    //                       SizedBox(height: 10.0),
+    //                       _buildRecentTransactions(),
+    //                       SizedBox(height: 10.0),
+    //                       _buildProfile(),
+    //                       SizedBox(height: 10.0),
+    //
+    //                       _buildFooter(),
+    //                       // _buildTransactionCard(),
+    //                       //
+    //                       // _buildFooter(),
+    //                     ],
+    //             ),
+    //           ),
+    //         ));
   }
 
   _buildBalanceCard() {
@@ -157,15 +171,29 @@ class _BalanceCardState extends State<BalanceCard> {
   }
 
   _buildButton() {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
+    return GFCard(
+      color: Get.theme.scaffoldBackgroundColor,
+      padding: EdgeInsets.all(5.0),
+      content: Column(
         children: [
-          _buildButtonCard("Send Money".tr, Icons.send),
-          _buildButtonCard("Receive Money".tr, Icons.money),
-          //   add money
-          _buildButtonCard("Add Money".tr, Icons.add),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Expanded(child: _buildButtonCard("Send Money".tr, Icons.send)),
+              Expanded(
+                  child: _buildButtonCard("Receive Money".tr, Icons.money)),
+              Expanded(child: _buildButtonCard("Add Money".tr, Icons.add)),
+            ],
+          ),
+          SizedBox(height: 10.0),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          //   children: [
+          //     _buildButtonCard("Withdraw Money".tr, Icons.money_off),
+          //     _buildButtonCard("Wallet".tr, Icons.account_balance_wallet),
+          //     _buildButtonCard("Statement".tr, Icons.sticky_note_2),
+          //   ],
+          // ),
         ],
       ),
     );
@@ -186,28 +214,17 @@ class _BalanceCardState extends State<BalanceCard> {
           _buildDialog();
         }
       },
-      child: Column(
-        children: [
-          Container(
-            height: 100,
-            width: 100,
-            decoration: BoxDecoration(
-              color: Theme.of(context).scaffoldBackgroundColor,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.5),
-                  spreadRadius: 1,
-                  blurRadius: 7,
-                  offset: Offset(0, 3), // changes position of shadow
-                ),
-              ],
-            ),
-            child: Icon(send, color: Colors.blue, size: 30),
-          ),
-          SizedBox(height: 10),
-          wText(s, size: 14, color: Colors.white),
-        ],
+      child: GFCard(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+        color: Get.theme.scaffoldBackgroundColor,
+        padding: EdgeInsets.all(5.0),
+        content: Column(
+          children: [
+            Icon(send, size: 30.0),
+            SizedBox(height: 5.0),
+            wText(s, size: 11.0),
+          ],
+        ),
       ),
     );
   }

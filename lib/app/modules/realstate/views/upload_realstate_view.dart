@@ -115,7 +115,7 @@ class _UploadRealstateViewState extends State<UploadRealstateView> {
       "parking": parkingValue,
       "furnishing": furnishingValue,
       "condition": conditionValue,
-      "likeCount": "5",
+      "likeCount": 5,
       "realStateStatus": realStateStatusValue,
       "status": "available",
       "publishedDate": DateTime.now(),

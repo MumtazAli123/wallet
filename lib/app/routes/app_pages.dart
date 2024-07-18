@@ -2,15 +2,18 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:get/get.dart';
 
+import 'package:wallet/app/modules/products/bindings/products_binding.dart';
+import 'package:wallet/app/modules/products/views/products_view.dart';
 import 'package:wallet/app/modules/realstate/bindings/realstate_binding.dart';
 import 'package:wallet/app/modules/realstate/views/realstate_view.dart';
 import 'package:wallet/app/modules/save_friends/bindings/save_friends_binding.dart';
 import 'package:wallet/app/modules/save_friends/views/save_friends_view.dart';
 import 'package:wallet/app/modules/shops/bindings/shops_binding.dart';
 import 'package:wallet/app/modules/shops/views/shops_view.dart';
+import 'package:wallet/app/modules/vehicle/bindings/vehicle_binding.dart';
+import 'package:wallet/app/modules/vehicle/views/vehicle_view.dart';
 import 'package:wallet/models/realstate_model.dart';
 
-import '../../models/user_model.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/bottom_page_view.dart';
 import '../modules/home/views/web_home_view.dart';
@@ -57,7 +60,7 @@ class AppPages {
       name: _Paths.HOME,
       // page: () => BottomPageView(),
       page: () => LayoutBuilder(builder: (context, constraints) {
-        if (constraints.maxWidth < 900) {
+        if (constraints.maxWidth < 950) {
           return BottomPageView();
         } else {
           return WebHomeView();
@@ -104,7 +107,16 @@ class AppPages {
     GetPage(
         name: _Paths.REALSTATE_EDIT_VIEW,
         page: () => RealstateEditView(model: RealStateModel()),
-        binding: RealstateBinding()
-    )
+        binding: RealstateBinding()),
+    GetPage(
+      name: _Paths.VEHICLE,
+      page: () => VehicleView(),
+      binding: VehicleBinding(),
+    ),
+    GetPage(
+      name: _Paths.PRODUCTS,
+      page: () => ProductsView(),
+      binding: ProductsBinding(),
+    ),
   ];
 }

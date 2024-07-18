@@ -1,0 +1,270 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart' as fStorage;
+
+
+import '../../../../global/global.dart';
+import '../../../../widgets/mix_widgets.dart';
+
+
+class VehicleController extends GetxController {
+  // showroom name controller
+  TextEditingController showroomNameController = TextEditingController();
+  TextEditingController vehicleNameController = TextEditingController();
+  TextEditingController vehiclePriceController = TextEditingController();
+  TextEditingController vehicleDescriptionController = TextEditingController();
+  TextEditingController vehicleKmController = TextEditingController();
+
+  // vehicle type
+  List<String> vehicleModel = ['2024','2023','2022', '2021', '2020', '2019', '2018', '2017', '2016', '2015', '2014', '2013', '2012', '2011', '2010', '2009', '2008', '2007', '2006', '2005', '2004', '2003', '2002', '2001', '2000', '1999', '1998', '1997', '1996', '1995', '1994', '1993', '1992', '1991', '1990', '1989', '1988', '1987', '1986', '1985', '1984', '1983', '1982', '1981', '1980', '1979', '1978', '1977', '1976', '1975', '1974', '1973', '1972', '1971', '1970',];
+  List<String> vehicleType = ['Car', 'Bike', 'Truck', 'Bus', 'Land cruiser', 'Other'];
+  List<String> vehicleName = ["Toyota", 'Audi', 'BMW', 'Ford', 'Honda', 'Hyundai', 'Kia', 'Mercedes', 'Tesla', 'Nissan', 'Suzuki', 'Volkswagen', 'Other'];
+  List<String> vehicleFuelType = ['Petrol', 'Diesel', 'Electric', 'Hybrid', 'Other'];
+  List<String> vehicleTransmission = ['Automatic', 'Manual', 'Other'];
+  List<String> vehicleCondition = ['New', 'Used', 'Accident', 'Other'];
+  List<String> vehicleStatus = ['Sale', 'Rent', 'Lease', 'Other'];
+  List<String> vehicleAmenities = ['AC', 'Heater', 'Power Steering', 'Power Windows', 'ABS', 'Air Bags', 'Central Locking', 'Immobilizer', 'Keyless Entry', 'CD Player', 'DVD Player', 'Navigation System', 'Alloy Rims', 'Sun Roof', 'Leather Seats', 'Other'];
+  List<String> vehicleColor = ['Black', 'White', 'Silver', 'Grey', 'Blue', 'Red', 'Green', 'Yellow', 'Orange', 'Purple', 'Brown', 'Other'];
+  List<String> vehicleBodyType = ['Sedan', 'Hatchback', 'SUV', 'MPV', 'Crossover', 'Coupe', 'Convertible', 'Pickup', 'Van', 'Truck', 'Other'];
+
+  // vehicle type value
+  String? vehicleTypeValue;
+  String? vehicleNameValue;
+  String? vehicleFuelTypeValue;
+  String? vehicleTransmissionValue;
+  String? vehicleConditionValue;
+  String? vehicleStatusValue;
+  String? vehicleAmenitiesValue;
+  String? vehicleColorValue;
+  String? vehicleModelValue;
+  String? vehicleBodyTypeValue;
+
+  String vehicleUniqueId = DateTime.now().millisecondsSinceEpoch.toString();
+
+
+  var fabController ;
+  var tabIndex = 0.obs;
+
+  final db = FirebaseFirestore.instance.collection("sellers").doc().snapshots();
+  final user = FirebaseAuth.instance.currentUser;
+
+
+  final date = DateTime.now();
+
+  final ImagePicker _picker = ImagePicker();
+  List<XFile>? images = [];
+  List<String> imageUrlPath = [];
+  var imageFileCount = 0.obs;
+  String downloadImageUrl = "";
+
+  var imageFile = "".obs;
+
+  var imagePath = "".obs;
+
+  var formKey = GlobalKey<FormState>();
+
+
+
+  realStateStream() {
+    return FirebaseFirestore.instance
+        .collection("sellers")
+        .doc(user!.uid)
+        .collection("vehicle")
+        .snapshots();
+  }
+
+
+  @override
+  void onInit() {
+    super.onInit();
+
+  }
+
+  @override
+  void onReady() {
+  }
+
+  @override
+  void onClose() {
+    super.onClose();
+    showroomNameController.dispose();
+    vehicleNameController.dispose();
+    vehiclePriceController.dispose();
+    vehicleDescriptionController.dispose();
+    vehicleKmController.dispose();
+
+  }
+
+  void selectMultipleImage() async {
+    images = await _picker.pickMultiImage();
+    if (images != null) {
+      for (XFile file in images!) {
+        imageUrlPath.add(file.path);
+      }
+    }else{
+      imageFileCount.value = 0;
+    }
+    imageFileCount.value = imageUrlPath.length;
+  }
+
+  void uploadImage() async {
+    try {
+      showDialog(context: Get.context!, builder: (context) => wAppLoading(context));
+      String imageFileName = DateTime.now().millisecondsSinceEpoch.toString();
+      if (imageUrlPath.isNotEmpty) {
+        for (int i = 0; i < imageUrlPath.length; i++) {
+          File file = File(imageUrlPath[i]);
+          fStorage.Reference storageRef = fStorage.FirebaseStorage.instance
+              .ref()
+              .child("vehicle")
+              .child(imageFileName)
+              .child("$imageFileName$i.jpg");
+          fStorage.UploadTask uploadImageTask = storageRef.putFile(file);
+          fStorage.TaskSnapshot taskSnapshot = await uploadImageTask;
+          await taskSnapshot.ref.getDownloadURL().then((urlImage) {
+            downloadImageUrl = urlImage;
+          });
+          addVehicle();
+
+        }
+      }
+
+      // fStorage.Reference storageRef = fStorage.FirebaseStorage.instance
+      //     .ref()
+      //     .child("vehicle")
+      //     .child(imageFileName);
+      // fStorage.UploadTask uploadImageTask = storageRef.putFile(File(imageUrlPath[0]));
+      // fStorage.TaskSnapshot taskSnapshot = await uploadImageTask;
+      // await taskSnapshot.ref.getDownloadURL().then((urlImage) {
+      //   downloadImageUrl = urlImage;
+      // });
+      // addVehicle();
+
+
+    } catch (e) {
+      Get.snackbar("Error", e.toString());
+    }
+  }
+
+
+  void addVehicle() async {
+    try {
+      await FirebaseFirestore.instance
+          .collection("sellers")
+          .doc(user!.uid)
+          .collection("vehicle")
+          .doc(vehicleUniqueId)
+          .set({
+        "vehicleId": vehicleUniqueId,
+        "showroomName": showroomNameController.text,
+        "vehicleName": vehicleNameController.text,
+        "vehiclePrice": vehiclePriceController.text,
+        "vehicleDescription": vehicleDescriptionController.text,
+        "vehicleKm": vehicleKmController.text,
+        "sellerId": sharedPreferences!.getString("uid"),
+        "sellerName": sharedPreferences!.getString("name"),
+        "email": sharedPreferences!.getString("email"),
+        "phone": sharedPreferences!.getString("phone"),
+        "image": downloadImageUrl,
+        "vehicleModel": vehicleModelValue,
+        "vehicleType": vehicleTypeValue,
+        "vehicleFuelType": vehicleFuelTypeValue,
+        "vehicleTransmission": vehicleTransmissionValue,
+        "vehicleCondition": vehicleConditionValue,
+        "vehicleStatus": vehicleStatusValue,
+        "vehicleAmenities": vehicleAmenitiesValue,
+        "vehicleColor": vehicleColorValue,
+        "vehicleBodyType": vehicleBodyTypeValue,
+        "status": "available",
+        "likeCount": 5,
+        "publishedDate": date,
+        "updatedDate": date,
+      }).then((value) {
+        FirebaseFirestore.instance
+            .collection("vehicle")
+            .doc(vehicleUniqueId)
+            .set({
+          "vehicleId": vehicleUniqueId,
+          "showroomName": showroomNameController.text,
+          "vehicleName": vehicleNameController.text,
+          "vehiclePrice": vehiclePriceController.text,
+          "vehicleDescription": vehicleDescriptionController.text,
+          "vehicleKm": vehicleKmController.text,
+          "sellerId": sharedPreferences!.getString("uid"),
+          "sellerName": sharedPreferences!.getString("name"),
+          "email": sharedPreferences!.getString("email"),
+          "phone": sharedPreferences!.getString("phone"),
+          "image": downloadImageUrl,
+          "vehicleModel": vehicleModelValue,
+          "vehicleType": vehicleTypeValue,
+          "vehicleFuelType": vehicleFuelTypeValue,
+          "vehicleTransmission": vehicleTransmissionValue,
+          "vehicleCondition": vehicleConditionValue,
+          "vehicleStatus": vehicleStatusValue,
+          "vehicleAmenities": vehicleAmenitiesValue,
+          "vehicleColor": vehicleColorValue,
+          "vehicleBodyType": vehicleBodyTypeValue,
+          "status": "available",
+          "likeCount": 5,
+          "publishedDate": date,
+          "updatedDate": date,
+        });
+        Get.back();
+        Get.snackbar("Success", "Vehicle Added Successfully",
+            backgroundColor: Colors.green, colorText: Colors.white);
+      });
+
+
+    } catch (e) {
+      Get.snackbar("Error", e.toString());
+    }
+  }
+
+  void pickImage() {
+    selectMultipleImage();
+  }
+
+  void uploadVehicle() {
+    if (formKey.currentState!.validate()) {
+      if (imageUrlPath.isNotEmpty) {
+        uploadImage();
+      } else {
+        Get.snackbar("Error", "Please select image");
+      }
+    }
+  }
+
+  void deleteImage(int index) {
+    imageUrlPath.removeAt(index);
+    imageFileCount.value = imageUrlPath.length;
+  }
+
+  vehicleStream() {
+      return FirebaseFirestore.instance
+          .collection("sellers")
+          .doc(user!.uid)
+          .collection("vehicle")
+          .snapshots();
+    }
+
+  void deleteVehicle(id) {
+    FirebaseFirestore.instance
+        .collection("sellers")
+        .doc(user!.uid)
+        .collection("vehicle")
+        .doc(id)
+        .delete()
+        .then((value) {
+      Get.snackbar("Success", "Vehicle Deleted Successfully",
+          backgroundColor: Colors.green, colorText: Colors.white);
+    });
+  }
+
+
+}

@@ -12,7 +12,7 @@ import 'balance_card.dart';
 
 class HomeView extends GetView {
 
-   HomeView({super.key});
+    HomeView({super.key});
 
 
   @override
