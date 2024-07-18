@@ -113,6 +113,7 @@ class RealstateViewPage extends GetView<RealStateController> {
                 
                 ),
               ),
+              Card(
                 child: ListTile(
                   onTap: () {
                     launch("mailto:${rsModel.email.toString()}");
