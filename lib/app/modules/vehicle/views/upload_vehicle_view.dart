@@ -111,6 +111,7 @@ class _UploadVehicleViewState extends State<UploadVehicleView> {
                 },
               ),
             ),
+
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: GFButton(

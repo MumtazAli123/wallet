@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as fStorage;
+import 'package:wallet/app/modules/vehicle/views/vehicle_view.dart';
 
 import '../../../../global/global.dart';
 import '../../../../widgets/mix_widgets.dart';
@@ -323,7 +324,9 @@ class VehicleController extends GetxController {
           "publishedDate": date,
           "updatedDate": date,
         });
-        Get.back();
+        // Get.back();
+        Get.to(() => const VehicleView());
+
         Get.snackbar("Success", "Vehicle Added Successfully",
             backgroundColor: Colors.green, colorText: Colors.white);
       });
