@@ -4,8 +4,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:getwidget/components/button/gf_button.dart';
+import 'package:getwidget/components/button/gf_button_bar.dart';
 import 'package:getwidget/components/card/gf_card.dart';
 import 'package:getwidget/components/list_tile/gf_list_tile.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:wallet/app/modules/vehicle/controllers/vehicle_controller.dart';
 import 'package:wallet/app/modules/vehicle/views/upload_vehicle_view.dart';
 
@@ -90,7 +94,7 @@ class ShowVehicleView extends GetView<VehicleController> {
 
   wBuildVehicleItem(VehicleModel model) {
     return GFCard(
-      image: Image.network(model.image!),
+      image: Image.network(model.image!, height: 300, width: double.infinity, fit: BoxFit.cover),
       showImage: true,
       title: GFListTile(
         icon: Icon(Icons.directions_car),
@@ -111,6 +115,73 @@ class ShowVehicleView extends GetView<VehicleController> {
           ),
         ],
       ),
+      buttonBar: GFButtonBar(
+        children: <Widget>[
+          GFButton(
+            onPressed: () {
+              // Get.to(() => RealstateViewPage(
+              //   rsModel: RealStateModel.fromJson(widget.model!.toJson()), doc: '',));
+            },
+            text: 'View',
+            color: Colors.blue,
+          ),
+          GFButton(
+            onPressed: () {
+              // Get.to(() => RealstateEditView(
+              //   model: widget.model!,
+              // ));
+            },
+            text: 'Edit',
+            color: Colors.green,
+          ),
+          GFButton(
+            onPressed: () {
+              _buildAlertDialog(model.vehicleId);
+            },
+            text: 'Delete',
+            color: Colors.red,
+          ),
+        ],
+      ),
+
     );
   }
+  void _buildAlertDialog(id) {
+    QuickAlert.show(
+      // delete dialog
+        context: Get.context!,
+        type: QuickAlertType.warning,
+        title: 'Delete Vehicle',
+        text: 'Are you sure you want to delete this vehicle?',
+        width: 400,
+        showConfirmBtn: false,
+        widget: Column(
+          children: [
+            Divider(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                GFButton(
+                  onPressed: () {
+                    controller.deleteVehicle(id);
+                    Get.back();
+                  },
+                  text: 'Delete',
+                  color: Colors.red,
+                ),
+                GFButton(
+                  onPressed: () {
+                    Get.back();
+                  },
+                  text: 'No',
+                  color: Colors.green,
+                ),
+              ],
+            ),
+          ],
+        )
+
+    );
+  }
+
 }

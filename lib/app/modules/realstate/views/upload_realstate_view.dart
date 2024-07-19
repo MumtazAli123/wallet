@@ -356,6 +356,8 @@ class _UploadRealstateViewState extends State<UploadRealstateView> {
         ));
   }
 
+
+
   @override
   Widget build(BuildContext context) {
     return imageFile == null ? defaultScreen() : uploadFormScreen();

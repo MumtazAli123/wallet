@@ -7,6 +7,7 @@ import 'package:getwidget/components/button/gf_button.dart';
 import 'package:getwidget/components/button/gf_icon_button.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:wallet/app/modules/vehicle/views/show_vehicle_view.dart';
+import 'package:wallet/app/modules/vehicle/views/tabbar/all_vehicle.dart';
 
 import '../../../../widgets/mix_widgets.dart';
 import '../controllers/vehicle_controller.dart';
@@ -86,9 +87,7 @@ class VehicleView extends GetView<VehicleController> {
           },
           body: TabBarView(
             children: [
-              Container(
-                color: Colors.red
-              ),
+              AllVehicle(),
               Container(
                 color: Colors.blue
               ),

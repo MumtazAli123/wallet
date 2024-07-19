@@ -77,6 +77,7 @@ class RealStateController extends GetxController {
         .collection("sellers")
         .doc(user!.uid)
         .collection("realState")
+        .orderBy("publishedDate", descending: true)
         .snapshots();
   }
 
@@ -128,7 +129,10 @@ class RealStateController extends GetxController {
   //   get all data realState
   allStateStream() {
     // realState database
-    return FirebaseFirestore.instance.collection("realState").snapshots();
+    return FirebaseFirestore.instance
+        .collection("realState")
+        .orderBy("publishedDate", descending: true)
+        .snapshots();
   }
 
 //   get data just house

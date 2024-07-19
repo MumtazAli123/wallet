@@ -28,6 +28,29 @@ class _UploadVehicleViewState extends State<UploadVehicleView> {
   // refresh the image list
   bool isImageRefresh = false;
 
+  validateAndUploadForm() {
+    if (imageFile == null) {
+      Get.snackbar("Error", "Please select image");
+      return;
+    }if (controller.vehicleDescriptionController.text.isEmpty ||
+        controller.vehicleDescriptionController.text.length < 3 &&
+            controller.vehicleDescriptionController.text.length > 200) {
+      Get.snackbar("Error", "Please enter description min 3 and max 200");
+      return;
+    } else if (controller.vehiclePriceController.text.isEmpty ||
+        controller.vehiclePriceController.text.length < 3 &&
+            controller.vehiclePriceController.text.length > 20) {
+      Get.snackbar("Error", "Please enter starting from min 3 and max 20");
+      return;
+    } else {
+      setState(() {
+        isUpLoading = true;
+      });
+      controller.uploadImage();
+    }
+  }
+
+
   uploadFormScreen() {
     return GestureDetector(
       onTap: () {
@@ -381,11 +404,6 @@ class _UploadVehicleViewState extends State<UploadVehicleView> {
     );
   }
 
-  @override
-  void initState() {
-    super.initState();
-    // controller.imageUrlPath.clear();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -489,14 +507,6 @@ class _UploadVehicleViewState extends State<UploadVehicleView> {
           );
         });
 
-  }
-
-  validateAndUploadForm() {
-    if (controller.imageUrlPath.isEmpty) {
-      Get.snackbar("Error", "Please select image");
-    } else {
-      controller.uploadImage();
-    }
   }
 
   wTextField({required TextEditingController controller, required String keyboardType, required String labelText, required String hintText, required IconData prefixIcon}) {
