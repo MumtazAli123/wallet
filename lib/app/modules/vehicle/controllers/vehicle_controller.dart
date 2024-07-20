@@ -6,10 +6,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as fStorage;
-import 'package:wallet/app/modules/vehicle/views/vehicle_view.dart';
 
 import '../../../../global/global.dart';
 import '../../../../widgets/mix_widgets.dart';
+import '../views/show_vehicle_view.dart';
 
 class VehicleController extends GetxController {
   // showroom name controller
@@ -325,7 +325,7 @@ class VehicleController extends GetxController {
           "updatedDate": date,
         });
         // Get.back();
-        Get.to(() => const VehicleView());
+        Get.to(() =>  ShowVehicleView());
 
         Get.snackbar("Success", "Vehicle Added Successfully",
             backgroundColor: Colors.green, colorText: Colors.white);
@@ -383,4 +383,5 @@ class VehicleController extends GetxController {
           backgroundColor: Colors.green, colorText: Colors.white);
     });
   }
+
 }

@@ -17,6 +17,7 @@ import 'package:wallet/app/modules/home/views/mob_home_view.dart';
 import '../../../../global/global.dart';
 import '../../../../models/user_model.dart';
 import '../../../../widgets/mix_widgets.dart';
+import '../../../../widgets/responsive.dart';
 import '../controllers/register_controller.dart';
 
 class RegisterView extends StatefulWidget {
@@ -76,7 +77,10 @@ class _RegisterViewState extends State<RegisterView> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        body: _buildBody(context),
+        body: ResponsiveWidget(
+          mobiView: _buildMobBody(context),
+          webView: _buildWebBody(context),
+        ),
       ),
     );
   }
@@ -157,7 +161,7 @@ class _RegisterViewState extends State<RegisterView> {
 
 
 
-  _buildBody(BuildContext context) {
+  _buildMobBody(BuildContext context) {
     return SafeArea(
       child: Center(
         child: Container(
@@ -265,6 +269,9 @@ class _RegisterViewState extends State<RegisterView> {
 
   _nameField() {
     return TextFormField(
+      style:  TextStyle(
+       color: Colors.black,
+      ),
       controller: controller.nameController,
       maxLength: 20,
       focusNode: controller.nameFocus,
@@ -276,8 +283,14 @@ class _RegisterViewState extends State<RegisterView> {
       decoration: InputDecoration(
         helperText: 'Enter your name as per CNIC',
         labelText: 'Name',
+        labelStyle: const TextStyle(
+          color: Colors.black,
+        ),
         hintText: 'Enter your name',
-        prefixIcon: Icon(Icons.person),
+        helperStyle: const TextStyle(
+          color: Colors.black,
+        ),
+        prefixIcon: Icon(Icons.person, color: Colors.black),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
@@ -300,6 +313,9 @@ class _RegisterViewState extends State<RegisterView> {
 
   _emailField() {
     return TextFormField(
+      style: const TextStyle(
+        color: Colors.black,
+      ),
       controller: controller.emailController,
       keyboardType: TextInputType.emailAddress,
       textInputAction: TextInputAction.next,
@@ -310,8 +326,14 @@ class _RegisterViewState extends State<RegisterView> {
       },
       decoration: InputDecoration(
         labelText: 'Email',
+        labelStyle: const TextStyle(
+          color: Colors.black,
+        ),
         hintText: 'Enter your email',
-        prefixIcon: Icon(Icons.email),
+        helperStyle: const TextStyle(
+          color: Colors.black,
+        ),
+        prefixIcon: Icon(Icons.email, color: Colors.black),
         suffixIcon: hintText == 'Email' &&
                 controller.emailController.text.contains('.com')
             ? Container(
@@ -739,5 +761,50 @@ class _RegisterViewState extends State<RegisterView> {
       Get.back();
       Get.snackbar('Error', e.toString());
     }
+  }
+
+  _buildWebBody(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Colors.blue[900]!, Colors.purple[900]!],
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        ),
+      ),
+      child: Center(
+        child: Container(
+        alignment: Alignment.center,
+        margin: const EdgeInsets.all(18.0),
+        width: 1100,
+        height: 800,
+        padding: const EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    _buildImage(context),
+                    _buildForm(context),
+                  ],
+                ),
+              ),
+            ),
+            Expanded(child: Center(child: Image.asset('assets/images/login_1.png', height: 500, width: 500, fit: BoxFit.cover))),
+
+          ],
+        ),
+      ),
+      ),
+    );
   }
 }

@@ -49,7 +49,7 @@ class ShowVehicleView extends GetView<VehicleController> {
         },
         icon: const Icon(Icons.arrow_back),
       ),
-      title: wText('Vehicle'),
+      title: wText('Vehicle List'),
       centerTitle: true,
     );
   }

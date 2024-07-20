@@ -9,7 +9,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:wallet/models/seller_model.dart';
 
 import '../../../../widgets/mix_widgets.dart';
-import '../../register/views/email_register_view.dart';
+import '../../../../widgets/responsive.dart';
 import '../controllers/login_controller.dart';
 
 class LoginView extends StatefulWidget {
@@ -26,9 +26,7 @@ class _LoginViewState extends State<LoginView> {
 
   final auth = FirebaseAuth.instance;
 
-
   SellerModel? sellerModel = SellerModel();
-
 
   var hintText = 'Email';
 
@@ -53,159 +51,360 @@ class _LoginViewState extends State<LoginView> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        body: _buildBody(),
+        backgroundColor: Colors.black,
+        body: ResponsiveWidget(
+          mobiView: _buildMobBody(),
+          webView: _buildWebBody(),
+        ),
       ),
     );
   }
 
-  _buildBody() {
-    return isLoading
-        ? Center(
-            child: CircularProgressIndicator(),
-          )
-        : NestedScrollView(
-            headerSliverBuilder: (context, innerBoxIsScrolled) {
-              return [
-                SliverAppBar(
-                  automaticallyImplyLeading: false,
-                  centerTitle: true,
-                  backgroundColor: Colors.white,
-                  expandedHeight: 200.0,
-                  floating: false,
-                  pinned: true,
-                  flexibleSpace: FlexibleSpaceBar(
-                    centerTitle: true,
-                    title: Container(
-                      //   shadow text
-                      margin: const EdgeInsets.only(top: 20),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.black.withOpacity(0.5),
-                      ),
-                      padding: const EdgeInsets.all(8.0),
-                      //   shadow text
-                      child: Text(
-                        'Login',
-                        style: GoogleFonts.paprika(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+  _buildMobBody() {
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Colors.blue[900]!, Colors.purple[900]!],
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        ),
+      ),
+      child: Center(
+        child: Container(
+          alignment: Alignment.center,
+          margin: const EdgeInsets.all(18.0),
+          width: 400,
+          height: 690,
+          padding: const EdgeInsets.all(8.0),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                aText('Welcome Here', size: 14, color: Colors.black),
+                aText('Login', size: 54, color: Colors.black),
+                SizedBox(height: 20),
+                _emailField(),
+                SizedBox(height: 20),
+                _passwordField(),
+                SizedBox(height: 20),
+                // remember me and forgot password
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      children: [
+                        Checkbox(
+                          focusColor: Colors.black,
+                          value: rememberMe,
+                          onChanged: (value) {
+                            setState(() {
+                              rememberMe = value!;
+                            });
+                          },
                         ),
-                      ),
+                        aText('Remember me', color: Colors.black, size: 14),
+                      ],
                     ),
-                    background: Image.asset(
-                      'assets/images/login.png',
-                      fit: BoxFit.cover,
+                    Expanded(child: TextButton(
+                        onPressed: () {},
+                        child: aText('Forgot password?', color: Colors.pinkAccent, size: 14)),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 20),
+                Container(
+                  alignment: Alignment.center,
+                  width: 200,
+                  height: 50,
+                  padding: const EdgeInsets.all(8.0),
+                  decoration: BoxDecoration(
+                    color: Colors.blue,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: GestureDetector(
+                    onTap: () {
+                      controller.login();
+                    },
+                    child: wText(
+                      'Login',
+                      color: Colors.white,
+                      size: 20,
                     ),
                   ),
                 ),
-              ];
-            },
-            body: SingleChildScrollView(
-              child: Wrap(
-                alignment: WrapAlignment.center,
-                children: [
-                  Container(
-                    height: MediaQuery.of(context).size.height / 1.5,
-                    margin: const EdgeInsets.all(18.0),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    padding: const EdgeInsets.all(8.0),
-                    width: 600,
-                    child: Card(
-                      elevation: 5,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
+                SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      aText('Don\'t have an account?', color: Colors.black),
+                      TextButton(
+                        onPressed: () {
+                          Get.toNamed('/register');
+                          // Get.to(() => EmailRegisterView());
+                        },
+                        child: aText('Register', color: Colors.blue),
+                      ),
+                    ],
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  _buildWebBody() {
+    // return Container(
+    //   height: double.infinity,
+    //   decoration: BoxDecoration(
+    //     image: DecorationImage(
+    //       image: AssetImage('assets/images/login.jpg'),
+    //       fit: BoxFit.cover,
+    //     ),
+    //   ),
+    //   child: Stack(
+    //     children: [
+    //       Positioned(
+    //           top: 270,
+    //           left: 150,
+    //           child: SingleChildScrollView(
+    //             child: Container(
+    //               alignment: Alignment.center,
+    //               margin: const EdgeInsets.all(18.0),
+    //               width: 400,
+    //               height: 500,
+    //               padding: const EdgeInsets.all(8.0),
+    //               decoration: BoxDecoration(
+    //                 color: Colors.transparent,
+    //                 borderRadius: BorderRadius.circular(10),
+    //               ),
+    //               child: Column(
+    //                 mainAxisAlignment: MainAxisAlignment.center,
+    //                 crossAxisAlignment: CrossAxisAlignment.center,
+    //                 children: [
+    //                   SizedBox(height: 20),
+    //                   _emailField(),
+    //                   SizedBox(height: 20),
+    //                   _passwordField(),
+    //                   SizedBox(height: 20),
+    //                   // remember me and forgot password
+    //                   Row(
+    //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    //                     children: [
+    //                       Row(
+    //                         children: [
+    //                           Checkbox(
+    //                             value: rememberMe,
+    //                             onChanged: (value) {
+    //                               setState(() {
+    //                                 rememberMe = value!;
+    //                               });
+    //                             },
+    //                           ),
+    //                           aText('Remember me', color: Colors.black),
+    //                         ],
+    //                       ),
+    //                       TextButton(
+    //                           onPressed: () {},
+    //                           child: aText('Forgot password?', color: Colors.pinkAccent)),
+    //                     ],
+    //                   ),
+    //                   SizedBox(height: 20),
+    //                   Container(
+    //                     alignment: Alignment.center,
+    //                     width: 200,
+    //                     height: 50,
+    //                     padding: const EdgeInsets.all(8.0),
+    //                     decoration: BoxDecoration(
+    //                       color: Colors.blue,
+    //                       borderRadius: BorderRadius.circular(10),
+    //                     ),
+    //                     child: GestureDetector(
+    //                       onTap: () {
+    //                         controller.login();
+    //                       },
+    //                       child: wText(
+    //                         'Login',
+    //                         color: Colors.white,
+    //                         size: 20,
+    //                       ),
+    //                     ),
+    //                   ),
+    //                   SizedBox(height: 20),
+    //                     Row(
+    //                       mainAxisAlignment: MainAxisAlignment.center,
+    //                       children: [
+    //                         wText('Don\'t have an account?',color:  Colors.black),
+    //                         TextButton(
+    //                           onPressed: () {
+    //                             Get.toNamed('/register');
+    //                             // Get.to(() => EmailRegisterView());
+    //                           },
+    //                           child: Text('Register',
+    //                               style: TextStyle(color: Colors.blue)),
+    //                         ),
+    //                       ],
+    //                     ),
+    //                 ],
+    //               ),
+    //
+    //
+    //                       ),
+    //           )),
+    //       Positioned(
+    //         top: 500,
+    //         right: 0,
+    //         child: Container(
+    //           alignment: Alignment.center,
+    //           margin: const EdgeInsets.all(18.0),
+    //           width: 200,
+    //           height: 200,
+    //           padding: const EdgeInsets.all(8.0),
+    //           decoration: BoxDecoration(
+    //             color: Colors.blue
+    //           ),
+    //           child: Column(
+    //             mainAxisAlignment: MainAxisAlignment.center,
+    //             crossAxisAlignment: CrossAxisAlignment.center,
+    //             children: [
+    //               wText('Vendor', size: 24),
+    //               SizedBox(height: 20),
+    //               wText('Sell your products online', size: 20),
+    //               SizedBox(height: 20),
+    //               wButton('Register',  onPressed: () {
+    //                 Get.toNamed('/register');
+    //               }),
+    //             ],
+    //           ),
+    //         ),
+    //       ),
+    //     ],
+    //   ),
+    //
+    // );
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Colors.blue[900]!, Colors.purple[900]!],
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        ),
+      ),
+      child: Center(
+        child: Container(
+          alignment: Alignment.center,
+          margin: const EdgeInsets.all(18.0),
+          width: 1100,
+          height: 700,
+          padding: const EdgeInsets.all(8.0),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Row(
+            children: [
+              Expanded(child: SingleChildScrollView(
+                child: Container(
+                  alignment: Alignment.center,
+                  margin: const EdgeInsets.all(18.0),
+                  width: 400,
+                  height: 600,
+                  padding: const EdgeInsets.all(8.0),
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      aText('Welcome Here', size: 14, color: Colors.black),
+                      aText('Login', size: 54, color: Colors.black),
+                      SizedBox(height: 20),
+                      _emailField(),
+                      SizedBox(height: 20),
+                      _passwordField(),
+                      SizedBox(height: 20),
+                      // remember me and forgot password
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          SizedBox(height: 20),
-                          _emailField(),
-                          SizedBox(height: 20),
-                          _passwordField(),
-                          SizedBox(height: 20),
-                          // remember me and forgot password
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Row(
-                                children: [
-                                  Checkbox(
-                                    value: rememberMe,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        rememberMe = value!;
-                                      });
-                                    },
-                                  ),
-                                  Text('Remember me'),
-                                ],
-                              ),
-                              TextButton(
-                                  onPressed: () {}, child: Text('Forgot password?')),
-                            ],
-                          ),
-                          SizedBox(height: 20),
-                          Container(
-                            alignment: Alignment.center,
-                            width: 200,
-                            height: 50,
-                            padding: const EdgeInsets.all(8.0),
-                            decoration: BoxDecoration(
-                              color: Colors.blue,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: GestureDetector(
-                              onTap: () {
-                                controller.login();
-                              },
-                              child: wText(
-                                'Login',
-                                color: Colors.white,
-                                size: 20,
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: 20),
-                          if (GetPlatform.isIOS || GetPlatform.isAndroid)
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text('Don\'t have an account?'),
-                              TextButton(
-                                onPressed: () {
-                                  Get.toNamed('/register');
-                                  // Get.to(() => EmailRegisterView());
+                              Checkbox(
+                                focusColor: Colors.black,
+                                value: rememberMe,
+                                onChanged: (value) {
+                                  setState(() {
+                                    rememberMe = value!;
+                                  });
                                 },
-                                child: Text('Register',
-                                    style: TextStyle(color: Colors.blue)),
                               ),
+                              aText('Remember me', color: Colors.black),
                             ],
                           ),
+                          TextButton(
+                              onPressed: () {},
+                              child: aText('Forgot password?', color: Colors.pinkAccent)),
                         ],
                       ),
-                    ),
-                  ),
-                  SizedBox(height: 50.0),
-                  Container(
-                    alignment: Alignment.center,
-                    margin: const EdgeInsets.all(18.0),
-                    width: 600,
-                    height: MediaQuery.of(context).size.height / 1.5,
-                    padding: const EdgeInsets.all(8.0),
-                    decoration: BoxDecoration(
-                      color: Colors.blue,
-                      image: DecorationImage(
-                        image: AssetImage('assets/images/login.png'),
-                        fit: BoxFit.cover,
+                      SizedBox(height: 20),
+                      Container(
+                        alignment: Alignment.center,
+                        width: 200,
+                        height: 50,
+                        padding: const EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: GestureDetector(
+                          onTap: () {
+                            controller.login();
+                          },
+                          child: wText(
+                            'Login',
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                        ),
                       ),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
+                      SizedBox(height: 20),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            aText('Don\'t have an account?', color: Colors.black),
+                            TextButton(
+                              onPressed: () {
+                                Get.toNamed('/register');
+                                // Get.to(() => EmailRegisterView());
+                              },
+                              child: aText('Register', color: Colors.blue),
+                            ),
+                          ],
+                        ),
+                    ],
                   ),
-                ],
-              ),
-            ));
+                ),
+              )),
+              Expanded(child: Center(child: Image.asset('assets/images/login_1.png', height: 500, width: 500, fit: BoxFit.cover))),
+
+            ],
+          ),
+
+        ),
+      ),
+    );
   }
 
   _emailField() {
@@ -215,15 +414,18 @@ class _LoginViewState extends State<LoginView> {
         controller: controller.emailController,
         keyboardType: TextInputType.emailAddress,
         textInputAction: TextInputAction.next,
+        style: TextStyle(color: Colors.black),
         onChanged: (value) {
           setState(() {
             hintText = 'Email';
           });
         },
         decoration: InputDecoration(
+          hintStyle: TextStyle(color: Colors.black),
+          labelStyle: TextStyle(color: Colors.black),
           labelText: 'Email',
           hintText: 'Enter your email',
-          prefixIcon: Icon(Icons.email),
+          prefixIcon: Icon(Icons.email, color: Colors.black),
           suffixIcon: hintText == 'Email' &&
                   controller.emailController.text.contains('.com')
               ? Container(
@@ -270,10 +472,12 @@ class _LoginViewState extends State<LoginView> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: FancyPasswordField(
+        style: TextStyle(color: Colors.black),
         controller: controller.passwordController,
         decoration: InputDecoration(
-          prefixIcon: Icon(Icons.lock),
+          prefixIcon: Icon(Icons.lock, color: Colors.black),
           labelText: 'Password',
+          labelStyle: TextStyle(color: Colors.black),
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(20.0),
           ),

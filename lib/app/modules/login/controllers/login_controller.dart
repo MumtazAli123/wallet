@@ -54,7 +54,7 @@ class LoginController extends GetxController {
       return;
     }
     else if(passwordController.text.isEmpty) {
-      Get.snackbar('Error', 'Please enter password');
+      Get.snackbar('Error', 'Please enter password', snackPosition: SnackPosition.TOP, backgroundColor: Colors.red, colorText: Colors.white);
       return;
     //   save email and password in shared preference
     }else if(isRememberMe.value) {
@@ -68,14 +68,37 @@ class LoginController extends GetxController {
   }
 
   loginNow() async {
-    QuickAlert.show(
-        // time: duration ?? Duration(seconds: 3),
-        context: Get.context!,
-        title: 'Logging in',
-        text: 'Please wait...',
-        type: QuickAlertType.loading);
-
-    try {
+    // try {QuickAlert.show(
+    //     // time: duration ?? Duration(seconds: 3),
+    //       context: Get.context!,
+    //       title: 'Logging in',
+    //       text: 'Please wait...',
+    //       type: QuickAlertType.loading);
+    //   await FirebaseAuth.instance.signInWithEmailAndPassword(
+    //       email: emailController.text.trim(),
+    //       password: passwordController.text.trim());
+    //   User? currentUser = FirebaseAuth.instance.currentUser;
+    //   if (currentUser != null) {
+    //     checkIfSellerRecordExist(currentUser);
+    //   }
+    // } on FirebaseAuthException catch (e) {
+    //   Get.back();
+    //   if (e.code == 'user-not-found') {
+    //    Get.snackbar('Error', 'No user found for that email.');
+    //   } else if (e.code == 'wrong-password') {
+    //     Get.snackbar('Error', 'Wrong password provided for that user.');
+    //
+    //   }
+    // }
+    try{
+      // if user is not found or wrong password then show error message to user or if user is found then login user successfully than show loading dialog
+      QuickAlert.show(
+        // if have to show dialog error message then not use loading dialog
+          context: Get.context!,
+          title: 'Logging in',
+          text: 'Please wait...',
+          width: 400,
+          type: QuickAlertType.loading);
       await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: emailController.text.trim(),
           password: passwordController.text.trim());
@@ -83,14 +106,12 @@ class LoginController extends GetxController {
       if (currentUser != null) {
         checkIfSellerRecordExist(currentUser);
       }
-    } on FirebaseAuthException catch (e) {
-      Get.back();
-      if (e.code == 'user-not-found') {
-       Get.snackbar('Error', 'No user found for that email.');
-      } else if (e.code == 'wrong-password') {
-        Get.snackbar('Error', 'Wrong password provided for that user.');
-
-      }
+    }catch(e) {
+      QuickAlert.show(
+        context: Get.context!,
+        title: 'Error',
+        text: 'User not found or wrong password',
+        type: QuickAlertType.error);
     }
   }
 

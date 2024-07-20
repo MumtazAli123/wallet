@@ -75,39 +75,102 @@ class _UploadVehicleViewState extends State<UploadVehicleView> {
             SizedBox(
               height: 200,
               width: MediaQuery.of(context).size.width,
-              child: ListView.builder(
+              child: GridView.builder(
+
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                ),
                 scrollDirection: Axis.horizontal,
                 itemCount: controller.imageUrlPath.length,
                 itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Stack(
-                      children: [
-                        Container(
-                          height: 150,
-                          width: 150,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            image: DecorationImage(
-                              image: FileImage(File(controller.imageUrlPath[index])),
-                              fit: BoxFit.cover,
-                            ),
+                  return index == 0
+                      ? Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Stack(
+                            children: [
+                              Container(
+                                height: 150,
+                                width: 150,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  image: DecorationImage(
+                                    image: FileImage(File(controller.imageUrlPath[index])),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                right: 0,
+                                child: IconButton(
+                                  onPressed: () {
+                                    controller.imageUrlPath.removeAt(index);
+                                    controller.imageFileCount.value = controller.imageUrlPath.length;
+                                    setState(() {});
+                                  },
+                                  icon: const Icon(Icons.delete, color: Colors.red),
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                        Positioned(
-                          right: 0,
-                          child: IconButton(
-                            onPressed: () {
-                              controller.imageUrlPath.removeAt(index);
-                              controller.imageFileCount.value = controller.imageUrlPath.length;
-                              setState(() {});
-                            },
-                            icon: const Icon(Icons.delete, color: Colors.red),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Stack(
+                            children: [
+                              Container(
+                                height: 150,
+                                width: 150,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  image: DecorationImage(
+                                    image: FileImage(File(controller.imageUrlPath[index])),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                              ),
+                              Positioned(
+                                right: 0,
+                                child: IconButton(
+                                  onPressed: () {
+                                    controller.imageUrlPath.removeAt(index);
+                                    controller.imageFileCount.value = controller.imageUrlPath.length;
+                                    setState(() {});
+                                  },
+                                  icon: const Icon(Icons.delete, color: Colors.red),
+                                ),
+                              ),
+                            ],
                           ),
-                        ),
-                      ],
-                    ),
-                  );
+                        );
+                  // return Padding(
+                  //   padding: const EdgeInsets.all(8.0),
+                  //   child: Stack(
+                  //     children: [
+                  //       Container(
+                  //         height: 150,
+                  //         width: 150,
+                  //         decoration: BoxDecoration(
+                  //           borderRadius: BorderRadius.circular(10),
+                  //           image: DecorationImage(
+                  //             image: FileImage(File(controller.imageUrlPath[index])),
+                  //             fit: BoxFit.cover,
+                  //           ),
+                  //         ),
+                  //       ),
+                  //       Positioned(
+                  //         right: 0,
+                  //         child: IconButton(
+                  //           onPressed: () {
+                  //             controller.imageUrlPath.removeAt(index);
+                  //             controller.imageFileCount.value = controller.imageUrlPath.length;
+                  //             setState(() {});
+                  //           },
+                  //           icon: const Icon(Icons.delete, color: Colors.red),
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // );
                 },
               ),
             ),
@@ -117,10 +180,10 @@ class _UploadVehicleViewState extends State<UploadVehicleView> {
               child: GFButton(
                 size: 50,
                   onPressed: (){
-                if (controller.imageUrlPath.length < 5) {
+                if (controller.imageUrlPath.length < 8) {
                   obtainImageBox();
                 } else {
-                  Get.snackbar("Error", "You can't select more than 5 images", backgroundColor: Colors.red, colorText: Colors.white);
+                  Get.snackbar("Error", "You can't select more than 8 images", backgroundColor: Colors.red, colorText: Colors.white);
                 }
               }, child:  wText("Select More Images")),
             ),

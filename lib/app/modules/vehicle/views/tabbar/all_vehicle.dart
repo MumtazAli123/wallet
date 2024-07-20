@@ -1,16 +1,13 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_state_manager/src/simple/get_view.dart';
+import 'package:get/get.dart';
 import 'package:getwidget/components/avatar/gf_avatar.dart';
-import 'package:getwidget/components/badge/gf_badge.dart';
-import 'package:getwidget/components/button/gf_button.dart';
-import 'package:getwidget/components/button/gf_button_bar.dart';
-import 'package:getwidget/components/card/gf_card.dart';
+import 'package:getwidget/components/image/gf_image_overlay.dart';
 import 'package:getwidget/components/list_tile/gf_list_tile.dart';
 import 'package:getwidget/shape/gf_avatar_shape.dart';
-import 'package:getwidget/shape/gf_badge_shape.dart';
-import 'package:getwidget/size/gf_size.dart';
 import 'package:wallet/app/modules/vehicle/controllers/vehicle_controller.dart';
 
+import '../../../../../models/vehicle_model.dart';
 import '../../../../../widgets/mix_widgets.dart';
 
 class AllVehicle extends GetView<VehicleController> {
@@ -18,33 +15,44 @@ class AllVehicle extends GetView<VehicleController> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
-        stream: controller.allVehicleStream(),
-        builder: (context, AsyncSnapshot snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
+    return StreamBuilder<QuerySnapshot>(
+      stream: controller.allVehicleStream(),
+      builder: (context, snapshot) {
+        try {
           if (snapshot.hasData) {
-            if (snapshot.data.docs.isEmpty) {
-              return const Center(child: Text('No Vehicle found'));
-            }
             return ListView.builder(
-                itemCount: snapshot.data.docs.length,
-                itemBuilder: (context, index) {
-                  return wBuildVehicleCard(snapshot.data.docs[index]);
-                });
+              itemCount: snapshot.data!.docs.length,
+              itemBuilder: (context, index) {
+                var data = snapshot.data!.docs[index].data() as Map;
+                VehicleModel model =
+                VehicleModel.fromJson(data as Map<String, dynamic>);
+                return wBuildVehicleCard(model.toJson());
+              },
+            );
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           }
-          return const Center(child: Text('No Vehicle found'));
-        });
+        } catch (e) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
+    );
+
   }
 }
 
 Widget wBuildVehicleCard(doc) {
+
+  bool isDarkMode = Get.isDarkMode;
   return Container(
     margin: const EdgeInsets.all(8.0),
     padding: const EdgeInsets.all(8.0),
     decoration: BoxDecoration(
-      color: Colors.white,
+      color: isDarkMode ? Colors.grey[800] : Colors.white,
       borderRadius: BorderRadius.circular(8.0),
       boxShadow: [
         BoxShadow(
@@ -59,16 +67,14 @@ Widget wBuildVehicleCard(doc) {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-          child: Container(
-            height: 150,
-            width: 150,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(8.0),
-              image: DecorationImage(
-                image: NetworkImage(doc['image']),
-                fit: BoxFit.cover,
-              ),
+        Container(
+          height: 200,
+          width: 150,
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(8.0),
+            image: DecorationImage(
+              image: NetworkImage(doc['image'], scale: 1.0, headers: {'User-Agent': 'your_user_agent'}),
+              fit: BoxFit.cover,
             ),
           ),
         ),
@@ -79,6 +85,7 @@ Widget wBuildVehicleCard(doc) {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ListTile(
+                iconColor: isDarkMode ? Colors.white : Colors.black,
                 // leading: const Icon(Icons.directions_car),
                 title: Text("Vehicle: ${doc['vehicleName']}"),
                 subtitle: Text("Model: ${doc['vehicleModel']}\nCondition: ${doc['vehicleCondition']}"),
@@ -92,6 +99,39 @@ Widget wBuildVehicleCard(doc) {
           ),
         ),
       ],
+    ),
+  );
+}
+
+Widget wVehicleCard(doc) {
+  return GFImageOverlay(
+    height: 200,
+    width: double.infinity,
+    shape: BoxShape.rectangle,
+    colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.darken),
+    borderRadius: BorderRadius.circular(8.0),
+    image: NetworkImage(doc['image']),
+    boxFit: BoxFit.cover,
+    child: Container(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          GFListTile(
+            avatar: GFAvatar(
+              shape: GFAvatarShape.standard,
+              backgroundImage: NetworkImage(doc['image']),
+            ),
+            title: wText("Vehicle: ${doc['vehicleName']}", color: Colors.white),
+            subTitle: wText("Model: ${doc['vehicleModel']}", color: Colors.white),
+          ),
+          ListTile(
+            leading: const Icon(Icons.directions_car, color: Colors.white),
+            title: aText("Km: ${doc['vehicleKm']}", color: Colors.white),
+          ),
+        ],
+      ),
     ),
   );
 }
