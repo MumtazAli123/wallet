@@ -367,6 +367,7 @@ class _RegisterViewState extends State<RegisterView> {
   _phoneField() {
     return TextFormField(
       controller: controller.phoneController,
+
       maxLength: 10,
       onChanged: (value) {
         setState(() {
@@ -375,6 +376,7 @@ class _RegisterViewState extends State<RegisterView> {
       },
       keyboardType: TextInputType.phone,
       style: const TextStyle(
+        color: Colors.black,
         fontSize: 18,
         fontWeight: FontWeight.w500,
       ),
@@ -389,8 +391,21 @@ class _RegisterViewState extends State<RegisterView> {
           ),
         ),
         hintText: 'Phone Number',
+        hintStyle: const TextStyle(
+          color: Colors.black,
+        ),
         // like 300 1234567
         helperText: 'Enter phone number like 300 1234567',
+        helperStyle: const TextStyle(
+          color: Colors.black,
+        ),
+
+        labelStyle: const TextStyle(
+          color: Colors.black,
+        ),
+        prefixStyle: const TextStyle(
+          color: Colors.black,
+        ),
         prefixIcon: Container(
           padding: const EdgeInsets.all(10),
           child: TextButton(
@@ -435,10 +450,16 @@ class _RegisterViewState extends State<RegisterView> {
 
   _passwordField() {
     return FancyPasswordField(
+      style: const TextStyle(
+        color: Colors.black,
+      ),
       controller: controller.passwordController,
       decoration: InputDecoration(
-        prefixIcon: Icon(Icons.lock),
+        prefixIcon: Icon(Icons.lock, color: Colors.black),
         labelText: 'Password',
+        labelStyle: const TextStyle(
+          color: Colors.black,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
@@ -455,9 +476,15 @@ class _RegisterViewState extends State<RegisterView> {
   _confirmPasswordField() {
     return FancyPasswordField(
       controller: controller.confirmPasswordController,
+      style: const TextStyle(
+        color: Colors.black,
+      ),
       decoration: InputDecoration(
-        prefixIcon: Icon(Icons.lock),
+        prefixIcon: Icon(Icons.lock, color: Colors.black),
         labelText: 'Confirm Password',
+        labelStyle: const TextStyle(
+          color: Colors.black,
+        ),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
@@ -493,12 +520,12 @@ class _RegisterViewState extends State<RegisterView> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text('Already have an account?'),
+        aText('Already have an account?', color: Colors.black),
         TextButton(
           onPressed: () {
             Get.back();
           },
-          child: Text('Login'),
+          child: aText('Login', color: Colors.green),
         ),
       ],
     );
