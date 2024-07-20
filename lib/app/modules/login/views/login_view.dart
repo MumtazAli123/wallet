@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:wallet/models/seller_model.dart';
 
 import '../../../../widgets/mix_widgets.dart';
@@ -87,7 +86,7 @@ class _LoginViewState extends State<LoginView> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                aText('Welcome Here', size: 14, color: Colors.black),
+                aText('Welcome to ZubiPay', size: 14, color: Colors.black),
                 aText('Login', size: 54, color: Colors.black),
                 SizedBox(height: 20),
                 _emailField(),
@@ -162,134 +161,6 @@ class _LoginViewState extends State<LoginView> {
   }
 
   _buildWebBody() {
-    // return Container(
-    //   height: double.infinity,
-    //   decoration: BoxDecoration(
-    //     image: DecorationImage(
-    //       image: AssetImage('assets/images/login.jpg'),
-    //       fit: BoxFit.cover,
-    //     ),
-    //   ),
-    //   child: Stack(
-    //     children: [
-    //       Positioned(
-    //           top: 270,
-    //           left: 150,
-    //           child: SingleChildScrollView(
-    //             child: Container(
-    //               alignment: Alignment.center,
-    //               margin: const EdgeInsets.all(18.0),
-    //               width: 400,
-    //               height: 500,
-    //               padding: const EdgeInsets.all(8.0),
-    //               decoration: BoxDecoration(
-    //                 color: Colors.transparent,
-    //                 borderRadius: BorderRadius.circular(10),
-    //               ),
-    //               child: Column(
-    //                 mainAxisAlignment: MainAxisAlignment.center,
-    //                 crossAxisAlignment: CrossAxisAlignment.center,
-    //                 children: [
-    //                   SizedBox(height: 20),
-    //                   _emailField(),
-    //                   SizedBox(height: 20),
-    //                   _passwordField(),
-    //                   SizedBox(height: 20),
-    //                   // remember me and forgot password
-    //                   Row(
-    //                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //                     children: [
-    //                       Row(
-    //                         children: [
-    //                           Checkbox(
-    //                             value: rememberMe,
-    //                             onChanged: (value) {
-    //                               setState(() {
-    //                                 rememberMe = value!;
-    //                               });
-    //                             },
-    //                           ),
-    //                           aText('Remember me', color: Colors.black),
-    //                         ],
-    //                       ),
-    //                       TextButton(
-    //                           onPressed: () {},
-    //                           child: aText('Forgot password?', color: Colors.pinkAccent)),
-    //                     ],
-    //                   ),
-    //                   SizedBox(height: 20),
-    //                   Container(
-    //                     alignment: Alignment.center,
-    //                     width: 200,
-    //                     height: 50,
-    //                     padding: const EdgeInsets.all(8.0),
-    //                     decoration: BoxDecoration(
-    //                       color: Colors.blue,
-    //                       borderRadius: BorderRadius.circular(10),
-    //                     ),
-    //                     child: GestureDetector(
-    //                       onTap: () {
-    //                         controller.login();
-    //                       },
-    //                       child: wText(
-    //                         'Login',
-    //                         color: Colors.white,
-    //                         size: 20,
-    //                       ),
-    //                     ),
-    //                   ),
-    //                   SizedBox(height: 20),
-    //                     Row(
-    //                       mainAxisAlignment: MainAxisAlignment.center,
-    //                       children: [
-    //                         wText('Don\'t have an account?',color:  Colors.black),
-    //                         TextButton(
-    //                           onPressed: () {
-    //                             Get.toNamed('/register');
-    //                             // Get.to(() => EmailRegisterView());
-    //                           },
-    //                           child: Text('Register',
-    //                               style: TextStyle(color: Colors.blue)),
-    //                         ),
-    //                       ],
-    //                     ),
-    //                 ],
-    //               ),
-    //
-    //
-    //                       ),
-    //           )),
-    //       Positioned(
-    //         top: 500,
-    //         right: 0,
-    //         child: Container(
-    //           alignment: Alignment.center,
-    //           margin: const EdgeInsets.all(18.0),
-    //           width: 200,
-    //           height: 200,
-    //           padding: const EdgeInsets.all(8.0),
-    //           decoration: BoxDecoration(
-    //             color: Colors.blue
-    //           ),
-    //           child: Column(
-    //             mainAxisAlignment: MainAxisAlignment.center,
-    //             crossAxisAlignment: CrossAxisAlignment.center,
-    //             children: [
-    //               wText('Vendor', size: 24),
-    //               SizedBox(height: 20),
-    //               wText('Sell your products online', size: 20),
-    //               SizedBox(height: 20),
-    //               wButton('Register',  onPressed: () {
-    //                 Get.toNamed('/register');
-    //               }),
-    //             ],
-    //           ),
-    //         ),
-    //       ),
-    //     ],
-    //   ),
-    //
-    // );
     return Container(
       width: double.infinity,
       height: double.infinity,

@@ -87,50 +87,50 @@ class _RegisterViewState extends State<RegisterView> {
 
   otpDefaultScreen() {
     return Scaffold(
-        body: Center(
-      child: Column(
-      //   otp screen design
-      children: [
-        const SizedBox(height: 100),
-        const Text(
-          'OTP Verification',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
+      body: Center(
+          child: Column(
+        //   otp screen design
+        children: [
+          const SizedBox(height: 100),
+          const Text(
+            'OTP Verification',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-        const SizedBox(height: 20),
-        const Text(
-          'Please enter the OTP sent to your on email ',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
+          const SizedBox(height: 20),
+          const Text(
+            'Please enter the OTP sent to your on email ',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
           ),
-        ),
-        const SizedBox(height: 20),
-        const Text(
-          'Enter OTP',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
+          const SizedBox(height: 20),
+          const Text(
+            'Enter OTP',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
           ),
-        ),
-        const SizedBox(height: 20),
-        const Text(
-          'Resend OTP',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
+          const SizedBox(height: 20),
+          const Text(
+            'Resend OTP',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+            ),
           ),
-        ),
-        const SizedBox(height: 20),
-        ElevatedButton(
-          onPressed: () {
-            Get.back();
-          },
-          child: const Text('Submit'),
-        ),
-      ],
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: () {
+              Get.back();
+            },
+            child: const Text('Submit'),
+          ),
+        ],
       )),
     );
   }
@@ -148,25 +148,41 @@ class _RegisterViewState extends State<RegisterView> {
     controller.nameFocus.requestFocus();
   }
 
-
   @override
   Widget build(BuildContext context) {
     // return isLoading ? otpDefaultScreen() : uploadFormScreen();
-    return isLoading ? const Scaffold(
-      body: Center(
-        child: CircularProgressIndicator(),
-      ),
-    ) : uploadFormScreen();
+    return isLoading
+        ? const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
+            ),
+          )
+        : uploadFormScreen();
+
   }
 
-
-
   _buildMobBody(BuildContext context) {
-    return SafeArea(
+    return Container(
+      width: double.infinity,
+      height: double.infinity,
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Colors.blue[900]!, Colors.purple[900]!],
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        ),
+      ),
       child: Center(
         child: Container(
-          padding: const EdgeInsets.all(10),
-          width: 600,
+          alignment: Alignment.center,
+          margin: const EdgeInsets.all(18.0),
+          width: 400,
+          height: 800,
+          padding: const EdgeInsets.all(8.0),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+          ),
           child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -208,7 +224,7 @@ class _RegisterViewState extends State<RegisterView> {
                       height: 140,
                       fit: BoxFit.cover,
                     ),
-            ),
+                  ),
           ),
           Positioned(
             bottom: 0,
@@ -269,8 +285,8 @@ class _RegisterViewState extends State<RegisterView> {
 
   _nameField() {
     return TextFormField(
-      style:  TextStyle(
-       color: Colors.black,
+      style: TextStyle(
+        color: Colors.black,
       ),
       controller: controller.nameController,
       maxLength: 20,
@@ -367,7 +383,6 @@ class _RegisterViewState extends State<RegisterView> {
   _phoneField() {
     return TextFormField(
       controller: controller.phoneController,
-
       maxLength: 10,
       onChanged: (value) {
         setState(() {
@@ -395,7 +410,7 @@ class _RegisterViewState extends State<RegisterView> {
           color: Colors.black,
         ),
         // like 300 1234567
-        helperText: 'Enter phone number like 300 1234567',
+        helperText: 'Enter phone no like 3001234567',
         helperStyle: const TextStyle(
           color: Colors.black,
         ),
@@ -500,20 +515,19 @@ class _RegisterViewState extends State<RegisterView> {
 
   _registerButton() {
     return ElevatedButton(
-      onPressed: () {
-        if (controller.formKey.currentState!.validate()) {
-          fromValidation();
-        }
-      },
-      child: wText('Register',  color: Colors.white, size: 18.0),
-      style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.green,
-        padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
-      )
-    );
+        onPressed: () {
+          if (controller.formKey.currentState!.validate()) {
+            fromValidation();
+          }
+        },
+        child: wText('Register', color: Colors.white, size: 18.0),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.green,
+          padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+        ));
   }
 
   _loginLink() {
@@ -803,34 +817,36 @@ class _RegisterViewState extends State<RegisterView> {
       ),
       child: Center(
         child: Container(
-        alignment: Alignment.center,
-        margin: const EdgeInsets.all(18.0),
-        width: 1100,
-        height: 800,
-        padding: const EdgeInsets.all(8.0),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    _buildImage(context),
-                    _buildForm(context),
-                  ],
+          alignment: Alignment.center,
+          margin: const EdgeInsets.all(18.0),
+          width: 1100,
+          height: 800,
+          padding: const EdgeInsets.all(8.0),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      _buildImage(context),
+                      _buildForm(context),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            Expanded(child: Center(child: Image.asset('assets/images/login_1.png', height: 500, width: 500, fit: BoxFit.cover))),
-
-          ],
+              Expanded(
+                  child: Center(
+                      child: Image.asset('assets/images/login_1.png',
+                          height: 500, width: 500, fit: BoxFit.cover))),
+            ],
+          ),
         ),
-      ),
       ),
     );
   }
