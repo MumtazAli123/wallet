@@ -1,12 +1,12 @@
 // ignore_for_file: avoid_print, use_build_context_synchronously, prefer_const_constructors
 
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:fancy_password_field/fancy_password_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -39,6 +39,8 @@ class _RegisterViewState extends State<RegisterView> {
   bool isLoading = false;
   var hintText = 'Email';
 
+  File? _pickedImage;
+
   fromValidation() {
     if (controller.emailController.text.isEmpty) {
       Get.snackbar('Error', 'Please enter email');
@@ -52,7 +54,7 @@ class _RegisterViewState extends State<RegisterView> {
       Get.snackbar('Error', 'Please enter phone number');
     } else if (controller.phoneController.text.length < 10) {
       Get.snackbar('Error', 'Phone number must be 10 digits');
-    } else if (controller.image == null) {
+    } else if (controller.imageMob == null) {
       Get.snackbar('Error', 'Please select image');
     } else if (controller.passwordController.text !=
         controller.confirmPasswordController.text) {
@@ -158,7 +160,6 @@ class _RegisterViewState extends State<RegisterView> {
             ),
           )
         : uploadFormScreen();
-
   }
 
   _buildMobBody(BuildContext context) {
@@ -188,7 +189,7 @@ class _RegisterViewState extends State<RegisterView> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                _buildImage(context),
+                _buildMobImage(context),
                 _buildForm(context),
               ],
             ),
@@ -198,7 +199,7 @@ class _RegisterViewState extends State<RegisterView> {
     );
   }
 
-  _buildImage(BuildContext context) {
+  _buildMobImage(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(top: 20),
       child: Stack(
@@ -210,7 +211,7 @@ class _RegisterViewState extends State<RegisterView> {
                 ? ClipRRect(
                     borderRadius: BorderRadius.circular(70),
                     child: Image.file(
-                      controller.image!,
+                      controller.imageMob!,
                       width: 140,
                       height: 140,
                       fit: BoxFit.cover,
@@ -514,20 +515,49 @@ class _RegisterViewState extends State<RegisterView> {
   }
 
   _registerButton() {
-    return ElevatedButton(
-        onPressed: () {
+    // return ElevatedButton(
+    //     onPressed: () {
+    //       if (controller.formKey.currentState!.validate()) {
+    //         fromValidation();
+    //       }
+    //     },
+    //     child: wText('Register', color: Colors.white, size: 18.0),
+    //     style: ElevatedButton.styleFrom(
+    //       backgroundColor: Colors.green,
+    //       padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+    //       shape: RoundedRectangleBorder(
+    //         borderRadius: BorderRadius.circular(20),
+    //       ),
+    //     ));
+    return Container(
+      alignment: Alignment.center,
+      width: 300,
+      height: 50,
+      padding: const EdgeInsets.all(8.0),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [Colors.blue[900]!, Colors.purple[900]!],
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        ),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: GestureDetector(
+        onTap: () {
+          // if (controller.formKey.currentState!.validate()) {
+          //   fromValidation();
+          // }
           if (controller.formKey.currentState!.validate()) {
             fromValidation();
           }
         },
-        child: wText('Register', color: Colors.white, size: 18.0),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.green,
-          padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-        ));
+        child: wText(
+          'Register',
+          color: Colors.white,
+          size: 20,
+        ),
+      ),
+    );
   }
 
   _loginLink() {
@@ -585,21 +615,22 @@ class _RegisterViewState extends State<RegisterView> {
     );
   }
 
-  void _imgFromGallery() {
+  void _imgFromGallery() async {
     controller.imagePicker!
         .pickImage(source: ImageSource.gallery)
         .then((value) {
       setState(() {
-        controller.image = File(value!.path);
+        controller.imageMob = File(value!.path);
         _isImageLoaded = true;
       });
     });
+
   }
 
   void _imgFromCamera() {
     controller.imagePicker!.pickImage(source: ImageSource.camera).then((value) {
       setState(() {
-        controller.image = File(value!.path);
+        controller.imageMob = File(value!.path);
         _isImageLoaded = true;
       });
     });
@@ -648,7 +679,7 @@ class _RegisterViewState extends State<RegisterView> {
     try {
       FirebaseStorage.instance
           .ref('sellerImage/$uid')
-          .putFile(controller.image!)
+          .putFile(controller.imageMob!)
           .then((value) {
         value.ref.getDownloadURL().then((value) {
           _saveUserData(value);
@@ -697,7 +728,7 @@ class _RegisterViewState extends State<RegisterView> {
           'email', controller.emailController.text);
       await sharedPreferences?.setString('phone',
           '+${controller.countryCode}${controller.phoneController.text}');
-      await sharedPreferences?.setString('image', controller.image!.path);
+      await sharedPreferences?.setString('image', controller.imageMob!.path);
       await sharedPreferences?.setString('sellerType', 'user');
       await sharedPreferences?.setString('status', 'approved');
       await sharedPreferences?.setString('balance', '100.0');
@@ -809,18 +840,17 @@ class _RegisterViewState extends State<RegisterView> {
               ),
               Expanded(
                   child: Row(
-                    children: [
-                      Center(
-                          child: Image.asset('assets/images/login_1.png',
-                              height: 500, width: 500, fit: BoxFit.cover)),
-                      Expanded(
-                        child: Container(
-                          width: 200,
-                        ),
-                      )
-                    ],
-                  )),
-
+                children: [
+                  Center(
+                      child: Image.asset('assets/images/login_1.png',
+                          height: 500, width: 500, fit: BoxFit.cover)),
+                  Expanded(
+                    child: Container(
+                      width: 200,
+                    ),
+                  )
+                ],
+              )),
             ],
           ),
         ),
@@ -833,26 +863,34 @@ class _RegisterViewState extends State<RegisterView> {
       margin: const EdgeInsets.only(top: 20),
       child: Stack(
         children: [
-          CircleAvatar(
-            radius: 70,
-            backgroundColor: Colors.grey[300],
+          Container(
+            height: 140,
+            width: 140,
+            decoration: BoxDecoration(
+              color: Colors.grey[300],
+              borderRadius: BorderRadius.circular(70),
+            ),
             child: _isImageLoaded
-                ? ClipRRect(
-                    borderRadius: BorderRadius.circular(70),
-                    child: Image.file(
-                      controller.image!,
-                      width: 140,
-                      height: 140,
-                      fit: BoxFit.cover,
+                ? Container(
+                    height: 140,
+                    width: 140,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(70),
+                      image: DecorationImage(
+                        image: MemoryImage(controller.selectedWebImage),
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   )
-                : ClipRRect(
-                    borderRadius: BorderRadius.circular(70),
-                    child: Image.asset(
-                      'assets/images/bg.png',
-                      width: 140,
-                      height: 140,
-                      fit: BoxFit.cover,
+                : Container(
+                    height: 140,
+                    width: 140,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      image: const DecorationImage(
+                        image: AssetImage('assets/images/bg.png'),
+                        fit: BoxFit.cover,
+                      ),
                     ),
                   ),
           ),
@@ -872,13 +910,48 @@ class _RegisterViewState extends State<RegisterView> {
                   color: Colors.white,
                 ),
                 onPressed: () {
-                  // _showPicker(context);
+                  _selectImage(context);
                 },
               ),
             ),
           ),
         ],
-      ),
+      )
     );
   }
+
+  void _selectImage(BuildContext context) {
+    // if (kIsWeb) {
+    //   final ImagePicker _picker = ImagePicker();
+    //   _picker.pickImage(source: ImageSource.gallery).then((value) {
+    //     if (value != null) {
+    //       var selected = File(value.path);
+    //       setState(() {
+    //         controller.selectedWebImage = selected.readAsBytesSync();
+    //         _pickedImage = File('a');
+    //         _isImageLoaded = true;
+    //       });
+    //     } else {
+    //       Get.snackbar('Error', 'No image selected');
+    //     }
+    //   });
+    // }
+    if (kIsWeb) {
+      final ImagePicker _picker = ImagePicker();
+      _picker.pickImage(source: ImageSource.gallery).then((value) {
+        if (value != null) {
+          var selected = File(value.path);
+          setState(() {
+            controller.selectedWebImage = selected.readAsBytesSync();
+            _pickedImage = File('a');
+            _isImageLoaded = true;
+          });
+        } else {
+          Get.snackbar('Error', 'No image selected');
+        }
+      });
+    }
+  }
+
+
 }

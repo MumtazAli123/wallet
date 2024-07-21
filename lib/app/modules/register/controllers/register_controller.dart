@@ -23,9 +23,9 @@ class RegisterController extends GetxController {
 
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  File? image;
+  File? imageMob;
   ImagePicker? imagePicker;
-  Uint8List selectedImage = Uint8List(0);
+  Uint8List selectedWebImage = Uint8List(8);
   String imageUrl = '';
 
 
