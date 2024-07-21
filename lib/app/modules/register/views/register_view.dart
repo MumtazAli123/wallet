@@ -1,9 +1,9 @@
 // ignore_for_file: avoid_print, use_build_context_synchronously, prefer_const_constructors
 
 import 'dart:io';
+import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_picker/country_picker.dart';
-import 'package:email_auth/email_auth.dart';
 import 'package:fancy_password_field/fancy_password_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -583,39 +583,6 @@ class _RegisterViewState extends State<RegisterView> {
       ),
       confirmBtnText: 'Cancel',
     );
-    // AwesomeDialog(
-    //   width: 400,
-    //   showCloseIcon: true,
-    //   barrierColor: Colors.black.withOpacity(0.5),
-    //   context: context,
-    //   dialogType: DialogType.info,
-    //   dialogBackgroundColor: Colors.blue[100],
-    //   animType: AnimType.leftSlide,
-    //   btnCancelOnPress: () {
-    //   },
-    //   btnCancelText: 'Cancel',
-    //   body: Row(
-    //     mainAxisAlignment: MainAxisAlignment.center,
-    //     crossAxisAlignment: CrossAxisAlignment.center,
-    //     children: [
-    //       ElevatedButton(
-    //         onPressed: () {
-    //           _imgFromCamera();
-    //           Get.back();
-    //         },
-    //         child: const Text('Camera'),
-    //       ),
-    //       const SizedBox(width: 5),
-    //       ElevatedButton(
-    //         onPressed: () {
-    //           _imgFromGallery();
-    //           Get.back();
-    //         },
-    //         child: const Text('Gallery'),
-    //       ),
-    //     ],
-    //   ),
-    // ).show();
   }
 
   void _imgFromGallery() {
@@ -819,7 +786,7 @@ class _RegisterViewState extends State<RegisterView> {
         child: Container(
           alignment: Alignment.center,
           margin: const EdgeInsets.all(18.0),
-          width: 1100,
+          width: 1200,
           height: 800,
           padding: const EdgeInsets.all(8.0),
           decoration: BoxDecoration(
@@ -834,19 +801,83 @@ class _RegisterViewState extends State<RegisterView> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      _buildImage(context),
+                      _buildWebImage(context),
                       _buildForm(context),
                     ],
                   ),
                 ),
               ),
               Expanded(
-                  child: Center(
-                      child: Image.asset('assets/images/login_1.png',
-                          height: 500, width: 500, fit: BoxFit.cover))),
+                  child: Row(
+                    children: [
+                      Center(
+                          child: Image.asset('assets/images/login_1.png',
+                              height: 500, width: 500, fit: BoxFit.cover)),
+                      Expanded(
+                        child: Container(
+                          width: 200,
+                        ),
+                      )
+                    ],
+                  )),
+
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  _buildWebImage(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.only(top: 20),
+      child: Stack(
+        children: [
+          CircleAvatar(
+            radius: 70,
+            backgroundColor: Colors.grey[300],
+            child: _isImageLoaded
+                ? ClipRRect(
+                    borderRadius: BorderRadius.circular(70),
+                    child: Image.file(
+                      controller.image!,
+                      width: 140,
+                      height: 140,
+                      fit: BoxFit.cover,
+                    ),
+                  )
+                : ClipRRect(
+                    borderRadius: BorderRadius.circular(70),
+                    child: Image.asset(
+                      'assets/images/bg.png',
+                      width: 140,
+                      height: 140,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+          ),
+          Positioned(
+            bottom: 0,
+            right: 0,
+            child: Container(
+              height: 40,
+              width: 40,
+              decoration: BoxDecoration(
+                color: Colors.blue,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: IconButton(
+                icon: const Icon(
+                  Icons.camera_alt,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  // _showPicker(context);
+                },
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

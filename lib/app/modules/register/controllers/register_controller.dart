@@ -1,3 +1,4 @@
+
 import 'dart:io';
 
 import 'package:country_picker/country_picker.dart';
@@ -24,6 +25,7 @@ class RegisterController extends GetxController {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   File? image;
   ImagePicker? imagePicker;
+  Uint8List selectedImage = Uint8List(0);
   String imageUrl = '';
 
 
@@ -114,3 +116,4 @@ class RegisterController extends GetxController {
   }
 
 }
+
