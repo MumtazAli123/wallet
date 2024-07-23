@@ -42,7 +42,6 @@ class _ShopsViewState extends State<ShopsView> {
       length: 5,
       child: Scaffold(
         floatingActionButton: FloatingActionButton.extended(
-
           backgroundColor: Colors.green,
           onPressed: () {
             _buildDialogProducts(context);
@@ -104,78 +103,74 @@ class _ShopsViewState extends State<ShopsView> {
       //   },
       // ),
       child: StreamBuilder<QuerySnapshot>(
-          stream: controller.allVehicleStream(),
-          builder: (context, snapshot) {
-            try {
-              if (snapshot.hasData) {
-                return ListView.builder(
-                  itemCount: snapshot.data!.docs.length,
-                  itemBuilder: (context, index) {
-                    var data = snapshot.data!.docs[index].data() as Map;
-                    VehicleModel model =
-                    VehicleModel.fromJson(data as Map<String, dynamic>);
-                    return _buildShopItem(model.toJson());
-                  },
-                );
-              } else {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              }
-            } catch (e) {
+        stream: controller.allVehicleStream(),
+        builder: (context, snapshot) {
+          try {
+            if (snapshot.hasData) {
+              return ListView.builder(
+                itemCount: snapshot.data!.docs.length,
+                itemBuilder: (context, index) {
+                  var data = snapshot.data!.docs[index].data() as Map;
+                  VehicleModel model =
+                      VehicleModel.fromJson(data as Map<String, dynamic>);
+                  return _buildShopItem(model.toJson());
+                },
+              );
+            } else {
               return const Center(
                 child: CircularProgressIndicator(),
               );
             }
-          },
-        ),
-
-
-
-    );
-  }
-
-  _buildCategories( ) {
-    return Center(
-      child: SizedBox(
-        height: 50,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Expanded(child: _buildCategoryItem(
-              onTap: () {
-                // controller.fetchShops();
-              },
-                name: 'All', selected: true
-            )),
-            SizedBox(width: 10.0),
-            Expanded(child: _buildCategoryItem(
-              onTap: () {
-                Get.to(() => ShowRealstate());
-
-              },
-                name: 'Real State')),
-            SizedBox(width: 10.0),
-            Expanded(child: _buildCategoryItem(
-              onTap: () {
-                Get.toNamed('/vehicle');
-              },
-                name: 'Vehicle')),
-            SizedBox(width: 10.0),
-            Expanded(child: _buildCategoryItem(
-                onTap: () {
-                  Get.toNamed('/products');
-                },
-                name: 'Products')),
-            // Expanded(child: _buildCategoryItem(name: 'Others')),
-
-          ]
-        ),
+          } catch (e) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
       ),
     );
   }
 
-  _buildShopItem( model) {
+  _buildCategories() {
+    return Center(
+      child: SizedBox(
+        height: 50,
+        child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+          Expanded(
+              child: _buildCategoryItem(
+                  onTap: () {
+                    // controller.fetchShops();
+                  },
+                  name: 'All',
+                  selected: true)),
+          SizedBox(width: 10.0),
+          Expanded(
+              child: _buildCategoryItem(
+                  onTap: () {
+                    Get.to(() => ShowRealstate());
+                  },
+                  name: 'Real State')),
+          SizedBox(width: 10.0),
+          Expanded(
+              child: _buildCategoryItem(
+                  onTap: () {
+                    Get.toNamed('/vehicle');
+                  },
+                  name: 'Vehicle')),
+          SizedBox(width: 10.0),
+          Expanded(
+              child: _buildCategoryItem(
+                  onTap: () {
+                    Get.toNamed('/products');
+                  },
+                  name: 'Products')),
+          // Expanded(child: _buildCategoryItem(name: 'Others')),
+        ]),
+      ),
+    );
+  }
+
+  _buildShopItem(model) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Column(
@@ -199,7 +194,7 @@ class _ShopsViewState extends State<ShopsView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Name: ${model['showroomName']}',
+                      'Showroom: ${model['showroomName']}',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -209,13 +204,9 @@ class _ShopsViewState extends State<ShopsView> {
                       "Vehicle ${model['vehicleName']}\nModel: ${model["vehicleModel"]} \n ${model['status']}",
                       style: TextStyle(
                         fontSize: 14,
-                        color: Colors.grey,
+                        // color: Colors.grey,
                       ),
                     ),
-                    Text(
-                      "Upload ${(GetTimeAgo.parse(DateTime.parse(model['updatedDate'].toDate().toString()).toLocal()))}",
-                    ),
-
                     Text(
                       'Price: ${model['vehiclePrice']}',
                       style: TextStyle(
@@ -223,7 +214,9 @@ class _ShopsViewState extends State<ShopsView> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-
+                    Text(
+                      "Upload ${(GetTimeAgo.parse(DateTime.parse(model['updatedDate'].toDate().toString()).toLocal()))}",
+                    ),
                     SizedBox(height: 10),
                     Row(
                       children: [
@@ -271,44 +264,55 @@ class _ShopsViewState extends State<ShopsView> {
   }
 
   void _buildDialogProducts(BuildContext context) {
-    showDialog(context: context,
+    showDialog(
+        context: context,
         builder: (context) {
           return GFAlert(
             title: 'Add Product',
             content: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children:[
-                Divider(),
-                SizedBox(height: 10.0),
-                // Add Real state
-                TextButton.icon(
-                    onPressed: () {
-                      Get.toNamed('/realstate');
-                    },
-                    icon: Icon(Icons.real_estate_agent, color: Get.theme.primaryColor,),
-                    label: wText('Add Real state', color: Get.theme.primaryColor)),
-                SizedBox(height: 10.0),
-                // Add Car
-                TextButton.icon(
-                    onPressed: () {
-                      Get.to(() => ShowVehicleView());
-                    },
-                    icon: Icon(Icons.car_rental, color: Get.theme.primaryColor,),
-                    label: wText('Add Vehicle', color: Get.theme.primaryColor)),
-                SizedBox(height: 10.0),
-                // Add Product
-                TextButton.icon(
-                    onPressed: () {
-                      Get.to(() => ShowProductsView());
-                    },
-                    icon: Icon(Icons.shopping_cart, color: Get.theme.primaryColor,),
-                    label: wText('Add Products', color: Get.theme.primaryColor)),
-                SizedBox(height: 10.0),
-
-              ]
-            ),
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Divider(),
+                  SizedBox(height: 10.0),
+                  // Add Real state
+                  TextButton.icon(
+                      onPressed: () {
+                        Get.toNamed('/realstate');
+                      },
+                      icon: Icon(
+                        Icons.real_estate_agent,
+                        color: Get.theme.primaryColor,
+                      ),
+                      label: wText('Add Real state',
+                          color: Get.theme.primaryColor)),
+                  SizedBox(height: 10.0),
+                  // Add Car
+                  TextButton.icon(
+                      onPressed: () {
+                        Get.to(() => ShowVehicleView());
+                      },
+                      icon: Icon(
+                        Icons.car_rental,
+                        color: Get.theme.primaryColor,
+                      ),
+                      label:
+                          wText('Add Vehicle', color: Get.theme.primaryColor)),
+                  SizedBox(height: 10.0),
+                  // Add Product
+                  TextButton.icon(
+                      onPressed: () {
+                        Get.to(() => ShowProductsView());
+                      },
+                      icon: Icon(
+                        Icons.shopping_cart,
+                        color: Get.theme.primaryColor,
+                      ),
+                      label:
+                          wText('Add Products', color: Get.theme.primaryColor)),
+                  SizedBox(height: 10.0),
+                ]),
             bottomBar: GFButtonBar(
               children: [
                 GFButton(
@@ -321,7 +325,6 @@ class _ShopsViewState extends State<ShopsView> {
               ],
             ),
           );
-        }
-    );
+        });
   }
 }
