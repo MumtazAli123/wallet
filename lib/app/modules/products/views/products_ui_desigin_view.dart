@@ -7,11 +7,11 @@ class ProductsUiDesiginView extends GetView {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('ProductsUiDesiginView'),
+        title: const Text('ProductsUiDesiginView'),
         centerTitle: true,
       ),
-      body: Center(
-        child: Text(
+      body: const Center(
+        child: const Text(
           'ProductsUiDesiginView is working',
           style: TextStyle(fontSize: 20),
         ),

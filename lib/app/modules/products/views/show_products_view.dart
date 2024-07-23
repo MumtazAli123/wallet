@@ -10,10 +10,10 @@ class ShowProductsView extends GetView<ProductsController> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('ShowProductsView'),
+        title: const Text('ShowProductsView'),
         centerTitle: true,
       ),
-      body: Center(
+      body: const Center(
         child: Text(
           'ShowProductsView is working',
           style: TextStyle(fontSize: 20),

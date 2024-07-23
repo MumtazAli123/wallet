@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/app/modules/home/controllers/home_controller.dart';
 import 'package:wallet/widgets/privacy_policy.dart';
 
@@ -20,6 +21,8 @@ class _MyDrawerState extends State<MyDrawer> {
   String email = sharedPreferences!.getString('email') ?? '';
   String profileImage = sharedPreferences!.getString('image') ?? "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.cleanpng.com%2Fpng-computer-icons-user-profile-person-730537%2F&psig=AOvVaw1QX8MH26kPfq4tS6bH9YVm&ust=1716047055827000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCLjV586DlYYDFQAAAAAdAAAAABAJ";
   String phoneNumber = sharedPreferences!.getString('phone') ?? '';
+
+  var url_launcher = Get.find<HomeController>();
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +72,9 @@ class _MyDrawerState extends State<MyDrawer> {
           leading: const Icon(Icons.email, color: Colors.orange),
           title:  Text(email),
           onTap: () {
-            Navigator.of(context).pushNamed('/home');
+            // url_launcher.launch('mailto:$email');
+            launch('mailto:$email');
+
           },
         ),
         ListTile(
@@ -84,7 +89,7 @@ class _MyDrawerState extends State<MyDrawer> {
           leading: const Icon(Icons.reorder),
           title: const Text('New Orders'),
           onTap: () {
-            Navigator.of(context).pushNamed('/orders');
+            // Navigator.of(context).pushNamed('/orders');
           },
         ),
         ListTile(
@@ -109,28 +114,13 @@ class _MyDrawerState extends State<MyDrawer> {
             Get.toNamed('/wallet');
           },
         ),
-        ListTile(
-          leading: const Icon(Icons.local_taxi),
-          title: const Text('Taxi'),
-          onTap: () {
-            Navigator.of(context).pushNamed('/taxi');
-          },
-        ),
-        Divider(
-          color: Theme.of(context).primaryColor,
-          thickness: 2,
-        ),
          ListTile(
             leading: const Icon(Icons.settings),
             title: const Text('Settings'),
             onTap: () {
-              Navigator.of(context).pushNamed('/gas');
+              // Navigator.of(context).pushNamed('/gas');
             },
           ),
-        Divider(
-          color: Theme.of(context).primaryColor,
-          thickness: 2,
-        ),
         ListTile(
           leading: const Icon(Icons.logout),
           title: const Text('Logout'),

@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:wallet/app/modules/realstate/views/realstate_ui_desigin.dart';
-import 'package:wallet/app/modules/realstate/views/tabbar/realstate_view_page.dart';
 import 'package:wallet/app/modules/realstate/views/upload_realstate_view.dart';
 import 'package:wallet/models/realstate_model.dart';
 import 'package:wallet/widgets/mix_widgets.dart';

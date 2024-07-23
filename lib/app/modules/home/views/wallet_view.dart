@@ -537,6 +537,7 @@ class _DigitalWalletViewState extends State<DigitalWalletView> {
         print(e);
       }
     }
+
   }
 
   void _buildDialog(name, amount, type, date, phone, description) {

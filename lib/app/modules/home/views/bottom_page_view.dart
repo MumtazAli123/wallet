@@ -5,19 +5,15 @@ import 'package:fancy_bottom_navigation_plus/fancy_bottom_navigation_plus.dart';
 
 import 'package:get/get.dart';
 import 'package:wallet/app/modules/home/views/mob_home_view.dart';
-import 'package:wallet/app/modules/home/views/wallet_view.dart';
-import 'package:wallet/app/modules/home/views/web_home_view.dart';
 import 'package:wallet/app/modules/shops/views/shops_view.dart';
 import 'package:wallet/global/global.dart';
 import 'package:wallet/widgets/my_drawer.dart';
 
-import '../../../../models/user_model.dart';
 import '../../../../notification/notification_page.dart';
 import '../../../../qrcode/qrcode.dart';
 import '../../../../search/search_screen.dart';
 import '../../../../user_profile/user_profile.dart';
 import '../../../../widgets/mix_widgets.dart';
-import '../../../../widgets/slider_pics.dart';
 import '../controllers/home_controller.dart';
 
 class BottomPageView extends GetView {
@@ -31,7 +27,7 @@ class BottomPageView extends GetView {
       drawer: MyDrawer(),
       // appbar 3rd index not show
       appBar: AppBar(
-        title: Text('PaySaw'),
+        title: wText('ZubiPay'.tr),
         actions: [
           IconButton(
             onPressed: () {

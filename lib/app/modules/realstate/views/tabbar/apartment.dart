@@ -7,7 +7,6 @@ import 'package:getwidget/components/button/gf_button.dart';
 import 'package:getwidget/components/button/gf_button_bar.dart';
 import 'package:getwidget/components/card/gf_card.dart';
 import 'package:getwidget/components/list_tile/gf_list_tile.dart';
-import 'package:getwidget/components/rating/gf_rating.dart';
 import 'package:like_button/like_button.dart';
 import 'package:wallet/app/modules/realstate/views/tabbar/realstate_view_page.dart';
 

@@ -9,10 +9,10 @@ class UploadProductsView extends GetView {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('UploadProductsView'),
+        title: const Text('UploadProductsView'),
         centerTitle: true,
       ),
-      body: Center(
+      body: const Center(
         child: Text(
           'UploadProductsView is working',
           style: TextStyle(fontSize: 20),

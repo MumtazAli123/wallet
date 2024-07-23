@@ -39,7 +39,6 @@ class _RegisterViewState extends State<RegisterView> {
   bool isLoading = false;
   var hintText = 'Email';
 
-  File? _pickedImage;
 
   fromValidation() {
     if (controller.emailController.text.isEmpty) {
@@ -943,7 +942,6 @@ class _RegisterViewState extends State<RegisterView> {
           var selected = File(value.path);
           setState(() {
             controller.selectedWebImage = selected.readAsBytesSync();
-            _pickedImage = File('a');
             _isImageLoaded = true;
           });
         } else {

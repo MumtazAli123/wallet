@@ -14,7 +14,6 @@ import 'package:wallet/widgets/mix_widgets.dart';
 
 import '../../../../models/address_model.dart';
 import '../../save_friends/controllers/save_friends_controller.dart';
-import '../../save_friends/views/friends_design.dart';
 import '../../save_friends/views/save_friends_view.dart';
 import '../controllers/send_money_controller.dart';
 

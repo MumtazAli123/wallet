@@ -54,12 +54,14 @@ dependencies:
   like_button: any
   transparent_image: ^2.0.1
   file_picker: ^8.0.6
+  flutter_animate: any
 
 
 
   flutter: 
     sdk: flutter
   image_picker_web: ^4.0.0
+  flip_card: ^0.7.0
 
 dev_dependencies: 
   flutter_lints: ^4.0.0
@@ -81,6 +83,7 @@ flutter:
     - assets/slider/
     - assets/icons/
     - assets/slider/2.jpg
+    - assets/wallet.jpeg
     - assets/audio/SEU4_Ride_08.wav
   uses-material-design: true
 
