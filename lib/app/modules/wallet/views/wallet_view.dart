@@ -3,9 +3,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 import 'package:get/get.dart';
 import 'package:get_time_ago/get_time_ago.dart';
+import 'package:getwidget/components/card/gf_card.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:wallet/global/global.dart';
 import 'package:wallet/widgets/currency_format.dart';
@@ -34,119 +36,112 @@ class WalletView extends GetView {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Dua"
+          "${'Wallet'.tr} ${'Balance'.tr}",
         ),
       ),
       body: SingleChildScrollView(
-        child: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/images/login.png'),
-              fit: BoxFit.cover,
-            ),
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Colors.black, Colors.blue],
-            ),
-          ),
-          child: Column(
-            children: [
-              _buildHeader(),
-              _buildContent(),
-              _buildFooter(),
-            ],
-          ),
+        child: Column(
+          children: [
+            _buildHeader(),
+            _buildContent(),
+            _buildFooter(),
+          ],
         ),
       ),
     );
   }
 
   _buildHeader() {
-    final size = MediaQuery.of(Get.context!).size;
-    return SizedBox(
-      // acquires 90% of the height of the screen
-      height: size.height * 0.9,
-      width: 600,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Container(
-            height: size.height * 0.3,
-            width: 600,
-            margin: EdgeInsets.all(10.0),
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/wallet.png'),
-                fit: BoxFit.fill,
-              ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(18.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // wText("${sharedPreferences?.getString('name')}",
-                  //     color: Colors.white, size: 20.0),
-                  SizedBox(
-                    height: 80.0,
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        StreamBuilder(
+            stream: FirebaseFirestore.instance
+                .collection('sellers')
+                .doc(user!.uid)
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                model = UserModel.fromMap(snapshot.data!.data()!);
+                return GFCard(
+                  elevation: 10,
+                  color: Get.theme.scaffoldBackgroundColor,
+                  padding: EdgeInsets.all(5.0),
+                  image: Image.network("${model!.image}", fit: BoxFit.cover,
+                    height: 200.0,
+                    width: double.infinity,),
+                  showImage: true,
+                  content: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    // crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          wText("Name: ${model!.name}", size: 14.0),
+
+                          Container(
+                            height: 18.0,
+                            width: 18.0,
+                            decoration: BoxDecoration(
+                                color: model!.status == 'approved'
+                                    ? Colors.green
+                                    : Colors.red,
+                                shape: BoxShape.circle),
+                            child: Icon(
+                              model!.status == 'approved'
+                                  ? Icons.check
+                                  : Icons.close,
+                              color: Colors.white,
+                              size: 14.0,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 10.0),
+                      wText("Balance".tr, size: 18.0),
+                      wText("Rs: ${model!.balance}", size: 30.0),
+                      Divider(),
+                      Row(
+                        children: [
+                          wText(
+                            "PKR: ${NumberToWord().convert(model!.balance!.toInt())}",
+                            size: 12.0,
+                          ),
+
+                        ],
+                      ),
+                      SizedBox(height: 10.0),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          wText("Account Number :".tr, size: 12.0),
+                          wText(
+                              "${model!.phone!.substring(0, 5)}...${model!
+                                  .phone!.substring(model!.phone!.length - 4)}"),
+                        ],
+                      ),
+                    ],
                   ),
-                  StreamBuilder(
-                      stream: FirebaseFirestore.instance
-                          .collection('sellers')
-                          .doc(user!.uid)
-                          .snapshots(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              wText(
-                                  "Balance: PKR: ${currencyFormat(double.parse(snapshot.data!['balance'].toString()))}".tr,
-                                  color: Colors.white,
-                                  size: 20.0),
-                              Divider(
-                                color: Colors.white,
-                              ),
-                              Text(
-                                NumberToWord()
-                                    .convert(snapshot.data!['balance'].toInt()),
-                                // "${model?.name}",
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.start,
-                                maxLines: 2,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 12),
-                              ),
-                              SizedBox(
-                                height: 10.0,
-                              ),
-                              wText(
-                                // show first 3 and ... last 4 digits of phone number
-                                  "Account Number: ${snapshot.data!['phone'].toString().substring(0, 5)}...${snapshot.data!['phone'].toString().substring(7, 11)}".tr,
-                                  color: Colors.white,
-                                  size: 14.0),
-                            ],
-                          );
-                        }
-                        return wText("Balance: \$0".tr,
-                            color: Colors.white, size: 20.0);
-                      })
-                ],
-              ),
-            ),
-          ),
-          _buildAddSendMoneyButton(double, model),
-          SizedBox(
-            height: 20.0,
-          ),
-          _buildRecentTransactions(),
-        ],
-      ),
+                ).animate(
+
+                ).fadeIn().slide(
+                  duration: const Duration(seconds: 5),
+                ).rotate(
+                  delay: Duration(seconds: 8),
+                  duration: const Duration(seconds: 8),
+                );
+              }
+              return wText("Balance: \$0".tr,
+                  color: Colors.white, size: 20.0);
+            }),
+        _buildAddSendMoneyButton(double, model),
+        SizedBox(
+          height: 20.0,
+        ),
+        _buildRecentTransactions(),
+      ],
     );
   }
 

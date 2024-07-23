@@ -62,11 +62,10 @@ class _BalanceCardState extends State<BalanceCard> {
   _buildBody() {
     return SafeArea(
       child: SingleChildScrollView(
-        // design GFWidet
-        child: GFCard(
-          color: Get.theme.scaffoldBackgroundColor,
-          padding: EdgeInsets.all(1.0),
-          content: Column(
+        // design card
+        child: Padding(
+          padding: const EdgeInsets.all(2.0),
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -182,9 +181,15 @@ class _BalanceCardState extends State<BalanceCard> {
           SizedBox(height: 10),
         ],
       ),
+    ).animate(
+
+    ).fadeIn().slide(
+      duration: const Duration(seconds: 5),
+    ).rotate(
+      delay: Duration(seconds: 8),
+      duration: const Duration(seconds: 8),
     );
   }
-
   _buildButton() {
     return GFCard(
       color: Get.theme.scaffoldBackgroundColor,
