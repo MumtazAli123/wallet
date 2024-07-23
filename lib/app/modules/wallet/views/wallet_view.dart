@@ -151,37 +151,6 @@ class WalletView extends GetView<HomeController> {
   }
 
   _buildAddSendMoneyButton(Type double, model) {
-    // return Padding(
-    //   padding: const EdgeInsets.all(8.0),
-    //   child: Row(
-    //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-    //     children: [
-    //       ElevatedButton(
-    //         onPressed: () {
-    //           Get.to(() => SendMoneyView());
-    //         },
-    //         style: ElevatedButton.styleFrom(
-    //           backgroundColor: Colors.blue,
-    //         ),
-    //         child: controller.isLoading.value
-    //             ? CircularProgressIndicator()
-    //             : wText('Send Money'.tr , color: Colors.white),
-    //       ),
-    //       ElevatedButton(
-    //         onPressed: () {
-    //           // Get.toNamed('/add-money');
-    //           _buildDialogAddMoney();
-    //         },
-    //         style: ElevatedButton.styleFrom(
-    //           backgroundColor: Colors.green,
-    //         ),
-    //         child: controller.isLoading.value
-    //             ? CircularProgressIndicator()
-    //             : wText('Add Money'.tr, color: Colors.white),
-    //       ),
-    //     ],
-    //   ),
-    // );
     return Padding(
       padding: const EdgeInsets.only(left: 8.0, right: 8.0),
       child: GridView(gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
@@ -217,7 +186,7 @@ class WalletView extends GetView<HomeController> {
         ],
       ),
     );
-    
+
   }
 
   _buildRecentTransactions() {
