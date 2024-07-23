@@ -12,6 +12,7 @@ class VehicleModel {
   String? status;
   Timestamp? updatedDate;
   String? vehicleAmenities;
+
   String? vehicleBodyType;
   String? vehicleColor;
   String? vehicleCondition;

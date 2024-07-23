@@ -1,19 +1,22 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:get_time_ago/get_time_ago.dart';
 import 'package:getwidget/components/alert/gf_alert.dart';
 import 'package:getwidget/components/avatar/gf_avatar.dart';
 import 'package:getwidget/components/button/gf_button.dart';
 import 'package:getwidget/components/button/gf_button_bar.dart';
 import 'package:getwidget/shape/gf_avatar_shape.dart';
 
+import '../../../../models/vehicle_model.dart';
 import '../../../../widgets/mix_widgets.dart';
 import '../../products/views/show_products_view.dart';
 import '../../realstate/views/show_realstate.dart';
+import '../../vehicle/controllers/vehicle_controller.dart';
 import '../../vehicle/views/show_vehicle_view.dart';
-import '../controllers/shops_controller.dart';
 
 class ShopsView extends StatefulWidget {
   const ShopsView({super.key});
@@ -23,14 +26,14 @@ class ShopsView extends StatefulWidget {
 }
 
 class _ShopsViewState extends State<ShopsView> {
-  final controller = Get.put(ShopsController());
+  final controller = Get.put(VehicleController());
   bool isLoading = false;
   final Dio dio = Dio();
 
   @override
   void initState() {
     super.initState();
-    controller.fetchShops();
+    controller.allVehicleStream();
   }
 
   @override
@@ -94,16 +97,45 @@ class _ShopsViewState extends State<ShopsView> {
 
   _buildShops() {
     return Expanded(
-      child: ListView.builder(
-        itemCount: 10,
-        itemBuilder: (context, index) {
-          return _buildShopItem();
-        },
-      ),
+      // child: ListView.builder(
+      //   itemCount: 10,
+      //   itemBuilder: (context, index) {
+      //     return _buildShopItem();
+      //   },
+      // ),
+      child: StreamBuilder<QuerySnapshot>(
+          stream: controller.allVehicleStream(),
+          builder: (context, snapshot) {
+            try {
+              if (snapshot.hasData) {
+                return ListView.builder(
+                  itemCount: snapshot.data!.docs.length,
+                  itemBuilder: (context, index) {
+                    var data = snapshot.data!.docs[index].data() as Map;
+                    VehicleModel model =
+                    VehicleModel.fromJson(data as Map<String, dynamic>);
+                    return _buildShopItem(model.toJson());
+                  },
+                );
+              } else {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
+            } catch (e) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
+        ),
+
+
+
     );
   }
 
-  _buildCategories() {
+  _buildCategories( ) {
     return Center(
       child: SizedBox(
         height: 50,
@@ -112,7 +144,7 @@ class _ShopsViewState extends State<ShopsView> {
           children: [
             Expanded(child: _buildCategoryItem(
               onTap: () {
-                controller.fetchShops();
+                // controller.fetchShops();
               },
                 name: 'All', selected: true
             )),
@@ -143,7 +175,7 @@ class _ShopsViewState extends State<ShopsView> {
     );
   }
 
-  _buildShopItem() {
+  _buildShopItem( model) {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       child: Column(
@@ -156,7 +188,7 @@ class _ShopsViewState extends State<ShopsView> {
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10),
                   image: DecorationImage(
-                    image: AssetImage('assets/images/bg.png'),
+                    image: NetworkImage(model['image']),
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -167,19 +199,31 @@ class _ShopsViewState extends State<ShopsView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'Shop Name',
+                      'Name: ${model['showroomName']}',
                       style: TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
                     Text(
-                      'This is the cheapest shop in town\nYou can find anything you want here\nWe are open 24/7\nCome and visit us',
+                      "Vehicle ${model['vehicleName']}\nModel: ${model["vehicleModel"]} \n ${model['status']}",
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.grey,
                       ),
                     ),
+                    Text(
+                      "Upload ${(GetTimeAgo.parse(DateTime.parse(model['updatedDate'].toDate().toString()).toLocal()))}",
+                    ),
+
+                    Text(
+                      'Price: ${model['vehiclePrice']}',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+
                     SizedBox(height: 10),
                     Row(
                       children: [
