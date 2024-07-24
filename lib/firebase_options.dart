@@ -52,7 +52,7 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyAv8WHaTiE-7ifD-ZmSafH5QDJTbtPS2mw',
-    appId: '1:143539298390:android:49bfd4e8c28fd9ead41bf7',
+    appId: '1:143539298390:android:0d3768ded28cab19d41bf7',
     messagingSenderId: '143539298390',
     projectId: 'zubi-pay',
     storageBucket: 'zubi-pay.appspot.com',

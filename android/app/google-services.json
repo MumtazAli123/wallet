@@ -51,6 +51,42 @@
     },
     {
       "client_info": {
+        "mobilesdk_app_id": "1:143539298390:android:0d3768ded28cab19d41bf7",
+        "android_client_info": {
+          "package_name": "com.paysaw.wallet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "143539298390-41ejqg0jbmhl03d722rcug0lv9bs7hl3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAv8WHaTiE-7ifD-ZmSafH5QDJTbtPS2mw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "143539298390-41ejqg0jbmhl03d722rcug0lv9bs7hl3.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "143539298390-0ct1l2v99e0h23bqk2otpb50u40alu08.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "paysaw.com.paysaw"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:143539298390:android:49bfd4e8c28fd9ead41bf7",
         "android_client_info": {
           "package_name": "paysaw.com.wallet"

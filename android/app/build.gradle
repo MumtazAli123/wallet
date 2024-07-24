@@ -50,7 +50,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "paysaw.com.wallet"
+        applicationId "com.paysaw.chatty"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion 23
@@ -62,17 +62,17 @@ android {
 
     signingConfigs {
         release {
-            storeFile file("zubiapp.jks") //check that the file exists
-            storePassword "009900"
-            keyAlias "zubipay"
-            keyPassword "009900"
+            storeFile file("wallet sign key.jks") //check that the file exists
+            storePassword "wallet"
+            keyAlias "Wallet"
+            keyPassword "wallet"
         }
     }
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig signingConfigs.release
+            signingConfig signingConfigs.debug
         }
 }
 

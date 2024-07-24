@@ -37,7 +37,7 @@ eText(String s, {required Color color}) {
 aText(String text, {Color? color, double size = 16}) {
   return Text(
     text,
-    style: GoogleFonts.gabriela(
+    style: GoogleFonts.quando(
       fontSize: size,
       fontWeight: FontWeight.bold,
       color: color,

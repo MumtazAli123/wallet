@@ -576,6 +576,7 @@ class _UploadVehicleViewState extends State<UploadVehicleView> {
   wTextField({required TextEditingController controller, required String keyboardType, required String labelText, required String hintText, required IconData prefixIcon}) {
     return TextField(
       controller: controller,
+
       // keyboardType: when number show done on keyboard
       keyboardType: keyboardType == "number" ? TextInputType.number : TextInputType.text,
       decoration: InputDecoration(

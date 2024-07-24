@@ -17,6 +17,7 @@ import '../../products/views/show_products_view.dart';
 import '../../realstate/views/show_realstate.dart';
 import '../../vehicle/controllers/vehicle_controller.dart';
 import '../../vehicle/views/show_vehicle_view.dart';
+import '../../vehicle/views/vehicle_page_view.dart';
 
 class ShopsView extends StatefulWidget {
   const ShopsView({super.key});
@@ -171,66 +172,73 @@ class _ShopsViewState extends State<ShopsView> {
   }
 
   _buildShopItem(model) {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              Container(
-                width: 100,
-                height: 100,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  image: DecorationImage(
-                    image: NetworkImage(model['image']),
-                    fit: BoxFit.cover,
+    return GestureDetector(
+      onTap: () {
+        Get.to(() => VehiclePageViewView(
+            vModel: VehicleModel.fromJson(model), doc: model.toString()));
+      },
+      child: Container(
+        color: Colors.red[50],
+        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Container(
+                  width: 100,
+                  height: 100,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    image: DecorationImage(
+                      image: NetworkImage(model['image']),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(width: 10),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Showroom: ${model['showroomName']}',
-                      style: TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                SizedBox(width: 10),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Showroom: ${model['showroomName']}',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    Text(
-                      "Vehicle ${model['vehicleName']}\nModel: ${model["vehicleModel"]} \n ${model['status']}",
-                      style: TextStyle(
-                        fontSize: 14,
-                        // color: Colors.grey,
+                      Text(
+                        "Vehicle ${model['vehicleName']}\nModel: ${model["vehicleModel"]} \n ${model['status']}",
+                        style: TextStyle(
+                          fontSize: 14,
+                          // color: Colors.grey,
+                        ),
                       ),
-                    ),
-                    Text(
-                      'Price: ${model['vehiclePrice']}',
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                      Text(
+                        'Price: ${model['vehiclePrice']}',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    Text(
-                      "Upload ${(GetTimeAgo.parse(DateTime.parse(model['updatedDate'].toDate().toString()).toLocal()))}",
-                    ),
-                    SizedBox(height: 10),
-                    Row(
-                      children: [
-                        ratingBar(5),
-                        SizedBox(width: 10),
-                      ],
-                    ),
-                  ],
+                      Text(
+                        "Upload: ${(GetTimeAgo.parse(DateTime.parse(model['updatedDate'].toDate().toString()).toLocal()))}",
+                      ),
+                      SizedBox(height: 10),
+                      Row(
+                        children: [
+                          ratingBar(5),
+                          SizedBox(width: 10),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
-          Divider(),
-        ],
+              ],
+            ),
+            Divider(),
+          ],
+        ),
       ),
     );
   }

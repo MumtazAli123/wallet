@@ -179,6 +179,8 @@ class VehicleController extends GetxController {
 
   final date = DateTime.now();
 
+  bool selected = false;
+
   final ImagePicker _picker = ImagePicker();
   List<XFile>? images = [];
   List<String> imageUrlPath = [];
@@ -207,7 +209,6 @@ class VehicleController extends GetxController {
     vehicleNameController = TextEditingController();
     vehiclePriceController = TextEditingController();
     vehicleDescriptionController = TextEditingController();
-    vehicleKmController = TextEditingController();
   }
 
   @override
