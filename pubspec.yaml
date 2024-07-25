@@ -38,7 +38,7 @@ dependencies:
   date_picker_plus: ^4.1.0
   share_plus: 9.0.0
   screenshot: 3.0.0
-  path_provider: ^2.1.1
+  path_provider: any
   image_gallery_saver: 2.0.3
   dio: ^5.5.0+1
   permission_handler: 11.3.1

@@ -4,23 +4,18 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:getwidget/components/button/gf_button.dart';
-import 'package:getwidget/components/button/gf_button_bar.dart';
-import 'package:getwidget/components/card/gf_card.dart';
-import 'package:getwidget/components/list_tile/gf_list_tile.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:wallet/app/modules/vehicle/controllers/vehicle_controller.dart';
 import 'package:wallet/app/modules/vehicle/views/upload_vehicle_view.dart';
+import 'package:wallet/app/modules/vehicle/views/vehicle_page_view.dart';
 
 import '../../../../models/vehicle_model.dart';
 import '../../../../widgets/mix_widgets.dart';
 
 class ShowVehicleView extends GetView<VehicleController> {
-  ShowVehicleView({super.key});
-
-  @override
-  VehicleController controller = Get.put(VehicleController());
+  const ShowVehicleView({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +89,9 @@ class ShowVehicleView extends GetView<VehicleController> {
 
   wBuildVehicleItem(VehicleModel model) {
     return GFCard(
-      image: Image.network(model.image!, height: 300, width: double.infinity, fit: BoxFit.cover),
+      // image list tile
+
+      image: Image.network( model.image!, fit: BoxFit.cover, width: double.infinity, height: 200,),
       showImage: true,
       title: GFListTile(
         icon: Icon(Icons.directions_car),
@@ -105,13 +102,30 @@ class ShowVehicleView extends GetView<VehicleController> {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ListTile(
-            leading: Icon(Icons.money),
-            title: aText("Price: ${model.vehiclePrice!}"),
-          ),
+          // get multiple images
+          // SizedBox(
+          //   height: 200,
+          //   child: GFCarousel(
+          //     autoPlay: true,
+          //     items: model.imagePath!.map((url) {
+          //       return Container(
+          //         margin: EdgeInsets.all(8.0),
+          //         decoration: BoxDecoration(
+          //           borderRadius: BorderRadius.circular(8),
+          //           color: Colors.grey,
+          //           image: DecorationImage(
+          //             image: NetworkImage(url),
+          //             fit: BoxFit.cover,
+          //           ),
+          //         ),
+          //       );
+          //     }).toList(),
+          //   ),
+          // ),
           ListTile(
             leading: Icon(Icons.directions_car),
-            title: aText("Km: ${model.vehicleKm!}"),
+            title: aText("Vehicle: ${model.vehicleType!}"),
+            subtitle: aText("For: ${model.vehicleStatus!}\nRs: ${model.vehiclePrice!}"),
           ),
         ],
       ),
@@ -119,7 +133,11 @@ class ShowVehicleView extends GetView<VehicleController> {
         children: <Widget>[
           GFButton(
             onPressed: () {
-              // Get.to(() => RealstateViewPage(
+              Get.to(() => VehiclePageView(
+                    vModel: model,
+                    doc: '',
+                  ));
+
               //   rsModel: RealStateModel.fromJson(widget.model!.toJson()), doc: '',));
             },
             text: 'View',
@@ -143,12 +161,12 @@ class ShowVehicleView extends GetView<VehicleController> {
           ),
         ],
       ),
-
     );
   }
+
   void _buildAlertDialog(id) {
     QuickAlert.show(
-      // delete dialog
+        // delete dialog
         context: Get.context!,
         type: QuickAlertType.warning,
         title: 'Delete Vehicle',
@@ -179,9 +197,7 @@ class ShowVehicleView extends GetView<VehicleController> {
               ],
             ),
           ],
-        )
-
-    );
+        ));
   }
 
 }

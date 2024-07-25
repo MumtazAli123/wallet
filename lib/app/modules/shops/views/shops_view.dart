@@ -174,11 +174,11 @@ class _ShopsViewState extends State<ShopsView> {
   _buildShopItem(model) {
     return GestureDetector(
       onTap: () {
-        Get.to(() => VehiclePageViewView(
+        Get.to(() => VehiclePageView(
             vModel: VehicleModel.fromJson(model), doc: model.toString()));
       },
       child: Container(
-        color: Colors.red[50],
+        color: Get.theme.primaryColor.withOpacity(0.1),
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Column(
           children: [
@@ -190,7 +190,7 @@ class _ShopsViewState extends State<ShopsView> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(10),
                     image: DecorationImage(
-                      image: NetworkImage(model['image']),
+                      image: NetworkImage(model['image'].toString()),
                       fit: BoxFit.cover,
                     ),
                   ),

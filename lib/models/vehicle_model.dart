@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class VehicleModel {
   String? email;
+  final List<String>? imagePath;
   String? image;
   int? likeCount;
   String? phone;
@@ -12,7 +13,6 @@ class VehicleModel {
   String? status;
   Timestamp? updatedDate;
   String? vehicleAmenities;
-
   String? vehicleBodyType;
   String? vehicleColor;
   String? vehicleCondition;
@@ -29,6 +29,7 @@ class VehicleModel {
 
   VehicleModel({
     this.email,
+    this.imagePath,
     this.image,
     this.likeCount,
     this.phone,
@@ -57,6 +58,7 @@ class VehicleModel {
   factory VehicleModel.fromJson(Map<String, dynamic> json) {
     return VehicleModel(
       email: json['email'],
+      imagePath: List<String>.from(json['imagePath']),
       image: json['image'],
       likeCount: json['likeCount'],
       phone: json['phone'],
@@ -86,6 +88,7 @@ class VehicleModel {
   Map<String, dynamic> toJson() {
     return {
       'email': email,
+      'imagePath': List<dynamic>.from(imagePath!),
       'image': image,
       'likeCount': likeCount,
       'phone': phone,

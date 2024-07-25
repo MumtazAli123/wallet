@@ -50,7 +50,7 @@ Widget wBuildVehicleCard(doc) {
   bool isDarkMode = Get.isDarkMode;
   return GestureDetector(
     onTap: () {
-      Get.to(() => VehiclePageViewView(
+      Get.to(() => VehiclePageView(
           vModel: VehicleModel.fromJson(doc), doc: doc.toString()
 
       ));

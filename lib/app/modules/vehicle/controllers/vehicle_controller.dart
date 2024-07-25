@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -169,7 +170,10 @@ class VehicleController extends GetxController {
   String? vehicleModelValue;
   String? vehicleBodyTypeValue;
 
-  String vehicleUniqueId = DateTime.now().millisecondsSinceEpoch.toString();
+  String vehicleUniqueId = DateTime
+      .now()
+      .millisecondsSinceEpoch
+      .toString();
 
   var fabController;
   var tabIndex = 0.obs;
@@ -180,6 +184,7 @@ class VehicleController extends GetxController {
   final date = DateTime.now();
 
   bool selected = false;
+  double? val = 0;
 
   final ImagePicker _picker = ImagePicker();
   List<XFile>? images = [];
@@ -240,7 +245,10 @@ class VehicleController extends GetxController {
     try {
       showDialog(
           context: Get.context!, builder: (context) => wAppLoading(context));
-      String imageFileName = DateTime.now().millisecondsSinceEpoch.toString();
+      String imageFileName = DateTime
+          .now()
+          .millisecondsSinceEpoch
+          .toString();
       if (imageUrlPath.isNotEmpty) {
         for (int i = 0; i < imageUrlPath.length; i++) {
           File file = File(imageUrlPath[i]);
@@ -257,7 +265,6 @@ class VehicleController extends GetxController {
           addVehicle();
         }
       }
-
     } catch (e) {
       Get.snackbar("Error", e.toString());
     }
@@ -282,6 +289,7 @@ class VehicleController extends GetxController {
         "email": sharedPreferences!.getString("email"),
         "phone": sharedPreferences!.getString("phone"),
         "image": downloadImageUrl,
+        "imagePath": imageUrlPath,
         "vehicleModel": vehicleModelValue,
         "vehicleType": vehicleTypeValue,
         "vehicleFuelType": vehicleFuelTypeValue,
@@ -311,6 +319,7 @@ class VehicleController extends GetxController {
           "email": sharedPreferences!.getString("email"),
           "phone": sharedPreferences!.getString("phone"),
           "image": downloadImageUrl,
+          "imagePath": imageUrlPath,
           "vehicleModel": vehicleModelValue,
           "vehicleType": vehicleTypeValue,
           "vehicleFuelType": vehicleFuelTypeValue,
@@ -326,7 +335,7 @@ class VehicleController extends GetxController {
           "updatedDate": date,
         });
         // Get.back();
-        Get.to(() =>  ShowVehicleView());
+        Get.to(() => ShowVehicleView());
 
         Get.snackbar("Success", "Vehicle Added Successfully",
             backgroundColor: Colors.green, colorText: Colors.white);
@@ -385,4 +394,15 @@ class VehicleController extends GetxController {
     });
   }
 
+  getVehicleImages(String? vehicleId) {
+    final FirebaseStorage _storage = FirebaseStorage.instance;
+    var ref = _storage.ref().child("vehicle").child(vehicleId!);
+    ref.listAll().then((result) {
+      result.items.forEach((fStorage.Reference ref) {
+        ref.getDownloadURL().then((value) {
+          print(value);
+        });
+      });
+    });
+  }
 }

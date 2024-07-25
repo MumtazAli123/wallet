@@ -6,19 +6,37 @@ import 'package:get/get.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:getwidget/components/button/gf_button.dart';
 import 'package:getwidget/components/button/gf_button_bar.dart';
+import 'package:getwidget/components/carousel/gf_carousel.dart';
 import 'package:getwidget/shape/gf_button_shape.dart';
 import 'package:getwidget/types/gf_button_type.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/app/modules/vehicle/controllers/vehicle_controller.dart';
 import 'package:wallet/models/vehicle_model.dart';
+import 'package:wallet/widgets/currency_format.dart';
 
 import '../../../../widgets/mix_widgets.dart';
 
-class VehiclePageViewView extends GetView<VehicleController> {
+class VehiclePageView extends StatefulWidget {
   final String doc;
   final VehicleModel vModel;
-  const VehiclePageViewView({super.key, required this.doc, required this.vModel});
+  const VehiclePageView({super.key, required this.doc, required this.vModel});
+
+  @override
+  State<VehiclePageView> createState() => _VehiclePageViewState();
+}
+
+class _VehiclePageViewState extends State<VehiclePageView> {
+  final controller = Get.put(VehicleController());
+
+  void urlLauncher(String url, {bool? forceSafariVC}) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +48,13 @@ class VehiclePageViewView extends GetView<VehicleController> {
             GFButton(
               onPressed: () {
                 // email
-                launch('mailto:${vModel.email}' '?subject=Vehicle Inquiry&body=Hello, I am interested in your vehicle ${vModel.vehicleName}');
+                urlLauncher('mailto:${widget.vModel.email}' '?subject=Vehicle Inquiry&body=Hello, I am interested in your vehicle ${widget.vModel.vehicleName}\n'
+                    'Model: ${widget.vModel.vehicleModel} ${widget.vModel.vehicleType}\n'
+                    'Description: ${widget.vModel.vehicleDescription}\n'
+                    'Price: ${widget.vModel.vehiclePrice}\n'
+                    'Type: ${widget.vModel.vehicleTransmission}\n'
+                    'Color: ${widget.vModel.vehicleColor}'
+                    '\n\nThank you\n',);
               },
               text: 'Email',
               icon: Icon(Icons.email),
@@ -40,7 +64,7 @@ class VehiclePageViewView extends GetView<VehicleController> {
             GFButton(
               onPressed: () {
                 // call
-                launch('tel:${vModel.phone}');
+                urlLauncher('tel:${widget.vModel.phone}');
               },
               text: 'Call',
               icon: Icon(Icons.phone),
@@ -51,13 +75,14 @@ class VehiclePageViewView extends GetView<VehicleController> {
             GFButton(onPressed: () {
               // price
             },
-              text: 'Rs: ${vModel.vehiclePrice}.00',
+              // rs 1000.00, like 1m 2 hundred 3 thousand 4 hundred 5 rupees
+              text: 'Rs: ${(widget.vModel.vehiclePrice)}',
               textStyle: GoogleFonts.roboto(
-                fontSize: 24.0,
+                fontSize: 18.0,
                 fontWeight: FontWeight.bold,
                 color: Colors.green[900],
               ),
-              icon: Icon(Icons.money),
+              // icon: Icon(Icons.money),
               type: GFButtonType.outline,
               shape: GFButtonShape.pills,
             ),
@@ -68,7 +93,13 @@ class VehiclePageViewView extends GetView<VehicleController> {
         backgroundColor: Colors.green[800],
         // whatsapp
         onPressed: () {
-          launch('https://wa.me/${vModel.phone}');
+          urlLauncher('https://wa.me/${widget.vModel.phone}' '?text=Hello, I am interested in your vehicle Name: ${widget.vModel.vehicleName},'
+              '\nType: ${widget.vModel.vehicleTransmission},'
+              '\nModel: ${widget.vModel.vehicleModel}'
+              '- ${widget.vModel.vehicleType}'
+              '\nDescription: ${widget.vModel.vehicleDescription}\n'
+              'Price: ${widget.vModel.vehiclePrice}'
+              '\nColor: ${widget.vModel.vehicleColor}', forceSafariVC: false);
         },
         child: Image.asset('assets/images/whatsapp.png'),
       ),
@@ -79,6 +110,7 @@ class VehiclePageViewView extends GetView<VehicleController> {
   _buildBody() {
     return NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+
           return <Widget>[
             SliverAppBar(
               leading: Container(
@@ -105,15 +137,45 @@ class VehiclePageViewView extends GetView<VehicleController> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Text(
-                    ": ${vModel.showroomName!}",
+                    ": ${widget.vModel.showroomName!}",
                     style: const TextStyle(
                       color: Colors.white,
                     ),
                   ),
                 ),
-                background: Image.network(
-                  vModel.image.toString(),
-                  fit: BoxFit.cover,
+                background: SizedBox(
+                  height: double.infinity,
+                  child: GFCarousel(
+                    height: double.infinity,
+                    autoPlay: true,
+                    items: widget.vModel.image != null
+                        ? [widget.vModel.image!].map((url) {
+                      return Container(
+                        margin: const EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: Colors.grey,
+                          image: DecorationImage(
+                            image: NetworkImage(url),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      );
+                    }).toList()
+                        : controller.getVehicleImages(widget.vModel.image!).map((url) {
+                      return Container(
+                        margin: const EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          color: Colors.grey,
+                          image: DecorationImage(
+                            image: NetworkImage(url),
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
                 ),
               ),
             ),
@@ -128,51 +190,58 @@ class VehiclePageViewView extends GetView<VehicleController> {
           children: [
             ListTile(
               leading:  Icon(Icons.directions_car, color: Colors.blue[800]),
-              title: aText('Vehicle: ${vModel.vehicleType}'),
-              subtitle: aText('Name: ${vModel.vehicleName}\nFor : ${ vModel.vehicleStatus}'),
+              title: aText('Vehicle: ${widget.vModel.vehicleType}'),
+              subtitle: aText('Name: ${widget.vModel.vehicleName}\nFor : ${ widget.vModel.vehicleStatus}'),
             ),
             ListTile(
               // if color  then show same color icon
               leading:  Icon(Icons.money, color: Colors.blue[800],),
-              title: aText('Model: ${vModel.vehicleModel}'),
-              subtitle: aText('Color: ${vModel.vehicleColor}'
-                  '\nCondition: ${vModel.vehicleCondition}\n'
-                  '${vModel.status}'),
+              title: aText('Model: ${widget.vModel.vehicleModel}'),
+              subtitle: aText('Color: ${widget.vModel.vehicleColor}'
+                  '\nCondition: ${widget.vModel.vehicleCondition}\n'
+                  '${widget.vModel.status}'),
             ),
             ListTile(
               leading:  Icon(Icons.description, color: Colors.blue[800],),
-              title: aText('Vehicle Type: ${vModel.vehicleTransmission}'),
+              title: aText('Vehicle Type: ${widget.vModel.vehicleTransmission}'),
             ),
             ListTile(
               leading:  Icon(Icons.directions_car, color: Colors.blue[800],),
-              title: aText('Vehicle Engine: ${vModel.vehicleBodyType}'),
+              title: aText('Vehicle Engine: ${widget.vModel.vehicleBodyType}'),
             ),
             ListTile(
               leading:  Icon(Icons.money, color: Colors.blue[800],),
-              title: aText('Km: ${vModel.vehicleKm.toString()}'),
+              title: aText('Km: ${widget.vModel.vehicleKm.toString()}'),
             ),
             ListTile(
-              onTap: () {
-                // email
-                // launch('mailto:${vModel.email}' + '?subject=Vehicle Inquiry&body=Hello, I am interested in your vehicle ${vModel.vehicleName}');
-              },
               leading:  Icon(Icons.email, color: Colors.blue[800],),
-              title: aText('Vehicle Fuel: ${vModel.vehicleFuelType}'),
+              title: aText('Vehicle Fuel: ${widget.vModel.vehicleFuelType}'),
             ),
             ListTile(
               onTap: () {
                 // call
-                launch('tel:${vModel.phone}');
+                urlLauncher('tel:${widget.vModel.phone}');
               },
               leading:  Icon(Icons.description,color: Colors.blue[800]),
               title: aText('Description: '),
-              subtitle: aText('${vModel.vehicleDescription}'),
+              subtitle: aText('${widget.vModel.vehicleDescription}', size: 12.0),
+            ),
+            // price
+            ListTile(
+              leading:  Icon(Icons.money, color: Colors.blue[800],),
+              title: aText('Price: ${widget.vModel.vehiclePrice}'),
+              subtitle: aText(
+                size: 10.0,
+                // rs 1000.00, like 1m 2 hundred 3 thousand 4 hundred 5 rupees
+                NumberToWord().convert(widget.vModel.vehiclePrice.toString().isNotEmpty ? int.parse(widget.vModel.vehiclePrice.toString()) : 0),
+              )
+
             ),
             ListTile(
               leading:  Icon(Icons.date_range, color: Colors.blue[800],),
               title: aText('Vehicle Update: Time'),
               subtitle:Text (
-              "Upload: ${(GetTimeAgo.parse(DateTime.parse(vModel.updatedDate!.toDate().toString()).toLocal()))}",
+              "Upload: ${(GetTimeAgo.parse(DateTime.parse(widget.vModel.updatedDate!.toDate().toString()).toLocal()))}",
               ),
             ),
           ],
