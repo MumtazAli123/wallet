@@ -19,7 +19,6 @@ class VehicleController extends GetxController {
   TextEditingController vehiclePriceController = TextEditingController();
   TextEditingController vehicleDescriptionController = TextEditingController();
   TextEditingController vehicleKmController = TextEditingController();
-  TextEditingController searchController = TextEditingController();
 
   // vehicle type
   List<String> vehicleModel = [
@@ -200,6 +199,7 @@ class VehicleController extends GetxController {
 
   var searchList = [].obs;
 
+
   realStateStream() {
     return FirebaseFirestore.instance
         .collection("sellers")
@@ -220,7 +220,6 @@ class VehicleController extends GetxController {
     vehiclePriceController = TextEditingController();
     vehicleDescriptionController = TextEditingController();
     vehicleKmController = TextEditingController();
-    searchController = TextEditingController();
     // vehicleList.bindStream(realStateStream());
     vehicleList.value = [];
   }
@@ -236,7 +235,6 @@ class VehicleController extends GetxController {
     vehiclePriceController.dispose();
     vehicleDescriptionController.dispose();
     vehicleKmController.dispose();
-    searchController.dispose();
   }
 
   void selectMultipleImage() async {
@@ -412,26 +410,4 @@ class VehicleController extends GetxController {
     });
   }
 
-  void searchVehicleStream(String search) {
-    // search any type text in firestore collection
-    List<Map<String, dynamic>> searchList = [];
-    if (search.isNotEmpty) {
-      FirebaseFirestore.instance
-          .collection("vehicle")
-          .where((element) => element["vehicleName"]
-              .toString()
-              .toLowerCase()
-              .contains(search.toLowerCase()))
-          .get()
-          .then((value) {
-        value.docs.forEach((element) {
-          searchList.add(element.data() as Map<String, dynamic>);
-        });
-        this.searchList.value = searchList;
-      });
-    } else {
-      this.searchList.value = [];
-
-    }
-  }
 }
