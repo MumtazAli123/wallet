@@ -66,6 +66,9 @@ class _SearchScreenState extends State<SearchScreen> {
           margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
           child: Center(
             child: TextField(
+              onTap: () {
+                _searchController.clear();
+              },
               maxLength: 13,
               controller: _searchController,
               keyboardType: TextInputType.phone,

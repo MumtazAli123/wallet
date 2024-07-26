@@ -1,5 +1,9 @@
 // ignore_for_file: prefer_const_constructors , prefer_const_literals_to_create_immutables
 
+import 'dart:async';
+import 'dart:io';
+
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -10,6 +14,7 @@ import 'package:getwidget/components/carousel/gf_carousel.dart';
 import 'package:getwidget/shape/gf_button_shape.dart';
 import 'package:getwidget/types/gf_button_type.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:scoped_model/scoped_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/app/modules/vehicle/controllers/vehicle_controller.dart';
 import 'package:wallet/models/vehicle_model.dart';
@@ -37,24 +42,61 @@ class _VehiclePageViewState extends State<VehiclePageView> {
     }
   }
 
+  final FirebaseStorage _storage = FirebaseStorage.instance;
+
+  List<String> imageUrls = [];
+
+
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  Widget _buildProductsList() {
+    return ScopedModelDescendant(
+      builder: (context, child, VehicleModel model) {
+        return ListView.builder(
+          itemCount: model.vehicleType?.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+              leading: CircleAvatar(
+                backgroundImage: NetworkImage(model.image![index][0]),
+              ),
+              title: Text(model.vehicleName![index]),
+              subtitle: Text('\$${model.vehiclePrice![index].toString()}'),
+              trailing: IconButton(
+                icon: Icon(Icons.favorite_border),
+                onPressed: () {},
+                color: Colors.red,
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: Container(
-        padding:  EdgeInsets.all(18.0),
-        child:GFButtonBar(
+        padding: EdgeInsets.all(18.0),
+        child: GFButtonBar(
           children: <Widget>[
             GFButton(
               onPressed: () {
                 // email
-                urlLauncher('mailto:${widget.vModel.email}' '?subject=Vehicle Inquiry&body=Hello, I am interested in your vehicle ${widget.vModel.vehicleName}\n'
-                    'Model: ${widget.vModel.vehicleModel} ${widget.vModel.vehicleType}\n'
-                    'Description: ${widget.vModel.vehicleDescription}\n'
-                    'Price: ${widget.vModel.vehiclePrice}\n'
-                    'Type: ${widget.vModel.vehicleTransmission}\n'
-                    'Color: ${widget.vModel.vehicleColor}'
-                    '\n\nThank you\n',);
+                urlLauncher(
+                  'mailto:${widget.vModel.email}'
+                  '?subject=Vehicle Inquiry&body=Hello, I am interested in your vehicle ${widget.vModel.vehicleName}\n'
+                  'Model: ${widget.vModel.vehicleModel} ${widget.vModel.vehicleType}\n'
+                  'Description: ${widget.vModel.vehicleDescription}\n'
+                  'Price: ${widget.vModel.vehiclePrice}\n'
+                  'Type: ${widget.vModel.vehicleTransmission}\n'
+                  'Color: ${widget.vModel.vehicleColor}'
+                  '\n\nThank you\n',
+                );
               },
               text: 'Email',
               icon: Icon(Icons.email),
@@ -71,10 +113,11 @@ class _VehiclePageViewState extends State<VehiclePageView> {
               type: GFButtonType.outline,
               shape: GFButtonShape.pills,
             ),
-          //   price != null
-            GFButton(onPressed: () {
-              // price
-            },
+            //   price != null
+            GFButton(
+              onPressed: () {
+                // price
+              },
               // rs 1000.00, like 1m 2 hundred 3 thousand 4 hundred 5 rupees
               text: 'Rs: ${(widget.vModel.vehiclePrice)}',
               textStyle: GoogleFonts.roboto(
@@ -93,13 +136,16 @@ class _VehiclePageViewState extends State<VehiclePageView> {
         backgroundColor: Colors.green[800],
         // whatsapp
         onPressed: () {
-          urlLauncher('https://wa.me/${widget.vModel.phone}' '?text=Hello, I am interested in your vehicle Name: ${widget.vModel.vehicleName},'
+          urlLauncher(
+              'https://wa.me/${widget.vModel.phone}'
+              '?text=Hello, I am interested in your vehicle Name: ${widget.vModel.vehicleName},'
               '\nType: ${widget.vModel.vehicleTransmission},'
               '\nModel: ${widget.vModel.vehicleModel}'
               '- ${widget.vModel.vehicleType}'
               '\nDescription: ${widget.vModel.vehicleDescription}\n'
               'Price: ${widget.vModel.vehiclePrice}'
-              '\nColor: ${widget.vModel.vehicleColor}', forceSafariVC: false);
+              '\nColor: ${widget.vModel.vehicleColor}',
+              forceSafariVC: false);
         },
         child: Image.asset('assets/images/whatsapp.png'),
       ),
@@ -109,112 +155,96 @@ class _VehiclePageViewState extends State<VehiclePageView> {
 
   _buildBody() {
     return NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-
-          return <Widget>[
-            SliverAppBar(
-              leading: Container(
+      headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+        return <Widget>[
+          SliverAppBar(
+            leading: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(50),
+              ),
+              child: IconButton(
+                onPressed: () {
+                  Get.back();
+                },
+                icon: const Icon(Icons.close, color: Colors.white),
+              ),
+            ),
+            expandedHeight: 400.0,
+            floating: false,
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+              title: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   color: Colors.black.withOpacity(0.5),
-                  borderRadius: BorderRadius.circular(50),
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                child: IconButton(
-                  onPressed: () {
-                    Get.back();
-                  },
-                  icon:  const Icon(Icons.close, color: Colors.white),
+                child: Text(
+                  ": ${widget.vModel.showroomName!}",
+                  style: const TextStyle(
+                    color: Colors.white,
+                  ),
                 ),
               ),
-              expandedHeight: 400.0,
-              floating: false,
-              pinned: true,
-              flexibleSpace: FlexibleSpaceBar(
-                title: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.5),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: Text(
-                    ": ${widget.vModel.showroomName!}",
-                    style: const TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-                background: SizedBox(
-                  height: double.infinity,
-                  child: GFCarousel(
-                    height: double.infinity,
-                    autoPlay: true,
-                    items: widget.vModel.image != null
-                        ? [widget.vModel.image!].map((url) {
-                      return Container(
-                        margin: const EdgeInsets.all(8.0),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          color: Colors.grey,
-                          image: DecorationImage(
-                            image: NetworkImage(url),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      );
-                    }).toList()
-                        : controller.getVehicleImages(widget.vModel.image!).map((url) {
-                      return Container(
-                        margin: const EdgeInsets.all(8.0),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          color: Colors.grey,
-                          image: DecorationImage(
-                            image: NetworkImage(url),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                ),
+              background: Image.network(
+                widget.vModel.image!,
+                fit: BoxFit.cover,
               ),
             ),
-          ];
-        },
+          ),
+        ];
+      },
       body: SafeArea(
         child: ListView(
           addAutomaticKeepAlives: true,
           addRepaintBoundaries: true,
           shrinkWrap: true,
-
           children: [
             ListTile(
-              leading:  Icon(Icons.directions_car, color: Colors.blue[800]),
-              title: aText('Vehicle: ${widget.vModel.vehicleType}'),
-              subtitle: aText('Name: ${widget.vModel.vehicleName}\nFor : ${ widget.vModel.vehicleStatus}'),
+              leading: Icon(Icons.directions_car, color: Colors.blue[800]),
+              title: aText('Vehicle: ${widget.vModel.vehicleName}'),
+              subtitle: aText('For: ${widget.vModel.vehicleStatus}'),
             ),
             ListTile(
               // if color  then show same color icon
-              leading:  Icon(Icons.money, color: Colors.blue[800],),
+              leading: Icon(
+                Icons.money,
+                color: Colors.blue[800],
+              ),
               title: aText('Model: ${widget.vModel.vehicleModel}'),
               subtitle: aText('Color: ${widget.vModel.vehicleColor}'
                   '\nCondition: ${widget.vModel.vehicleCondition}\n'
                   '${widget.vModel.status}'),
             ),
             ListTile(
-              leading:  Icon(Icons.description, color: Colors.blue[800],),
-              title: aText('Vehicle Type: ${widget.vModel.vehicleTransmission}'),
+              leading: Icon(
+                Icons.description,
+                color: Colors.blue[800],
+              ),
+              title:
+                  aText('Vehicle Type: ${widget.vModel.vehicleTransmission}'),
             ),
             ListTile(
-              leading:  Icon(Icons.directions_car, color: Colors.blue[800],),
-              title: aText('Vehicle Engine: ${widget.vModel.vehicleBodyType}'),
+              leading: Icon(
+                Icons.directions_car,
+                color: Colors.blue[800],
+              ),
+              title: aText('Vehicle Body: ${widget.vModel.vehicleBodyType}'),
             ),
             ListTile(
-              leading:  Icon(Icons.money, color: Colors.blue[800],),
+              leading: Icon(
+                Icons.money,
+                color: Colors.blue[800],
+              ),
               title: aText('Km: ${widget.vModel.vehicleKm.toString()}'),
             ),
             ListTile(
-              leading:  Icon(Icons.email, color: Colors.blue[800],),
+              leading: Icon(
+                Icons.email,
+                color: Colors.blue[800],
+              ),
               title: aText('Vehicle Fuel: ${widget.vModel.vehicleFuelType}'),
             ),
             ListTile(
@@ -222,26 +252,34 @@ class _VehiclePageViewState extends State<VehiclePageView> {
                 // call
                 urlLauncher('tel:${widget.vModel.phone}');
               },
-              leading:  Icon(Icons.description,color: Colors.blue[800]),
+              leading: Icon(Icons.description, color: Colors.blue[800]),
               title: aText('Description: '),
-              subtitle: aText('${widget.vModel.vehicleDescription}', size: 12.0),
+              subtitle:
+                  aText('${widget.vModel.vehicleDescription}', size: 12.0),
             ),
             // price
             ListTile(
-              leading:  Icon(Icons.money, color: Colors.blue[800],),
-              title: aText('Price: ${widget.vModel.vehiclePrice}'),
-              subtitle: aText(
-                size: 10.0,
-                // rs 1000.00, like 1m 2 hundred 3 thousand 4 hundred 5 rupees
-                NumberToWord().convert(widget.vModel.vehiclePrice.toString().isNotEmpty ? int.parse(widget.vModel.vehiclePrice.toString()) : 0),
-              )
-
-            ),
+                leading: Icon(
+                  Icons.money,
+                  color: Colors.blue[800],
+                ),
+                title: aText('Price: ${widget.vModel.vehiclePrice}'),
+                subtitle: aText(
+                  size: 10.0,
+                  // rs 1000.00, like 1m 2 hundred 3 thousand 4 hundred 5 rupees
+                  NumberToWord().convert(
+                      widget.vModel.vehiclePrice.toString().isNotEmpty
+                          ? int.parse(widget.vModel.vehiclePrice.toString())
+                          : 0),
+                )),
             ListTile(
-              leading:  Icon(Icons.date_range, color: Colors.blue[800],),
+              leading: Icon(
+                Icons.date_range,
+                color: Colors.blue[800],
+              ),
               title: aText('Vehicle Update: Time'),
-              subtitle:Text (
-              "Upload: ${(GetTimeAgo.parse(DateTime.parse(widget.vModel.updatedDate!.toDate().toString()).toLocal()))}",
+              subtitle: Text(
+                "Upload: ${(GetTimeAgo.parse(DateTime.parse(widget.vModel.updatedDate!.toDate().toString()).toLocal()))}",
               ),
             ),
           ],

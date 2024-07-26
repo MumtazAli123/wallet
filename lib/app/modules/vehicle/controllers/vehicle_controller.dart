@@ -19,6 +19,7 @@ class VehicleController extends GetxController {
   TextEditingController vehiclePriceController = TextEditingController();
   TextEditingController vehicleDescriptionController = TextEditingController();
   TextEditingController vehicleKmController = TextEditingController();
+  TextEditingController searchController = TextEditingController();
 
   // vehicle type
   List<String> vehicleModel = [
@@ -170,10 +171,7 @@ class VehicleController extends GetxController {
   String? vehicleModelValue;
   String? vehicleBodyTypeValue;
 
-  String vehicleUniqueId = DateTime
-      .now()
-      .millisecondsSinceEpoch
-      .toString();
+  String vehicleUniqueId = DateTime.now().millisecondsSinceEpoch.toString();
 
   var fabController;
   var tabIndex = 0.obs;
@@ -198,6 +196,10 @@ class VehicleController extends GetxController {
 
   var formKey = GlobalKey<FormState>();
 
+  var search = "".obs;
+
+  var searchList = [].obs;
+
   realStateStream() {
     return FirebaseFirestore.instance
         .collection("sellers")
@@ -207,6 +209,9 @@ class VehicleController extends GetxController {
         .snapshots();
   }
 
+  Rx<List<Map<String, dynamic>>> vehicleList =
+      Rx<List<Map<String, dynamic>>>([]);
+
   @override
   void onInit() {
     super.onInit();
@@ -214,6 +219,10 @@ class VehicleController extends GetxController {
     vehicleNameController = TextEditingController();
     vehiclePriceController = TextEditingController();
     vehicleDescriptionController = TextEditingController();
+    vehicleKmController = TextEditingController();
+    searchController = TextEditingController();
+    // vehicleList.bindStream(realStateStream());
+    vehicleList.value = [];
   }
 
   @override
@@ -227,6 +236,7 @@ class VehicleController extends GetxController {
     vehiclePriceController.dispose();
     vehicleDescriptionController.dispose();
     vehicleKmController.dispose();
+    searchController.dispose();
   }
 
   void selectMultipleImage() async {
@@ -245,18 +255,14 @@ class VehicleController extends GetxController {
     try {
       showDialog(
           context: Get.context!, builder: (context) => wAppLoading(context));
-      String imageFileName = DateTime
-          .now()
-          .millisecondsSinceEpoch
-          .toString();
       if (imageUrlPath.isNotEmpty) {
         for (int i = 0; i < imageUrlPath.length; i++) {
           File file = File(imageUrlPath[i]);
           fStorage.Reference storageRef = fStorage.FirebaseStorage.instance
               .ref()
               .child("vehicle")
-              .child(imageFileName)
-              .child("$imageFileName$i.jpg");
+              .child(user!.uid)
+              .child("$vehicleUniqueId$i.jpg");
           fStorage.UploadTask uploadImageTask = storageRef.putFile(file);
           fStorage.TaskSnapshot taskSnapshot = await uploadImageTask;
           await taskSnapshot.ref.getDownloadURL().then((urlImage) {
@@ -289,7 +295,7 @@ class VehicleController extends GetxController {
         "email": sharedPreferences!.getString("email"),
         "phone": sharedPreferences!.getString("phone"),
         "image": downloadImageUrl,
-        "imagePath": imageUrlPath,
+        // "imagePath": imageUrlPath,
         "vehicleModel": vehicleModelValue,
         "vehicleType": vehicleTypeValue,
         "vehicleFuelType": vehicleFuelTypeValue,
@@ -319,7 +325,7 @@ class VehicleController extends GetxController {
           "email": sharedPreferences!.getString("email"),
           "phone": sharedPreferences!.getString("phone"),
           "image": downloadImageUrl,
-          "imagePath": imageUrlPath,
+          // "imagePath": imageUrlPath,
           "vehicleModel": vehicleModelValue,
           "vehicleType": vehicleTypeValue,
           "vehicleFuelType": vehicleFuelTypeValue,
@@ -404,5 +410,28 @@ class VehicleController extends GetxController {
         });
       });
     });
+  }
+
+  void searchVehicleStream(String search) {
+    // search any type text in firestore collection
+    List<Map<String, dynamic>> searchList = [];
+    if (search.isNotEmpty) {
+      FirebaseFirestore.instance
+          .collection("vehicle")
+          .where((element) => element["vehicleName"]
+              .toString()
+              .toLowerCase()
+              .contains(search.toLowerCase()))
+          .get()
+          .then((value) {
+        value.docs.forEach((element) {
+          searchList.add(element.data() as Map<String, dynamic>);
+        });
+        this.searchList.value = searchList;
+      });
+    } else {
+      this.searchList.value = [];
+
+    }
   }
 }

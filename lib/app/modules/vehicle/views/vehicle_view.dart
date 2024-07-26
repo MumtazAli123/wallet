@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:getwidget/components/button/gf_button.dart';
 import 'package:getwidget/components/button/gf_icon_button.dart';
 import 'package:quickalert/quickalert.dart';
+import 'package:wallet/app/modules/vehicle/views/search_view.dart';
 import 'package:wallet/app/modules/vehicle/views/show_vehicle_view.dart';
 import 'package:wallet/app/modules/vehicle/views/tabbar/all_vehicle.dart';
 
@@ -36,12 +37,7 @@ class VehicleView extends GetView<VehicleController> {
                   GFIconButton(
                       icon: Icon(Icons.search),
                       onPressed: () {
-                        QuickAlert.show(
-                            context: context,
-                            type: QuickAlertType.info,
-                            title: 'Search',
-                            text: 'Search your vehicle',
-                            showConfirmBtn: false);
+                        Get.to(() => SearchView());
                       }),
                   SizedBox(width: 10.0),
                   // add button
