@@ -17,6 +17,21 @@ class SearchView extends StatefulWidget {
 class _SearchViewState extends State<SearchView> {
   final controller = Get.put(VehicleController());
   var searchName = '';
+
+  Stream<QuerySnapshot> searchVehicles() {
+    // Convert search term to lowercase
+    String lowerCaseSearchName = searchName.toLowerCase();
+
+    return FirebaseFirestore.instance
+        .collection('vehicle')
+    // Perform case-insensitive search
+        .orderBy('vehicleName')
+        .startAt([lowerCaseSearchName])
+        .endAt(['$lowerCaseSearchName\uf8ff'])
+        .limit(3)
+        .snapshots();
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -81,6 +96,7 @@ class _SearchViewState extends State<SearchView> {
   _buildSearchItems() {
     return SafeArea(
       child: StreamBuilder<QuerySnapshot>(
+
         stream: FirebaseFirestore.instance.collection('vehicle')
             // search by vehicle name, by model, by color with lowercase
             .orderBy('vehicleName')
