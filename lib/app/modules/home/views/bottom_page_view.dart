@@ -24,6 +24,38 @@ class BottomPageView extends GetView {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // drawer: NavigationSideBar(
+      //   topWidget: SafeArea(
+      //     child: Container(
+      //       decoration: BoxDecoration(
+      //         color: Colors.blue,
+      //         borderRadius: BorderRadius.only(
+      //           bottomLeft: Radius.circular(30),
+      //           bottomRight: Radius.circular(30),
+      //         ),
+      //       ),
+      //       height: 100,
+      //       child: Center(
+      //         child: Text('ZubiPay'.tr, style: TextStyle(color: Colors.white, fontSize: 20)),
+      //       ),
+      //     ),
+      //   ),
+      //   extendedWidth: 300,
+      //   extendedBorderRadius: BorderRadius.circular(30),
+      //   items: [
+      //   NavigationSideBarItem(
+      //       text: 'Home', selectedIcon: Icons.home, unSelectedIcon: Icons.home_outlined),
+      //   NavigationSideBarItem(text: 'Digital Wallet', selectedIcon: Icons.account_balance_wallet, unSelectedIcon: Icons.account_balance_wallet_outlined),
+      //   NavigationSideBarItem(text: 'Search', selectedIcon: Icons.search, unSelectedIcon: Icons.search_outlined),
+      //   NavigationSideBarItem(text: 'QrCode', selectedIcon: Icons.qr_code, unSelectedIcon: Icons.qr_code_outlined),
+      // ], onItemSelected: (int value) {
+      //   controller.currentIndex.value = value;
+      //   controller.pageController.jumpToPage(value);
+      // },
+      //   isExtended: true,
+      //   isIndicatorActive: false,
+      //   showExtendedButton: true,
+      // ),
       drawer: MyDrawer(),
       // appbar 3rd index not show
       appBar: AppBar(

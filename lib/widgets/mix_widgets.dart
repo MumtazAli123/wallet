@@ -255,7 +255,7 @@ wBuildRealstateCard(doc) {
       ),
       image: Image.network(
         doc['image'],
-        height: 350,
+        height: 250,
         width: double.infinity,
         fit: BoxFit.cover,
       ),

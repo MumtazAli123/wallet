@@ -23,6 +23,13 @@ class _MyDrawerState extends State<MyDrawer> {
   String phoneNumber = sharedPreferences!.getString('phone') ?? '';
 
   var url_launcher = Get.find<HomeController>();
+  bool isSelect = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // controller.getUserData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -86,6 +93,7 @@ class _MyDrawerState extends State<MyDrawer> {
           },
         ),
         ListTile(
+          selectedColor: Colors.orange,
           leading: const Icon(Icons.reorder),
           title: const Text('New Orders'),
           onTap: () {
