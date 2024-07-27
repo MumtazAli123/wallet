@@ -31,8 +31,8 @@ class RealstateViewPage extends GetView<RealStateController> {
                 // email
                 urlLauncherA(
                   'mailto:${rsModel.email}?subject=Realstate Inquiry&body=Hello, I am interested in your property ${rsModel.realStateType}\n'
-                  '?subject=Vehicle Inquiry&body=Hello, I am interested in your vehicle ${rsModel.realStateName}\n'
-                  'Model: ${rsModel.realStateType} ${rsModel.condition}\n'
+                  'Name: ${rsModel.realStateName}\n'
+                  'Condition: ${rsModel.realStateType} ${rsModel.condition}\n'
                   'Description: ${rsModel.description}\n'
                   'Price: ${rsModel.startingFrom}\n'
                   'Type: ${rsModel.status}\n'
