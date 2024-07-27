@@ -1,7 +1,5 @@
 // ignore_for_file: prefer_const_constructors , prefer_const_literals_to_create_immutables
 
-import 'dart:async';
-import 'dart:io';
 
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +8,6 @@ import 'package:get/get.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:getwidget/components/button/gf_button.dart';
 import 'package:getwidget/components/button/gf_button_bar.dart';
-import 'package:getwidget/components/carousel/gf_carousel.dart';
 import 'package:getwidget/shape/gf_button_shape.dart';
 import 'package:getwidget/types/gf_button_type.dart';
 import 'package:google_fonts/google_fonts.dart';

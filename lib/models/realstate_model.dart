@@ -24,7 +24,7 @@ class RealStateModel {
   String? rating;
   String? status;
   Timestamp? publishedDate;
-  Timestamp? updatedAt;
+  Timestamp? updatedDate;
 
   RealStateModel({
     this.realStateId,
@@ -50,7 +50,7 @@ class RealStateModel {
     this.rating,
     this.status,
     this.publishedDate,
-    this.updatedAt,
+    this.updatedDate,
   });
 
 
@@ -80,7 +80,7 @@ class RealStateModel {
       'rating': rating,
       'status': status,
       'publishedDate': publishedDate,
-      'updatedAt': updatedAt,
+      'updatedDate': updatedDate,
     };
   }
 
@@ -108,6 +108,6 @@ class RealStateModel {
     rating = json['rating'];
     status = json['status'];
     publishedDate = json['publishedDate'];
-    updatedAt = json['updatedAt'];
+    updatedDate = json['updatedDate'];
   }
 }
