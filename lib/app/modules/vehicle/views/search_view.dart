@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:wallet/app/modules/register/controllers/register_controller.dart';
 import 'package:wallet/app/modules/vehicle/controllers/vehicle_controller.dart';
 import 'package:wallet/app/modules/vehicle/views/tabbar/all_vehicle.dart';
 
@@ -16,6 +17,7 @@ class SearchView extends StatefulWidget {
 
 class _SearchViewState extends State<SearchView> {
   final controller = Get.put(VehicleController());
+  final controller1 = Get.put(RegisterController());
   var searchName = '';
 
   Stream<QuerySnapshot> searchVehicles() {
@@ -67,6 +69,12 @@ class _SearchViewState extends State<SearchView> {
                 child: Padding(
                   padding: const EdgeInsets.only(left: 10, right: 10),
                   child: TextField(
+                    textInputAction: TextInputAction.search,
+                    inputFormatters: [
+                      // ignore: deprecated_member_use
+                      controller1.upperCaseTextFormatter,
+                    ],
+
                     decoration: InputDecoration(
                       hintText: 'Search',
                       border: OutlineInputBorder(
@@ -137,62 +145,5 @@ class _SearchViewState extends State<SearchView> {
     );
   }
 
-  // _buildSearchField() {
-  //   return TextField(
-  //
-  //     decoration: InputDecoration(
-  //       hintText: 'Search',
-  //       border: OutlineInputBorder(
-  //         borderRadius: BorderRadius.circular(8),
-  //         borderSide: BorderSide.none,
-  //       ),
-  //       prefixIcon: const Icon(Icons.search),
-  //       helperText: 'Search by vehicle name',
-  //       filled: true,
-  //       fillColor: Get.isDarkMode ? Colors.grey[800] : Colors.grey[200],
-  //
-  //     ),
-  //     onChanged: (value) {
-  //       setState(() {
-  //         searchName = value;
-  //       });
-  //
-  //     },
-  //   );
-  // }
-  //
-  // _buildSearchItems() {
-  //   return Expanded(
-  //     child: StreamBuilder<QuerySnapshot>(
-  //       stream: FirebaseFirestore.instance.collection('vehicles')
-  //           .orderBy('vehicleName')
-  //       .startAt([searchName]).endAt(['$searchName\uf8ff'])
-  //       // .where((_element) => _element['vehicleName'].toString().toLowerCase().contains(searchName.toLowerCase()))
-  //           .snapshots(),
-  //       builder: (context, snapshot) {
-  //         try {
-  //           if (snapshot.hasData) {
-  //             return ListView.builder(
-  //               itemCount: snapshot.data!.docs.length,
-  //               itemBuilder: (context, index) {
-  //                 var data = snapshot.data!.docs[index].data() as Map;
-  //                 VehicleModel model =
-  //                 VehicleModel.fromJson(data as Map<String, dynamic>);
-  //                 return wBuildVehicleCard(model.toJson());
-  //               },
-  //             );
-  //           } else {
-  //             return const Center(
-  //               child: CircularProgressIndicator(),
-  //             );
-  //           }
-  //         } catch (e) {
-  //           return const Center(
-  //             child: CircularProgressIndicator(),
-  //           );
-  //         }
-  //       },
-  //     ),
-  //   );
-  // }
+
 }
