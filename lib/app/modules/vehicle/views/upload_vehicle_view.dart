@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/components/button/gf_button.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:wallet/app/modules/register/controllers/register_controller.dart';
 import 'package:wallet/app/modules/vehicle/controllers/vehicle_controller.dart';
 
 import '../../../../utils/translation.dart';
@@ -214,8 +215,8 @@ class _UploadVehicleViewState extends State<UploadVehicleView> {
                 },
                 items: controller.vehicleType.map((e) {
                   return DropdownMenuItem(
-                    child: Text(e),
                     value: e,
+                    child: Text(e),
                   );
                 }).toList(),
               ),
@@ -229,6 +230,7 @@ class _UploadVehicleViewState extends State<UploadVehicleView> {
                   hintText: "Enter Vehicle Name",
                   prefixIcon: Icons.car_rental),
             ),
+            // price
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: wTextField(
@@ -265,8 +267,8 @@ class _UploadVehicleViewState extends State<UploadVehicleView> {
                 },
                 items: controller.vehicleModel.map((e) {
                   return DropdownMenuItem(
-                    child: Text(e),
                     value: e,
+                    child: Text(e),
                   );
                 }).toList(),
               ),
@@ -289,8 +291,8 @@ class _UploadVehicleViewState extends State<UploadVehicleView> {
                 },
                 items: controller.vehicleFuelType.map((e) {
                   return DropdownMenuItem(
-                    child: Text(e),
                     value: e,
+                    child: Text(e),
                   );
                 }).toList(),
               ),
@@ -313,8 +315,8 @@ class _UploadVehicleViewState extends State<UploadVehicleView> {
                 },
                 items: controller.vehicleTransmission.map((e) {
                   return DropdownMenuItem(
-                    child: Text(e),
                     value: e,
+                    child: Text(e),
                   );
                 }).toList(),
               ),
@@ -337,8 +339,8 @@ class _UploadVehicleViewState extends State<UploadVehicleView> {
                 },
                 items: controller.vehicleCondition.map((e) {
                   return DropdownMenuItem(
-                    child: Text(e),
                     value: e,
+                    child: Text(e),
                   );
                 }).toList(),
               ),
@@ -361,8 +363,8 @@ class _UploadVehicleViewState extends State<UploadVehicleView> {
                 },
                 items: controller.vehicleStatus.map((e) {
                   return DropdownMenuItem(
-                    child: Text(e),
                     value: e,
+                    child: Text(e),
                   );
                 }).toList(),
               ),
@@ -409,8 +411,8 @@ class _UploadVehicleViewState extends State<UploadVehicleView> {
                 },
                 items: controller.vehicleColor.map((e) {
                   return DropdownMenuItem(
-                    child: Text(e),
                     value: e,
+                    child: Text(e),
                   );
                 }).toList(),
               ),
@@ -433,8 +435,8 @@ class _UploadVehicleViewState extends State<UploadVehicleView> {
                 },
                 items: controller.vehicleBodyType.map((e) {
                   return DropdownMenuItem(
-                    child: Text(e),
                     value: e,
+                    child: Text(e),
                   );
                 }).toList(),
               ),
@@ -466,6 +468,25 @@ class _UploadVehicleViewState extends State<UploadVehicleView> {
 
           ])),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    controller.vehiclePriceController = TextEditingController();
+    controller.vehicleKmController = TextEditingController();
+    controller.vehicleNameController = TextEditingController();
+    controller.vehicleDescriptionController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    controller.vehiclePriceController.dispose();
+    controller.vehicleKmController.dispose();
+    controller.vehicleNameController.dispose();
+    controller.vehicleDescriptionController.dispose();
+
   }
 
 
@@ -576,6 +597,10 @@ class _UploadVehicleViewState extends State<UploadVehicleView> {
   wTextField({required TextEditingController controller, required String keyboardType, required String labelText, required String hintText, required IconData prefixIcon}) {
     return TextField(
       controller: controller,
+      inputFormatters: [
+        RegisterController.textUpperCaseTextFormatter(),
+
+      ],
 
       // keyboardType: when number show done on keyboard
       keyboardType: keyboardType == "number" ? TextInputType.number : TextInputType.text,

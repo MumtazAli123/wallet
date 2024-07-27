@@ -9,6 +9,7 @@ import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:wallet/app/modules/vehicle/controllers/vehicle_controller.dart';
 import 'package:wallet/app/modules/vehicle/views/upload_vehicle_view.dart';
+import 'package:wallet/app/modules/vehicle/views/vehicle_edit_view.dart';
 import 'package:wallet/app/modules/vehicle/views/vehicle_page_view.dart';
 
 import '../../../../models/vehicle_model.dart';
@@ -145,9 +146,9 @@ class ShowVehicleView extends GetView<VehicleController> {
           ),
           GFButton(
             onPressed: () {
-              // Get.to(() => RealstateEditView(
-              //   model: widget.model!,
-              // ));
+              Get.to(() => VehicleEditView(
+                model: model,
+              ));
             },
             text: 'Edit',
             color: Colors.green,

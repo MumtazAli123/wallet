@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as fStorage;
+import 'package:wallet/models/vehicle_model.dart';
 
 import '../../../../global/global.dart';
 import '../../../../widgets/mix_widgets.dart';
@@ -362,6 +363,7 @@ class VehicleController extends GetxController {
     }
   }
 
+
   void deleteImage(int index) {
     imageUrlPath.removeAt(index);
     imageFileCount.value = imageUrlPath.length;
@@ -383,6 +385,25 @@ class VehicleController extends GetxController {
         .snapshots();
   }
 
+  void editVehicle(VehicleModel model) {
+    FirebaseFirestore.instance
+        .collection("sellers")
+        .doc(user!.uid)
+        .collection("vehicle")
+        .doc(model.vehicleId)
+        .update(model.toJson())
+        .then((value) {
+      FirebaseFirestore.instance
+          .collection("vehicle")
+          .doc(model.vehicleId)
+          .update(model.toJson());
+      Get.back();
+      Get.snackbar("Success", "Vehicle Updated Successfully",
+          backgroundColor: Colors.green, colorText: Colors.white);
+      // Get.to(() => const ShowVehicleView());
+    });
+  }
+
   void deleteVehicle(id) {
     FirebaseFirestore.instance
         .collection("sellers")
@@ -395,6 +416,41 @@ class VehicleController extends GetxController {
       Get.snackbar("Success", "Vehicle Deleted Successfully",
           backgroundColor: Colors.green, colorText: Colors.white);
     });
+  }
+
+  carVehicleStream() {
+    return FirebaseFirestore.instance
+        .collection("vehicle")
+        .where("vehicleType", isEqualTo: "Car")
+        .snapshots();
+  }
+
+  bikeStream() {
+    return FirebaseFirestore.instance
+        .collection("vehicle")
+        .where("vehicleType", isEqualTo: "Bike")
+        .snapshots();
+  }
+
+  truckStream() {
+    return FirebaseFirestore.instance
+        .collection("vehicle")
+        .where("vehicleType", isEqualTo: "Truck")
+        .snapshots();
+  }
+
+  busStream() {
+    return FirebaseFirestore.instance
+        .collection("vehicle")
+        .where("vehicleType", isEqualTo: "Bus")
+        .snapshots();
+  }
+
+  othersStream() {
+    return FirebaseFirestore.instance
+        .collection("vehicle")
+        .where("vehicleType", isEqualTo: "Other")
+        .snapshots();
   }
 
 }

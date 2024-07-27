@@ -9,6 +9,11 @@ import 'package:quickalert/quickalert.dart';
 import 'package:wallet/app/modules/vehicle/views/search_view.dart';
 import 'package:wallet/app/modules/vehicle/views/show_vehicle_view.dart';
 import 'package:wallet/app/modules/vehicle/views/tabbar/all_vehicle.dart';
+import 'package:wallet/app/modules/vehicle/views/tabbar/bike.dart';
+import 'package:wallet/app/modules/vehicle/views/tabbar/bus_view.dart';
+import 'package:wallet/app/modules/vehicle/views/tabbar/car_vehicle.dart';
+import 'package:wallet/app/modules/vehicle/views/tabbar/others_view.dart';
+import 'package:wallet/app/modules/vehicle/views/tabbar/truck_view.dart';
 
 import '../../../../widgets/mix_widgets.dart';
 import '../controllers/vehicle_controller.dart';
@@ -75,7 +80,7 @@ class VehicleView extends GetView<VehicleController> {
                         text: 'Bus'),
                     Tab(
                       icon: Icon(Icons.devices_other_sharp),
-                        text: 'Other'),
+                        text: 'Others'),
                   ],
                 ),
               ),
@@ -84,21 +89,12 @@ class VehicleView extends GetView<VehicleController> {
           body: TabBarView(
             children: [
               AllVehicle(),
-              Container(
-                color: Colors.blue
-              ),
-              Container(
-                color: Colors.green
-              ),
-              Container(
-                color: Colors.yellow
-              ),
-              Container(
-                color: Colors.purple
-              ),
-              Container(
-                color: Colors.orange
-              ),
+              CarVehicle(),
+              BikeView(),
+              TruckView(),
+              BusView(),
+              OthersView(),
+
               // AllVehicle(),
               // Car(),
               // Bike(),

@@ -41,70 +41,51 @@ class _SearchViewState extends State<SearchView> {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
-        // appBar: AppBar(
-        //   title: const Text('Search'),
-        //   centerTitle: true,
-        // ),
+        appBar: AppBar(
+          title: const Text('Search'),
+          centerTitle: true,
+          bottom: PreferredSize(
+            preferredSize: const Size.fromHeight(100.0),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 10, right: 10),
+              child: TextField(
+                textInputAction: TextInputAction.search,
+                inputFormatters: [
+                  // ignore: deprecated_member_use
+                  controller1.upperCaseTextFormatter,
+                ],
+                decoration: InputDecoration(
+                  hintText: 'Search',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide.none,
+                  ),
+                  prefixIcon: const Icon(Icons.search),
+                  helperText: 'Search by vehicle name',
+                  filled: true,
+                  fillColor: Get.isDarkMode ? Colors.grey[800] : Colors.grey[200],
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    searchName = value;
+                  });
+                },
+              ),
+            ),
+          )
+        ),
         body: _buildBody(),
       ),
     );
   }
 
   _buildBody() {
-    return NestedScrollView(
-
-        headerSliverBuilder: (context, innerBoxIsScrolled) {
-          return [
-            SliverAppBar(
-
-              title: const Text('Search'),
-              centerTitle: true,
-              floating: true,
-              snap: true,
-              pinned: true,
-              forceElevated: innerBoxIsScrolled,
-              bottom: PreferredSize(
-
-                preferredSize: const Size.fromHeight(100.0),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 10, right: 10),
-                  child: TextField(
-                    textInputAction: TextInputAction.search,
-                    inputFormatters: [
-                      // ignore: deprecated_member_use
-                      controller1.upperCaseTextFormatter,
-                    ],
-
-                    decoration: InputDecoration(
-                      hintText: 'Search',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                        borderSide: BorderSide.none,
-                      ),
-                      prefixIcon: const Icon(Icons.search),
-                      helperText: 'Search by vehicle name',
-                      filled: true,
-                      fillColor: Get.isDarkMode ? Colors.grey[800] : Colors.grey[200],
-                    ),
-                    onChanged: (value) {
-                      setState(() {
-                        searchName = value;
-                      });
-                    },
-                  ),
-                ),
-              ),
-            ),
-          ];
-        },
-        body: _buildSearchItems(),
-    );
+    return _buildSearchItems();
   }
 
   _buildSearchItems() {
     return SafeArea(
       child: StreamBuilder<QuerySnapshot>(
-
         stream: FirebaseFirestore.instance.collection('vehicle')
             // search by vehicle name, by model, by color with lowercase
             .orderBy('vehicleName')

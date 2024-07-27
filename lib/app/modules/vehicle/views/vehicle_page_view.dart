@@ -272,6 +272,18 @@ class _VehiclePageViewState extends State<VehiclePageView> {
                           ? int.parse(widget.vModel.vehiclePrice.toString())
                           : 0),
                 )),
+            // phone
+            ListTile(
+              onTap: () {
+                // call
+                urlLauncher('tel:${widget.vModel.phone}');
+              },
+              leading: Icon(
+                Icons.phone,
+                color: Colors.blue[800],
+              ),
+              title: aText('Phone: ${widget.vModel.phone}'),
+            ),
             ListTile(
               leading: Icon(
                 Icons.date_range,

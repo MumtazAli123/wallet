@@ -20,21 +20,30 @@ class AllVehicle extends GetView<VehicleController> {
       stream: controller.allVehicleStream(),
       builder: (context, snapshot) {
         try {
-          if (snapshot.hasData) {
-            return ListView.builder(
-              itemCount: snapshot.data!.docs.length,
-              itemBuilder: (context, index) {
-                var data = snapshot.data!.docs[index].data() as Map;
-                VehicleModel model =
-                VehicleModel.fromJson(data as Map<String, dynamic>);
-                return wBuildVehicleCard(model.toJson());
-              },
+          if(snapshot.hasError) {
+            return const Center(
+              child: Text('Something went wrong'),
             );
-          } else {
+          }
+          if(snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(),
             );
           }
+          if(snapshot.data!.docs.isEmpty) {
+            return const Center(
+              child: Text('No Vehicle Found'),
+            );
+          }
+          return ListView.builder(
+            itemCount: snapshot.data!.docs.length,
+            itemBuilder: (context, index) {
+              var data = snapshot.data!.docs[index].data() as Map;
+              VehicleModel model =
+              VehicleModel.fromJson(data as Map<String, dynamic>);
+              return wBuildVehicleCard(model.toJson());
+            },
+          );
         } catch (e) {
           return const Center(
             child: CircularProgressIndicator(),
