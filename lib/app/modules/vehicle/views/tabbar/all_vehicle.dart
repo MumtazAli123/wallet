@@ -120,35 +120,4 @@ Widget wBuildVehicleCard(doc) {
   );
 }
 
-Widget wVehicleCard(doc) {
-  return GFImageOverlay(
-    height: 200,
-    width: double.infinity,
-    shape: BoxShape.rectangle,
-    colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.darken),
-    borderRadius: BorderRadius.circular(8.0),
-    image: NetworkImage(doc['image']),
-    boxFit: BoxFit.cover,
-    child: Container(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          GFListTile(
-            avatar: GFAvatar(
-              shape: GFAvatarShape.standard,
-              backgroundImage: NetworkImage(doc['image']),
-            ),
-            title: wText("Vehicle: ${doc['vehicleName']}", color: Colors.white),
-            subTitle: wText("Model: ${doc['vehicleModel']}", color: Colors.white),
-          ),
-          ListTile(
-            leading: const Icon(Icons.directions_car, color: Colors.white),
-            title: aText("Km: ${doc['vehicleKm']}", color: Colors.white),
-          ),
-        ],
-      ),
-    ),
-  );
-}
+

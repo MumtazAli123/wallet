@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wallet/app/modules/register/controllers/register_controller.dart';
 import 'package:wallet/app/modules/vehicle/controllers/vehicle_controller.dart';
-import 'package:wallet/app/modules/vehicle/views/tabbar/all_vehicle.dart';
+import 'package:wallet/app/modules/vehicle/views/vehicle_page_view.dart';
 
 import '../../../../models/vehicle_model.dart';
 
@@ -112,12 +112,13 @@ class _SearchViewState extends State<SearchView> {
           else{
             return ListView.builder(
               // less than 3 items will not show
-              itemCount: 3 < 3 ? 3 : snapshot.data!.docs.length,
+              itemCount: snapshot.data!.docs.length,
+              // itemCount: 5 < 5 ? 5 : snapshot.data!.docs.length,
               itemBuilder: (context, index) {
                 var data = snapshot.data!.docs[index].data() as Map;
                 VehicleModel model =
                 VehicleModel.fromJson(data as Map<String, dynamic>);
-                return wBuildVehicleCard(model.toJson());
+                return wVehicleCard(model.toJson());
               },
             );
           }
@@ -126,5 +127,65 @@ class _SearchViewState extends State<SearchView> {
     );
   }
 
+}
+Widget wVehicleCard(doc) {
+  return GestureDetector(
+    onTap: () {
+      Get.to(() => VehiclePageView(
+          vModel: VehicleModel.fromJson(doc), doc: doc.toString()
 
+      ));
+    },
+    child: Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        margin: const EdgeInsets.all(8.0),
+        padding: const EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+          color: Get.isDarkMode ? Colors.grey[800] : Colors.white,
+          borderRadius: BorderRadius.circular(8.0),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 1,
+              blurRadius: 7,
+              offset: const Offset(0, 3), // changes position of shadow
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+              height: 100,
+              width: 150,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8.0),
+                image: DecorationImage(
+                  image: NetworkImage(doc['image']),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            const SizedBox(width: 8.0),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  ListTile(
+                    // leading: const Icon(Icons.directions_car),
+                    title: Text("Vehicle: ${doc['vehicleName']}"
+                        "\nModel: ${doc['vehicleModel']}\n"
+                        "Price: ${doc['vehiclePrice']}"),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
+  );
 }
