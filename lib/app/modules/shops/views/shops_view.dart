@@ -2,6 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 import 'package:get/get.dart';
 import 'package:get_time_ago/get_time_ago.dart';
@@ -143,7 +144,9 @@ class _ShopsViewState extends State<ShopsView> {
                     // controller.fetchShops();
                   },
                   name: 'All',
-                  selected: true)),
+                  selected: true)).animate().rotate(duration: Duration(seconds: 2)).slide(
+              duration: const Duration(seconds: 4),
+          ),
           SizedBox(width: 10.0),
           Expanded(
               child: _buildCategoryItem(

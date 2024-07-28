@@ -9,19 +9,21 @@ import '../../../../models/user_model.dart';
 import '../controllers/home_controller.dart';
 import 'balance_card.dart';
 
-class HomeView extends GetView {
+class HomeView extends GetView<HomeController> {
+  HomeView({super.key});
 
-    HomeView({super.key});
-
+  final User? user = FirebaseAuth.instance.currentUser;
 
   @override
   final controller = Get.put(HomeController());
   final DateTime now = DateTime.now();
-  final user = FirebaseAuth.instance.currentUser;
+  // final user = FirebaseAuth.instance.currentUser;
 
   UserModel? model;
 
   var isLoading = false.obs;
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

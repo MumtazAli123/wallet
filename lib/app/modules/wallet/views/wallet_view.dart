@@ -12,8 +12,9 @@ import 'package:getwidget/components/button/gf_icon_button.dart';
 import 'package:getwidget/components/card/gf_card.dart';
 import 'package:getwidget/components/list_tile/gf_list_tile.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
+import 'package:path/path.dart';
 import 'package:quickalert/quickalert.dart';
-import 'package:wallet/global/global.dart';
 import 'package:wallet/widgets/currency_format.dart';
 
 import '../../../../models/balance.dart';
@@ -22,6 +23,7 @@ import '../../../../widgets/mix_widgets.dart';
 import '../../home/controllers/home_controller.dart';
 import '../../home/views/wallet_view.dart';
 import '../../send_money/views/send_money_view.dart';
+import '../../statement/views/receive_send.dart';
 import '../../statement/views/time_statement_view.dart';
 
 class WalletView extends GetView<HomeController> {
@@ -141,7 +143,8 @@ class WalletView extends GetView<HomeController> {
               return wText("Balance: \$0".tr,
                   color: Colors.white, size: 20.0);
             }),
-        _buildAddSendMoneyButton(double, model),
+        _buildButton(),
+        // _buildAddSendMoneyButton(double, model),
         SizedBox(
           height: 20.0,
         ),
@@ -150,51 +153,72 @@ class WalletView extends GetView<HomeController> {
     );
   }
 
-  _buildAddSendMoneyButton(Type double, model) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-      child: GridView(gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 10.0,
-        mainAxisSpacing: 10.0,
-        childAspectRatio: 3.0,
-      ),
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        children: [
-          ElevatedButton.icon(
-            onPressed: () {
-              Get.to(() => SendMoneyView());
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue,
+  _buildButton() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Expanded(child: _buildButtonCard("Send Money".tr, "assets/lottie/send.json")),
+        // Expanded(
+        //     child: _buildButtonCard("Receive Money".tr, Icons.money)),
+        Expanded(child: _buildButtonCard("Add Money".tr, "assets/lottie/animation.json")),
+      ],
+    );
+  }
+
+  _buildButtonCard(
+      String s,
+      String send,
+      ) {
+    return GestureDetector(
+      onTap: () {
+        if (s == "Send Money".tr) {
+          Get.toNamed('/send-money');
+        } else if (s == "Receive Money".tr) {
+          Get.to(() => ReceiveSendMoney());
+        } else if (s == "Add Money".tr) {
+          // Get.toNamed('/add-money');
+          _buildDialogAddMoney();
+        }
+      },
+      child: Container(
+        height: 150,
+        padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
+        margin: EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 1,
+              blurRadius: 7,
+              offset: Offset(0, 3), // changes position of shadow
             ),
-            label: wText('Send Money'.tr, color: Colors.white),
-            icon: Icon(Icons.send, color: Colors.white),
-          ),
-          ElevatedButton.icon(
-            onPressed: () {
-              // Get.toNamed('/add-money');
-              _buildDialogAddMoney();
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.green,
-            ),
-           label: wText('Add Money'.tr, color: Colors.white),
-            icon: Icon(Icons.add, color: Colors.white)
-          ),
-        ],
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Lottie.asset(send,
+                height: 80, width: double.infinity),
+            // Icon(send, size: 30.0, color: Theme.of(context).primaryColor),
+            SizedBox(height: 10.0),
+            wText(s, size: 16.0, color: Theme.of(Get.context!).primaryColor),
+          ],
+        ),
       ),
     );
-
   }
 
   _buildRecentTransactions() {
     final size = MediaQuery.of(Get.context!).size;
     try {
       return FlipCard(
+        direction: FlipDirection.HORIZONTAL,
+        flipOnTouch: true,
         front: GFCard(
-          image: Image.asset('assets/wallet.jpeg'),
+          // image: Image.asset('assets/wallet.jpeg', height: 200, width: double.infinity,),
           showImage: true,
           title: GFListTile(
             title: wText('View All Transactions'.tr),
@@ -205,12 +229,19 @@ class WalletView extends GetView<HomeController> {
               icon: Icon(Icons.arrow_forward_ios),
             ),
           ),
-          content: myWidget.animate(onPlay: (controller) {
-            controller.loop(reverse: false, count: 3);
-          })
-              .fade().shake().slide(
-            duration: const Duration(seconds: 5),
-          ).saturate(),
+          content: Column(
+            children: [
+              myWidget.animate(onPlay: (controller) {
+                controller.loop(reverse: false, count: 3);
+              })
+                  .fade().shake().slide(
+                duration: const Duration(seconds: 5),
+              ).saturate(),
+              Lottie.asset('assets/lottie/coins.json',
+                  height: 200, width: double.infinity),
+
+            ],
+          ),
         ),
         back:  Card(
           elevation: 14,
@@ -343,13 +374,13 @@ class WalletView extends GetView<HomeController> {
           ),
         ),
       );
-
     } catch (e) {
       if (kDebugMode) {
         print(e);
       }
     }
   }
+
 
   _buildFooter() {
     return Container(

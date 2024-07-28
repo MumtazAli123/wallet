@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:wallet/app/modules/home/views/wallet_view.dart';
 import 'package:wallet/models/user_model.dart';
@@ -32,19 +33,28 @@ class _BalanceCardState extends State<BalanceCard> {
   final DateTime now = DateTime.now();
 
   Widget myWidget = Container(
-    width: 500,
-    height: 200,
+    width: 700,
+    height: 270,
     decoration: BoxDecoration(
       color: Colors.blue[900],
       borderRadius: BorderRadius.circular(10),
     ),
     child: Center(
-      child: Text("Recent Transactions!".tr, style: GoogleFonts.damion(
-          fontSize: 30,
-              color: Colors.white
-      ),),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Lottie.asset('assets/lottie/coins.json',
+              height: 200, width: double.infinity),
+          Text("Recent Transactions!".tr, style: GoogleFonts.damion(
+              fontSize: 30,
+                  color: Colors.white
+          ),),
+          SizedBox(height: 10.0),
+        ],
+      ),
     ),
   );
+
 
   @override
   void initState() {
@@ -110,7 +120,7 @@ class _BalanceCardState extends State<BalanceCard> {
   }
 
   _buildBalanceCard() {
-    return Container(
+    return FlipCard(front: Container(
       height: 255,
       padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
       margin: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
@@ -181,47 +191,96 @@ class _BalanceCardState extends State<BalanceCard> {
           SizedBox(height: 10),
         ],
       ),
-    ).animate(
-
-    ).fadeIn().slide(
-      duration: const Duration(seconds: 5),
-    ).rotate(
-      delay: Duration(seconds: 8),
-      duration: const Duration(seconds: 8),
-    );
-  }
-  _buildButton() {
-    return GFCard(
-      color: Get.theme.scaffoldBackgroundColor,
-      padding: EdgeInsets.all(5.0),
-      content: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Expanded(child: _buildButtonCard("Send Money".tr, Icons.send)),
-              Expanded(
-                  child: _buildButtonCard("Receive Money".tr, Icons.money)),
-              Expanded(child: _buildButtonCard("Add Money".tr, Icons.add)),
+    ).animate().fadeIn().slide(duration: const Duration(seconds: 5)),
+        back: Container(
+          height: 255,
+          padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
+          margin: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage('assets/walleta.png'),
+              fit: BoxFit.cover,
+            ),
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.grey.withOpacity(0.5),
+                spreadRadius: 1,
+                blurRadius: 7,
+                offset: Offset(0, 3), // changes position of shadow
+              ),
             ],
           ),
-          SizedBox(height: 10.0),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //   children: [
-          //     _buildButtonCard("Withdraw Money".tr, Icons.money_off),
-          //     _buildButtonCard("Wallet".tr, Icons.account_balance_wallet),
-          //     _buildButtonCard("Statement".tr, Icons.sticky_note_2),
-          //   ],
-          // ),
-        ],
-      ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // name
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  wText("${widget.model!.name}", color: Colors.white),
+                  Container(
+                      height: 18.0,
+                      width: 18.0,
+                      decoration: BoxDecoration(
+                          color: widget.model!.status == 'approved'
+                              ? Colors.green
+                              : Colors.red,
+                          shape: BoxShape.circle),
+                      child: Icon(
+                        widget.model!.status == 'approved'
+                            ? Icons.check
+                            : Icons.close,
+                        color: Colors.white,
+                        size: 14.0,
+                      )),
+                ],
+              ),
+              SizedBox(height: 20.0),
+              // balance
+              wText("Balance".tr, color: Colors.white),
+              wText("Rs: ${widget.model!.balance}", color: Colors.white, size: 30),
+              Divider(color: Colors.white),
+              // number of transactions
+              wText(
+                  "PKR: ${NumberToWord().convert(widget.model!.balance!.toInt())}",
+                  color: Colors.white,
+                  size: 12),
+
+              SizedBox(height: 15.0),
+              // account number phone first 5 digits and last 4 digits
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  wText("Account Number :".tr, color: Colors.white, size: 12),
+                  wText(
+                      "${widget.model!.phone!.substring(0, 5)}...${widget.model!.phone!.substring(widget.model!.phone!.length - 4)}",
+                      color: Colors.white),
+                ],
+              ),
+              SizedBox(height: 10),
+            ],
+          ),
+        ));
+  }
+
+  _buildButton() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Expanded(child: _buildButtonCard("Send Money".tr, "assets/lottie/send.json")),
+        // Expanded(
+        //     child: _buildButtonCard("Receive Money".tr, Icons.money)),
+        Expanded(child: _buildButtonCard("Add Money".tr, "assets/lottie/diamond.json")),
+      ],
     );
   }
 
   _buildButtonCard(
     String s,
-    IconData send,
+    String send,
   ) {
     return GestureDetector(
       onTap: () {
@@ -234,15 +293,32 @@ class _BalanceCardState extends State<BalanceCard> {
           _buildDialog();
         }
       },
-      child: GFCard(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-        color: Get.theme.scaffoldBackgroundColor,
-        padding: EdgeInsets.all(5.0),
-        content: Column(
+      child: Container(
+        height: 150,
+        width: 200,
+        padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
+        margin: EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 1,
+              blurRadius: 7,
+              offset: Offset(0, 3), // changes position of shadow
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Icon(send, size: 30.0),
-            SizedBox(height: 5.0),
-            wText(s, size: 11.0),
+            Lottie.asset(send,
+                height: 80, width: double.infinity),
+            // Icon(send, size: 30.0, color: Theme.of(context).primaryColor),
+            SizedBox(height: 10.0),
+            wText(s, size: 16.0, color: Theme.of(context).primaryColor),
           ],
         ),
       ),
@@ -252,139 +328,10 @@ class _BalanceCardState extends State<BalanceCard> {
   _buildRecentTransactions() {
     final size = MediaQuery.of(Get.context!).size;
     try {
-      // return Card(
-      //   elevation: 14,
-      //   child: Container(
-      //     margin: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
-      //     height: size.height * 0.6,
-      //     decoration: BoxDecoration(
-      //       borderRadius: BorderRadius.circular(10.0),
-      //     ),
-      //     child: Column(
-      //       crossAxisAlignment: CrossAxisAlignment.center,
-      //       mainAxisAlignment: MainAxisAlignment.center,
-      //       mainAxisSize: MainAxisSize.min,
-      //       children: [
-      //         SizedBox(height: 10.0),
-      //         Padding(
-      //           padding: const EdgeInsets.only(left: 8.0, right: 4.0),
-      //           child: Row(
-      //             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //             children: [
-      //               wText("Recent Transactions".tr, size: 18.0),
-      //               Spacer(),
-      //               TextButton(
-      //                   onPressed: () {
-      //                     Get.to(() => TimeStatementView());
-      //                   },
-      //                   child: wText('View All'.tr, color: Colors.blue))
-      //             ],
-      //           ),
-      //         ),
-      //         // Divider(),
-      //         Expanded(
-      //           child: StreamBuilder(
-      //             stream: FirebaseFirestore.instance
-      //                 .collection('sellers')
-      //                 .doc(user!.uid)
-      //                 .collection('statement')
-      //                 .where('created_at',
-      //                     isGreaterThanOrEqualTo: DateTime(
-      //                         // recent transactions minimum 3 days
-      //                         now.year,
-      //                         now.month,
-      //                         now.day - 3))
-      //                 .orderBy('created_at', descending: true)
-      //                 .limit(5)
-      //                 .snapshots(),
-      //             builder: (context, snapshot) {
-      //               if (snapshot.hasData) {
-      //                 return ListView.builder(
-      //                   itemCount: snapshot.data!.docs.length,
-      //                   itemBuilder: (context, index) {
-      //                     return Padding(
-      //                       padding:
-      //                           const EdgeInsets.only(left: 8.0, right: 8.0),
-      //                       child: Card(
-      //                         elevation: 5,
-      //                         child: ListTile(
-      //                             leading: MixWidgets.buildAvatar(
-      //                                 // get user image from firebase
-      //                                 isLoading == true
-      //                                     ? 'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png'
-      //                                     : snapshot
-      //                                         .data?.docs[index]['image']
-      //                                         .toString(),
-      //                                 20.0),
-      //                             title: Text(
-      //                                 snapshot.data?.docs[index]['name']),
-      //                             subtitle: Column(
-      //                               crossAxisAlignment:
-      //                                   CrossAxisAlignment.start,
-      //                               children: [
-      //                                 // balance type cr or dr
-      //                                 Row(
-      //                                   children: [
-      //                                     Text(
-      //                                         // amount
-      //                                         snapshot.data?.docs[index]
-      //                                                     ['type'] ==
-      //                                                 'send'
-      //                                             ? 'Rs.${currencyFormat(double.parse(snapshot.data!.docs[index]['balance'].toString()))}'
-      //                                             : 'Rs.${currencyFormat(double.parse(snapshot.data!.docs[index]['balance'].toString()))}'),
-      //                                     SizedBox(width: 10.0),
-      //                                     Text(snapshot.data?.docs[index]
-      //                                                 ['type'] ==
-      //                                             'send'
-      //                                         ? 'Cr'
-      //                                         : 'Dr'),
-      //                                   ],
-      //                                 ),
-      //                                 Text(GetTimeAgo.parse(
-      //                                     DateTime.parse(snapshot
-      //                                         .data!.docs[index]['created_at']
-      //                                         .toDate()
-      //                                         .toString()),
-      //                                     locale: 'en')),
-      //                               ],
-      //                             ),
-      //
-      //                             //   type and amount
-      //                             trailing: wText(
-      //                               snapshot.data?.docs[index]['type'] ==
-      //                                       'send'
-      //                                   ? '+ ${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}'
-      //                                   : '- ${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}',
-      //                             ),
-      //                             onTap: () {
-      //                               _buildDialogTran(
-      //                                   snapshot.data?.docs[index]['name'],
-      //                                   snapshot.data?.docs[index]['amount'],
-      //                                   snapshot.data?.docs[index]['type'],
-      //                                   snapshot
-      //                                       .data?.docs[index]['created_at']
-      //                                       .toDate()
-      //                                       .toString(),
-      //                                   snapshot.data?.docs[index]['phone'],
-      //                                   snapshot.data?.docs[index]
-      //                                       ['description']);
-      //                             }),
-      //                       ),
-      //                     );
-      //                   },
-      //                 );
-      //               }
-      //               return wText('No Transactions');
-      //             },
-      //           ),
-      //         ),
-      //       ],
-      //     ),
-      //   ),
-      // );
       return FlipCard(
+        flipOnTouch: true,
           front: GFCard(
-            image: Image.asset('assets/wallet.jpeg'),
+            // image: Image.asset('assets/wallet.jpeg', height: 200, width: double.infinity,),
             showImage: true,
             title: GFListTile(
               title: wText('View All Transactions'.tr),
@@ -395,12 +342,19 @@ class _BalanceCardState extends State<BalanceCard> {
                 icon: Icon(Icons.arrow_forward_ios),
               ),
             ),
-            content: myWidget.animate(onPlay: (controller) {
-              controller.loop(reverse: false, count: 3);
-            })
-                .fade().shake().slide(
-              duration: const Duration(seconds: 5),
-            ).saturate(),
+            content: Column(
+              children: [
+                myWidget.animate(onPlay: (controller) {
+                  controller.loop(reverse: false, count: 3);
+                })
+                    .fade().shake().slide(
+                  duration: const Duration(seconds: 5),
+                ).saturate(),
+                Lottie.asset('assets/lottie/animation.json',
+                    height: 200, width: double.infinity),
+
+              ],
+            ),
           ),
           back:  Card(
             elevation: 14,
@@ -455,70 +409,71 @@ class _BalanceCardState extends State<BalanceCard> {
                               return Padding(
                                 padding:
                                     const EdgeInsets.only(left: 8.0, right: 8.0),
-                                child: Card(
-                                  elevation: 5,
-                                  child: ListTile(
-                                      leading: MixWidgets.buildAvatar(
-                                          // get user image from firebase
-                                          isLoading == true
-                                              ? 'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png'
-                                              : snapshot
-                                                  .data?.docs[index]['image']
-                                                  .toString(),
-                                          20.0),
-                                      title: Text(
-                                          snapshot.data?.docs[index]['name']),
-                                      subtitle: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          // balance type cr or dr
-                                          Row(
-                                            children: [
-                                              Text(
-                                                  // amount
-                                                  snapshot.data?.docs[index]
-                                                              ['type'] ==
-                                                          'send'
-                                                      ? 'Rs.${currencyFormat(double.parse(snapshot.data!.docs[index]['balance'].toString()))}'
-                                                      : 'Rs.${currencyFormat(double.parse(snapshot.data!.docs[index]['balance'].toString()))}'),
-                                              SizedBox(width: 10.0),
-                                              Text(snapshot.data?.docs[index]
-                                                          ['type'] ==
-                                                      'send'
-                                                  ? 'Cr'
-                                                  : 'Dr'),
-                                            ],
-                                          ),
-                                          Text(GetTimeAgo.parse(
-                                              DateTime.parse(snapshot
-                                                  .data!.docs[index]['created_at']
-                                                  .toDate()
-                                                  .toString()),
-                                              locale: 'en')),
-                                        ],
-                                      ),
+                                child: GestureDetector(
+                                  onDoubleTap: () {
+                                    _buildDialogTran(
+                                        snapshot.data?.docs[index]['name'],
+                                        snapshot.data?.docs[index]['amount'],
+                                        snapshot.data?.docs[index]['type'],
+                                        snapshot.data?.docs[index]['created_at']
+                                            .toDate()
+                                            .toString(),
+                                        snapshot.data?.docs[index]['phone'],
+                                        snapshot.data?.docs[index]['description']);
+                                  },
+                                  child: Card(
+                                    elevation: 5,
+                                    child: ListTile(
+                                        leading: MixWidgets.buildAvatar(
+                                            // get user image from firebase
+                                            isLoading == true
+                                                ? 'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png'
+                                                : snapshot
+                                                    .data?.docs[index]['image']
+                                                    .toString(),
+                                            20.0),
+                                        title: Text(
+                                            snapshot.data?.docs[index]['name']),
+                                        subtitle: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            // balance type cr or dr
+                                            Row(
+                                              children: [
+                                                Text(
+                                                    // amount
+                                                    snapshot.data?.docs[index]
+                                                                ['type'] ==
+                                                            'send'
+                                                        ? 'Rs.${currencyFormat(double.parse(snapshot.data!.docs[index]['balance'].toString()))}'
+                                                        : 'Rs.${currencyFormat(double.parse(snapshot.data!.docs[index]['balance'].toString()))}'),
+                                                SizedBox(width: 10.0),
+                                                Text(snapshot.data?.docs[index]
+                                                            ['type'] ==
+                                                        'send'
+                                                    ? 'Cr'
+                                                    : 'Dr'),
+                                              ],
+                                            ),
+                                            Text(GetTimeAgo.parse(
+                                                DateTime.parse(snapshot
+                                                    .data!.docs[index]['created_at']
+                                                    .toDate()
+                                                    .toString()),
+                                                locale: 'en')),
+                                          ],
+                                        ),
 
-                                      //   type and amount
-                                      trailing: wText(
-                                        snapshot.data?.docs[index]['type'] ==
-                                                'send'
-                                            ? '+ ${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}'
-                                            : '- ${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}',
-                                      ),
-                                      onTap: () {
-                                        _buildDialogTran(
-                                            snapshot.data?.docs[index]['name'],
-                                            snapshot.data?.docs[index]['amount'],
-                                            snapshot.data?.docs[index]['type'],
-                                            snapshot
-                                                .data?.docs[index]['created_at']
-                                                .toDate()
-                                                .toString(),
-                                            snapshot.data?.docs[index]['phone'],
-                                            snapshot.data?.docs[index]
-                                                ['description']);
-                                      }),
+                                        //   type and amount
+                                        trailing: wText(
+                                          snapshot.data?.docs[index]['type'] ==
+                                                  'send'
+                                              ? '+ ${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}'
+                                              : '- ${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}',
+                                        ),
+                              ),
+                                  ),
                                 ),
                               );
                             },
