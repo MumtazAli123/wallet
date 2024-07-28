@@ -181,7 +181,7 @@ class _ShopsViewState extends State<ShopsView> {
             vModel: VehicleModel.fromJson(model), doc: model.toString()));
       },
       child: Container(
-        color: Get.theme.primaryColor.withOpacity(0.1),
+        color: Get.theme.primaryColor.withOpacity(0.0),
         padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Column(
           children: [
