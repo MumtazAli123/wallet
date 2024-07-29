@@ -104,7 +104,9 @@ Widget wBuildVehicleCard(doc) {
                   iconColor: isDarkMode ? Colors.white : Colors.black,
                   // leading: const Icon(Icons.directions_car),
                   title: Text("Vehicle: ${doc['vehicleName']}"),
-                  subtitle: Text("Model: ${doc['vehicleModel']}\nCondition: ${doc['vehicleCondition']}"),
+                  subtitle: Text("Model: ${doc['vehicleModel']}"
+                      "\nCondition: ${doc['vehicleCondition']}\n"
+                      "City: ${doc['city']}"),
                 ),
                 ListTile(
                   // leading: const Icon(Icons.money),

@@ -254,6 +254,22 @@ class _VehiclePageViewState extends State<VehiclePageView> {
               subtitle:
                   aText('${widget.vModel.vehicleDescription}', size: 12.0),
             ),
+            // city
+            ListTile(
+              leading: Icon(
+                Icons.location_city,
+                color: Colors.blue[800],
+              ),
+              title: aText('City: ${widget.vModel.city}'),
+            ),
+            // address
+            ListTile(
+              leading: Icon(
+                Icons.location_on,
+                color: Colors.blue[800],
+              ),
+              title: aText('Address:\n${widget.vModel.address}'),
+            ),
             // price
             ListTile(
                 leading: Icon(
