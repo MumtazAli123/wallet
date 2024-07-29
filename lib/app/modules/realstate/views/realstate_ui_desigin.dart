@@ -111,7 +111,7 @@ class _RealStateUiDesignWidgetState extends State<RealStateUiDesignWidget> {
         ),
         semanticContainer: true,
         showImage: true,
-        image: Image.network(widget.model!.image.toString()),
+        image: Image.network(widget.model!.image.toString(), fit: BoxFit.cover, height: 200, width: double.infinity,),
         colorFilter:
         ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.darken),
         title: GFListTile(

@@ -215,6 +215,9 @@ class _VehicleEditViewState extends State<VehicleEditView> {
                 },
               ),
             ),
+          // city
+
+
           //   color
             Padding(
               padding: const EdgeInsets.all(8.0),
@@ -233,6 +236,43 @@ class _VehicleEditViewState extends State<VehicleEditView> {
                     .toList(),
                 onChanged: (value) {
                   widget.model.vehicleColor = value;
+                },
+              ),
+            ),
+            // city
+            Padding(padding: const EdgeInsets.all(9.0),
+              child: TextFormField(
+                inputFormatters: [
+                  //every name of first latter capital after space
+                  RegisterController.textUpperCaseTextFormatter(),
+                ],
+                // controller: controller1.cityController,
+                decoration: InputDecoration(
+                  labelText: 'City',
+                  hintText: 'City: ${widget.model.city}',
+                  prefixIcon: Icon(Icons.location_city),
+                ),
+                onChanged: (value) {
+                  widget.model.city = value;
+                },
+              ),
+            ),
+            // address
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                inputFormatters: [
+                  //every name of first latter capital after space
+                  RegisterController.textUpperCaseTextFormatter(),
+                ],
+                // controller: controller1.addressController,
+                decoration: InputDecoration(
+                  labelText: 'Address',
+                  hintText: 'Address: ${widget.model.address}',
+                  prefixIcon: Icon(Icons.location_on),
+                ),
+                onChanged: (value) {
+                  widget.model.address = value;
                 },
               ),
             ),

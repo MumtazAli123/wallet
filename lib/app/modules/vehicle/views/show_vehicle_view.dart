@@ -95,40 +95,36 @@ class ShowVehicleView extends GetView<VehicleController> {
       image: Image.network( model.image!, fit: BoxFit.cover, width: double.infinity, height: 200,),
       showImage: true,
       title: GFListTile(
-        icon: Icon(Icons.directions_car),
-        title: wText("Vehicle: ${model.vehicleName!}"),
-        subTitle: wText("Model: ${model.vehicleModel!}"),
-      ),
-      content: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // get multiple images
-          // SizedBox(
-          //   height: 200,
-          //   child: GFCarousel(
-          //     autoPlay: true,
-          //     items: model.imagePath!.map((url) {
-          //       return Container(
-          //         margin: EdgeInsets.all(8.0),
-          //         decoration: BoxDecoration(
-          //           borderRadius: BorderRadius.circular(8),
-          //           color: Colors.grey,
-          //           image: DecorationImage(
-          //             image: NetworkImage(url),
-          //             fit: BoxFit.cover,
-          //           ),
-          //         ),
-          //       );
-          //     }).toList(),
-          //   ),
-          // ),
-          ListTile(
-            leading: Icon(Icons.directions_car),
-            title: aText("Vehicle: ${model.vehicleType!}"),
-            subtitle: aText("For: ${model.vehicleStatus!}\nRs: ${model.vehiclePrice!}"),
+        title: Row(
+          children: [
+            CircleAvatar(
+              backgroundColor: Colors.orange,
+              child: wText(model.vehicleName![0], color: Colors.white),
+            ),
+
+            SizedBox(width: 10.0),
+            wText('${model.vehicleName} For ${model.vehicleType!}'),
+          ],
+        ),
+        subTitle: Padding(
+          padding: const EdgeInsets.only(top: 8.0),
+          child: Row(
+            children: [
+              Icon(
+                Icons.location_on,
+                color: Colors.blueAccent,
+              ),
+              SizedBox(width: 10.0),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('City: ${model.city}'),
+                  Text('Address: ${model.address}'),
+                ],
+              )
+            ],
           ),
-        ],
+        ),
       ),
       buttonBar: GFButtonBar(
         children: <Widget>[
