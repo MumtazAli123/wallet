@@ -12,6 +12,7 @@ import 'package:getwidget/components/button/gf_button.dart';
 import 'package:getwidget/components/button/gf_button_bar.dart';
 import 'package:getwidget/shape/gf_avatar_shape.dart';
 import 'package:lottie/lottie.dart';
+import 'package:wallet/widgets/my_drawer.dart';
 
 import '../../../../models/vehicle_model.dart';
 import '../../../../widgets/mix_widgets.dart';
@@ -44,6 +45,7 @@ class _ShopsViewState extends State<ShopsView> {
     return DefaultTabController(
       length: 5,
       child: Scaffold(
+        drawer: MyDrawer(),
         floatingActionButton: FloatingActionButton.extended(
           backgroundColor: Colors.green,
           onPressed: () {
@@ -76,6 +78,7 @@ class _ShopsViewState extends State<ShopsView> {
           headerSliverBuilder: (context, innerBoxIsScrolled) {
             return [
               SliverAppBar(
+                leading: Text(''),
                 title: wText('ZubiPay',size: 20),
                 expandedHeight: 200.0,
                 centerTitle: true,
@@ -127,8 +130,13 @@ class _ShopsViewState extends State<ShopsView> {
               //   ),
               // ),
 
-              Lottie.asset('assets/lottie/shoping.json',
-                  width: 100, height: 100),
+              GestureDetector(
+                onTap: () {
+                  Scaffold.of(context).openDrawer();
+                },
+                child: Lottie.asset('assets/lottie/shoping.json',
+                    width: 100, height: 100),
+              ),
               Lottie.asset('assets/lottie/earn.json',
                   width: 100, height: 100),
 
