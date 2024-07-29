@@ -11,6 +11,7 @@ import 'package:getwidget/components/avatar/gf_avatar.dart';
 import 'package:getwidget/components/button/gf_button.dart';
 import 'package:getwidget/components/button/gf_button_bar.dart';
 import 'package:getwidget/shape/gf_avatar_shape.dart';
+import 'package:getwidget/types/gf_alert_type.dart';
 import 'package:lottie/lottie.dart';
 import 'package:wallet/widgets/my_drawer.dart';
 
@@ -51,7 +52,7 @@ class _ShopsViewState extends State<ShopsView> {
           onPressed: () {
             _buildDialogProducts(context);
           },
-          label: wText('Add', color: Colors.white),
+          label: wText('Add'.tr, color: Colors.white),
           icon: Icon(
             Icons.add,
             color: Colors.white,
@@ -79,7 +80,7 @@ class _ShopsViewState extends State<ShopsView> {
             return [
               SliverAppBar(
                 leading: Text(''),
-                title: wText('ZubiPay',size: 20),
+                title: wText('ZubiPay'.tr,size: 20),
                 expandedHeight: 200.0,
                 centerTitle: true,
                 floating: true,
@@ -190,7 +191,7 @@ class _ShopsViewState extends State<ShopsView> {
                   onTap: () {
                     // controller.fetchShops();
                   },
-                  name: 'All',
+                  name: 'All'.tr,
                   selected: true)).animate().rotate(duration: Duration(seconds: 2)).slide(
               duration: const Duration(seconds: 4),
           ),
@@ -200,21 +201,21 @@ class _ShopsViewState extends State<ShopsView> {
                   onTap: () {
                     Get.to(() => ShowRealstate());
                   },
-                  name: 'Real State')),
+                  name: 'Real State'.tr)),
           SizedBox(width: 10.0),
           Expanded(
               child: _buildCategoryItem(
                   onTap: () {
                     Get.toNamed('/vehicle');
                   },
-                  name: 'Vehicle')),
+                  name: 'Vehicle'.tr)),
           SizedBox(width: 10.0),
           Expanded(
               child: _buildCategoryItem(
                   onTap: () {
-                    Get.toNamed('/products');
+                    Get.toNamed('/products'.tr);
                   },
-                  name: 'Products')),
+                  name: 'Products'.tr)),
           // Expanded(child: _buildCategoryItem(name: 'Others')),
         ]),
       ),
@@ -265,7 +266,7 @@ class _ShopsViewState extends State<ShopsView> {
                         ),
                       ),
                       Text(
-                        'Price: ${model['vehiclePrice']}',
+                        'Price: ${model['vehiclePrice']}'.tr,
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -326,7 +327,9 @@ class _ShopsViewState extends State<ShopsView> {
         context: context,
         builder: (context) {
           return GFAlert(
-            title: 'Add Product',
+            type: GFAlertType.rounded,
+            title: 'Add Products'.tr,
+            titleAlignment: Alignment.center,
             content: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -343,7 +346,7 @@ class _ShopsViewState extends State<ShopsView> {
                         Icons.real_estate_agent,
                         color: Get.theme.primaryColor,
                       ),
-                      label: wText('Add Real state',
+                      label: wText('Add Real state'.tr,
                           color: Get.theme.primaryColor)),
                   SizedBox(height: 10.0),
                   // Add Car
@@ -356,7 +359,7 @@ class _ShopsViewState extends State<ShopsView> {
                         color: Get.theme.primaryColor,
                       ),
                       label:
-                          wText('Add Vehicle', color: Get.theme.primaryColor)),
+                          wText('Add Vehicle'.tr, color: Get.theme.primaryColor)),
                   SizedBox(height: 10.0),
                   // Add Product
                   TextButton.icon(
@@ -368,8 +371,16 @@ class _ShopsViewState extends State<ShopsView> {
                         color: Get.theme.primaryColor,
                       ),
                       label:
-                          wText('Add Products', color: Get.theme.primaryColor)),
+                          wText('Add Products'.tr, color: Get.theme.primaryColor)),
                   SizedBox(height: 10.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Lottie.asset('assets/lottie/shop.json',
+                          width: 300, height: 150),
+                    ],
+                  ),
+
                 ]),
             bottomBar: GFButtonBar(
               children: [
@@ -377,7 +388,7 @@ class _ShopsViewState extends State<ShopsView> {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  text: 'Cancel',
+                  text: 'Cancel'.tr,
                   color: Colors.red,
                 ),
               ],
