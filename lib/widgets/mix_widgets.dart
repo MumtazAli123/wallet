@@ -37,12 +37,13 @@ eText(String s, {required Color color}) {
 
 aText(String text, {Color? color, double size = 16}) {
   return Text(
+    maxLines: 1,
     text,
     style: GoogleFonts.quando(
       fontSize: size,
       fontWeight: FontWeight.bold,
       color: color,
-    ),
+    )
   );
 }
 

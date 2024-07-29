@@ -1,4 +1,5 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,7 @@ import 'package:getwidget/types/gf_alert_type.dart';
 import 'package:lottie/lottie.dart';
 import 'package:wallet/widgets/my_drawer.dart';
 
+import '../../../../global/global.dart';
 import '../../../../models/vehicle_model.dart';
 import '../../../../widgets/mix_widgets.dart';
 import '../../products/views/show_products_view.dart';
@@ -81,7 +83,7 @@ class _ShopsViewState extends State<ShopsView> {
               SliverAppBar(
                 leading: Text(''),
                 title: wText('ZubiPay'.tr,size: 20),
-                expandedHeight: 200.0,
+                expandedHeight: 410.0,
                 centerTitle: true,
                 floating: true,
                 pinned: true,
@@ -123,14 +125,6 @@ class _ShopsViewState extends State<ShopsView> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Text(
-              //   'Shops',
-              //   style: TextStyle(
-              //     fontSize: 20,
-              //     fontWeight: FontWeight.bold,
-              //   ),
-              // ),
-
               GestureDetector(
                 onTap: () {
                   Scaffold.of(context).openDrawer();
@@ -147,6 +141,8 @@ class _ShopsViewState extends State<ShopsView> {
           ),
           SizedBox(height: 10.0),
           _buildCategories(),
+          SizedBox(height: 10.0),
+          _buildRealState(),
         ],
       ),
     );
@@ -297,8 +293,7 @@ class _ShopsViewState extends State<ShopsView> {
   _buildCategoryItem(
       {required String name,
       bool selected = false,
-      Function()? onTap,
-      IconData? icon}) {
+      Function()? onTap}) {
     return GestureDetector(
       onTap: onTap,
       child: GFAvatar(
@@ -396,4 +391,138 @@ class _ShopsViewState extends State<ShopsView> {
           );
         });
   }
+
+  _buildRealState() {
+    return Container(
+      width: double.infinity,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        color: Colors.black,
+      ),
+
+      height: 200,
+      // color: Colors.black,
+      // child: SingleChildScrollView(
+      //   child: Row(
+      //     children: [
+      //       Expanded(
+      //         child: Column(
+      //           children: [
+      //            CircleAvatar(
+      //              radius: 50,
+      //              backgroundColor: Colors.green,
+      //              child: IconButton(
+      //                onPressed: () {
+      //                  // Get.toNamed('/realstate');
+      //                },
+      //                icon: Lottie.asset('assets/lottie/shop.json',
+      //                    width: 100, height: 100),
+      //              ),
+      //            ),
+      //             SizedBox(height: 10),
+      //             aText(
+      //                 'All'.tr),
+      //           ],
+      //         ),
+      //       ),
+      //       SizedBox(width: 10),
+      //       Expanded(
+      //         child: Column(
+      //           children: [
+      //             CircleAvatar(
+      //               radius: 50,
+      //               backgroundColor: Colors.green,
+      //               child: IconButton(
+      //                 onPressed: () {
+      //                   Get.toNamed('/realstate');
+      //                 },
+      //                 icon: Lottie.asset('assets/lottie/jump.json',
+      //                     width: 150, height: 150, fit: BoxFit.fill),
+      //               ),
+      //             ),
+      //             SizedBox(height: 10),
+      //             aText('Real State'.tr),
+      //           ],
+      //         ),
+      //       ),
+      //       SizedBox(width: 10),
+      //       Expanded(
+      //         child: Column(
+      //           children: [
+      //             CircleAvatar(
+      //               radius: 50,
+      //               backgroundColor: Colors.green,
+      //               child: IconButton(
+      //                 onPressed: () {
+      //                   Get.to(() => ShowVehicleView());
+      //                 },
+      //                 icon: Lottie.asset('assets/lottie/round.json',
+      //                     width: 150, height: 150, fit: BoxFit.cover),
+      //               ),
+      //             ),
+      //             SizedBox(height: 10),
+      //             aText('Vehicle'.tr),
+      //           ],
+      //         ),
+      //       ),
+      //       SizedBox(width: 10),
+      //       Expanded(
+      //         child: Column(
+      //           children: [
+      //             CircleAvatar(
+      //               radius: 50,
+      //               backgroundColor: Colors.green,
+      //               child: IconButton(
+      //                 onPressed: () {
+      //                   Get.toNamed('/realstate');
+      //                 },
+      //                 icon: Lottie.asset('assets/lottie/coins.json',
+      //                     width: 50, height: 150, fit: BoxFit.cover
+      //                 ),
+      //               ),
+      //             ),
+      //             SizedBox(height: 10),
+      //             aText('Products'.tr),
+      //           ],
+      //         ),
+      //       ),
+      //     ],
+      //   ),
+      // ),
+      child: CarouselSlider(
+          items: itemsList.map((i) {
+            return Builder(
+              builder: (BuildContext context) {
+                return Container(
+                  width: MediaQuery.of(context).size.width,
+                  margin: EdgeInsets.symmetric(horizontal: 5.0),
+                  decoration: BoxDecoration(
+                    color: Colors.amber,
+                  ),
+                  child: Image.asset(
+                    i,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                  ),
+                );
+              },
+            );
+          }).toList(),
+          options: CarouselOptions(
+            autoPlay: true,
+            autoPlayInterval: Duration(seconds: 3),
+            autoPlayAnimationDuration: Duration(milliseconds: 800),
+            autoPlayCurve: Curves.fastOutSlowIn,
+            pauseAutoPlayOnTouch: true,
+            // aspectRatio: 2.7,
+            enlargeCenterPage: true,
+            enableInfiniteScroll: true,
+            viewportFraction: 0.9,
+          )),
+    );
+        // use itemsList
+
+
+  }
+
 }

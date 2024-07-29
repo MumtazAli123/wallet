@@ -37,7 +37,7 @@ class _UploadRealstateViewState extends State<UploadRealstateView> {
   List<String> realStateFurnishing = ['Furnished', 'Semi-Furnished','Unfurnished','Other'];
   List<String> realStateCondition = ['New','Ready to move','Used','Under Construction', 'Other'];
   List<String> realStateStatus = ['Rent', 'Sale', 'Lease', 'Other'];
-  List<String> realStateType = [ 'House','Apartment','Office','Land','Shop', "Plot", "Farm House", "Commercial", "Residential", "Portion", "Flat", "Room", "Building", "Factory", "Warehouse", "Agricultural Land", "Industrial Land", "Residential Plot", "Commercial Plot", "Penthouse", "Upper Portion", "Lower Portion", "Farm", "Farmhouse", "Farm Land", "Farm Warehouse", "Farm Industrial Land", ];
+  List<String> realStateType = [ 'House','Apartment','Office','Land','Shop', "Portion", "Room", "Other"];
   String? realStateTypeValue;
   String? parkingValue;
   String? furnishingValue;
