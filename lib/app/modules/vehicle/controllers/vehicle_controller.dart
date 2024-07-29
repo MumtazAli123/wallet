@@ -19,6 +19,8 @@ class VehicleController extends GetxController {
   TextEditingController vehiclePriceController = TextEditingController();
   TextEditingController vehicleDescriptionController = TextEditingController();
   TextEditingController vehicleKmController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+  TextEditingController cityController = TextEditingController();
 
   // vehicle type
   List<String> vehicleModel = [
@@ -200,6 +202,7 @@ class VehicleController extends GetxController {
   var searchList = [].obs;
 
 
+
   realStateStream() {
     return FirebaseFirestore.instance
         .collection("sellers")
@@ -293,6 +296,8 @@ class VehicleController extends GetxController {
         "email": sharedPreferences!.getString("email"),
         "phone": sharedPreferences!.getString("phone"),
         "image": downloadImageUrl,
+        'address': addressController.text,
+        'city': cityController.text,
         // "imagePath": imageUrlPath,
         "vehicleModel": vehicleModelValue,
         "vehicleType": vehicleTypeValue,
@@ -323,6 +328,8 @@ class VehicleController extends GetxController {
           "email": sharedPreferences!.getString("email"),
           "phone": sharedPreferences!.getString("phone"),
           "image": downloadImageUrl,
+          'address': addressController.text,
+          'city': cityController.text,
           // "imagePath": imageUrlPath,
           "vehicleModel": vehicleModelValue,
           "vehicleType": vehicleTypeValue,

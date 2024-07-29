@@ -32,12 +32,12 @@ class _UploadRealstateViewState extends State<UploadRealstateView> {
   final TextEditingController descriptionController =
   TextEditingController();
   final TextEditingController startingFromController = TextEditingController();
+  final TextEditingController addressController = TextEditingController();
   List<String> parking = ['Bike', 'Car', 'Both', 'None', 'Other'];
   List<String> realStateFurnishing = ['Furnished', 'Semi-Furnished','Unfurnished','Other'];
   List<String> realStateCondition = ['New','Ready to move','Used','Under Construction', 'Other'];
   List<String> realStateStatus = ['Rent', 'Sale', 'Lease', 'Other'];
-  List<String> realStateType = [ 'House','Apartment','Office','Land','Shop','Other'];
-
+  List<String> realStateType = [ 'House','Apartment','Office','Land','Shop', "Plot", "Farm House", "Commercial", "Residential", "Portion", "Flat", "Room", "Building", "Factory", "Warehouse", "Agricultural Land", "Industrial Land", "Residential Plot", "Commercial Plot", "Penthouse", "Upper Portion", "Lower Portion", "Farm", "Farmhouse", "Farm Land", "Farm Warehouse", "Farm Industrial Land", ];
   String? realStateTypeValue;
   String? parkingValue;
   String? furnishingValue;
@@ -105,6 +105,7 @@ class _UploadRealstateViewState extends State<UploadRealstateView> {
       "country": countryValue,
       "state": stateValue,
       "city": cityValue,
+      "address": addressController.text.trim(),
       "sellerId": sharedPreferences!.getString("uid"),
       "sellerName": sharedPreferences!.getString("name"),
       "email": sharedPreferences!.getString("email"),
@@ -127,6 +128,7 @@ class _UploadRealstateViewState extends State<UploadRealstateView> {
         "country": countryValue,
         "state": stateValue,
         "city": cityValue,
+        "address": addressController.text.trim(),
         "sellerId": sharedPreferences!.getString("uid"),
         "sellerName": sharedPreferences!.getString("name"),
         "email": sharedPreferences!.getString("email"),
@@ -325,6 +327,17 @@ class _UploadRealstateViewState extends State<UploadRealstateView> {
               ),
             ),
             const SizedBox(height: 2),
+            // address
+            Padding(padding: const EdgeInsets.all(8.0),
+              child: TextFormField(
+                controller: addressController,
+                decoration: const InputDecoration(
+                  labelText: "Address",
+                  border: OutlineInputBorder(),
+                ),
+              ),
+            ),
+
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(

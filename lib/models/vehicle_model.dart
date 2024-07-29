@@ -5,6 +5,8 @@ class VehicleModel {
   String? image;
   int? likeCount;
   String? phone;
+  String? address;
+  String? city;
   Timestamp? publishedDate;
   String? sellerId;
   String? sellerName;
@@ -32,6 +34,8 @@ class VehicleModel {
     this.likeCount,
     this.phone,
     this.publishedDate,
+    this.address,
+    this.city,
     this.sellerId,
     this.sellerName,
     this.showroomName,
@@ -59,6 +63,8 @@ class VehicleModel {
       image: json['image'],
       likeCount: json['likeCount'],
       phone: json['phone'],
+      address: json['address'],
+      city: json['city'],
       publishedDate: json['publishedDate'],
       sellerId: json['sellerId'],
       sellerName: json['sellerName'],
@@ -88,6 +94,8 @@ class VehicleModel {
       'image': image,
       'likeCount': likeCount,
       'phone': phone,
+      'address': address,
+      'city': city,
       'publishedDate': publishedDate,
       'sellerId': sellerId,
       'sellerName': sellerName,

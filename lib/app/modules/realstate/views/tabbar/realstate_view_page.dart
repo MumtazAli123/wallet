@@ -150,6 +150,12 @@ class RealstateViewPage extends GetView<RealStateController> {
               subtitle: aText("State: ${rsModel.state.toString()}", size: 12),
               trailing: aText(rsModel.country.toString(), size: 12),
             ),
+            // address
+            ListTile(
+              leading: const Icon(Icons.location_city),
+              title: aText("Address:"),
+              subtitle: aText(rsModel.address.toString(), size: 12),
+            ),
             // price
             ListTile(
                 leading:   Icon(Icons.money, color: Colors.orange[900],),

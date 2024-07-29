@@ -441,6 +441,26 @@ class _UploadVehicleViewState extends State<UploadVehicleView> {
                 }).toList(),
               ),
             ),
+            // address
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: wTextField(
+                  keyboardType: "text",
+                  controller: controller.addressController,
+                  labelText: "Vehicle Address",
+                  hintText: "Enter Vehicle Address",
+                  prefixIcon: Icons.location_on),
+            ),
+            // city
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: wTextField(
+                  keyboardType: "text",
+                  controller: controller.cityController,
+                  labelText: "Vehicle City",
+                  hintText: "Enter Vehicle City",
+                  prefixIcon: Icons.location_city),
+            ),
             // description
             Padding(
               padding: const EdgeInsets.all(8.0),

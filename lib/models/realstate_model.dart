@@ -8,6 +8,7 @@ class RealStateModel {
   String? email;
   String? realStateName;
   String? city;
+  String? address;
   String? image;
   String? state;
   String? country;
@@ -34,6 +35,7 @@ class RealStateModel {
     this.email,
     this.realStateName,
     this.city,
+    this.address,
     this.image,
     this.state,
     this.country,
@@ -64,6 +66,7 @@ class RealStateModel {
       'email': email,
       'realStateName': realStateName,
       'city': city,
+      'address': address,
       'image': image,
       'state': state,
       'country': country,
@@ -92,6 +95,7 @@ class RealStateModel {
     email = json['email'];
     realStateName = json['realStateName'];
     city = json['city'];
+    address = json['address'];
     image = json['image'];
     state = json['state'];
     country = json['country'];
