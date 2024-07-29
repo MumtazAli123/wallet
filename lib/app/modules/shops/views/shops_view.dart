@@ -11,6 +11,7 @@ import 'package:getwidget/components/avatar/gf_avatar.dart';
 import 'package:getwidget/components/button/gf_button.dart';
 import 'package:getwidget/components/button/gf_button_bar.dart';
 import 'package:getwidget/shape/gf_avatar_shape.dart';
+import 'package:lottie/lottie.dart';
 
 import '../../../../models/vehicle_model.dart';
 import '../../../../widgets/mix_widgets.dart';
@@ -60,13 +61,51 @@ class _ShopsViewState extends State<ShopsView> {
   }
 
   Widget _buildBody() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        _buildHeader(),
-        _buildShops(),
-      ],
+    // return SafeArea(
+    //   child: Column(
+    //     mainAxisAlignment: MainAxisAlignment.center,
+    //     crossAxisAlignment: CrossAxisAlignment.center,
+    //     children: [
+    //       _buildHeader(),
+    //       _buildShops(),
+    //     ],
+    //   ),
+    // );
+    return SafeArea(
+      child: NestedScrollView(
+          headerSliverBuilder: (context, innerBoxIsScrolled) {
+            return [
+              SliverAppBar(
+                title: wText('ZubiPay',size: 20),
+                expandedHeight: 200.0,
+                centerTitle: true,
+                floating: true,
+                pinned: true,
+                snap: true,
+                actions: [
+                  IconButton(
+                    onPressed: () {
+                      wBuildLanguageBottomSheet(context);
+                    },
+                    icon: const Icon(Icons.language),
+                  ),
+
+                  IconButton(
+                    onPressed: () {
+                      _buildDialogProducts(context);
+                    },
+                    icon: Icon(Icons.add),
+                  ),
+                ],
+                flexibleSpace: FlexibleSpaceBar(
+                  background: _buildHeader(),
+                ),
+
+              ),
+            ];
+          },
+          body: _buildShops()
+      ),
     );
   }
 
@@ -80,13 +119,21 @@ class _ShopsViewState extends State<ShopsView> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                'Shops',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+              // Text(
+              //   'Shops',
+              //   style: TextStyle(
+              //     fontSize: 20,
+              //     fontWeight: FontWeight.bold,
+              //   ),
+              // ),
+
+              Lottie.asset('assets/lottie/shoping.json',
+                  width: 100, height: 100),
+              Lottie.asset('assets/lottie/earn.json',
+                  width: 100, height: 100),
+
+              Lottie.asset('assets/lottie/sale.json',
+                  width: 100, height: 100),
             ],
           ),
           SizedBox(height: 10.0),
@@ -97,39 +144,31 @@ class _ShopsViewState extends State<ShopsView> {
   }
 
   _buildShops() {
-    return Expanded(
-      // child: ListView.builder(
-      //   itemCount: 10,
-      //   itemBuilder: (context, index) {
-      //     return _buildShopItem();
-      //   },
-      // ),
-      child: StreamBuilder<QuerySnapshot>(
-        stream: controller.allVehicleStream(),
-        builder: (context, snapshot) {
-          try {
-            if (snapshot.hasData) {
-              return ListView.builder(
-                itemCount: snapshot.data!.docs.length,
-                itemBuilder: (context, index) {
-                  var data = snapshot.data!.docs[index].data() as Map;
-                  VehicleModel model =
-                      VehicleModel.fromJson(data as Map<String, dynamic>);
-                  return _buildShopItem(model.toJson());
-                },
-              );
-            } else {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          } catch (e) {
+    return StreamBuilder<QuerySnapshot>(
+      stream: controller.allVehicleStream(),
+      builder: (context, snapshot) {
+        try {
+          if (snapshot.hasData) {
+            return ListView.builder(
+              itemCount: snapshot.data!.docs.length,
+              itemBuilder: (context, index) {
+                var data = snapshot.data!.docs[index].data() as Map;
+                VehicleModel model =
+                    VehicleModel.fromJson(data as Map<String, dynamic>);
+                return _buildShopItem(model.toJson());
+              },
+            );
+          } else {
             return const Center(
               child: CircularProgressIndicator(),
             );
           }
-        },
-      ),
+        } catch (e) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
     );
   }
 

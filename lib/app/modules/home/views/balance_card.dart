@@ -92,30 +92,6 @@ class _BalanceCardState extends State<BalanceCard> {
         ),
       ),
     );
-    // return SafeArea(
-    //     child: SingleChildScrollView(
-    //           child: Center(
-    //             child: Column(
-    //               mainAxisAlignment: MainAxisAlignment.center,
-    //               crossAxisAlignment: CrossAxisAlignment.center,
-    //                     children: [
-    //                       _buildBalanceCard(),
-    //                       SizedBox(height: 10.0),
-    //                       _buildButton(),
-    //                       SizedBox(height: 10.0),
-    //                       _buildRecentTransactions(),
-    //                       SizedBox(height: 10.0),
-    //                       _buildProfile(),
-    //                       SizedBox(height: 10.0),
-    //
-    //                       _buildFooter(),
-    //                       // _buildTransactionCard(),
-    //                       //
-    //                       // _buildFooter(),
-    //                     ],
-    //             ),
-    //           ),
-    //         ));
   }
 
   _buildBalanceCard() {
@@ -349,16 +325,7 @@ class _BalanceCardState extends State<BalanceCard> {
           ),
           content: Column(
             children: [
-              myWidget
-                  .animate(onPlay: (controller) {
-                    controller.loop(reverse: false, count: 3);
-                  })
-                  .fade()
-                  .shake()
-                  .slide(
-                    duration: const Duration(seconds: 5),
-                  )
-                  .saturate(),
+              myWidget,
               Lottie.asset('assets/lottie/animation.json',
                   height: 200, width: double.infinity),
             ],

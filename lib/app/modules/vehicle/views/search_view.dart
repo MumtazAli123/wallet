@@ -90,7 +90,7 @@ class _SearchViewState extends State<SearchView> {
             // search by vehicle name, by model, by color with lowercase
             .orderBy('vehicleName')
             .startAt([searchName]).endAt(['$searchName\uf8ff'])
-            .limit(3)
+            .limit(5)
             .snapshots(),
 
         builder: (context, snapshot) {
@@ -112,8 +112,8 @@ class _SearchViewState extends State<SearchView> {
           else{
             return ListView.builder(
               // less than 3 items will not show
-              itemCount: snapshot.data!.docs.length,
-              // itemCount: 5 < 5 ? 5 : snapshot.data!.docs.length,
+              // itemCount: snapshot.data!.docs.length,
+              itemCount: 5 < 5 ? 5 : snapshot.data!.docs.length,
               itemBuilder: (context, index) {
                 var data = snapshot.data!.docs[index].data() as Map;
                 VehicleModel model =
@@ -137,7 +137,7 @@ Widget wVehicleCard(doc) {
       ));
     },
     child: Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 0.0),
       child: Container(
         margin: const EdgeInsets.all(8.0),
         padding: const EdgeInsets.all(8.0),
@@ -158,7 +158,7 @@ Widget wVehicleCard(doc) {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              height: 100,
+              height: 130,
               width: 150,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8.0),

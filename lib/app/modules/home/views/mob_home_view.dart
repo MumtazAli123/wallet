@@ -4,8 +4,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
+import 'package:wallet/widgets/my_drawer.dart';
 
 import '../../../../models/user_model.dart';
+import '../../../../notification/notification_page.dart';
+import '../../../../widgets/mix_widgets.dart';
 import '../controllers/home_controller.dart';
 import 'balance_card.dart';
 
@@ -27,6 +31,33 @@ class HomeView extends GetView<HomeController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: MyDrawer(),
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () {
+            Scaffold.of(context).openDrawer();
+          },
+          icon: CircleAvatar(
+            backgroundColor: Colors.white,
+            backgroundImage: Image.asset('assets/icons/icon.png').image,
+          ),
+        ),
+        title: wText('ZubiPay'.tr),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Get.to(() => NotificationPage());
+            },
+            icon: const Icon(Icons.notifications),
+          ),
+          IconButton(
+            onPressed: () {
+              wBuildLanguageBottomSheet(context);
+            },
+            icon: const Icon(Icons.language),
+          ),
+        ],
+      ),
       body: _buildBody(),
     );
   }

@@ -13,6 +13,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:get/get_utils/get_utils.dart';
 import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:lottie/lottie.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:quickalert/quickalert.dart';
@@ -23,7 +24,9 @@ import 'package:wallet/models/user_model.dart';
 import 'package:wallet/qrcode/result_screen.dart';
 import 'dart:typed_data';
 
+import '../notification/notification_page.dart';
 import '../widgets/mix_widgets.dart';
+import '../widgets/my_drawer.dart';
 
 class QrcodePage extends StatefulWidget {
   const QrcodePage({super.key});
@@ -136,23 +139,8 @@ class _QrcodePageState extends State<QrcodePage> {
           child: wText('Scan QR Code'.tr, color: Colors.white, size: 20),
         ),
       ),
-      appBar: AppBar(
-
-        title: Text('QR Code Scanner'.tr),
-        centerTitle: true,
-        backgroundColor: colours[appBar],
-        actions: [
-          IconButton(
-            onPressed: () {
-              setState(() {
-                appBar = random.nextInt(6);
-              });
-            },
-            icon: Icon(Icons.color_lens),
-          ),
-        ],
-      ),
       body: _buildBody(),
+
     );
   }
 
@@ -165,6 +153,15 @@ class _QrcodePageState extends State<QrcodePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+             Row(
+               children: [
+                 Expanded(child:  Lottie.asset('assets/lottie/jump.json',
+                     width: 200, height: 150)),
+                  Expanded(child:  Lottie.asset('assets/lottie/enjoy.json',
+                     width: 200, height: 150)),
+               ],
+             ),
+
               Text(
                 'Scan the QR code to get the details'.tr,
                 style: TextStyle(
