@@ -125,21 +125,8 @@ class VehicleRating extends StatelessWidget {
   }
 
   wBuildRatingCard(doc) {
-    return Container(
-      margin: const EdgeInsets.all(10),
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.5),
-            spreadRadius: 1,
-            blurRadius: 7,
-            offset: Offset(0, 3), // changes position of shadow
-          ),
-        ],
-      ),
+    return Card(
+      elevation: 5,
       child: ListTile(
         leading: GFAvatar(
           // image is not null then show first letter of name
@@ -160,8 +147,8 @@ class VehicleRating extends StatelessWidget {
               allowHalfRating: true,
               spacing: 2.0,
             ),
-            Text(doc['title'].toString()),
-            Text("Comment: ${doc['comment'].toString()}"),
+            aText(doc['title'].toString()),
+            Text(doc['comment'].toString()),
           ],
         ),
       ),
