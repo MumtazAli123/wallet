@@ -14,6 +14,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/models/realstate_model.dart';
 
 import '../app/modules/realstate/views/tabbar/realstate_view_page.dart';
+import '../rating/rating_screen.dart';
+import '../rating/show_rating_screen.dart';
 
 bool isLoading = false;
 wText(String text, {Color? color, double size = 16}) {
@@ -271,7 +273,12 @@ wBuildRealstateCard(doc) {
           GFRating(
             size: 30,
             color: Colors.amber,
-            onChanged: (value) {},
+            onChanged: (value) {
+              Get.to(() => ShowRatingScreen(
+                sellerId: doc['sellerId'],
+                model: RealStateModel.fromJson(doc.data()),
+                  ));
+            },
             value: 3.5,
           ),
         ],

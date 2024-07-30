@@ -717,6 +717,7 @@ class _RegisterViewState extends State<RegisterView> {
       'sellerType': userModel.sellerType,
       'status': 'approved',
       'balance': 100.0,
+      'rating': 0.0,
       'createdAt': userModel.createdAt,
       'updatedAt': userModel.updatedAt,
     }).then((value) async {
@@ -731,6 +732,7 @@ class _RegisterViewState extends State<RegisterView> {
       await sharedPreferences?.setString('sellerType', 'user');
       await sharedPreferences?.setString('status', 'approved');
       await sharedPreferences?.setString('balance', '100.0');
+      await sharedPreferences?.setString('rating', '0.0');
       await sharedPreferences?.setString(
           'createdAt', DateTime.now().toString());
       await sharedPreferences?.setString(
@@ -771,7 +773,8 @@ class _RegisterViewState extends State<RegisterView> {
         'image': value,
         'sellerType': userModel.sellerType,
         'status': 'approved',
-        'balance': 100.0,
+        'balance': 200.0,
+        'rating': 5.0,
         'createdAt': userModel.createdAt,
         'updatedAt': userModel.updatedAt,
       });
@@ -786,7 +789,8 @@ class _RegisterViewState extends State<RegisterView> {
       await sharedPreferences?.setString('sellerType', 'user');
       await sharedPreferences?.setString('status', 'approved');
       await sharedPreferences?.setString('earning', '100.0');
-      await sharedPreferences?.setString('balance', '100.0');
+      await sharedPreferences?.setString('balance', '200.0');
+      await sharedPreferences?.setString('rating', '5.0');
       await sharedPreferences?.setString(
           'createdAt', DateTime.now().toString());
       await sharedPreferences?.setString(

@@ -7,6 +7,7 @@ import 'package:get/get_navigation/src/routes/transitions_type.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:wallet/notification/notifation_api.dart';
 import 'package:wallet/provider/address_changer.dart';
 
 import 'app/routes/app_pages.dart';
@@ -19,6 +20,7 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  // await FirebaseApi().initNotification();
   SystemChrome.setPreferredOrientations([
     DeviceOrientation.portraitUp,
     DeviceOrientation.portraitDown,
@@ -44,7 +46,7 @@ class MyApp extends StatelessWidget {
         translations: LanguageTranslate(),
         locale: const Locale('en', 'US'),
         fallbackLocale: const Locale('en', 'US'),
-        defaultTransition: Transition.zoom,
+        defaultTransition: Transition.leftToRight,
         debugShowCheckedModeBanner: false,
         darkTheme: ThemeData.dark(),
         themeMode: ThemeMode.system,

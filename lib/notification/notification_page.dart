@@ -24,7 +24,7 @@ class NotificationPage extends StatefulWidget {
 class _NotificationPageState extends State<NotificationPage> {
   late int _totalNotifications;
   late final FirebaseMessaging _firebaseMessaging;
-  PushNotification? _notificationInfo;
+  PNotificationModel? _notificationInfo;
 
   void requestAndRegisterNotification() async {
     await Firebase.initializeApp();
@@ -50,7 +50,7 @@ class _NotificationPageState extends State<NotificationPage> {
     }
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      PushNotification notification = PushNotification(
+      PNotificationModel notification = PNotificationModel(
         title: message.notification?.title ?? '',
         body: message.notification?.body ?? '',
       );
@@ -70,7 +70,7 @@ class _NotificationPageState extends State<NotificationPage> {
     });
     
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      PushNotification notification = PushNotification(
+      PNotificationModel notification = PNotificationModel(
         title: message.notification!.title!,
         body: message.notification!.body!,
       );
@@ -83,7 +83,7 @@ class _NotificationPageState extends State<NotificationPage> {
     // Get any messages which caused the application to open from terminated state
     RemoteMessage? initialMessage = await FirebaseMessaging.instance.getInitialMessage();
     if (initialMessage != null) {
-      PushNotification notification = PushNotification(
+      PNotificationModel notification = PNotificationModel(
         title: initialMessage.notification?.title ?? '',
         body: initialMessage.notification?.body ?? '',
       );

@@ -6,14 +6,18 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_time_ago/get_time_ago.dart';
+import 'package:getwidget/components/rating/gf_rating.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:quickalert/quickalert.dart';
 
 import 'package:screenshot/screenshot.dart';
 import 'package:wallet/app/modules/statement/views/time_statement_view.dart';
 import 'package:wallet/global/global.dart';
+import 'package:wallet/models/realstate_model.dart';
+import 'package:wallet/models/seller_model.dart';
 
 import '../../../../models/user_model.dart';
+import '../../../../rating/rating_screen.dart';
 import '../../../../widgets/currency_format.dart';
 import '../../../../widgets/mix_widgets.dart';
 import '../../send_money/views/send_money_view.dart';
@@ -600,14 +604,24 @@ class MixWidgets {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: List.generate(5, (index) {
-            return Icon(
-              index <= d ? Icons.star : Icons.star_border,
-              color: Colors.amber,
-            );
-          }),
+        // Row(
+        //   mainAxisAlignment: MainAxisAlignment.center,
+        //   children: List.generate(5, (index) {
+        //     return Icon(
+        //       index <= d ? Icons.star : Icons.star_border,
+        //       color: Colors.amber,
+        //     );
+        //   }),
+        // ),
+        GFRating(
+          color: Colors.amber,
+            onChanged: (value) {
+              Get.to(() => RatingScreen(
+                sellerId: FirebaseAuth.instance.currentUser!.uid,
+                model: RealStateModel(),
+              ));
+            },
+            value: d,
         ),
         Text('($d)',
             style: TextStyle(

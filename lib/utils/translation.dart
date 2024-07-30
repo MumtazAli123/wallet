@@ -1,4 +1,8 @@
 
+import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:wallet/notification/push_notification_model.dart';
+
 class Utils {
   static String getLanguageCode(String language) {
     switch (language) {
@@ -103,6 +107,13 @@ class Utils {
     } else {
       return 'Good Evening';
     }
+  }
+
+  static StreamTransformer<QuerySnapshot<Map<String, dynamic>>, List<PNotificationModel>> transformer(PNotificationModel Function(Map<String, dynamic> json) param0) {
+    return StreamTransformer.fromHandlers(handleData: (QuerySnapshot<Map<String, dynamic>> data, EventSink<List<PNotificationModel>> sink) {
+      final notifications = data.docs.map((doc) => param0(doc.data())).toList();
+      sink.add(notifications);
+    });
   }
 
 

@@ -11,11 +11,11 @@ class SellerModel {
   String? token;
   String? earning;
   double? balance;
-
   String? createdAt;
   String? updatedAt;
   String? status;
   String? cart;
+  double? rating;
 
   SellerModel({
     this.uid,
@@ -33,6 +33,7 @@ class SellerModel {
     this.updatedAt,
     this.status,
     this.cart,
+    this.rating,
   });
 
   SellerModel.fromJson(Map<String, dynamic> json) {
@@ -51,6 +52,7 @@ class SellerModel {
     updatedAt = json['updatedAt'];
     status = json['status'];
     cart = json['cart'];
+    rating = json['rating'];
   }
 
   Map<String, dynamic> toJson() {
@@ -70,6 +72,7 @@ class SellerModel {
     data['updatedAt'] = updatedAt;
     data['status'] = status;
     data['cart'] = cart;
+    data['rating'] = rating;
     return data;
   }
 
@@ -90,6 +93,7 @@ class SellerModel {
       updatedAt: map['updatedAt'],
       status: map['status'],
       cart: map['cart'],
+      rating: map['rating'],
     );
   }
 
@@ -110,6 +114,7 @@ class SellerModel {
       'updatedAt': updatedAt,
       'status': status,
       'cart': cart,
+      'rating': rating,
     };
   }
 }

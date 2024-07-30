@@ -11,9 +11,11 @@ import 'package:getwidget/components/alert/gf_alert.dart';
 import 'package:getwidget/components/avatar/gf_avatar.dart';
 import 'package:getwidget/components/button/gf_button.dart';
 import 'package:getwidget/components/button/gf_button_bar.dart';
+import 'package:getwidget/components/rating/gf_rating.dart';
 import 'package:getwidget/shape/gf_avatar_shape.dart';
 import 'package:getwidget/types/gf_alert_type.dart';
 import 'package:lottie/lottie.dart';
+import 'package:wallet/app/modules/shops/views/vehicle_rating.dart';
 import 'package:wallet/widgets/my_drawer.dart';
 
 import '../../../../global/global.dart';
@@ -47,20 +49,25 @@ class _ShopsViewState extends State<ShopsView> {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 5,
-      child: Scaffold(
-        drawer: MyDrawer(),
-        floatingActionButton: FloatingActionButton.extended(
-          backgroundColor: Colors.green,
-          onPressed: () {
-            _buildDialogProducts(context);
-          },
-          label: wText('Add'.tr, color: Colors.white),
-          icon: Icon(
-            Icons.add,
-            color: Colors.white,
+      child: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: Scaffold(
+          drawer: MyDrawer(),
+          floatingActionButton: FloatingActionButton.extended(
+            backgroundColor: Colors.green,
+            onPressed: () {
+              _buildDialogProducts(context);
+            },
+            label: wText('Add'.tr, color: Colors.white),
+            icon: Icon(
+              Icons.add,
+              color: Colors.white,
+            ),
           ),
+          body: _buildBody(),
         ),
-        body: _buildBody(),
       ),
     );
   }
@@ -272,12 +279,28 @@ class _ShopsViewState extends State<ShopsView> {
                         "Upload: ${(GetTimeAgo.parse(DateTime.parse(model['updatedDate'].toDate().toString()).toLocal()))}",
                       ),
                       SizedBox(height: 10),
-                      Row(
-                        children: [
-                          ratingBar(5),
-                          SizedBox(width: 10),
-                        ],
+                      // Row(
+                      //   children: [
+                      //     ratingBar(5),
+                      //     SizedBox(width: 10),
+                      //   ],
+                      // ),
+                      GFRating(
+                        size: 30,
+                        borderColor: Colors.amber,
+                        color: Colors.amber,
+                        onChanged: (value) {
+                          Get.to(() => VehicleRating(
+                            sellerId: model['sellerId'],
+                            image: model['image'],
+                            // model: model,
+                          ));
+                        },
+                        value: sharedPreferences?.getString('rating') != null
+                            ? double.parse(sharedPreferences!.getString('rating')!)
+                            : 4.1,
                       ),
+
                     ],
                   ),
                 ),
@@ -393,132 +416,137 @@ class _ShopsViewState extends State<ShopsView> {
   }
 
   _buildRealState() {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        color: Colors.black,
-      ),
+    return GestureDetector(
+      onTap: () {
+        Get.toNamed('/products'.tr);
+      },
+      child: Container(
+        width: double.infinity,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.black,
+        ),
 
-      height: 200,
-      // color: Colors.black,
-      // child: SingleChildScrollView(
-      //   child: Row(
-      //     children: [
-      //       Expanded(
-      //         child: Column(
-      //           children: [
-      //            CircleAvatar(
-      //              radius: 50,
-      //              backgroundColor: Colors.green,
-      //              child: IconButton(
-      //                onPressed: () {
-      //                  // Get.toNamed('/realstate');
-      //                },
-      //                icon: Lottie.asset('assets/lottie/shop.json',
-      //                    width: 100, height: 100),
-      //              ),
-      //            ),
-      //             SizedBox(height: 10),
-      //             aText(
-      //                 'All'.tr),
-      //           ],
-      //         ),
-      //       ),
-      //       SizedBox(width: 10),
-      //       Expanded(
-      //         child: Column(
-      //           children: [
-      //             CircleAvatar(
-      //               radius: 50,
-      //               backgroundColor: Colors.green,
-      //               child: IconButton(
-      //                 onPressed: () {
-      //                   Get.toNamed('/realstate');
-      //                 },
-      //                 icon: Lottie.asset('assets/lottie/jump.json',
-      //                     width: 150, height: 150, fit: BoxFit.fill),
-      //               ),
-      //             ),
-      //             SizedBox(height: 10),
-      //             aText('Real State'.tr),
-      //           ],
-      //         ),
-      //       ),
-      //       SizedBox(width: 10),
-      //       Expanded(
-      //         child: Column(
-      //           children: [
-      //             CircleAvatar(
-      //               radius: 50,
-      //               backgroundColor: Colors.green,
-      //               child: IconButton(
-      //                 onPressed: () {
-      //                   Get.to(() => ShowVehicleView());
-      //                 },
-      //                 icon: Lottie.asset('assets/lottie/round.json',
-      //                     width: 150, height: 150, fit: BoxFit.cover),
-      //               ),
-      //             ),
-      //             SizedBox(height: 10),
-      //             aText('Vehicle'.tr),
-      //           ],
-      //         ),
-      //       ),
-      //       SizedBox(width: 10),
-      //       Expanded(
-      //         child: Column(
-      //           children: [
-      //             CircleAvatar(
-      //               radius: 50,
-      //               backgroundColor: Colors.green,
-      //               child: IconButton(
-      //                 onPressed: () {
-      //                   Get.toNamed('/realstate');
-      //                 },
-      //                 icon: Lottie.asset('assets/lottie/coins.json',
-      //                     width: 50, height: 150, fit: BoxFit.cover
-      //                 ),
-      //               ),
-      //             ),
-      //             SizedBox(height: 10),
-      //             aText('Products'.tr),
-      //           ],
-      //         ),
-      //       ),
-      //     ],
-      //   ),
-      // ),
-      child: CarouselSlider(
-          items: itemsList.map((i) {
-            return Builder(
-              builder: (BuildContext context) {
-                return Container(
-                  width: MediaQuery.of(context).size.width,
-                  margin: EdgeInsets.symmetric(horizontal: 5.0),
-                  decoration: BoxDecoration(
-                    color: Colors.amber,
-                  ),
-                  child: Image.asset(
-                    i,
-                    fit: BoxFit.cover,
-                    width: double.infinity,
-                  ),
-                );
-              },
-            );
-          }).toList(),
-          options: CarouselOptions(
-            autoPlay: true,
-            autoPlayInterval: Duration(seconds: 3),
-            autoPlayAnimationDuration: Duration(milliseconds: 800),
-            autoPlayCurve: Curves.fastOutSlowIn,
-            pauseAutoPlayOnTouch: true,
-            // aspectRatio: 2.7,
-            enlargeCenterPage: true,
-            enableInfiniteScroll: true,
-            viewportFraction: 0.9,
-          )),
+        height: 200,
+        // color: Colors.black,
+        // child: SingleChildScrollView(
+        //   child: Row(
+        //     children: [
+        //       Expanded(
+        //         child: Column(
+        //           children: [
+        //            CircleAvatar(
+        //              radius: 50,
+        //              backgroundColor: Colors.green,
+        //              child: IconButton(
+        //                onPressed: () {
+        //                  // Get.toNamed('/realstate');
+        //                },
+        //                icon: Lottie.asset('assets/lottie/shop.json',
+        //                    width: 100, height: 100),
+        //              ),
+        //            ),
+        //             SizedBox(height: 10),
+        //             aText(
+        //                 'All'.tr),
+        //           ],
+        //         ),
+        //       ),
+        //       SizedBox(width: 10),
+        //       Expanded(
+        //         child: Column(
+        //           children: [
+        //             CircleAvatar(
+        //               radius: 50,
+        //               backgroundColor: Colors.green,
+        //               child: IconButton(
+        //                 onPressed: () {
+        //                   Get.toNamed('/realstate');
+        //                 },
+        //                 icon: Lottie.asset('assets/lottie/jump.json',
+        //                     width: 150, height: 150, fit: BoxFit.fill),
+        //               ),
+        //             ),
+        //             SizedBox(height: 10),
+        //             aText('Real State'.tr),
+        //           ],
+        //         ),
+        //       ),
+        //       SizedBox(width: 10),
+        //       Expanded(
+        //         child: Column(
+        //           children: [
+        //             CircleAvatar(
+        //               radius: 50,
+        //               backgroundColor: Colors.green,
+        //               child: IconButton(
+        //                 onPressed: () {
+        //                   Get.to(() => ShowVehicleView());
+        //                 },
+        //                 icon: Lottie.asset('assets/lottie/round.json',
+        //                     width: 150, height: 150, fit: BoxFit.cover),
+        //               ),
+        //             ),
+        //             SizedBox(height: 10),
+        //             aText('Vehicle'.tr),
+        //           ],
+        //         ),
+        //       ),
+        //       SizedBox(width: 10),
+        //       Expanded(
+        //         child: Column(
+        //           children: [
+        //             CircleAvatar(
+        //               radius: 50,
+        //               backgroundColor: Colors.green,
+        //               child: IconButton(
+        //                 onPressed: () {
+        //                   Get.toNamed('/realstate');
+        //                 },
+        //                 icon: Lottie.asset('assets/lottie/coins.json',
+        //                     width: 50, height: 150, fit: BoxFit.cover
+        //                 ),
+        //               ),
+        //             ),
+        //             SizedBox(height: 10),
+        //             aText('Products'.tr),
+        //           ],
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // ),
+        child: CarouselSlider(
+            items: itemsList.map((i) {
+              return Builder(
+                builder: (BuildContext context) {
+                  return Container(
+                    width: MediaQuery.of(context).size.width,
+                    margin: EdgeInsets.symmetric(horizontal: 5.0),
+                    decoration: BoxDecoration(
+                      color: Colors.amber,
+                    ),
+                    child: Image.asset(
+                      i,
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                    ),
+                  );
+                },
+              );
+            }).toList(),
+            options: CarouselOptions(
+              autoPlay: true,
+              autoPlayInterval: Duration(seconds: 3),
+              autoPlayAnimationDuration: Duration(milliseconds: 800),
+              autoPlayCurve: Curves.fastOutSlowIn,
+              pauseAutoPlayOnTouch: true,
+              // aspectRatio: 2.7,
+              enlargeCenterPage: true,
+              enableInfiniteScroll: true,
+              // viewportFraction: 0.9,
+            )),
+      ),
     );
         // use itemsList
 

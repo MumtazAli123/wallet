@@ -138,7 +138,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             _buildDescriptionEdit(),
             // ranking stars
 
-            MixWidgets.buildRatingStars(4.5),
+            MixWidgets.buildRatingStars(3.1),
 
             _buildProfileDetails(),
           ],
@@ -426,7 +426,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Column(
             children: [
               wText(
-                '0',
+                '90',
                 size: 16.0,
               ),
               wText(
@@ -439,7 +439,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Column(
             children: [
               wText(
-                '0',
+                '10',
                 size: 16.0,
               ),
               wText(
@@ -452,7 +452,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           Column(
             children: [
               wText(
-                '0',
+                '100',
                 size: 16.0,
               ),
               wText(
@@ -675,7 +675,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       'data': {
         'click_action': 'FLUTTER_NOTIFICATION_CLICK',
         'id': '1',
-        'status': 'done',
+        'statusN': 'done',
         'name': notification['name'],
         'phone': notification['phone'],
         'email': notification['email'],
