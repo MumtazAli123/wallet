@@ -544,8 +544,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       value.ref.getDownloadURL().then((value) {
         db.doc(user!.uid).update({
           'image': value,
+
         });
         sharedPreferences!.setString('image', value);
+        // vehicle image updated successfully
         QuickAlert.show(
           barrierDismissible: false,
           context: context,

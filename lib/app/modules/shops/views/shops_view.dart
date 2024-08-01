@@ -287,6 +287,7 @@ class _ShopsViewState extends State<ShopsView> {
                                 sellerId: model['sellerId'],
                                 image: model['image'],
                                 name: model['showroomName'],
+                                sellerImage: model['sellerImage'],
                                 // model: model,
                               ));
                         },

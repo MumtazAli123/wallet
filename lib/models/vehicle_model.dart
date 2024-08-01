@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class VehicleModel {
   String? email;
   String? image;
+  String? sellerImage;
   int? likeCount;
   String? phone;
   String? address;
@@ -31,6 +32,7 @@ class VehicleModel {
   VehicleModel({
     this.email,
     this.image,
+    this.sellerImage,
     this.likeCount,
     this.phone,
     this.publishedDate,
@@ -61,6 +63,7 @@ class VehicleModel {
     return VehicleModel(
       email: json['email'],
       image: json['image'],
+      sellerImage: json['sellerImage'],
       likeCount: json['likeCount'],
       phone: json['phone'],
       address: json['address'],
@@ -92,6 +95,7 @@ class VehicleModel {
     return {
       'email': email,
       'image': image,
+      'sellerImage': sellerImage,
       'likeCount': likeCount,
       'phone': phone,
       'address': address,

@@ -11,8 +11,9 @@ class VehicleRating extends StatelessWidget {
   final String? sellerId;
   final String? image;
   final String? name;
+  final String? sellerImage;
   // final VehicleModel? model;
-  const VehicleRating({super.key, this.sellerId, this.image, this.name});
+  const VehicleRating({super.key, this.sellerId, this.image, this.name, this.sellerImage});
 
   @override
   Widget build(BuildContext context) {
@@ -79,15 +80,37 @@ class VehicleRating extends StatelessWidget {
                 ),
               ),
             ),
-            centerTitle: false,
+            centerTitle: true,
             iconTheme: const IconThemeData(color: Colors.white),
             title: Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: Colors.black.withOpacity(0.5),
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(5),
               ),
-              child: wText(name.toString().tr, color: Colors.white),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  GFAvatar(
+                    radius: 20,
+                    backgroundColor: Colors.blue,
+                    backgroundImage: sellerImage != null
+                        ? NetworkImage(sellerImage.toString())
+                        : null,
+                    // if sellerImage is  null then show first letter of name
+                    child: sellerImage == null
+                        ? Text(
+                            name.toString().substring(0, 1).toUpperCase(),
+                            style: const TextStyle(color: Colors.white),
+                          )
+                        : null,
+                  ),
+                  const SizedBox(width: 10),
+                  wText(
+                      name.toString(),
+                      color: Colors.white,),
+                ],
+              ),
             ),
             floating: true,
             snap: true,
