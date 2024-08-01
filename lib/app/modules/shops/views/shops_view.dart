@@ -89,7 +89,7 @@ class _ShopsViewState extends State<ShopsView> {
             return [
               SliverAppBar(
                 leading: Text(''),
-                title: wText('ZubiPay'.tr,size: 20),
+                title: wText('ZubiPay'.tr, size: 20),
                 expandedHeight: 410.0,
                 centerTitle: true,
                 floating: true,
@@ -102,7 +102,6 @@ class _ShopsViewState extends State<ShopsView> {
                     },
                     icon: const Icon(Icons.language),
                   ),
-
                   IconButton(
                     onPressed: () {
                       _buildDialogProducts(context);
@@ -113,12 +112,10 @@ class _ShopsViewState extends State<ShopsView> {
                 flexibleSpace: FlexibleSpaceBar(
                   background: _buildHeader(),
                 ),
-
               ),
             ];
           },
-          body: _buildShops()
-      ),
+          body: _buildShops()),
     );
   }
 
@@ -139,11 +136,8 @@ class _ShopsViewState extends State<ShopsView> {
                 child: Lottie.asset('assets/lottie/shoping.json',
                     width: 100, height: 100),
               ),
-              Lottie.asset('assets/lottie/earn.json',
-                  width: 100, height: 100),
-
-              Lottie.asset('assets/lottie/sale.json',
-                  width: 100, height: 100),
+              Lottie.asset('assets/lottie/earn.json', width: 100, height: 100),
+              Lottie.asset('assets/lottie/sale.json', width: 100, height: 100),
             ],
           ),
           SizedBox(height: 10.0),
@@ -190,14 +184,17 @@ class _ShopsViewState extends State<ShopsView> {
         height: 50,
         child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
           Expanded(
-              child: _buildCategoryItem(
-                  onTap: () {
-                    // controller.fetchShops();
-                  },
-                  name: 'All'.tr,
-                  selected: true)).animate().rotate(duration: Duration(seconds: 2)).slide(
-              duration: const Duration(seconds: 4),
-          ),
+                  child: _buildCategoryItem(
+                      onTap: () {
+                        // controller.fetchShops();
+                      },
+                      name: 'All'.tr,
+                      selected: true))
+              .animate()
+              .rotate(duration: Duration(seconds: 2))
+              .slide(
+                duration: const Duration(seconds: 4),
+              ),
           SizedBox(width: 10.0),
           Expanded(
               child: _buildCategoryItem(
@@ -279,23 +276,25 @@ class _ShopsViewState extends State<ShopsView> {
                         "Upload: ${(GetTimeAgo.parse(DateTime.parse(model['updatedDate'].toDate().toString()).toLocal()))}",
                       ),
                       SizedBox(height: 10),
+                      // platform
+
                       GFRating(
                         size: 30,
                         borderColor: Colors.amber,
                         color: Colors.amber,
                         onChanged: (value) {
                           Get.to(() => VehicleRating(
-                            sellerId: model['sellerId'],
-                            image: model['image'],
-                            name: model['showroomName'],
-                            // model: model,
-                          ));
+                                sellerId: model['sellerId'],
+                                image: model['image'],
+                                name: model['showroomName'],
+                                // model: model,
+                              ));
                         },
                         value: sharedPreferences?.getString('rating') != null
-                            ? double.parse(sharedPreferences!.getString('rating')!)
+                            ? double.parse(
+                                sharedPreferences!.getString('rating')!)
                             : 4.1,
                       ),
-
                     ],
                   ),
                 ),
@@ -309,9 +308,7 @@ class _ShopsViewState extends State<ShopsView> {
   }
 
   _buildCategoryItem(
-      {required String name,
-      bool selected = false,
-      Function()? onTap}) {
+      {required String name, bool selected = false, Function()? onTap}) {
     return GestureDetector(
       onTap: onTap,
       child: GFAvatar(
@@ -371,8 +368,8 @@ class _ShopsViewState extends State<ShopsView> {
                         Icons.car_rental,
                         color: Get.theme.primaryColor,
                       ),
-                      label:
-                          wText('Add Vehicle'.tr, color: Get.theme.primaryColor)),
+                      label: wText('Add Vehicle'.tr,
+                          color: Get.theme.primaryColor)),
                   SizedBox(height: 10.0),
                   // Add Product
                   TextButton.icon(
@@ -383,8 +380,8 @@ class _ShopsViewState extends State<ShopsView> {
                         Icons.shopping_cart,
                         color: Get.theme.primaryColor,
                       ),
-                      label:
-                          wText('Add Products'.tr, color: Get.theme.primaryColor)),
+                      label: wText('Add Products'.tr,
+                          color: Get.theme.primaryColor)),
                   SizedBox(height: 10.0),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -393,7 +390,6 @@ class _ShopsViewState extends State<ShopsView> {
                           width: 300, height: 150),
                     ],
                   ),
-
                 ]),
             bottomBar: GFButtonBar(
               children: [
@@ -543,9 +539,6 @@ class _ShopsViewState extends State<ShopsView> {
             )),
       ),
     );
-        // use itemsList
-
-
+    // use itemsList
   }
-
 }

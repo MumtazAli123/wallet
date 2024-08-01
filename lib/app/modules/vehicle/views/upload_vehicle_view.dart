@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/components/button/gf_button.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:wallet/app/modules/register/controllers/register_controller.dart';
 import 'package:wallet/app/modules/vehicle/controllers/vehicle_controller.dart';
 
 import '../../../../utils/translation.dart';
@@ -614,24 +613,4 @@ class _UploadVehicleViewState extends State<UploadVehicleView> {
 
   }
 
-  wTextField({required TextEditingController controller, required String keyboardType, required String labelText, required String hintText, required IconData prefixIcon}) {
-    return TextField(
-      controller: controller,
-      inputFormatters: [
-        RegisterController.textUpperCaseTextFormatter(),
-
-      ],
-
-      // keyboardType: when number show done on keyboard
-      keyboardType: keyboardType == "number" ? TextInputType.number : TextInputType.text,
-      decoration: InputDecoration(
-        labelText: labelText,
-        hintText: hintText,
-        prefixIcon: Icon(prefixIcon),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-      ),
-    );
-  }
 }

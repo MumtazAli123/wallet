@@ -13,6 +13,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/models/realstate_model.dart';
 
 import '../app/modules/realstate/views/tabbar/realstate_view_page.dart';
+import '../app/modules/register/controllers/register_controller.dart';
 import '../rating/show_rating_screen.dart';
 
 bool isLoading = false;
@@ -418,6 +419,28 @@ void wBuildLanguageBottomSheet(BuildContext context) {
             ],
           ),
         ],
+      ),
+    ),
+  );
+}
+
+
+wTextField({required TextEditingController controller, required String keyboardType, required String labelText, required String hintText, required IconData prefixIcon}) {
+  return TextField(
+    controller: controller,
+    inputFormatters: [
+      RegisterController.textUpperCaseTextFormatter(),
+
+    ],
+
+    // keyboardType: when number show done on keyboard
+    keyboardType: keyboardType == "number" ? TextInputType.number : TextInputType.text,
+    decoration: InputDecoration(
+      labelText: labelText,
+      hintText: hintText,
+      prefixIcon: Icon(prefixIcon),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(10),
       ),
     ),
   );
