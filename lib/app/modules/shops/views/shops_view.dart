@@ -279,12 +279,6 @@ class _ShopsViewState extends State<ShopsView> {
                         "Upload: ${(GetTimeAgo.parse(DateTime.parse(model['updatedDate'].toDate().toString()).toLocal()))}",
                       ),
                       SizedBox(height: 10),
-                      // Row(
-                      //   children: [
-                      //     ratingBar(5),
-                      //     SizedBox(width: 10),
-                      //   ],
-                      // ),
                       GFRating(
                         size: 30,
                         borderColor: Colors.amber,
@@ -293,6 +287,7 @@ class _ShopsViewState extends State<ShopsView> {
                           Get.to(() => VehicleRating(
                             sellerId: model['sellerId'],
                             image: model['image'],
+                            name: model['showroomName'],
                             // model: model,
                           ));
                         },

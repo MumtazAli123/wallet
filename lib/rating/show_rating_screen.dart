@@ -33,6 +33,20 @@ class _ShowRatingScreenState extends State<ShowRatingScreen> {
       headerSliverBuilder: (context, innerBoxIsScrolled) {
         return [
           SliverAppBar(
+            leading: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(50),
+              ),
+              child: IconButton(
+                onPressed: () {
+                  Get.back();
+                },
+                icon: const Icon(Icons.close, color: Colors.white),
+              ),
+            ),
+
             bottom: PreferredSize(
               preferredSize: const Size.fromHeight(100.0),
               child: GestureDetector(
@@ -77,7 +91,7 @@ class _ShowRatingScreenState extends State<ShowRatingScreen> {
                 ),
               ),
             ),
-            centerTitle: false,
+            centerTitle: true,
             iconTheme: const IconThemeData(color: Colors.white),
             title: Container(
               padding: const EdgeInsets.all(10),
@@ -85,8 +99,9 @@ class _ShowRatingScreenState extends State<ShowRatingScreen> {
                 color: Colors.black.withOpacity(0.5),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: wText('Rating'.tr, color: Colors.white),
+              child: wText('Seller : ${widget.model.sellerName}'.tr, color: Colors.white),
             ),
+
             floating: true,
             snap: true,
             pinned: true,

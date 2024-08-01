@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, prefer_const_constructors_in_immutables, avoid_print
 
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/components/avatar/gf_avatar.dart';
 import 'package:getwidget/components/button/gf_button_bar.dart';
@@ -14,18 +13,19 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/models/realstate_model.dart';
 
 import '../app/modules/realstate/views/tabbar/realstate_view_page.dart';
-import '../rating/rating_screen.dart';
 import '../rating/show_rating_screen.dart';
 
 bool isLoading = false;
 wText(String text, {Color? color, double size = 16}) {
   return Text(
+    maxLines: 1,
     textAlign: TextAlign.center,
     text,
     style: GoogleFonts.gabriela(
       fontSize: size,
       fontWeight: FontWeight.bold,
       color: color,
+
     ),
   );
 }

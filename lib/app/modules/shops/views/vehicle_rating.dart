@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:getwidget/components/avatar/gf_avatar.dart';
 import 'package:smooth_star_rating_nsafe/smooth_star_rating.dart';
 
@@ -11,8 +10,9 @@ import '../../../../widgets/mix_widgets.dart';
 class VehicleRating extends StatelessWidget {
   final String? sellerId;
   final String? image;
+  final String? name;
   // final VehicleModel? model;
-  const VehicleRating({super.key, this.sellerId, this.image});
+  const VehicleRating({super.key, this.sellerId, this.image, this.name});
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +26,20 @@ class VehicleRating extends StatelessWidget {
       headerSliverBuilder: (context, innerBoxIsScrolled) {
         return [
           SliverAppBar(
+            leading: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(50),
+              ),
+              child: IconButton(
+                onPressed: () {
+                  Get.back();
+                },
+                icon: const Icon(Icons.close, color: Colors.white),
+              ),
+            ),
+
             bottom: PreferredSize(
               preferredSize: const Size.fromHeight(100.0),
               child: GestureDetector(
@@ -73,7 +87,7 @@ class VehicleRating extends StatelessWidget {
                 color: Colors.black.withOpacity(0.5),
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: wText('Rating'.tr, color: Colors.white),
+              child: wText(name.toString().tr, color: Colors.white),
             ),
             floating: true,
             snap: true,
