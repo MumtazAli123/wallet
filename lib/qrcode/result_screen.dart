@@ -147,9 +147,14 @@ class _ResultScreenState extends State<ResultScreen> {
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
                     shape: BoxShape.rectangle,
-                    image: DecorationImage(
-                      image: NetworkImage(widget.userModel.image!),
-                      fit: BoxFit.cover,
+                    image: widget.userModel.image!.isEmpty
+                        ? DecorationImage(
+                            image: AssetImage('assets/images/bg.png'),
+                            fit: BoxFit.cover,
+                          )
+                        : DecorationImage(
+                            image: NetworkImage("${widget.userModel.image}"),
+                            fit: BoxFit.cover,
                     ),
                   ),
                 ),

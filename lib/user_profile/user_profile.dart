@@ -104,10 +104,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
             Stack(
               children: [
                 // if image not found then show placeholder image
-                MixWidgets.buildAvatar(
-                    sharedPreferences!.getString('image') ??
+                // MixWidgets.buildAvatar(
+                //     sharedPreferences!.getString('image') ??
+                //         'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png',
+                //     70.0),
+                sharedPreferences!.getString('image')!.isEmpty
+                    ? MixWidgets.buildAvatar(
                         'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png',
-                    70.0),
+                        70.0)
+                    : MixWidgets.buildAvatar(
+                        sharedPreferences!.getString('image')!,
+                        70.0),
 
                 Positioned(
                   top: 95.0,

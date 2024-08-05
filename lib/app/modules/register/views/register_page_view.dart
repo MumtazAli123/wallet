@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:getwidget/components/button/gf_button.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
@@ -139,7 +140,7 @@ class _RegisterPageViewState extends State<RegisterPageView> {
   }
   Widget emailFormScreen() {
     return Scaffold(
-      backgroundColor: Colors.blue[800],
+      backgroundColor: Colors.blue[900],
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Colors.transparent,
@@ -184,39 +185,43 @@ class _RegisterPageViewState extends State<RegisterPageView> {
 
   Widget registerFormScreen() {
     return Scaffold(
-      backgroundColor: Colors.blue[800],
-      bottomNavigationBar: Row(
-        children: [
-          Expanded(
-            child: Container(
-              decoration: BoxDecoration(
-                color: Colors.red,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(140),
+      backgroundColor: Colors.blue[900],
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.only(bottom: 18.0, left: 10.0, right: 10.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            Expanded(
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(140),
+                  ),
                 ),
+                height: 55,
+                child: wButton('Back', color: Colors.red, onPressed: () {
+                  controller.currentScreen.value = 0;
+                }),
               ),
-              height: 60,
-              child: wButton('Back', color: Colors.red, onPressed: () {
-                controller.currentScreen.value = 0;
-              }),
             ),
-          ),
-          Expanded(
-            child: Container(
-              height: 60,
+            SizedBox(
+              width: 10,
+            ),
+            Container(
+              height: 57,
               decoration: BoxDecoration(
-                color: Colors.green,
                 borderRadius: BorderRadius.only(
                   topRight: Radius.circular(140),
                 ),
               ),
-              child: wButton('Next', color: Colors.blue, onPressed: () {
+              child: wButton('Next', color: Colors.blue[800], onPressed: () {
                 formValidation();
               }),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
+
       appBar: AppBar(
         automaticallyImplyLeading: false,
         iconTheme: IconThemeData(color: Colors.white),
@@ -329,7 +334,7 @@ class _RegisterPageViewState extends State<RegisterPageView> {
                   const SizedBox(height: 20.0),
                   wText("Let's get started", color: Colors.white, size: 20),
                   cText("Please enter your WhatsApp number",
-                      color: Colors.white),
+                      color: Colors.white, size: 12),
                   const SizedBox(height: 20.0),
                   // wText('Enter Phone Number', color: Colors.white),
                   const SizedBox(height: 20.0),
@@ -399,19 +404,19 @@ class _RegisterPageViewState extends State<RegisterPageView> {
         child: Form(
           key: controller.formKey,
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.only(left: 8.0, right: 8.0),
             child: Column(
               children: [
                 Container(
-                  height: 150,
-                  width: 200,
+                  height: 50,
+                  width: 100,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     shape: BoxShape.circle,
                   ),
-                  child: Lottie.asset('assets/lottie/coins.json'),
+                  child: Lottie.asset('assets/lottie/diamond.json'),
                 ),
-                SizedBox(height: 20.0),
+                SizedBox(height: 10.0),
                 // email show here
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -466,11 +471,14 @@ class _RegisterPageViewState extends State<RegisterPageView> {
                   ),
                   SizedBox(height: 20.0),
 
-                  wText(
+                  Text(
+                    textAlign: TextAlign.center,
                     "Please check your information\n"
                         "If you want to change, click back button",
-                    size: 14,
-                    color: Colors.yellowAccent,
+                    style: GoogleFonts.kadwa(
+                      color: Colors.yellowAccent[700],
+                      fontSize: 12,
+                    ),
                   ),
                   Divider(),
                   // email show here
@@ -838,7 +846,7 @@ class _RegisterPageViewState extends State<RegisterPageView> {
 
       Get.back();
       Get.offAll(() => BottomPageView());
-      Get.snackbar('Success', 'User registered successfully');
+      Get.snackbar('Success', 'User registered successfully', backgroundColor: Colors.green);
     } catch (e) {
       Get.back();
       Get.snackbar('Error', e.toString());
