@@ -166,9 +166,18 @@ class VehicleRating extends StatelessWidget {
       elevation: 5,
       child: ListTile(
         leading: GFAvatar(
-          // image is not null then show first letter of name
-          backgroundImage: doc['image'] != null
+          radius: 20,
+          backgroundColor: Colors.blue,
+          backgroundImage: sellerImage != null
               ? NetworkImage(doc['image'].toString())
+              : null,
+          // if sellerImage is  null then show first letter of name
+          child: sellerImage == null
+              ? Text(
+            // name.toString().substring(0, 1).toUpperCase(),
+            doc['name'].toString().substring(0, 1).toUpperCase(),
+            style: const TextStyle(color: Colors.white),
+          )
               : null,
         ),
         title: Text("Name: ${doc['name'].toString()}"),
