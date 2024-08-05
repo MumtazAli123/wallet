@@ -15,6 +15,7 @@ class UserModel {
   String? updatedAt;
   String? uid;
   String? sellerDeviceToken;
+  String? desc;
   String? city;
   String? address;
 
@@ -29,6 +30,7 @@ class UserModel {
       this.status,
       this.description,
       this.lastTransaction,
+      this.desc,
       this.sellerType,
       this.createdAt,
       this.updatedAt,
@@ -53,6 +55,7 @@ class UserModel {
         createdAt: map['createdAt'],
         updatedAt: map['updatedAt'],
         sellerDeviceToken: map['sellerDeviceToken'],
+        desc: map['desc'],
         city: map['city'],
         address: map['address']);
   }
@@ -75,6 +78,7 @@ class UserModel {
       'createdAt': createdAt,
       'updatedAt': updatedAt,
       'sellerDeviceToken': sellerDeviceToken,
+      'desc': desc,
       'city': city,
       'address': address
     };
@@ -95,6 +99,7 @@ class UserModel {
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
     sellerDeviceToken = json['sellerDeviceToken'];
+    desc = json['desc'];
     city = json['city'];
     address = json['address'];
   }
@@ -115,6 +120,7 @@ class UserModel {
     data['createdAt'] = createdAt;
     data['updatedAt'] = updatedAt;
     data['sellerDeviceToken'] = sellerDeviceToken;
+    data['desc'] = desc;
     data['city'] = city;
     data['address'] = address;
     return data;
@@ -136,6 +142,7 @@ class UserModel {
         createdAt: doc['createdAt'],
         updatedAt: doc['updatedAt'],
         sellerDeviceToken: doc['sellerDeviceToken'],
+        desc: doc['desc'],
         city: doc['city'],
         address: doc['address']);
   }
