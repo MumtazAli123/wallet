@@ -153,7 +153,7 @@ class _ShowRatingScreenState extends State<ShowRatingScreen> {
       margin: const EdgeInsets.all(10),
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Get.theme.scaffoldBackgroundColor,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
           BoxShadow(
@@ -166,11 +166,18 @@ class _ShowRatingScreenState extends State<ShowRatingScreen> {
       ),
       child: ListTile(
         leading: GFAvatar(
-            // image is not null then show first letter of name
+          radius: 20,
+          backgroundColor: Colors.blue,
           backgroundImage: doc['image'] != null
               ? NetworkImage(doc['image'].toString())
               : null,
-
+          // if sellerImage is  null then show first letter of name
+          child: doc['image'] == null
+              ? Text(
+            doc['name'].toString().substring(0, 1).toUpperCase(),
+            style: const TextStyle(color: Colors.white),
+          )
+              : null,
         ),
         title: Text("Name: ${doc['name'].toString()}"),
         subtitle: Column(
