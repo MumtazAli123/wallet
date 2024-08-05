@@ -13,7 +13,6 @@ import 'package:getwidget/components/card/gf_card.dart';
 import 'package:getwidget/components/list_tile/gf_list_tile.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
-import 'package:path/path.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:wallet/widgets/currency_format.dart';
 
@@ -22,7 +21,6 @@ import '../../../../models/user_model.dart';
 import '../../../../widgets/mix_widgets.dart';
 import '../../home/controllers/home_controller.dart';
 import '../../home/views/wallet_view.dart';
-import '../../send_money/views/send_money_view.dart';
 import '../../statement/views/receive_send.dart';
 import '../../statement/views/time_statement_view.dart';
 
@@ -75,9 +73,12 @@ class WalletView extends GetView<HomeController> {
                   elevation: 10,
                   color: Get.theme.scaffoldBackgroundColor,
                   padding: EdgeInsets.all(5.0),
-                  image: Image.network("${model!.image}", fit: BoxFit.cover,
-                    height: 200.0,
-                    width: double.infinity,),
+                  image: model!.image!.isEmpty
+                      ? Image.asset('assets/images/bg.png', height: 300, width: double.infinity, fit: BoxFit.cover,)
+                      : Image.network(model!.image!,
+                      height: 200.0,
+                      width: double.infinity,
+                      fit: BoxFit.cover,),
                   showImage: true,
                   content: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -296,70 +297,69 @@ class WalletView extends GetView<HomeController> {
                             return Padding(
                               padding:
                               const EdgeInsets.only(left: 8.0, right: 8.0),
-                              child: Card(
-                                elevation: 5,
-                                child: ListTile(
-                                    leading: MixWidgets.buildAvatar(
-                                      // get user image from firebase
-                                        isLoading == true
-                                            ? 'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png'
-                                            : snapshot
-                                            .data?.docs[index]['image']
-                                            .toString(),
-                                        20.0),
-                                    title: Text(
-                                        snapshot.data?.docs[index]['name']),
-                                    subtitle: Column(
-                                      crossAxisAlignment:
-                                      CrossAxisAlignment.start,
-                                      children: [
-                                        // balance type cr or dr
-                                        Row(
-                                          children: [
-                                            Text(
-                                              // amount
-                                                snapshot.data?.docs[index]
-                                                ['type'] ==
-                                                    'send'
-                                                    ? 'Rs.${currencyFormat(double.parse(snapshot.data!.docs[index]['balance'].toString()))}'
-                                                    : 'Rs.${currencyFormat(double.parse(snapshot.data!.docs[index]['balance'].toString()))}'),
-                                            SizedBox(width: 10.0),
-                                            Text(snapshot.data?.docs[index]
-                                            ['type'] ==
-                                                'send'
-                                                ? 'Cr'
-                                                : 'Dr'),
-                                          ],
-                                        ),
-                                        Text(GetTimeAgo.parse(
-                                            DateTime.parse(snapshot
-                                                .data!.docs[index]['created_at']
-                                                .toDate()
-                                                .toString()),
-                                            locale: 'en')),
-                                      ],
-                                    ),
+                              child: GestureDetector(
+                                onDoubleTap: () {
+                                  _buildDetailDialog(
+                                      context,
+                                      BalanceModel(
+                                        name: snapshot.data?.docs[index]['name'],
+                                        amount: snapshot.data?.docs[index]['amount'],
+                                        type: snapshot.data?.docs[index]['type'],
+                                        description: snapshot.data?.docs[index]['description'],
+                                        phone: snapshot.data?.docs[index]['phone'],
+                                        created_at: snapshot.data?.docs[index]['created_at'].toDate().toString(),
+                                      ));
+                                },
+                                child: Card(
+                                  elevation: 5,
+                                  child: ListTile(
+                                      leading: Icon(Icons.account_balance_wallet, color: Colors.blue),
+                                      title: Text(
+                                          snapshot.data?.docs[index]['name']),
+                                      subtitle: Column(
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                        children: [
+                                          // balance type cr or dr
+                                          Row(
+                                            children: [
+                                              Text(
+                                                // amount
+                                                  snapshot.data?.docs[index]
+                                                  ['type'] ==
+                                                      'send'
+                                                      ? 'Rs.${currencyFormat(double.parse(snapshot.data!.docs[index]['balance'].toString()))}'
+                                                      : 'Rs.${currencyFormat(double.parse(snapshot.data!.docs[index]['balance'].toString()))}'),
+                                              SizedBox(width: 10.0),
+                                              Text(snapshot.data?.docs[index]
+                                              ['type'] ==
+                                                  'send'
+                                                  ? 'Cr'
+                                                  : 'Dr'),
+                                            ],
+                                          ),
+                                          Text(GetTimeAgo.parse(
+                                              DateTime.parse(snapshot
+                                                  .data!.docs[index]['created_at']
+                                                  .toDate()
+                                                  .toString()),
+                                              locale: 'en')),
+                                        ],
+                                      ),
 
-                                    //   type and amount
-                                    trailing: wText(
-                                      snapshot.data?.docs[index]['type'] ==
-                                          'send'
-                                          ? '+ ${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}'
-                                          : '- ${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}',
-                                    ),
-                                    onTap: () {
-                                      _buildDialogTran(
-                                          snapshot.data?.docs[index]['name'],
-                                          snapshot.data?.docs[index]['amount'],
-                                          snapshot.data?.docs[index]['type'],
-                                          snapshot
-                                              .data?.docs[index]['created_at']
-                                              .toDate()
-                                              .toString(),
-                                          snapshot.data?.docs[index]['phone'],
-                                          snapshot.data?.docs[index]
-                                          ['description']);
-                                    }),
+                                      //   type and amount
+                                      trailing: wText(
+                                        snapshot.data?.docs[index]['type'] ==
+                                            'send'
+                                            ? '+ ${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}'
+                                            : '- ${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}',
+                                        color: snapshot.data?.docs[index]['type'] ==
+                                            'send'
+                                            ? Colors.green
+                                            : Colors.red,
+                                      )),
+
+                                ),
                               ),
                             );
                           },
