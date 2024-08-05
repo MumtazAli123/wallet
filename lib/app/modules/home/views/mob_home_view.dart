@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:lottie/lottie.dart';
 import 'package:wallet/widgets/my_drawer.dart';
 
 import '../../../../models/user_model.dart';
@@ -14,6 +13,7 @@ import '../controllers/home_controller.dart';
 import 'balance_card.dart';
 
 class HomeView extends GetView<HomeController> {
+
   HomeView({super.key});
 
   final User? user = FirebaseAuth.instance.currentUser;

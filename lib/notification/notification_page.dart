@@ -1,8 +1,8 @@
 // ignore_for_file: public_member_api_docs, prefer_const_constructors
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:overlay_support/overlay_support.dart';
 import 'package:wallet/notification/notification_badge.dart';
@@ -11,7 +11,9 @@ import 'package:wallet/widgets/mix_widgets.dart';
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
-  print('Handling a background message ${message.messageId}');
+  if (kDebugMode) {
+    print('Handling a background message ${message.messageId}');
+  }
 }
 
 class NotificationPage extends StatefulWidget {
@@ -42,11 +44,17 @@ class _NotificationPageState extends State<NotificationPage> {
       sound: true,
     );
     if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      print('User granted permission');
+      if (kDebugMode) {
+        print('User granted permission');
+      }
       String? token = await _firebaseMessaging.getToken();
-      print('Token: $token');
+      if (kDebugMode) {
+        print('Token: $token');
+      }
     } else {
-      print('User declined or has not accepted permission');
+      if (kDebugMode) {
+        print('User declined or has not accepted permission');
+      }
     }
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
@@ -103,6 +111,9 @@ class _NotificationPageState extends State<NotificationPage> {
     super.initState();
     _totalNotifications = 0;
     requestAndRegisterNotification();
+    // PushNotificationSys pushNotificationSys = PushNotificationSys();
+    // pushNotificationSys.generateDeviceToken();
+    // pushNotificationSys.whenNotificationReceived();
   }
 
   @override

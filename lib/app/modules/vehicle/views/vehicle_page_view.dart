@@ -12,6 +12,7 @@ import 'package:getwidget/shape/gf_button_shape.dart';
 import 'package:getwidget/types/gf_button_type.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:scoped_model/scoped_model.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/app/modules/vehicle/controllers/vehicle_controller.dart';
 import 'package:wallet/models/vehicle_model.dart';
@@ -307,9 +308,12 @@ class _VehiclePageViewState extends State<VehiclePageView> {
                 "Upload: ${(GetTimeAgo.parse(DateTime.parse(widget.vModel.updatedDate!.toDate().toString()).toLocal()))}",
               ),
             ),
+          SizedBox(height: 20.0),
+          //   share on facebook, twitter, whatsapp, email as a post or message
           ],
         ),
       ),
     );
   }
+
 }

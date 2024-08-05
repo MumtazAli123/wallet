@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:getwidget/components/avatar/gf_avatar.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/app/modules/home/controllers/home_controller.dart';
 import 'package:wallet/widgets/privacy_policy.dart';
@@ -19,8 +20,10 @@ class _MyDrawerState extends State<MyDrawer> {
 
   String name = sharedPreferences!.getString('name') ?? '';
   String email = sharedPreferences!.getString('email') ?? '';
-  String profileImage = sharedPreferences!.getString('image') ?? "https://www.google.com/url?sa=i&url=https%3A%2F%2Fwww.cleanpng.com%2Fpng-computer-icons-user-profile-person-730537%2F&psig=AOvVaw1QX8MH26kPfq4tS6bH9YVm&ust=1716047055827000&source=images&cd=vfe&opi=89978449&ved=0CBIQjRxqFwoTCLjV586DlYYDFQAAAAAdAAAAABAJ";
   String phoneNumber = sharedPreferences!.getString('phone') ?? '';
+  final profileImage = sharedPreferences!.getString('image') ?? '';
+
+
 
   var url_launcher = Get.find<HomeController>();
   bool isSelect = false;
@@ -66,9 +69,17 @@ class _MyDrawerState extends State<MyDrawer> {
           icon: const Icon(Icons.edit),
         ),
       ],
-      currentAccountPicture: CircleAvatar(
-        backgroundImage: NetworkImage(profileImage),
-      ),
+      currentAccountPicture: profileImage.isEmpty
+          ? const CircleAvatar(
+              backgroundColor: Colors.white,
+              child: Icon(
+                Icons.person,
+                color: Colors.brown,
+              ),
+            )
+          : GFAvatar(
+              backgroundImage: NetworkImage(profileImage),
+            ),
     );
   }
 

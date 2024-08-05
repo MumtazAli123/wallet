@@ -1,8 +1,11 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 import 'package:get/get.dart';
 import 'package:quickalert/models/quickalert_type.dart';
@@ -11,6 +14,8 @@ import 'package:wallet/app/modules/send_money/views/send_money_friends_view.dart
 
 import '../../../../global/global.dart';
 import '../../../../models/user_model.dart';
+import '../../../../notification/push_notification_model.dart';
+import '../../../../notification/push_notification_sys.dart';
 import '../../../../widgets/mix_widgets.dart';
 import '../controllers/send_money_controller.dart';
 
@@ -39,7 +44,6 @@ class _SendMoneyViewState extends State<SendMoneyView> {
   final phoneController = TextEditingController();
 
   String? description = '';
-
 
   UserModel userModel = UserModel();
 
@@ -121,7 +125,7 @@ class _SendMoneyViewState extends State<SendMoneyView> {
           Get.to(() => SendMoneyToFriends(
                 // otherUser: otherUsers,
                 amount: loggedInUser.balance!.toDouble(),
-          ));
+              ));
         },
         backgroundColor: Colors.green,
         label: wText('Send Money to Friends', color: Colors.white),
@@ -146,14 +150,12 @@ class _SendMoneyViewState extends State<SendMoneyView> {
                     onTap: () {
                       controller.selectedUser.value = otherUsers[index];
                       _buildTransferDialog(otherUsers[index]);
-
                     },
                   ),
                 ),
               ),
             ),
           );
-
         },
         itemCount: otherUsers.length,
       ),
@@ -167,9 +169,8 @@ class _SendMoneyViewState extends State<SendMoneyView> {
       children: [
         Padding(
           padding: const EdgeInsets.all(8.0),
-
           child: TextField(
-          //   do not search same use
+            //   do not search same use
             controller: controller.searchController,
             onChanged: controller.otherUsers.isEmpty
                 ? (value) {
@@ -186,7 +187,6 @@ class _SendMoneyViewState extends State<SendMoneyView> {
                 borderRadius: BorderRadius.circular(20),
               ),
             ),
-
           ),
         ),
         Expanded(
@@ -200,7 +200,8 @@ class _SendMoneyViewState extends State<SendMoneyView> {
                 itemCount: controller.searchOtherUserList.length,
                 itemBuilder: (context, index) {
                   UserModel user = UserModel.fromMap(
-                      controller.searchOtherUserList[index].data() as Map<String, dynamic>);
+                      controller.searchOtherUserList[index].data()
+                          as Map<String, dynamic>);
                   return ListTile(
                     title: Text(user.name!),
                     subtitle: Text(user.email!),
@@ -340,6 +341,9 @@ class _SendMoneyViewState extends State<SendMoneyView> {
           loggedInUser.balance = updatedBalance;
         });
 
+        // send notification to recipient
+        await sendNotificationToRecipient(recipient);
+
         Get.snackbar('Success', 'Money sent successfully',
             backgroundColor: Colors.green,
             colorText: Colors.white,
@@ -416,4 +420,121 @@ class _SendMoneyViewState extends State<SendMoneyView> {
     );
   }
 
+  // sendNotificationToRecipient(UserModel recipient) {
+  //   // send notification to recipient
+  //   fb.collection('sellers').doc(recipient.uid).get().then((doc) {
+  //     if (doc.exists) {
+  //       String? recipientDeviceToken = doc['sellerDeviceToken'];
+  //
+  //       if (recipientDeviceToken != null) {
+  //         PNotificationModel notificationModel = PNotificationModel(
+  //           title: 'Money Received',
+  //           body:
+  //               'You have received money from ${sharedPreferences!.getString('name')}\n'
+  //               'Amount: ${transferNominalController.text}\n'
+  //               'Description: ${descriptionController.text}',
+  //         );
+  //
+  //         PushNotificationSys()
+  //             .sendNotification(notificationModel, recipientDeviceToken);
+  //         print(
+  //             'Notification sent to recipient successfully $recipientDeviceToken');
+  //       }
+  //     }
+  //   });
+  //   notificationFormat(recipient);
+  // }
+
+  void notificationFormat(UserModel recipient) {
+    // Map<String, String> headerNotification = {
+    //   'Content-Type': 'application/json',
+    //   'Authorization': 'key=$fcmServerToken',
+    // };
+    // Map bodyNotification = {
+    //   'notification': {
+    //     'title': 'Money Received',
+    //     'body':
+    //         'Dear you have received money from ${sharedPreferences!.getString('name')}\n'
+    //             'Amount: ${transferNominalController.text}\n'
+    //             'Description: ${descriptionController.text}',
+    //   },
+    //   'to': recipient.sellerDeviceToken,
+    // };
+    // Map dataMap = {
+    //   "click_action": "FLUTTER_NOTIFICATION_CLICK",
+    //   "id": "1",
+    //   "status": "done",
+    //   "user_id": recipient.uid,
+    // };
+    // Map officialNotificationFormat = {
+    //   'notification': bodyNotification,
+    //   'data': dataMap,
+    //   'priority': 'high',
+    //   'to': recipient.sellerDeviceToken,
+    // };
+    //
+    // http.post(
+    //   Uri.parse('https://fcm.googleapis.com/fcm/send'),
+    //   headers: headerNotification,
+    //   body: jsonDecode(jsonEncode(officialNotificationFormat)),
+    // );
+    Map<String, String> headerNotification = {
+      'Content-Type': 'application/json',
+      'Authorization': '$fcmServerToken',
+    };
+    Map bodyNotification = {
+      'notification': {
+        'title': 'Money Received',
+        'body':
+            'Dear you have received money from ${sharedPreferences!.getString('name')}\n'
+            'Amount: ${transferNominalController.text}\n'
+            'Description: ${descriptionController.text}',
+      },
+      'to': recipient.sellerDeviceToken,
+    };
+    Map dataMap = {
+      "click_action": "FLUTTER_NOTIFICATION_CLICK",
+      "id": "1",
+      "status": "done",
+      "user_id": recipient.uid,
+    };
+    Map officialNotificationFormat = {
+      'notification': bodyNotification,
+      'data': dataMap,
+      'priority': 'high',
+      'to': recipient.sellerDeviceToken,
+    };
+
+    http.post(
+      Uri.parse('https://fcm.googleapis.com/fcm/send'),
+      headers: headerNotification,
+      body: jsonDecode(jsonEncode(officialNotificationFormat)),
+    );
+  }
+
+  sendNotificationToRecipient(UserModel recipient) {
+    // send notification to recipient
+    fb.collection('sellers').doc(recipient.uid).get().then((doc) {
+      if (doc.exists) {
+        String? recipientDeviceToken = doc['sellerDeviceToken'];
+
+        if (recipientDeviceToken != null) {
+          PNotificationModel notificationModel = PNotificationModel(
+            title: 'Money Received',
+            body:
+                'You have received money from ${sharedPreferences!.getString('name')}\n'
+                'Amount: ${transferNominalController.text}\n'
+                'Description: ${descriptionController.text}',
+          );
+
+          PushNotificationSys()
+              .sendNotification(notificationModel, recipientDeviceToken);
+          print(
+              'Notification sent to recipient successfully $recipientDeviceToken');
+        }
+      }
+    });
+    notificationFormat(recipient);
+
+  }
 }

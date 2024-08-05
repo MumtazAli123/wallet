@@ -446,3 +446,12 @@ wTextField({required TextEditingController controller, required String keyboardT
   );
 }
 
+void wGetSnackBar(String title, String text) {
+  Get.snackbar(title, text,
+      snackPosition: SnackPosition.TOP,
+      backgroundColor: Colors.red,
+      colorText: Colors.white);
+}
+
+
+

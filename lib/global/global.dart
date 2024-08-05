@@ -18,8 +18,9 @@ String? uid;
 // StreamSubscription<Position>? streamSubscriptionPosition;
 // AssetsAudioPlayer audioPlayer = AssetsAudioPlayer();
 // DriversData? onlineDriverData= DriversData();
-String? cloudMessagingServerToken =
+String? fcmServerToken =
     "key=AAAAFI9Nj2A:APA91bHSqQoyzaSKkaxNeSGKRmWPlSU2qRO2Luu-o9xDD6mXgDEgOoRCeBRlX1VjwnEI3ErXgGn-za3x03CsBCVtL6QKJwWrsMmp515Q6FarHSs9EggCxmVhg9hvweMUmyoIsKuztK8A"; // for driversKey info list
+
 String? userSearchHotelsAddress = "";
 String? userCountryName = "";
 // DirectionDetailsInfo? tripDirectionDetailsInfo; // for driversKey info list

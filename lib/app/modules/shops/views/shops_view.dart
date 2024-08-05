@@ -16,6 +16,7 @@ import 'package:getwidget/shape/gf_avatar_shape.dart';
 import 'package:getwidget/types/gf_alert_type.dart';
 import 'package:lottie/lottie.dart';
 import 'package:wallet/app/modules/shops/views/vehicle_rating.dart';
+import 'package:wallet/notification/push_notification_sys.dart';
 import 'package:wallet/widgets/my_drawer.dart';
 
 import '../../../../global/global.dart';
@@ -43,6 +44,10 @@ class _ShopsViewState extends State<ShopsView> {
   void initState() {
     super.initState();
     controller.allVehicleStream();
+    // PushNotificationSys pushNotificationSys = PushNotificationSys();
+    // pushNotificationSys.generateDeviceToken();
+    // pushNotificationSys.whenNotificationReceived();
+
   }
 
   @override

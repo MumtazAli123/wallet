@@ -14,6 +14,8 @@ class RegisterController extends GetxController {
   final nameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final addressController = TextEditingController();
+  final cityController = TextEditingController();
   final confirmPasswordController = TextEditingController();
   final upperCaseTextFormatter = textUpperCaseTextFormatter();
   final TextEditingController otpController = TextEditingController();
@@ -27,6 +29,8 @@ class RegisterController extends GetxController {
   ImagePicker? imagePicker;
   Uint8List selectedWebImage = Uint8List(8);
   String imageUrl = '';
+  final currentScreen = 0.obs;
+
 
 
   final FocusNode nameFocus = FocusNode();

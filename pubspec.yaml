@@ -9,6 +9,8 @@ dependencies:
   get: any
   path: any
   http: any
+  share_plus: ^10.0.0
+  path_provider: any
   cupertino_icons: ^1.0.6
   firebase_auth: any
   cloud_firestore: any
@@ -37,14 +39,12 @@ dependencies:
   smooth_star_rating_nsafe: any
   overlay_support: 2.1.0
   date_picker_plus: ^4.1.0
-  share_plus: ^10.0.0
   screenshot: 3.0.0
-  path_provider: any
   image_gallery_saver: 2.0.3
   dio: ^5.5.0+1
   permission_handler: 11.3.1
   url_launcher: ^6.3.0
-  url_strategy: 0.2.0
+  url_strategy: ^0.3.0
   audioplayers: 6.0.0
   flutter_slidable: ^3.1.1
   country_state_city_picker: ^1.2.8

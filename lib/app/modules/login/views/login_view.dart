@@ -9,6 +9,7 @@ import 'package:wallet/models/seller_model.dart';
 
 import '../../../../widgets/mix_widgets.dart';
 import '../../../../widgets/responsive.dart';
+import '../../register/views/register_page_view.dart';
 import '../controllers/login_controller.dart';
 
 class LoginView extends StatefulWidget {
@@ -145,8 +146,9 @@ class _LoginViewState extends State<LoginView> {
                       aText('Don\'t have an account?', color: Colors.black),
                       TextButton(
                         onPressed: () {
-                          Get.toNamed('/register');
-                          // Get.to(() => EmailRegisterView());
+                          // Get.toNamed('/register');
+                          Get.to(() => RegisterPageView());
+                          // Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterScreen()));
                         },
                         child: aText('Register', color: Colors.blue),
                       ),

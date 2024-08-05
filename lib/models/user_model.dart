@@ -14,6 +14,9 @@ class UserModel {
   String? createdAt;
   String? updatedAt;
   String? uid;
+  String? sellerDeviceToken;
+  String? city;
+  String? address;
 
   UserModel(
       {this.uid,
@@ -28,28 +31,31 @@ class UserModel {
       this.lastTransaction,
       this.sellerType,
       this.createdAt,
-      this.updatedAt});
+      this.updatedAt,
+      this.sellerDeviceToken,
+      this.city,
+      this.address});
 
   // receiving data from the server
   factory UserModel.fromMap(map) {
     return UserModel(
-      uid: map['uid'],
-      email: map['email'],
-      phone: map['phone'],
-      name: map['name'],
-      username: map['username'],
-      image: map['image'],
-      balance: map['balance'] ,
-      description: map['description'],
-      lastTransaction: map['lastTransaction'],
-      sellerType: map['sellerType'],
-      status: map['status'],
-      createdAt: map['createdAt'],
-      updatedAt: map['updatedAt'],
-    );
+        uid: map['uid'],
+        email: map['email'],
+        phone: map['phone'],
+        name: map['name'],
+        username: map['username'],
+        image: map['image'],
+        balance: map['balance'],
+        description: map['description'],
+        lastTransaction: map['lastTransaction'],
+        sellerType: map['sellerType'],
+        status: map['status'],
+        createdAt: map['createdAt'],
+        updatedAt: map['updatedAt'],
+        sellerDeviceToken: map['sellerDeviceToken'],
+        city: map['city'],
+        address: map['address']);
   }
-
-
 
   // sending data to the server
 
@@ -68,10 +74,13 @@ class UserModel {
       'status': status,
       'createdAt': createdAt,
       'updatedAt': updatedAt,
+      'sellerDeviceToken': sellerDeviceToken,
+      'city': city,
+      'address': address
     };
   }
 
-  UserModel.fromJson(Map<String, dynamic> json){
+  UserModel.fromJson(Map<String, dynamic> json) {
     uid = json['uid'];
     email = json['email'];
     phone = json['phone'];
@@ -85,42 +94,49 @@ class UserModel {
     status = json['status'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
+    sellerDeviceToken = json['sellerDeviceToken'];
+    city = json['city'];
+    address = json['address'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
-    data['uid'] = this.uid;
-    data['email'] = this.email;
-    data['phone'] = this.phone;
-    data['name'] = this.name;
-    data['username'] = this.username;
-    data['image'] = this.image;
-    data['balance'] = this.balance;
-    data['description'] = this.description;
-    data['lastTransaction'] = this.lastTransaction;
-    data['sellerType'] = this.sellerType;
-    data['status'] = this.status;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
+    data['uid'] = uid;
+    data['email'] = email;
+    data['phone'] = phone;
+    data['name'] = name;
+    data['username'] = username;
+    data['image'] = image;
+    data['balance'] = balance;
+    data['description'] = description;
+    data['lastTransaction'] = lastTransaction;
+    data['sellerType'] = sellerType;
+    data['status'] = status;
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
+    data['sellerDeviceToken'] = sellerDeviceToken;
+    data['city'] = city;
+    data['address'] = address;
     return data;
   }
 
   factory UserModel.fromDocument(DocumentSnapshot doc) {
     return UserModel(
-      uid: doc['uid'],
-      email: doc['email'],
-      phone: doc['phone'],
-      name: doc['name'],
-      username: doc['username'],
-      image: doc['image'],
-      balance: doc['balance'],
-      description: doc['description'],
-      lastTransaction: doc['lastTransaction'],
-      sellerType: doc['sellerType'],
-      status: doc['status'],
-      createdAt: doc['createdAt'],
-      updatedAt: doc['updatedAt'],
-    );
+        uid: doc['uid'],
+        email: doc['email'],
+        phone: doc['phone'],
+        name: doc['name'],
+        username: doc['username'],
+        image: doc['image'],
+        balance: doc['balance'],
+        description: doc['description'],
+        lastTransaction: doc['lastTransaction'],
+        sellerType: doc['sellerType'],
+        status: doc['status'],
+        createdAt: doc['createdAt'],
+        updatedAt: doc['updatedAt'],
+        sellerDeviceToken: doc['sellerDeviceToken'],
+        city: doc['city'],
+        address: doc['address']);
   }
-
 }

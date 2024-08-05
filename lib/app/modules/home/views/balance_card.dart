@@ -400,14 +400,19 @@ class _BalanceCardState extends State<BalanceCard> {
                                 child: Card(
                                   elevation: 5,
                                   child: ListTile(
-                                    leading: MixWidgets.buildAvatar(
-                                        // get user image from firebase
-                                        isLoading == true
-                                            ? 'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png'
-                                            : snapshot
-                                                .data?.docs[index]['image']
-                                                .toString(),
-                                        20.0),
+                                    leading: CircleAvatar(
+                                      backgroundColor: Colors.white,
+                                      child: Icon(
+                                        snapshot.data?.docs[index]['type'] ==
+                                                'send'
+                                            ? Icons.arrow_upward
+                                            : Icons.arrow_downward,
+                                        color: snapshot.data?.docs[index]['type'] ==
+                                                'send'
+                                            ? Colors.green
+                                            : Colors.red,
+                                      ),
+                                    ),
                                     title: Text(
                                         snapshot.data?.docs[index]['name']),
                                     subtitle: Column(
@@ -548,14 +553,48 @@ class _BalanceCardState extends State<BalanceCard> {
             children: [
               wText("Profile".tr, size: 18.0),
               SizedBox(height: 10.0),
-              CircleAvatar(
-                radius: 50.0,
-                backgroundImage: NetworkImage(
-                  isLoading == true
-                      ? 'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png'
-                      : widget.model!.image!,
+              Container(
+                height: 100.0,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.grey.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    widget.model!.image!.isEmpty
+                        ? const CircleAvatar(
+                      backgroundColor: Colors.white,
+                      child: Icon(
+                        Icons.person,
+                        color: Colors.brown,
+                      ),
+                    )
+                        : GFAvatar(
+                      backgroundImage: NetworkImage(widget.model!.image!),
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        aText(
+                          "${widget.model!.name}",
+                        ),
+                        Text(
+                          textAlign: TextAlign.start,
+                          "${widget.model!.email}",
+                          style: GoogleFonts.poppins(
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.w400,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
+
               ListTile(
                 leading: Icon(Icons.person),
                 title: Text(
@@ -579,7 +618,9 @@ class _BalanceCardState extends State<BalanceCard> {
               SizedBox(height: 10.0),
               ListTile(
                 leading: Icon(Icons.location_on),
-                title: Text('Pakistan'.tr),
+                title: isLoading == true
+                    ? Text('City: ')
+                    : Text('City: ${widget.model!.city}'),
               ),
               SizedBox(height: 10.0),
               ListTile(

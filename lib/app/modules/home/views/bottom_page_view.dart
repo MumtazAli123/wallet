@@ -21,6 +21,8 @@ class BottomPageView extends GetView {
   @override
   get controller => Get.put(HomeController());
 
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -107,14 +109,9 @@ class BottomPageView extends GetView {
             TabData(icon:  Icon(Icons.shop), title: "Shops".tr),
             TabData(
           //     user image
-              icon: CircleAvatar(
-                radius: 15,
-                backgroundImage: NetworkImage(
-                    sharedPreferences!.getString('image') ?? 'https://pay-saw.com/storage/app/public/'),
-                  ),
+              icon: Icon(Icons.person),
+              title: "Profile".tr),
 
-              title: "Profile".tr,
-            ),
           ],
           key: controller.bottomNavigationKey,
           initialSelection: controller.currentIndex.value,
