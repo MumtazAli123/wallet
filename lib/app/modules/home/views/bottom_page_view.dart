@@ -109,7 +109,13 @@ class BottomPageView extends GetView {
             TabData(icon:  Icon(Icons.shop), title: "Shops".tr),
             TabData(
           //     user image
-              icon: Icon(Icons.person),
+              icon: sharedPreferences!.getString('image')!.isEmpty
+                  ? const Icon(Icons.person)
+                  : CircleAvatar(
+                      backgroundImage: NetworkImage(
+                          sharedPreferences!.getString('image')!
+                      ),
+                    ),
               title: "Profile".tr),
 
           ],
