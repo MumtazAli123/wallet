@@ -774,7 +774,7 @@ class _RegisterPageViewState extends State<RegisterPageView> {
         });
       } else {
         Get.back();
-        Get.snackbar('Error', 'Phone number already exists');
+        wGetSnackBar('Error', 'Phone number already exists');
       }
     } catch (e) {
       Get.back();

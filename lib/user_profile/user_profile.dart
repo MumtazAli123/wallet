@@ -14,10 +14,13 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:wallet/global/global.dart';
 import 'package:http/http.dart' as http;
+import 'package:wallet/models/seller_model.dart';
+import 'package:wallet/models/user_model.dart';
 
 import '../app/modules/home/views/wallet_view.dart';
 import '../notification/notification_page.dart';
 import '../widgets/mix_widgets.dart';
+import 'edit_profile.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -87,7 +90,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     IconButton(
                       icon: Icon(Icons.edit),
                       onPressed: () async {
-                        _updateDescription();
+                        // _updateDescription();
+                        Get.to(() => EditProfileScreen(
+                             model: UserModel.fromJson({
+                               'name': name,
+                               "address": "address",
+                                "city": "city",
+                                "description": "description",
+
+                             })
+                        ));
                       },
                     ),
                   ],
@@ -597,13 +609,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
       title: 'Update Description'.tr,
       text: "You can update your description here.",
       widget: TextField(
+        style: GoogleFonts.poppins(
+          color: Colors.black,
+        ),
         controller: descController,
         maxLength: 100,
         maxLines: 2,
         keyboardType: TextInputType.text,
         decoration: InputDecoration(
           border: OutlineInputBorder(),
-          hintText: 'Enter new description'.tr,
+          hintText: 'Description: ${sharedPreferences!.getString('description')}'.tr,
         ),
       ),
       showConfirmBtn: false,

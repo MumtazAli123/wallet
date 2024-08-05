@@ -1,15 +1,18 @@
-
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:email_auth/email_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:wallet/global/global.dart';
+import 'package:wallet/notification/push_notification_sys.dart';
+
+import '../../../../user_profile/user_profile.dart';
 
 class RegisterController extends GetxController {
-
   final phoneController = TextEditingController();
   final nameController = TextEditingController();
   final emailController = TextEditingController();
@@ -20,9 +23,9 @@ class RegisterController extends GetxController {
   final upperCaseTextFormatter = textUpperCaseTextFormatter();
   final TextEditingController otpController = TextEditingController();
   final username = TextEditingController();
+  final descController = TextEditingController();
 
-  EmailAuth emailAuth =  EmailAuth(sessionName: "Sample session");
-
+  EmailAuth emailAuth = EmailAuth(sessionName: "Sample session");
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   File? imageMob;
@@ -31,10 +34,7 @@ class RegisterController extends GetxController {
   String imageUrl = '';
   final currentScreen = 0.obs;
 
-
-
   final FocusNode nameFocus = FocusNode();
-
 
   var countryCode = '';
   var flagUri = '';
@@ -52,11 +52,11 @@ class RegisterController extends GetxController {
   );
 
   Map<String, String> get remoteServerConfiguration => {
-    'server': 'smtp.gmail.com',
-    'port': '587',
-    'email': 'kad.dadu@gmail.com',
-    'password': 'Mart@2022',
-  };
+        'server': 'smtp.gmail.com',
+        'port': '587',
+        'email': 'kad.dadu@gmail.com',
+        'password': 'Mart@2022',
+      };
 
   @override
   void onInit() {
@@ -67,7 +67,6 @@ class RegisterController extends GetxController {
   @override
   void onReady() {
     // super.onReady();
-
   }
 
   @override
@@ -79,6 +78,28 @@ class RegisterController extends GetxController {
     confirmPasswordController.dispose();
     phoneController.dispose();
     username.dispose();
+    descController.dispose();
+  }
+
+  void editProfileAndUpdate() {
+    FirebaseFirestore.instance
+        .collection("sellers")
+        .doc(user!.uid)
+        .update({
+          'name': nameController.text.trim(),
+          'address': emailController.text.trim(),
+          'city': phoneController.text.trim(),
+        })
+
+        .then((value) async{
+          await sharedPreferences!.setString('name', nameController.text.trim());
+          await sharedPreferences!.setString('address', emailController.text.trim());
+          await sharedPreferences!.setString('city', phoneController.text.trim());
+      Get.to(() => const ProfileScreen());
+      Get.snackbar("Success", "Vehicle Updated Successfully",
+          backgroundColor: Colors.green, colorText: Colors.white);
+      // Get.to(() => const ShowVehicleView());
+    });
   }
 
   static textUpperCaseTextFormatter() {
@@ -98,10 +119,8 @@ class RegisterController extends GetxController {
 
   var status = "".obs;
 
-
   Future<void> sendOtp(String email) async {
-
-   var res = await emailAuth.sendOtp(recipientMail: email);
+    var res = await emailAuth.sendOtp(recipientMail: email);
     if (res) {
       status.value = "OTP sent";
     } else {
@@ -109,8 +128,7 @@ class RegisterController extends GetxController {
     }
   }
 
-
- Future <void> verifyOtp(String email, String otp) async {
+  Future<void> verifyOtp(String email, String otp) async {
     var res = emailAuth.validateOtp(recipientMail: email, userOtp: otp);
     if (res) {
       status.value = "OTP verified";
@@ -118,6 +136,4 @@ class RegisterController extends GetxController {
       status.value = "Invalid OTP";
     }
   }
-
 }
-
