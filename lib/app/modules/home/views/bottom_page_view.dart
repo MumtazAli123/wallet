@@ -107,16 +107,17 @@ class BottomPageView extends GetView {
             TabData(icon:  Icon(Icons.search,), title: "Search".tr),
             TabData(icon:  Icon(Icons.qr_code), title: "QrCode".tr),
             TabData(icon:  Icon(Icons.shop), title: "Shops".tr),
-            TabData(
-          //     user image
-              icon: sharedPreferences!.getString('image')!.isEmpty
-                  ? const Icon(Icons.person)
-                  : CircleAvatar(
-                      backgroundImage: NetworkImage(
-                          sharedPreferences!.getString('image')!
-                      ),
-                    ),
-              title: "Profile".tr),
+            TabData(icon:  Icon(Icons.person), title: "Profile".tr),
+          //   TabData(
+          // //     user image
+          //     icon: sharedPreferences!.getString('image')!.isEmpty
+          //         ? const Icon(Icons.person)
+          //         : CircleAvatar(
+          //             backgroundImage: NetworkImage(
+          //                 sharedPreferences!.getString('image')!
+          //             ),
+          //           ),
+          //     title: "Profile".tr),
 
           ],
           key: controller.bottomNavigationKey,

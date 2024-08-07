@@ -105,25 +105,26 @@ class UserModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['uid'] = uid;
-    data['email'] = email;
-    data['phone'] = phone;
-    data['name'] = name;
-    data['username'] = username;
-    data['image'] = image;
-    data['balance'] = balance;
-    data['description'] = description;
-    data['lastTransaction'] = lastTransaction;
-    data['sellerType'] = sellerType;
-    data['status'] = status;
-    data['createdAt'] = createdAt;
-    data['updatedAt'] = updatedAt;
-    data['sellerDeviceToken'] = sellerDeviceToken;
-    data['desc'] = desc;
-    data['city'] = city;
-    data['address'] = address;
-    return data;
+    return {
+      'uid': uid,
+      'email': email,
+      'phone': phone,
+      'name': name,
+      'image': image,
+      'username': username,
+      'balance': balance,
+      'lastTransaction': lastTransaction,
+      'sellerType': sellerType,
+      'description': description,
+      'status': status,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
+      'sellerDeviceToken': sellerDeviceToken,
+      'desc': desc,
+      'city': city,
+      'address': address
+    };
+
   }
 
   factory UserModel.fromDocument(DocumentSnapshot doc) {

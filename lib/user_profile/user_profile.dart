@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -14,13 +15,11 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:wallet/global/global.dart';
 import 'package:http/http.dart' as http;
-import 'package:wallet/models/seller_model.dart';
 import 'package:wallet/models/user_model.dart';
 
 import '../app/modules/home/views/wallet_view.dart';
 import '../notification/notification_page.dart';
 import '../widgets/mix_widgets.dart';
-import 'edit_profile.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -37,6 +36,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final user = FirebaseAuth.instance.currentUser;
 
   final descController = TextEditingController();
+  final cityController = TextEditingController();
+  final addressController = TextEditingController();
 
   bool isLoading = false;
   ImagePicker imagePicker = ImagePicker();
@@ -52,6 +53,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   var balance = '';
 
   FocusNode focusNode = FocusNode();
+
+  final UserModel userModel = UserModel();
 
   Future<void> _refresh() async {
     setState(() {
@@ -72,6 +75,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     focusNode.dispose();
     super.dispose();
     descController.dispose();
+    cityController.dispose();
   }
 
   @override
@@ -90,16 +94,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     IconButton(
                       icon: Icon(Icons.edit),
                       onPressed: () async {
-                        // _updateDescription();
-                        Get.to(() => EditProfileScreen(
-                             model: UserModel.fromJson({
-                               'name': name,
-                               "address": "address",
-                                "city": "city",
-                                "description": "description",
-
-                             })
-                        ));
+                        _updateDescription();
+                        // Get.to(() => EditProfileScreen());
                       },
                     ),
                   ],
@@ -115,11 +111,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           children: [
             Stack(
               children: [
-                // if image not found then show placeholder image
-                // MixWidgets.buildAvatar(
-                //     sharedPreferences!.getString('image') ??
-                //         'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png',
-                //     70.0),
                 sharedPreferences!.getString('image')!.isEmpty
                     ? MixWidgets.buildAvatar(
                         'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png',
@@ -272,10 +263,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   SizedBox(height: 10.0),
                   Row(
                     children: [
-                      Icon(Icons.location_on),
+                      Icon(Icons.location_city),
                       SizedBox(width: 10.0),
                       wText(
-                        'Pakistan'.tr,
+                        'City: ${data["city"]}'.tr,
                       ),
                     ],
                   ),
@@ -608,24 +599,59 @@ class _ProfileScreenState extends State<ProfileScreen> {
       type: QuickAlertType.confirm,
       title: 'Update Description'.tr,
       text: "You can update your description here.",
-      widget: TextField(
-        style: GoogleFonts.poppins(
-          color: Colors.black,
-        ),
-        controller: descController,
-        maxLength: 100,
-        maxLines: 2,
-        keyboardType: TextInputType.text,
-        decoration: InputDecoration(
-          border: OutlineInputBorder(),
-          hintText: 'Description: ${sharedPreferences!.getString('description')}'.tr,
-        ),
+      widget: Column(
+        children: [
+          TextField(
+            style: GoogleFonts.poppins(
+              color: Colors.black,
+            ),
+            controller: descController,
+            maxLength: 100,
+            maxLines: 1,
+            keyboardType: TextInputType.text,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.black),
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              labelText: 'Description'.tr,
+              labelStyle: GoogleFonts.poppins(
+                color: Colors.black,
+              ),
+              hintText: 'Description: ${sharedPreferences!.getString('description')}'.tr,
+            ),
+          ),
+          SizedBox(height: 10),
+        //   city
+          TextField(
+            style: GoogleFonts.poppins(
+              color: Colors.black,
+            ),
+            controller: cityController,
+            maxLength: 100,
+            maxLines: 1,
+            keyboardType: TextInputType.text,
+            decoration: InputDecoration(
+              border: OutlineInputBorder(
+                borderSide: BorderSide(color: Colors.black),
+                borderRadius: BorderRadius.circular(10.0)
+              ),
+              labelText: 'City'.tr,
+              labelStyle: GoogleFonts.poppins(
+                color: Colors.black,
+              ),
+              hintText: 'City: ${sharedPreferences!.getString('city')}'.tr,
+            ),
+          ),
+          SizedBox(height: 10),
+        ],
       ),
       showConfirmBtn: false,
       cancelBtnText: "Update".tr,
       onCancelBtnTap: () {
         db.doc(user!.uid).update({
-          'description': descController.text,
+          'description': descController.text.trim(),
+          'city': cityController.text.trim()
         });
         sharedPreferences!.setString('description', descController.text);
         Get.back();
@@ -637,12 +663,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
           text: "Your description has been updated successfully.",
           showConfirmBtn: true,
           showCancelBtn: false,
-          confirmBtnText: "Close".tr,
+          confirmBtnText: "Confirm".tr,
           onConfirmBtnTap: () {
             // Get.back and refresh the screen
             // send notification to the user that description has been updated
             const message = 'Your description has been updated successfully.';
-            sendNotification(message);
+            // sendNotification(message);
 
             _refresh();
             Get.back();
@@ -661,10 +687,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       var image = data['image'];
       var phone = data['phone'];
       var email = data['email'];
-      var description = data['description'];
-      var status = data['status'];
-      var createdAt = data['createdAt'];
-      var balance = data['balance'];
 
       var notification = {
         'title': 'Description Updated',
@@ -673,9 +695,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         'name': name,
         'phone': phone,
         'email': email,
-        'description': description,
-        'status': status,
-        'createdAt': createdAt,
         'balance': balance,
       };
 
@@ -714,9 +733,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     http.post(Uri.parse(url), headers: header, body: jsonEncode(request)).then(
           (response) {
         if (response.statusCode == 200) {
-          print('Notification sent successfully');
+          if (kDebugMode) {
+            print('Notification sent successfully');
+          }
         } else {
-          print('Failed to send notification');
+          if (kDebugMode) {
+            print('Failed to send notification');
+          }
         }
       },
     );

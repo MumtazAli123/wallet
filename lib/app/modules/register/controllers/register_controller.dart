@@ -7,23 +7,26 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:quickalert/quickalert.dart';
+import 'package:wallet/app/modules/home/views/bottom_page_view.dart';
 import 'package:wallet/global/global.dart';
+import 'package:wallet/models/user_model.dart';
 import 'package:wallet/notification/push_notification_sys.dart';
 
 import '../../../../user_profile/user_profile.dart';
 
 class RegisterController extends GetxController {
-  final phoneController = TextEditingController();
-  final nameController = TextEditingController();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final addressController = TextEditingController();
-  final cityController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
+  final TextEditingController phoneController = TextEditingController();
+   TextEditingController nameController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+  TextEditingController cityController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
   final upperCaseTextFormatter = textUpperCaseTextFormatter();
-  final TextEditingController otpController = TextEditingController();
-  final username = TextEditingController();
-  final descController = TextEditingController();
+  TextEditingController otpController = TextEditingController();
+  TextEditingController username = TextEditingController();
+  TextEditingController descController = TextEditingController();
 
   EmailAuth emailAuth = EmailAuth(sessionName: "Sample session");
 
@@ -33,6 +36,7 @@ class RegisterController extends GetxController {
   Uint8List selectedWebImage = Uint8List(8);
   String imageUrl = '';
   final currentScreen = 0.obs;
+  bool isLoading = false;
 
   final FocusNode nameFocus = FocusNode();
 
@@ -62,6 +66,11 @@ class RegisterController extends GetxController {
   void onInit() {
     super.onInit();
     countryCode = selectedCountry.phoneCode;
+    nameController = TextEditingController();
+    emailController = TextEditingController();
+    addressController = TextEditingController();
+    cityController = TextEditingController();
+    descController = TextEditingController();
   }
 
   @override
@@ -81,25 +90,56 @@ class RegisterController extends GetxController {
     descController.dispose();
   }
 
-  void editProfileAndUpdate() {
-    FirebaseFirestore.instance
-        .collection("sellers")
-        .doc(user!.uid)
-        .update({
-          'name': nameController.text.trim(),
-          'address': emailController.text.trim(),
-          'city': phoneController.text.trim(),
-        })
+  Future<void> editProfileAndUpdate(UserModel model) async {
+   try {
+     QuickAlert.show(
+         context: Get.context!,
+         type: QuickAlertType.loading,
+          title: 'Updating Profile',
+     );
+      FirebaseFirestore.instance.collection('sellers')
+          .doc(user!.uid)
+          .update({
+        'name': nameController.text,
+        'address': addressController.text,
+        'city': cityController.text,
+        'description': descController.text,
+      }).then((value) {
+        FirebaseFirestore.instance.collection('sellers')
+            .doc(user!.uid)
+            .collection('rating')
+            .doc(user!.uid)
+            .update({
+          'name': nameController.text,
+        });
+        // update shared preferences
+         sharedPreferences!.setString('name', nameController.text);
+         sharedPreferences!.setString('address', addressController.text);
+         sharedPreferences!.setString('city', cityController.text);
+         sharedPreferences!.setString('description', descController.text);
 
-        .then((value) async{
-          await sharedPreferences!.setString('name', nameController.text.trim());
-          await sharedPreferences!.setString('address', emailController.text.trim());
-          await sharedPreferences!.setString('city', phoneController.text.trim());
-      Get.to(() => const ProfileScreen());
-      Get.snackbar("Success", "Vehicle Updated Successfully",
-          backgroundColor: Colors.green, colorText: Colors.white);
-      // Get.to(() => const ShowVehicleView());
-    });
+            QuickAlert.show(
+              context: Get.context!,
+              title: 'Success',
+              type: QuickAlertType.success,
+            );
+            Get.offAll(() => const BottomPageView());
+           QuickAlert.show(
+             context: Get.context!,
+             title: 'Success',
+             type: QuickAlertType.success,
+           );
+           Get.offAll(() => const BottomPageView());
+         });
+
+
+    } catch (e) {
+      QuickAlert.show(
+        context: Get.context!,
+        title: 'Error',
+        type: QuickAlertType.error,
+      );
+    }
   }
 
   static textUpperCaseTextFormatter() {

@@ -46,8 +46,9 @@ class _BalanceCardState extends State<BalanceCard> {
           Lottie.asset('assets/lottie/coins.json',
               height: 200, width: double.infinity),
           Text(
+            maxLines: 1,
             "Recent Transactions!".tr,
-            style: GoogleFonts.damion(fontSize: 30, color: Colors.white),
+            style: GoogleFonts.damion(fontSize: 24, color: Colors.white),
           ),
           SizedBox(height: 10.0),
         ],

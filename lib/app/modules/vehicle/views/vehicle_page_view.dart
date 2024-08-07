@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors , prefer_const_literals_to_create_immutables
 
 
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -11,8 +10,6 @@ import 'package:getwidget/components/button/gf_button_bar.dart';
 import 'package:getwidget/shape/gf_button_shape.dart';
 import 'package:getwidget/types/gf_button_type.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:scoped_model/scoped_model.dart';
-import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/app/modules/vehicle/controllers/vehicle_controller.dart';
 import 'package:wallet/models/vehicle_model.dart';
@@ -40,7 +37,6 @@ class _VehiclePageViewState extends State<VehiclePageView> {
     }
   }
 
-  final FirebaseStorage _storage = FirebaseStorage.instance;
 
   List<String> imageUrls = [];
 
@@ -51,29 +47,6 @@ class _VehiclePageViewState extends State<VehiclePageView> {
     super.initState();
   }
 
-  Widget _buildProductsList() {
-    return ScopedModelDescendant(
-      builder: (context, child, VehicleModel model) {
-        return ListView.builder(
-          itemCount: model.vehicleType?.length,
-          itemBuilder: (context, index) {
-            return ListTile(
-              leading: CircleAvatar(
-                backgroundImage: NetworkImage(model.image![index][0]),
-              ),
-              title: Text(model.vehicleName![index]),
-              subtitle: Text('\$${model.vehiclePrice![index].toString()}'),
-              trailing: IconButton(
-                icon: Icon(Icons.favorite_border),
-                onPressed: () {},
-                color: Colors.red,
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
