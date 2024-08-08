@@ -14,6 +14,7 @@ import 'package:getwidget/components/rating/gf_rating.dart';
 import 'package:getwidget/shape/gf_avatar_shape.dart';
 import 'package:getwidget/types/gf_alert_type.dart';
 import 'package:lottie/lottie.dart';
+import 'package:screenshot/screenshot.dart';
 import 'package:wallet/app/modules/shops/views/vehicle_rating.dart';
 import 'package:wallet/models/realstate_model.dart';
 import 'package:wallet/widgets/my_drawer.dart';
@@ -65,7 +66,7 @@ class _ShopsViewState extends State<ShopsView> {
             onPressed: () {
               _buildDialogProducts(context);
             },
-            label: wText('Add'.tr, color: Colors.white),
+            label: wText('Sale'.tr, color: Colors.white),
             icon: Icon(
               Icons.add,
               color: Colors.white,
@@ -78,16 +79,6 @@ class _ShopsViewState extends State<ShopsView> {
   }
 
   Widget _buildBody() {
-    // return SafeArea(
-    //   child: Column(
-    //     mainAxisAlignment: MainAxisAlignment.center,
-    //     crossAxisAlignment: CrossAxisAlignment.center,
-    //     children: [
-    //       _buildHeader(),
-    //       _buildShops(),
-    //     ],
-    //   ),
-    // );
     return SafeArea(
       child: NestedScrollView(
           headerSliverBuilder: (context, innerBoxIsScrolled) {
@@ -129,7 +120,7 @@ class _ShopsViewState extends State<ShopsView> {
       padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -138,7 +129,7 @@ class _ShopsViewState extends State<ShopsView> {
                 onTap: () {
                   Scaffold.of(context).openDrawer();
                 },
-                child: Lottie.asset('assets/lottie/shoping.json',
+                child: Lottie.asset('assets/lottie/home.json',
                     width: 100, height: 100),
               ),
               Lottie.asset('assets/lottie/earn.json', width: 100, height: 100),
@@ -150,6 +141,11 @@ class _ShopsViewState extends State<ShopsView> {
           SizedBox(height: 10.0),
           // _buildRealState(),
           Expanded(child: _buildRealState()),
+          // SizedBox(height: 10.0),
+          // aText(
+          //     "Vehicle's".tr),
+          // Expanded(child: _buildAvatar()),
+
         ],
       ),
     );
@@ -345,7 +341,7 @@ class _ShopsViewState extends State<ShopsView> {
         builder: (context) {
           return GFAlert(
             type: GFAlertType.rounded,
-            title: 'Add Products'.tr,
+            title: 'Sale your Products'.tr,
             titleAlignment: Alignment.center,
             content: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -363,7 +359,7 @@ class _ShopsViewState extends State<ShopsView> {
                         Icons.real_estate_agent,
                         color: Get.theme.primaryColor,
                       ),
-                      label: wText('Add Real state'.tr,
+                      label: wText('Sale Real state'.tr,
                           color: Get.theme.primaryColor)),
                   SizedBox(height: 10.0),
                   // Add Car
@@ -375,7 +371,7 @@ class _ShopsViewState extends State<ShopsView> {
                         Icons.car_rental,
                         color: Get.theme.primaryColor,
                       ),
-                      label: wText('Add Vehicle'.tr,
+                      label: wText('Sale Vehicle'.tr,
                           color: Get.theme.primaryColor)),
                   SizedBox(height: 10.0),
                   // Add Product
@@ -387,7 +383,7 @@ class _ShopsViewState extends State<ShopsView> {
                         Icons.shopping_cart,
                         color: Get.theme.primaryColor,
                       ),
-                      label: wText('Add Products'.tr,
+                      label: wText('Sale Products'.tr,
                           color: Get.theme.primaryColor)),
                   SizedBox(height: 10.0),
                   Row(
@@ -438,7 +434,7 @@ class _ShopsViewState extends State<ShopsView> {
                   },
                   image: model.image.toString(),
                   label: "${model.realStateType.toString()}\n"
-                      "For: ${model.realStateStatus.toString()}\n: ",
+                      "For: ${model.realStateStatus.toString()}",
                 );
               }),
             );
@@ -477,23 +473,145 @@ class _ShopsViewState extends State<ShopsView> {
             borderRadius: BorderRadius.circular(10),
             gradient: LinearGradient(
               begin: Alignment.bottomCenter,
-              end: Alignment.topCenter,
+              end: Alignment.bottomCenter,
               colors: [
                 Colors.black.withOpacity(0.8),
                 Colors.black.withOpacity(0.1),
               ],
             ),
           ),
-          child: Center(
-            child: Text(
-              maxLines: 2,
-              label,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                padding: EdgeInsets.all( 5),
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.4),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10)
+                  ),
+                ),
+                child: Text(
+                  textAlign: TextAlign.center,
+                  label,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  _buildAvatar() {
+    // return StreamBuilder<QuerySnapshot>(
+    //   stream: controller.allVehicleStream(),
+    //   builder: (context, snapshot) {
+    //     try {
+    //       if (snapshot.hasData) {
+    //         return GridView(
+    //           controller: ScrollController(),
+    //           scrollDirection: Axis.horizontal,
+    //           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+    //           crossAxisCount: 1,
+    //           crossAxisSpacing: 10,
+    //           mainAxisSpacing: 10,
+    //         ),
+    //           children: List.generate(snapshot.data!.docs.length, (index) {
+    //             var data = snapshot.data!.docs[index].data() as Map;
+    //             VehicleModel model = VehicleModel.fromJson(data as Map<String, dynamic>);
+    //             return _buildAvatarItem(
+    //               onTap: () {
+    //                 Get.to(() => VehiclePageView(
+    //                     vModel: VehicleModel.fromJson(model.toJson()), doc: model.toString()));
+    //               },
+    //               image: model.image.toString(),
+    //               label: "${model.showroomName.toString()}\n"
+    //                   "${model.vehicleName.toString()}",
+    //             );
+    //           }),
+    //         );
+    //       } else {
+    //         return const Center(
+    //           child: CircularProgressIndicator(),
+    //         );
+    //       }
+    //     } catch (e) {
+    //       return const Center(
+    //         child: CircularProgressIndicator(),
+    //       );
+    //     }
+    //   },
+    // );
+    return Row(
+      children: [
+        Expanded(child: Lottie.asset('assets/lottie/home.json', width: 300, height: 300)),
+        Expanded(child: GestureDetector(
+          onTap: (){
+            Get.to(() => ShowRealstate());
+
+          },
+            child: Lottie.asset('assets/lottie/realState.json', width: 300, height: 300))),
+      ],
+    );
+  }
+
+  _buildAvatarItem({required Null Function() onTap, required String image, required String label}) {
+    return GestureDetector(
+      onTap: () {
+        onTap();
+      },
+      child: Container(
+        margin: EdgeInsets.only(right: 10),
+        width: 200,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          image: DecorationImage(
+            image: NetworkImage(image),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            gradient: LinearGradient(
+              begin: Alignment.bottomCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Colors.black.withOpacity(0.8),
+                Colors.black.withOpacity(0.1),
+              ],
             ),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                padding: EdgeInsets.all( 5),
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.4),
+                  borderRadius: BorderRadius.all(
+                    Radius.circular(10)
+                  ),
+                ),
+                child: Text(
+                  textAlign: TextAlign.center,
+                  label,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
