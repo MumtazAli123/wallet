@@ -213,7 +213,7 @@ class _BalanceCardState extends State<BalanceCard> {
           ),
         ).animate().fadeIn().slide(duration: const Duration(seconds: 5)),
         back: Container(
-          height: 285,
+          height: 315,
           padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
           margin: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
           decoration: BoxDecoration(
@@ -237,20 +237,21 @@ class _BalanceCardState extends State<BalanceCard> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               // balance
-              wText("Total Balance".tr, color: Colors.white),
+              wText("Total Balance".tr, color: Colors.white, size: 12),
               wText("Rs: ${widget.model!.balance}",
-                  color: Colors.white, size: 30),
-             SizedBox(height: 10),
+                  color: Colors.white, size: 24),
+              Divider(color: Colors.white),
+             SizedBox(height: 5.0),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Column(
                     children: [
-                      Text('Total Credit'),
-                      SizedBox(width: 10),
+                      wText('Total Credit', color: Colors.white, size: 12),
+                      SizedBox(width: 5),
                       Container(
                         width: 150,
-                        height: 24,
+                        height: 30,
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.green),
                           borderRadius: BorderRadius.circular(5),
@@ -263,11 +264,11 @@ class _BalanceCardState extends State<BalanceCard> {
                   SizedBox(width: 40),
                   Column(
                     children: [
-                      Text('Total Debit'),
+                      wText('Total Debit', color: Colors.white, size: 12),
                       SizedBox(width: 10),
                       Container(
                         width: 150,
-                        height: 24,
+                        height: 30,
                         decoration: BoxDecoration(
                           border: Border.all(color: Colors.red),
                           borderRadius: BorderRadius.circular(5),
@@ -284,15 +285,13 @@ class _BalanceCardState extends State<BalanceCard> {
               //   pie chart
               SizedBox(
                 width: 150,
-                height: 100,
+                height: 110,
                 child: wPieChartSample2(
                   totalBalanceCredit: totalBalanceCredit,
                   totalBalanceDebit: totalBalanceDebit,
                 ),
               ),
-
-
-              SizedBox(height: 10),
+              SizedBox(height: 5.0),
             ],
           ),
         ));
@@ -754,7 +753,7 @@ class _BalanceCardState extends State<BalanceCard> {
             borderSide: BorderSide(color: Colors.green),
             color: Colors.green,
             value: totalBalanceCredit,
-            title: 'Credit',
+            title: 'Cr',
             titleStyle: TextStyle(
               color: Colors.white,
               fontSize: 16,
@@ -767,7 +766,7 @@ class _BalanceCardState extends State<BalanceCard> {
             borderSide: BorderSide(color: Colors.red),
             color: Colors.red,
             value: totalBalanceDebit,
-            title: 'Debit',
+            title: 'Dr',
             titleStyle: TextStyle(
               color: Colors.white,
               fontSize: 16,

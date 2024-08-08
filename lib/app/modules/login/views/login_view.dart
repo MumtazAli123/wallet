@@ -72,54 +72,48 @@ class _LoginViewState extends State<LoginView> {
         ),
       ),
       child: Center(
-        child: Container(
-          alignment: Alignment.center,
-          margin: const EdgeInsets.all(18.0),
-          width: 400,
-          height: 690,
-          padding: const EdgeInsets.all(8.0),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                aText('Welcome to ZubiPay', size: 14, color: Colors.black),
-                aText('Login', size: 54, color: Colors.black),
-                SizedBox(height: 20),
-                _emailField(),
-                SizedBox(height: 20),
-                _passwordField(),
-                SizedBox(height: 20),
-                // remember me and forgot password
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Checkbox(
-                          focusColor: Colors.black,
-                          value: rememberMe,
-                          onChanged: (value) {
-                            setState(() {
-                              rememberMe = value!;
-                            });
-                          },
-                        ),
-                        aText('Remember me', color: Colors.black, size: 14),
-                      ],
-                    ),
-                    Expanded(child: TextButton(
-                        onPressed: () {},
-                        child: aText('Forgot password?', color: Colors.pinkAccent, size: 14)),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                Container(
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              aText('Welcome to ZubiPay'.tr, size: 14, color: Colors.white),
+              aText('Login'.tr, size: 54, color: Colors.white),
+              SizedBox(height: 20),
+              _emailField(),
+              SizedBox(height: 20),
+              _passwordField(),
+              SizedBox(height: 20),
+              // remember me and forgot password
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Checkbox(
+                        focusColor: Colors.black,
+                        value: rememberMe,
+                        onChanged: (value) {
+                          setState(() {
+                            rememberMe = value!;
+                          });
+                        },
+                      ),
+                      aText('Remember me'.tr, color: Colors.white, size: 14),
+                    ],
+                  ),
+                  Expanded(child: TextButton(
+                      onPressed: () {},
+                      child: aText('Forgot password?', color: Colors.yellowAccent, size: 14)),
+                  ),
+                ],
+              ),
+              SizedBox(height: 20),
+              GestureDetector(
+                onTap: () {
+                  controller.login();
+                },
+                child: Container(
                   alignment: Alignment.center,
                   width: 200,
                   height: 50,
@@ -128,34 +122,29 @@ class _LoginViewState extends State<LoginView> {
                     color: Colors.blue,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: GestureDetector(
-                    onTap: () {
-                      controller.login();
-                    },
-                    child: wText(
-                      'Login',
-                      color: Colors.white,
-                      size: 20,
-                    ),
+                  child: wText(
+                    'Login',
+                    color: Colors.white,
+                    size: 20,
                   ),
                 ),
-                SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      aText('Don\'t have an account?', color: Colors.black),
-                      TextButton(
-                        onPressed: () {
-                          // Get.toNamed('/register');
-                          Get.to(() => RegisterPageView());
-                          // Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterScreen()));
-                        },
-                        child: aText('Register', color: Colors.blue),
-                      ),
-                    ],
-                  ),
-              ],
-            ),
+              ),
+              SizedBox(height: 50),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    aText('Don\'t have an account?', color: Colors.white, size: 12),
+                    TextButton(
+                      onPressed: () {
+                        // Get.toNamed('/register');
+                        Get.to(() => RegisterPageView());
+                        // Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterScreen()));
+                      },
+                      child: aText('Register now', color: Colors.yellowAccent),
+                    ),
+                  ],
+                ),
+            ],
           ),
         ),
       ),
@@ -282,51 +271,56 @@ class _LoginViewState extends State<LoginView> {
 
   _emailField() {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: TextFormField(
-        controller: controller.emailController,
-        keyboardType: TextInputType.emailAddress,
-        textInputAction: TextInputAction.next,
-        style: TextStyle(color: Colors.black),
-        onChanged: (value) {
-          setState(() {
-            hintText = 'Email';
-          });
-        },
-        decoration: InputDecoration(
-          hintStyle: TextStyle(color: Colors.black),
-          labelStyle: TextStyle(color: Colors.black),
-          labelText: 'Email',
-          hintText: 'Enter your email',
-          prefixIcon: Icon(Icons.email, color: Colors.black),
-          suffixIcon: hintText == 'Email' &&
-                  controller.emailController.text.contains('.com')
-              ? Container(
-                  margin: const EdgeInsets.only(right: 10),
-                  height: 20,
-                  width: 20,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.green,
-                  ),
-                  child: const Icon(
-                    Icons.done,
-                    color: Colors.white,
-                    size: 20,
-                  ),
-                )
-              : null,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20.0),
-          ),
+      padding: const EdgeInsets.all(18.0),
+      child: Container(
+        padding: const EdgeInsets.all(8.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
         ),
-        validator: (value) {
-          if (value!.isEmpty) {
-            return 'Email is required';
-          }
-          return emailValidator(value);
-        },
-        autovalidateMode: AutovalidateMode.onUserInteraction,
+        child: TextFormField(
+          controller: controller.emailController,
+          keyboardType: TextInputType.emailAddress,
+          textInputAction: TextInputAction.next,
+          style: TextStyle(color: Colors.black),
+          onChanged: (value) {
+            setState(() {
+              hintText = 'Email';
+            });
+          },
+          decoration: InputDecoration(
+            hintStyle: TextStyle(color: Colors.black),
+            labelStyle: TextStyle(color: Colors.black),
+            labelText: 'Email',
+            hintText: 'Enter your email',
+            prefixIcon: Icon(Icons.email, color: Colors.black),
+            suffixIcon: hintText == 'Email' &&
+                    controller.emailController.text.contains('.com')
+                ? Container(
+                    margin: const EdgeInsets.only(right: 10),
+                    height: 20,
+                    width: 20,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Colors.green,
+                    ),
+                    child: const Icon(
+                      Icons.done,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                  )
+                : null,
+
+          ),
+          validator: (value) {
+            if (value!.isEmpty) {
+              return 'Email is required';
+            }
+            return emailValidator(value);
+          },
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+        ),
       ),
     );
   }
@@ -343,24 +337,29 @@ class _LoginViewState extends State<LoginView> {
 
   _passwordField() {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: FancyPasswordField(
-        style: TextStyle(color: Colors.black),
-        controller: controller.passwordController,
-        decoration: InputDecoration(
-          prefixIcon: Icon(Icons.lock, color: Colors.black),
-          labelText: 'Password',
-          labelStyle: TextStyle(color: Colors.black),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(20.0),
-          ),
+      padding: const EdgeInsets.all(18.0),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
         ),
-        validator: (value) {
-          if (value!.isEmpty) {
-            return 'Password is required';
-          }
-          return null;
-        },
+        padding: const EdgeInsets.all(8.0),
+        child: FancyPasswordField(
+          style: TextStyle(color: Colors.black),
+          controller: controller.passwordController,
+          decoration: InputDecoration(
+            prefixIcon: Icon(Icons.lock, color: Colors.black),
+            labelText: 'Password',
+            labelStyle: TextStyle(color: Colors.black),
+            // border: InputBorder.none,
+          ),
+          validator: (value) {
+            if (value!.isEmpty) {
+              return 'Password is required';
+            }
+            return null;
+          },
+        ),
       ),
     );
   }

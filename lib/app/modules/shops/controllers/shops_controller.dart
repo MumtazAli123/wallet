@@ -45,6 +45,7 @@ class ShopsController extends GetxController {
     // realState database
     return FirebaseFirestore.instance
         .collection("realState")
+
         .snapshots();
   }
 }

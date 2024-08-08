@@ -201,8 +201,6 @@ class VehicleController extends GetxController {
 
   var searchList = [].obs;
 
-
-
   realStateStream() {
     return FirebaseFirestore.instance
         .collection("sellers")
@@ -372,7 +370,6 @@ class VehicleController extends GetxController {
     }
   }
 
-
   void deleteImage(int index) {
     imageUrlPath.removeAt(index);
     imageFileCount.value = imageUrlPath.length;
@@ -466,7 +463,7 @@ class VehicleController extends GetxController {
     return FirebaseFirestore.instance
         .collection("realState")
         .orderBy("publishedDate", descending: true)
+        .limit(20)
         .snapshots();
   }
-
 }

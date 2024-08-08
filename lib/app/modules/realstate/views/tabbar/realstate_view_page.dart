@@ -7,6 +7,7 @@ import 'package:getwidget/components/button/gf_button_bar.dart';
 import 'package:getwidget/shape/gf_button_shape.dart';
 import 'package:getwidget/types/gf_button_type.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/app/modules/realstate/controllers/realstate_controller.dart';
 import 'package:wallet/models/realstate_model.dart';
 
@@ -22,6 +23,29 @@ class RealstateViewPage extends GetView<RealStateController> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // whatsApp
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.green,
+        onPressed: () {
+          // whatsApp
+          launch(
+              'https://wa.me/${rsModel.phone}?text=ZubiPay\nHello, I am interested in your property\n'
+              '${rsModel.realStateType} for ${rsModel.realStateStatus}\n'
+              'Description: ${rsModel.description}\n'
+              'Price: ${rsModel.startingFrom}\n'
+              'Type: ${rsModel.status}\n'
+              'City: ${rsModel.city}\n'
+              'State: ${rsModel.state}\n'
+              'Country: ${rsModel.country}\n'
+              'Phone: ${rsModel.phone}\n'
+              'Email: ${rsModel.email}\n');
+        },
+        child: Image.asset(
+          'assets/images/whatsapp.png',
+          height: 50,
+          width: 50,
+        ),
+      ),
       bottomNavigationBar: Container(
         padding: const EdgeInsets.all(18.0),
         child: GFButtonBar(

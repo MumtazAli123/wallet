@@ -109,7 +109,7 @@ class _VehiclePageViewState extends State<VehiclePageView> {
         onPressed: () {
           urlLauncher(
               'https://wa.me/${widget.vModel.phone}'
-              '?text=Hello, I am interested in your vehicle Name: ${widget.vModel.vehicleName},'
+              '?text=ZubiPay\nHello, I am interested in your\nvehicle Name: ${widget.vModel.vehicleName},'
               '\nType: ${widget.vModel.vehicleTransmission},'
               '\nModel: ${widget.vModel.vehicleModel}'
               '- ${widget.vModel.vehicleType}'
