@@ -205,6 +205,7 @@ class _BalanceCardState extends State<BalanceCard> {
                   wText(
                       "${widget.model!.phone!.substring(0, 5)}...${widget.model!.phone!.substring(widget.model!.phone!.length - 4)}",
                       color: Colors.white),
+
                 ],
               ),
               SizedBox(height: 10),
