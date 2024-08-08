@@ -35,7 +35,7 @@ dependencies:
   mobile_scanner: ^5.1.1
   qr_flutter: ^4.1.0
   flutter_barcode_scanner: ^2.0.0
-  carousel_slider: ^4.2.1
+  carousel_slider: any
   smooth_star_rating_nsafe: any
   overlay_support: 2.1.0
   date_picker_plus: ^4.1.0

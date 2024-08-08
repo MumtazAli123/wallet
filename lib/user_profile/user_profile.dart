@@ -56,6 +56,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   final UserModel userModel = UserModel();
 
+  String  message = 'Description Updated';
+
   Future<void> _refresh() async {
     setState(() {
       isLoading = true;
@@ -560,7 +562,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         // vehicle image updated successfully
         QuickAlert.show(
           barrierDismissible: false,
-          context: context,
+          context: Get.context!,
           type: QuickAlertType.success,
           title: 'Image Updated'.tr,
           text: "Your image has been updated successfully.",
@@ -665,10 +667,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           showCancelBtn: false,
           confirmBtnText: "Confirm".tr,
           onConfirmBtnTap: () {
-            // Get.back and refresh the screen
-            // send notification to the user that description has been updated
-            const message = 'Your description has been updated successfully.';
-            // sendNotification(message);
+            sendNotification(message);
 
             _refresh();
             Get.back();

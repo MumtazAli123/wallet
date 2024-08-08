@@ -462,4 +462,11 @@ class VehicleController extends GetxController {
         .snapshots();
   }
 
+  allRealStateStream() {
+    return FirebaseFirestore.instance
+        .collection("realState")
+        .orderBy("publishedDate", descending: true)
+        .snapshots();
+  }
+
 }
