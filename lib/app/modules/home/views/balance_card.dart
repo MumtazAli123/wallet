@@ -1,6 +1,7 @@
 // ignore_for_file: file_names , prefer_const_constructors
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -11,7 +12,6 @@ import 'package:getwidget/getwidget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
 import 'package:quickalert/quickalert.dart';
-import 'package:wallet/app/modules/home/views/wallet_view.dart';
 import 'package:wallet/models/user_model.dart';
 import 'package:wallet/widgets/currency_format.dart';
 
@@ -56,9 +56,50 @@ class _BalanceCardState extends State<BalanceCard> {
     ),
   );
 
+  double totalBalanceCredit = 0;
+  double totalBalanceDebit = 0;
+  double totalBalance = 0;
+
+
+  getCurrentTotalBalanceCredit() {
+    // total credit show from statement collection where type is send and balance is added
+    FirebaseFirestore.instance
+        .collection('sellers')
+        .doc(user!.uid)
+        .collection('statement')
+        .where('type', isEqualTo: 'send')
+        .get()
+        .then((allCredit) {
+      setState(() {
+        totalBalanceCredit = allCredit.docs.fold(0, (previousValue, element) {
+          return previousValue + double.parse(element['amount'].toString());
+        });
+      });
+    });
+  }
+
+  getCurrentTotalBalanceDebit() {
+    // total debit show from statement collection where type is receive and balance is deducted
+    FirebaseFirestore.instance
+        .collection('sellers')
+        .doc(user!.uid)
+        .collection('statement')
+        .where('type', isEqualTo: 'receive')
+        .get()
+        .then((allDebit) {
+      setState(() {
+        totalBalanceDebit = allDebit.docs.fold(0, (previousValue, element) {
+          return previousValue + double.parse(element['amount'].toString());
+        });
+      });
+    });
+  }
+
   @override
   void initState() {
     super.initState();
+    getCurrentTotalBalanceCredit();
+    getCurrentTotalBalanceDebit();
   }
 
   @override
@@ -171,7 +212,7 @@ class _BalanceCardState extends State<BalanceCard> {
           ),
         ).animate().fadeIn().slide(duration: const Duration(seconds: 5)),
         back: Container(
-          height: 255,
+          height: 285,
           padding: EdgeInsets.symmetric(horizontal: 15.0, vertical: 15.0),
           margin: EdgeInsets.symmetric(horizontal: 5.0, vertical: 5.0),
           decoration: BoxDecoration(
@@ -191,54 +232,65 @@ class _BalanceCardState extends State<BalanceCard> {
             ],
           ),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              // name
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  wText("${widget.model!.name}", color: Colors.white),
-                  Container(
-                      height: 18.0,
-                      width: 18.0,
-                      decoration: BoxDecoration(
-                          color: widget.model!.status == 'approved'
-                              ? Colors.green
-                              : Colors.red,
-                          shape: BoxShape.circle),
-                      child: Icon(
-                        widget.model!.status == 'approved'
-                            ? Icons.check
-                            : Icons.close,
-                        color: Colors.white,
-                        size: 14.0,
-                      )),
-                ],
-              ),
-              SizedBox(height: 20.0),
               // balance
-              wText("Balance".tr, color: Colors.white),
+              wText("Total Balance".tr, color: Colors.white),
               wText("Rs: ${widget.model!.balance}",
                   color: Colors.white, size: 30),
-              Divider(color: Colors.white),
-              // number of transactions
-              wText(
-                  "PKR: ${NumberToWord().convert(widget.model!.balance!.toInt())}",
-                  color: Colors.white,
-                  size: 12),
-
-              SizedBox(height: 15.0),
-              // account number phone first 5 digits and last 4 digits
+             SizedBox(height: 10),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  wText("Account Number :".tr, color: Colors.white, size: 12),
-                  wText(
-                      "${widget.model!.phone!.substring(0, 5)}...${widget.model!.phone!.substring(widget.model!.phone!.length - 4)}",
-                      color: Colors.white),
+                  Column(
+                    children: [
+                      Text('Total Credit'),
+                      SizedBox(width: 10),
+                      Container(
+                        width: 150,
+                        height: 24,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.green),
+                          borderRadius: BorderRadius.circular(5),
+                          color: Colors.green,
+                        ),
+                        child: wText('${currencyFormat(totalBalanceCredit)}', color: Colors.white),
+                      ),
+                    ],
+                  ),
+                  SizedBox(width: 40),
+                  Column(
+                    children: [
+                      Text('Total Debit'),
+                      SizedBox(width: 10),
+                      Container(
+                        width: 150,
+                        height: 24,
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.red),
+                          borderRadius: BorderRadius.circular(5),
+                          color: Colors.red,
+                        ),
+                        child: wText('${currencyFormat(totalBalanceDebit)}', color: Colors.white),
+                      ),
+                    ],
+                  ),
+                  SizedBox(width: 10),
                 ],
               ),
+              SizedBox(height: 20),
+              //   pie chart
+              SizedBox(
+                width: 150,
+                height: 100,
+                child: wPieChartSample2(
+                  totalBalanceCredit: totalBalanceCredit,
+                  totalBalanceDebit: totalBalanceDebit,
+                ),
+              ),
+
+
               SizedBox(height: 10),
             ],
           ),
@@ -691,4 +743,39 @@ class _BalanceCardState extends State<BalanceCard> {
       ),
     );
   }
+  wPieChartSample2({required double totalBalanceCredit, required double totalBalanceDebit}) {
+    return PieChart(
+      PieChartData(
+        sections: [
+          PieChartSectionData(
+            titlePositionPercentageOffset: 0.5,
+            badgePositionPercentageOffset: 1.8,
+            borderSide: BorderSide(color: Colors.green),
+            color: Colors.green,
+            value: totalBalanceCredit,
+            title: 'Credit',
+            titleStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+            ),
+            radius: 50,
+          ),
+          PieChartSectionData(
+            titlePositionPercentageOffset: 0.5,
+            badgePositionPercentageOffset: 1.8,
+            borderSide: BorderSide(color: Colors.red),
+            color: Colors.red,
+            value: totalBalanceDebit,
+            title: 'Debit',
+            titleStyle: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+            ),
+            radius: 50,
+          ),
+        ],
+      ),
+    );
+  }
+
 }
