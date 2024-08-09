@@ -1,19 +1,36 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:wallet/widgets/mix_widgets.dart';
 
 import '../../../../global/global.dart';
 import '../../../../models/realstate_model.dart';
 
 class RealStateController extends GetxController {
   final TextEditingController realStateNameController = TextEditingController();
-  List<String> realStateType = [ 'House','Apartment','Office','Land','Shop','Other'];
+  List<String> realStateType = [
+    'House',
+    'Apartment',
+    'Office',
+    'Land',
+    'Shop',
+    'Other'
+  ];
   List<String> realStateStatus = ['Rent', 'Sale', 'Lease', 'Other'];
-  List<String> realStateFurnishing = ['Furnished', 'Semi-Furnished','Unfurnished','Other'];
-  List<String> realStateCondition = ['New','Ready to move','Used','Under Construction', 'Other'];
-
+  List<String> realStateFurnishing = [
+    'Furnished',
+    'Semi-Furnished',
+    'Unfurnished',
+    'Other'
+  ];
+  List<String> realStateCondition = [
+    'New',
+    'Ready to move',
+    'Used',
+    'Under Construction',
+    'Other'
+  ];
 
   String? realStateTypeValue;
   String? realStateStatusValue;
@@ -54,9 +71,6 @@ class RealStateController extends GetxController {
     }
   }
 
-
-
-
   @override
   void onInit() {
     super.onInit();
@@ -66,6 +80,7 @@ class RealStateController extends GetxController {
   @override
   void onReady() {
     super.onReady();
+
   }
 
   @override
@@ -99,7 +114,7 @@ class RealStateController extends GetxController {
             backgroundColor: Colors.green, colorText: Colors.white);
       });
     } catch (e) {
-      print(e);
+     wGetSnackBar("Error", e.toString());
     }
   }
 
@@ -121,7 +136,8 @@ class RealStateController extends GetxController {
             backgroundColor: Colors.red, colorText: Colors.white);
       });
     } catch (e) {
-      print(e);
+      Get.snackbar("Error", e.toString(),
+          backgroundColor: Colors.red, colorText: Colors.white);
     }
   }
 
@@ -144,6 +160,7 @@ class RealStateController extends GetxController {
 
 //   get data apartment
   apartmentDataStream() {
+    // .orderBy('date', descending: true)
     return FirebaseFirestore.instance
         .collection("realState")
         .where('realStateType', isEqualTo: 'Apartment')
@@ -195,7 +212,6 @@ class RealStateController extends GetxController {
         .then((value) => value.data());
   }
 
-
   removeLike(doc, String uid) {
     FirebaseFirestore.instance
         .collection("realState")
@@ -225,5 +241,4 @@ class RealStateController extends GetxController {
   void likeRealState(doc) {
     addLike(doc, user!.uid);
   }
-
 }

@@ -168,16 +168,12 @@ class _ShowRatingScreenState extends State<ShowRatingScreen> {
         leading: GFAvatar(
           radius: 20,
           backgroundColor: Colors.blue,
-          backgroundImage: doc['image'] != null
-              ? NetworkImage(doc['image'].toString())
-              : null,
           // if sellerImage is  null then show first letter of name
-          child: doc['image'] == null
-              ? Text(
+          child:  Text(
             doc['name'].toString().substring(0, 1).toUpperCase(),
             style: const TextStyle(color: Colors.white),
           )
-              : null,
+
         ),
         title: Text("Name: ${doc['name'].toString()}"),
         subtitle: Column(

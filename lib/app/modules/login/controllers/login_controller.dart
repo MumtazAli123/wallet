@@ -3,11 +3,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:quickalert/quickalert.dart';
+import 'package:wallet/widgets/mix_widgets.dart';
 
 import '../../../../global/global.dart';
 
 class LoginController extends GetxController {
-
   final emailController = TextEditingController();
   FocusNode? emailAddressFocusNode;
   final passwordController = TextEditingController();
@@ -19,14 +19,12 @@ class LoginController extends GetxController {
 
   var isLoading = true.obs;
 
-
   var email = '';
   var password = '';
 
   var isRememberMe = false.obs;
 
   final count = 0.obs;
-
 
   @override
   void onClose() {
@@ -40,60 +38,46 @@ class LoginController extends GetxController {
   void increment() => count.value++;
 
   void login() {
-    if(emailController.text.isEmpty) {
-      Get.snackbar('Error', 'Please enter email', snackPosition: SnackPosition.TOP, backgroundColor: Colors.red, colorText: Colors.white);
+    if (emailController.text.isEmpty) {
+      Get.snackbar('Error', 'Please enter email',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.red,
+          colorText: Colors.white);
       return;
-    //   if email is wrong @ , .com , .net
-    }else if(!GetUtils.isEmail(emailController.text)) {
-      Get.snackbar('Error', 'Please enter valid email', snackPosition: SnackPosition.TOP, backgroundColor: Colors.red, colorText: Colors.white);
+      //   if email is wrong @ , .com , .net
+    } else if (!GetUtils.isEmail(emailController.text)) {
+      Get.snackbar('Error', 'Please enter valid email',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.red,
+          colorText: Colors.white);
       return;
     }
     // in email do not use emoji
-    else if(GetUtils.hasMatch(emailController.text , r'[^\x00-\x7F]+')) {
-      Get.snackbar('Error', 'Please enter valid email', snackPosition: SnackPosition.TOP, backgroundColor: Colors.red, colorText: Colors.white);
+    else if (GetUtils.hasMatch(emailController.text, r'[^\x00-\x7F]+')) {
+      Get.snackbar('Error', 'Please enter valid email',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.red,
+          colorText: Colors.white);
       return;
-    }
-    else if(passwordController.text.isEmpty) {
-      Get.snackbar('Error', 'Please enter password', snackPosition: SnackPosition.TOP, backgroundColor: Colors.red, colorText: Colors.white);
+    } else if (passwordController.text.isEmpty) {
+      Get.snackbar('Error', 'Please enter password',
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Colors.red,
+          colorText: Colors.white);
       return;
-    //   save email and password in shared preference
-    }else if(isRememberMe.value) {
+      //   save email and password in shared preference
+    } else if (isRememberMe.value) {
       sharedPreferences!.setString('email', emailController.text);
       sharedPreferences!.setString('password', passwordController.text);
-    }
-    else {
+    } else {
       loginNow();
-
     }
   }
 
   loginNow() async {
-    // try {QuickAlert.show(
-    //     // time: duration ?? Duration(seconds: 3),
-    //       context: Get.context!,
-    //       title: 'Logging in',
-    //       text: 'Please wait...',
-    //       type: QuickAlertType.loading);
-    //   await FirebaseAuth.instance.signInWithEmailAndPassword(
-    //       email: emailController.text.trim(),
-    //       password: passwordController.text.trim());
-    //   User? currentUser = FirebaseAuth.instance.currentUser;
-    //   if (currentUser != null) {
-    //     checkIfSellerRecordExist(currentUser);
-    //   }
-    // } on FirebaseAuthException catch (e) {
-    //   Get.back();
-    //   if (e.code == 'user-not-found') {
-    //    Get.snackbar('Error', 'No user found for that email.');
-    //   } else if (e.code == 'wrong-password') {
-    //     Get.snackbar('Error', 'Wrong password provided for that user.');
-    //
-    //   }
-    // }
-    try{
-      // if user is not found or wrong password then show error message to user or if user is found then login user successfully than show loading dialog
+    try {
       QuickAlert.show(
-        // if have to show dialog error message then not use loading dialog
+          // if have to show dialog error message then not use loading dialog
           context: Get.context!,
           title: 'Logging in',
           text: 'Please wait...',
@@ -106,12 +90,13 @@ class LoginController extends GetxController {
       if (currentUser != null) {
         checkIfSellerRecordExist(currentUser);
       }
-    }catch(e) {
+    } catch (e) {
+      Get.back();
       QuickAlert.show(
-        context: Get.context!,
-        title: 'Error',
-        text: 'User not found or wrong password',
-        type: QuickAlertType.error);
+          context: Get.context!,
+          title: 'Error',
+          text: 'User not found or wrong password',
+          type: QuickAlertType.error);
     }
   }
 
@@ -135,18 +120,23 @@ class LoginController extends GetxController {
 
           Get.back();
           Get.offAllNamed('/home');
-          Get.snackbar('Success', 'Login successful');
-        }else if(record.data()!['status'] == 'pending') {
-          Get.snackbar('Error', 'Your account is not approved yet', snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red, colorText: Colors.white);
-        }
-        else {
-          Get.snackbar('Error', 'Your account is not approved yet', snackPosition: SnackPosition.BOTTOM, backgroundColor: Colors.red, colorText: Colors.white);
+          Get.snackbar('Success', 'Login successful',
+              snackPosition: SnackPosition.TOP,
+              backgroundColor: Colors.green,
+              colorText: Colors.white);
+        } else if (record.data()!['status'] == 'pending') {
+          wGetSnackBar('Error', 'Your account is not approved yet');
+        } else {
+          Get.back();
+          QuickAlert.show(
+              context: Get.context!,
+              title: 'Error',
+              text: 'Your account is not approved yet',
+              type: QuickAlertType.error);
         }
       }
     });
   }
 
-  void facebookSignIn() {
-
-  }
+  void facebookSignIn() {}
 }

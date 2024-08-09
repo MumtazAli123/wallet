@@ -293,6 +293,7 @@ class _LoginViewState extends State<LoginView> {
             labelStyle: TextStyle(color: Colors.black),
             labelText: 'Email',
             hintText: 'Enter your email',
+            border: InputBorder.none,
             prefixIcon: Icon(Icons.email, color: Colors.black),
             suffixIcon: hintText == 'Email' &&
                     controller.emailController.text.contains('.com')
@@ -313,12 +314,6 @@ class _LoginViewState extends State<LoginView> {
                 : null,
 
           ),
-          validator: (value) {
-            if (value!.isEmpty) {
-              return 'Email is required';
-            }
-            return emailValidator(value);
-          },
           autovalidateMode: AutovalidateMode.onUserInteraction,
         ),
       ),

@@ -31,7 +31,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
   var hintText = 'Email';
   String flagUri = '';
 
-
   emailValidation() {
     if (controller.emailController.text.isEmpty) {
       wGetSnackBar(
@@ -103,7 +102,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
       controller.currentScreen.value = 4;
     }
   }
-
 
   @override
   void initState() {
@@ -247,8 +245,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     child: Lottie.asset('assets/lottie/login.json'),
                   ),
                   SizedBox(height: 20),
-                  _buildTextField(
-                      controller.nameController, 'Name', Icons.person),
+                  wTextField(
+                    controller: controller.nameController,
+                    hintText: "Enter Name",
+                    labelText: "Name",
+                    keyboardType: "text",
+                    prefixIcon: Icons.person,
+                  ),
+
+                  // _buildTextField(
+                  //     controller.nameController, 'Name', Icons.person),
                   SizedBox(height: 20),
                   _buildTextField(controller.addressController, 'Address',
                       Icons.location_on),
@@ -304,39 +310,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ],
         ),
       ),
-      // bottomNavigationBar: Row(
-      //   children: [
-      //     Expanded(
-      //       child: Container(
-      //         decoration: BoxDecoration(
-      //           color: Colors.red,
-      //           borderRadius: BorderRadius.only(
-      //             topLeft: Radius.circular(140),
-      //           ),
-      //         ),
-      //         height: 60,
-      //         child: wButton('Back', color: Colors.red, onPressed: () {
-      //           controller.currentScreen.value = 1;
-      //         }),
-      //       ),
-      //     ),
-      //     Expanded(
-      //       child: Container(
-      //         height: 60,
-      //         decoration: BoxDecoration(
-      //           color: Colors.green,
-      //           borderRadius: BorderRadius.only(
-      //             topRight: Radius.circular(140),
-      //           ),
-      //         ),
-      //         child: wButton('Next', color: Colors.green[700], onPressed: () {
-      //           phoneValidation();
-      //
-      //         }),
-      //       ),
-      //     ),
-      //   ],
-      // ),
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         automaticallyImplyLeading: false,
@@ -631,6 +604,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
       width: 550,
       padding: EdgeInsets.only(right: 10),
       child: TextFormField(
+        inputFormatters: [
+          RegisterController.textUpperCaseTextFormatter(),
+        ],
         style: TextStyle(
             color: Colors.black, fontSize: 16, fontWeight: FontWeight.w500),
         autofocus: false,
@@ -830,7 +806,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       userModel.email = user.email;
       userModel.name = controller.nameController.text;
       userModel.phone =
-      "+${controller.countryCode}${controller.phoneController.text}";
+          "+${controller.countryCode}${controller.phoneController.text}";
       userModel.sellerType = 'user';
       userModel.balance = 100.0;
       userModel.createdAt = DateTime.now().toString();
@@ -875,5 +851,4 @@ class _RegisterScreenState extends State<RegisterScreen> {
       Get.snackbar('Error', e.toString());
     }
   }
-
 }

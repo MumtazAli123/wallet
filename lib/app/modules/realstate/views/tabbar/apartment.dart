@@ -28,6 +28,9 @@ class _ApartmentState extends State<Apartment> {
     return StreamBuilder(
         stream: controller.apartmentDataStream(),
         builder: (context, AsyncSnapshot snapshot) {
+          if(snapshot.hasError){
+            return Text('Something went wrong');
+          }
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           }
@@ -36,6 +39,10 @@ class _ApartmentState extends State<Apartment> {
               return Center(child: Text('No Realstate found'));
             }
             return ListView.builder(
+              controller: ScrollController(),
+              // scrollDirection: Axis.vertical,
+              reverse: true,
+              shrinkWrap: true,
                 itemCount: snapshot.data.docs.length,
                 itemBuilder: (context, index) {
                   return wBuildRealstateCard(snapshot.data.docs[index]);
