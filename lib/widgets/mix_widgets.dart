@@ -26,7 +26,6 @@ wText(String text, {Color? color, double size = 16}) {
       fontSize: size,
       fontWeight: FontWeight.bold,
       color: color,
-
     ),
   );
 }
@@ -40,14 +39,13 @@ eText(String s, {required Color color}) {
 
 aText(String text, {Color? color, double size = 16}) {
   return Text(
-    maxLines: 1,
-    text,
-    style: GoogleFonts.quando(
-      fontSize: size,
-      fontWeight: FontWeight.bold,
-      color: color,
-    )
-  );
+      maxLines: 1,
+      text,
+      style: GoogleFonts.quando(
+        fontSize: size,
+        fontWeight: FontWeight.bold,
+        color: color,
+      ));
 }
 
 wTitleMedium({required String title, required String subtitle}) {
@@ -189,7 +187,8 @@ urlLauncher(String imgPath, String url, String title) {
     ),
   );
 }
-urlLauncherA(String url){
+
+urlLauncherA(String url) {
   return GestureDetector(
     onTap: () async {
       if (await canLaunch(url)) {
@@ -207,10 +206,7 @@ urlLauncherA(String url){
       child: wText("View", color: Colors.white),
     ),
   );
-
 }
-
-
 
 wBuildRealstateCard(doc) {
   return GestureDetector(
@@ -276,8 +272,8 @@ wBuildRealstateCard(doc) {
             color: Colors.amber,
             onChanged: (value) {
               Get.to(() => ShowRatingScreen(
-                sellerId: doc['sellerId'],
-                model: RealStateModel.fromJson(doc.data()),
+                    sellerId: doc['sellerId'],
+                    model: RealStateModel.fromJson(doc.data()),
                   ));
             },
             value: 3.5,
@@ -424,17 +420,21 @@ void wBuildLanguageBottomSheet(BuildContext context) {
   );
 }
 
-
-wTextField({required TextEditingController controller, required String keyboardType, required String labelText, required String hintText, required IconData prefixIcon}) {
+wTextField(
+    {required TextEditingController controller,
+    required String keyboardType,
+    required String labelText,
+    required String hintText,
+    required IconData prefixIcon}) {
   return TextField(
     controller: controller,
     inputFormatters: [
       RegisterController.textUpperCaseTextFormatter(),
-
     ],
 
     // keyboardType: when number show done on keyboard
-    keyboardType: keyboardType == "number" ? TextInputType.number : TextInputType.text,
+    keyboardType:
+        keyboardType == "number" ? TextInputType.number : TextInputType.text,
     decoration: InputDecoration(
       labelText: labelText,
       hintText: hintText,
@@ -452,6 +452,3 @@ void wGetSnackBar(String title, String text) {
       backgroundColor: Colors.red,
       colorText: Colors.white);
 }
-
-
-

@@ -336,12 +336,13 @@ class _UploadRealstateViewState extends State<UploadRealstateView> {
             const SizedBox(height: 2),
             // address
             Padding(padding: const EdgeInsets.all(8.0),
-              child: TextFormField(
+              child: wTextField(
                 controller: addressController,
-                decoration: const InputDecoration(
-                  labelText: "Address",
-                  border: OutlineInputBorder(),
-                ),
+                hintText: "Enter Address",
+                labelText: "Enter Address",
+                keyboardType: "text",
+                prefixIcon: Icons.location_city,
+
               ),
             ),
 
