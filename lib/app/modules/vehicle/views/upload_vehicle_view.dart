@@ -463,12 +463,18 @@ class _UploadVehicleViewState extends State<UploadVehicleView> {
             // description
             Padding(
               padding: const EdgeInsets.all(8.0),
-              child: wTextField(
-                  keyboardType: "text",
+              child: TextFormField(
+                  keyboardType: TextInputType.multiline,
                   controller: controller.vehicleDescriptionController,
-                  labelText: "Vehicle Description",
-                  hintText: "Enter Vehicle Description",
-                  prefixIcon: Icons.description),
+                  maxLines: 2,
+                  decoration: InputDecoration(
+                    labelText: "Vehicle Description",
+                    hintText: "Enter Vehicle Description",
+                    prefixIcon: const Icon(Icons.description),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  )),
             ),
 
             const SizedBox(

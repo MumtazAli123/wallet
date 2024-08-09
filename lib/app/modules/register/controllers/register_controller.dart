@@ -13,7 +13,6 @@ import 'package:wallet/global/global.dart';
 import 'package:wallet/models/user_model.dart';
 import 'package:wallet/notification/push_notification_sys.dart';
 
-import '../../../../user_profile/user_profile.dart';
 
 class RegisterController extends GetxController {
   final TextEditingController phoneController = TextEditingController();
@@ -143,18 +142,39 @@ class RegisterController extends GetxController {
   }
 
   static textUpperCaseTextFormatter() {
-    // first letter use capital and other letter use small if type space then same logic apply
+    // first letter use capital after space  letter use small if type space then same logic apply
     return TextInputFormatter.withFunction((oldValue, newValue) {
-      if (newValue.text.isEmpty) {
+      try {
+        if (newValue.text.contains(' ')) {
+          return newValue.copyWith(
+            text: newValue.text
+                .split(' ')
+                .map((e) => e[0].toUpperCase() + e.substring(1).toLowerCase())
+                .join(' '),
+          );
+        } else if (newValue.text.length == 1) {
+          return newValue.copyWith(
+              text: newValue.text[0].toUpperCase() +
+                  newValue.text.substring(1).toLowerCase());
+        } else if (newValue.text.length > 1) {
+          return newValue.copyWith(
+              text: newValue.text[0].toUpperCase() +
+                  newValue.text.substring(1).toLowerCase());
+        }
+      } catch (e) {
         return newValue.copyWith(text: newValue.text);
-      } else if (newValue.text.length == 1) {
-        return newValue.copyWith(
-            text: newValue.text[0].toUpperCase() + newValue.text.substring(1));
       }
-      return newValue.copyWith(
-          text: newValue.text[0].toUpperCase() +
-              newValue.text.substring(1).toLowerCase());
+     if (newValue.text.contains(' ')) {
+        return newValue.copyWith(
+          text: newValue.text
+              .split(' ')
+              .map((e) => e[0].toUpperCase() + e.substring(1).toLowerCase())
+              .join(' '),
+        );
+      }
+      return newValue;
     });
+
   }
 
   var status = "".obs;
