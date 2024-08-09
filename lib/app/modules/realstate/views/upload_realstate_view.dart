@@ -56,19 +56,24 @@ class _UploadRealstateViewState extends State<UploadRealstateView> {
 
   validateAndUploadForm() {
     if (imageFile == null) {
-      Get.snackbar("Error", "Please select image");
+      wGetSnackBar("Error", "Please select image");
       return;
     }if (descriptionController.text.isEmpty ||
         descriptionController.text.length < 3 &&
             descriptionController.text.length > 200) {
-      Get.snackbar("Error", "Please enter description min 3 and max 200");
+      wGetSnackBar("Error", "Please enter description min 3 and max 200");
       return;
     } else if (startingFromController.text.isEmpty ||
         startingFromController.text.length < 3 &&
             startingFromController.text.length > 20) {
-      Get.snackbar("Error", "Please enter starting from min 3 and max 20");
+      wGetSnackBar("Error", "Please enter starting from min 3 and max 20");
       return;
-    } else {
+    //   if user use startingFromController , or . or latter after no select
+    }else if(startingFromController.text.contains(",") || startingFromController.text.contains(".") || startingFromController.text.contains("a")){
+      wGetSnackBar("Error", "Please enter starting from number only");
+      return;
+    }
+    else {
       setState(() {
         isUpLoading = true;
       });
@@ -344,8 +349,10 @@ class _UploadRealstateViewState extends State<UploadRealstateView> {
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
                 controller: startingFromController,
+                keyboardType: TextInputType.number,
                 decoration: const InputDecoration(
-                  labelText: "Enter Starting from",
+                  labelText: "Enter Price",
+                  hintText: "Enter Price",
                   border: OutlineInputBorder(),
                 ),
               ),

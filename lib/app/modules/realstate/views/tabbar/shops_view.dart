@@ -14,6 +14,9 @@ class ShopsViewPage extends GetView<RealStateController> {
     return StreamBuilder(
         stream: controller.shopDataStream(),
         builder: (context, AsyncSnapshot snapshot) {
+          if(snapshot.hasError){
+            return Center(child: Text('Error: ${snapshot.error}'));
+          }
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
           }

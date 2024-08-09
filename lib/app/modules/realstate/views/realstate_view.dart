@@ -58,7 +58,13 @@ class RealStateView extends GetView<RealStateController> {
     return StreamBuilder<QuerySnapshot>(
       stream: controller.realStateStream(),
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
+       if(snapshot.hasError){
+         return const Text('Something went wrong');
+       }else if(snapshot.connectionState == ConnectionState.waiting){
+         return const Center(child: CircularProgressIndicator());
+       }else if(snapshot.data!.docs.isEmpty){
+         return const Center(child: Text('No data found'));
+        }else{
           return ListView.builder(
             itemCount: snapshot.data!.docs.length,
             itemBuilder: (context, index) {
@@ -67,11 +73,21 @@ class RealStateView extends GetView<RealStateController> {
               return RealStateUiDesignWidget(model: model, context: context);
             },
           );
-        } else {
-          return const Center(child: CircularProgressIndicator());
-        }
+       }
       },
     );
   }
 
 }
+//  if (snapshot.hasData) {
+//           return ListView.builder(
+//             itemCount: snapshot.data!.docs.length,
+//             itemBuilder: (context, index) {
+//               final RealStateModel model = RealStateModel.fromJson(
+//                   snapshot.data!.docs[index].data() as Map<String, dynamic>);
+//               return RealStateUiDesignWidget(model: model, context: context);
+//             },
+//           );
+//         } else {
+//           return const Center(child: CircularProgressIndicator());
+//         }
