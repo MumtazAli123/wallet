@@ -119,10 +119,11 @@ class _WebLoginPageState extends State<WebLoginPage> {
                       ),
                       wButton(
                         'Login',
+                          Colors.blue,
+
                         onPressed: () {
                           controller.login();
                         },
-                        color: Colors.blue,
                       ),
                       const SizedBox(
                         height: 20,

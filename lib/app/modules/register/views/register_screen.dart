@@ -172,7 +172,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     SizedBox(height: 45),
                     _emailField(controller.emailController),
                     SizedBox(height: 30),
-                    wButton('Next', color: Colors.blue, onPressed: () {
+                    wButton('Next', Colors.blue, onPressed: () {
                       emailValidation();
                     }),
                     SizedBox(height: 30),
@@ -200,7 +200,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
               ),
               height: 60,
-              child: wButton('Back', color: Colors.red, onPressed: () {
+              child: wButton('Back', Colors.red, onPressed: () {
                 controller.currentScreen.value = 0;
               }),
             ),
@@ -214,7 +214,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   topRight: Radius.circular(140),
                 ),
               ),
-              child: wButton('Next', color: Colors.blue, onPressed: () {
+              child: wButton('Next',  Colors.blue, onPressed: () {
                 formValidation();
               }),
             ),
@@ -288,7 +288,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
                 height: 55,
-                child: wButton('Back', color: Colors.red, onPressed: () {
+                child: wButton('Back', Colors.red, onPressed: () {
                   controller.currentScreen.value = 1;
                 }),
               ),
@@ -303,7 +303,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   topRight: Radius.circular(140),
                 ),
               ),
-              child: wButton('Next', color: Colors.blue[800], onPressed: () {
+              child: wButton('Next',  Colors.blue[800]!, onPressed: () {
                 phoneValidation();
               }),
             ),
@@ -375,7 +375,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
                 height: 55,
-                child: wButton('Back', color: Colors.red, onPressed: () {
+                child: wButton('Back', Colors.red, onPressed: () {
                   controller.currentScreen.value = 2;
                 }),
               ),
@@ -390,7 +390,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   topRight: Radius.circular(140),
                 ),
               ),
-              child: wButton('Next', color: Colors.blue[800], onPressed: () {
+              child: wButton('Next',  Colors.blue[800]!, onPressed: () {
                 passwordValidation();
               }),
             ),
@@ -507,7 +507,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       title: wText("City: ${controller.addressController.text}",
                           color: Colors.white)),
                   SizedBox(height: 20),
-                  wButton('Submit', color: Colors.blue, onPressed: () {
+                  wButton('Submit',Colors.blue, onPressed: () {
                     if (controller.formKey.currentState!.validate()) {
                       signUp(controller.emailController.text,
                           controller.passwordController.text);

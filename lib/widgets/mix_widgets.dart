@@ -3,10 +3,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/components/avatar/gf_avatar.dart';
+import 'package:getwidget/components/button/gf_button.dart';
 import 'package:getwidget/components/button/gf_button_bar.dart';
 import 'package:getwidget/components/card/gf_card.dart';
 import 'package:getwidget/components/list_tile/gf_list_tile.dart';
 import 'package:getwidget/components/rating/gf_rating.dart';
+import 'package:getwidget/types/gf_button_type.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:like_button/like_button.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -134,27 +136,38 @@ cText(String text, {Color? color, double size = 16}) {
   );
 }
 
-wButton(String text, {Color? color, double size = 16, Function()? onPressed}) {
-  return GestureDetector(
-    onTap: onPressed,
-    child: isLoading
-        ? const CircularProgressIndicator()
-        : Container(
-            alignment: Alignment.center,
-            width: 250,
-            height: 50,
-            padding: const EdgeInsets.all(8.0),
-            decoration: BoxDecoration(
-              color: color,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: wText(
-              text,
-              color: Colors.white,
-              size: 20,
-            ),
-          ),
-  );
+wButton(String text, Color color, { double size = 16, Function()? onPressed}) {
+  // return GestureDetector(
+  //   onTap: onPressed,
+  //   child: isLoading
+  //       ? const CircularProgressIndicator()
+  //       : Container(
+  //           alignment: Alignment.center,
+  //           width: 250,
+  //           height: 50,
+  //           padding: const EdgeInsets.all(8.0),
+  //           decoration: BoxDecoration(
+  //             color: color,
+  //             borderRadius: BorderRadius.circular(10),
+  //           ),
+  //           child: wText(
+  //             text,
+  //             color: Colors.white,
+  //             size: 20,
+  //           ),
+  //         ),
+  // );
+  return GFButton(
+      onPressed: onPressed,
+      text: text,
+      highlightColor: Colors.red,
+      color: color,
+      hoverColor: Colors.green,
+      borderShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      type: GFButtonType.solid,
+      size: size,
+      textStyle:  GoogleFonts.salsa(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),);
+
 }
 
 urlLauncher(String imgPath, String url, String title) {

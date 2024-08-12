@@ -169,7 +169,9 @@ class _MobRegisterViewState extends State<MobRegisterView> {
                     SizedBox(height: 45),
                     _emailField(controller.emailController),
                     SizedBox(height: 30),
-                    wButton('Next', color: Colors.blue, onPressed: () {
+                    wButton(
+                        size: 50,
+                        'Next', Colors.blue, onPressed: () {
                       emailValidation();
                     }),
                     SizedBox(height: 30),
@@ -193,13 +195,16 @@ class _MobRegisterViewState extends State<MobRegisterView> {
           children: [
             Expanded(
               child: Container(
+                margin: const EdgeInsets.only(left: 10),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(140),
                   ),
                 ),
                 height: 55,
-                child: wButton('Back', color: Colors.red, onPressed: () {
+                child: wButton('Previous',
+                    Colors.red,
+                    onPressed: () {
                   controller.currentScreen.value = 0;
                 }),
               ),
@@ -207,16 +212,19 @@ class _MobRegisterViewState extends State<MobRegisterView> {
             SizedBox(
               width: 10,
             ),
-            Container(
-              height: 57,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(140),
+            Expanded(
+              child: Container(
+                margin:  EdgeInsets.only(right: 10),
+                height: 57,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(140),
+                  ),
                 ),
+                child: wButton('Next', Colors.blue[800]!, onPressed: () {
+                  formValidation();
+                }),
               ),
-              child: wButton('Next', color: Colors.blue[800], onPressed: () {
-                formValidation();
-              }),
             ),
           ],
         ),
@@ -247,15 +255,15 @@ class _MobRegisterViewState extends State<MobRegisterView> {
                   _buildTextField(
                       controller.cityController, 'City', Icons.location_city),
 
-                  SizedBox(height: 20),
+                  SizedBox(height: 30),
                   Container(
-                    height: 400,
-                    width: 380,
+                    height: 300,
+                    width: 280,
                     decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
+                      // color: Colors.blue,
+                      borderRadius: BorderRadius.circular(40),
                     ),
-                    child: Image.asset('assets/images/login_image.png'),
+                    child: Lottie.asset('assets/lottie/sale.json', fit: BoxFit.fill, height: 200, width: 200,),
                   ),
                   SizedBox(height: 20),
                 ],
@@ -277,13 +285,14 @@ class _MobRegisterViewState extends State<MobRegisterView> {
           children: [
             Expanded(
               child: Container(
+                margin: const EdgeInsets.only(left: 10),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(140),
                   ),
                 ),
                 height: 55,
-                child: wButton('Back', color: Colors.red, onPressed: () {
+                child: wButton('Previous', Colors.red, onPressed: () {
                   controller.currentScreen.value = 1;
                 }),
               ),
@@ -291,16 +300,19 @@ class _MobRegisterViewState extends State<MobRegisterView> {
             SizedBox(
               width: 10,
             ),
-            Container(
-              height: 57,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(140),
+            Expanded(
+              child: Container(
+                margin: const EdgeInsets.only(right: 10),
+                height: 57,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(140),
+                  ),
                 ),
+                child: wButton('Next', Colors.blue[800]!, onPressed: () {
+                  phoneValidation();
+                }),
               ),
-              child: wButton('Next', color: Colors.blue[800], onPressed: () {
-                phoneValidation();
-              }),
             ),
           ],
         ),
@@ -368,13 +380,14 @@ class _MobRegisterViewState extends State<MobRegisterView> {
           children: [
             Expanded(
               child: Container(
+                margin: const EdgeInsets.only(left: 10),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(140),
                   ),
                 ),
                 height: 55,
-                child: wButton('Back', color: Colors.red, onPressed: () {
+                child: wButton('Previous', Colors.red, onPressed: () {
                   controller.currentScreen.value = 2;
                 }),
               ),
@@ -382,16 +395,19 @@ class _MobRegisterViewState extends State<MobRegisterView> {
             SizedBox(
               width: 10,
             ),
-            Container(
-              height: 57,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(140),
+            Expanded(
+              child: Container(
+                margin: const EdgeInsets.only(right: 10),
+                height: 57,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(140),
+                  ),
                 ),
+                child: wButton('Next', Colors.blue[800]!, onPressed: () {
+                  passwordValidation();
+                }),
               ),
-              child: wButton('Next', color: Colors.blue[800], onPressed: () {
-                passwordValidation();
-              }),
             ),
           ],
         ),
@@ -509,12 +525,22 @@ class _MobRegisterViewState extends State<MobRegisterView> {
                       title: aText("City: ${controller.cityController.text}",
                           color: Colors.white)),
                   SizedBox(height: 20),
-                  wButton('Submit', color: Colors.blue, onPressed: () {
-                    if (controller.formKey.currentState!.validate()) {
-                      signUp(
-                          controller.emailController.text, controller.passwordController.text);
-                    }
-                  }),
+                 Container(
+                   padding: const EdgeInsets.all(5),
+                   width: 200,
+                   decoration: BoxDecoration(
+                     color: Colors.blue,
+                     borderRadius: BorderRadius.circular(10),
+                   ),
+                   child:  wButton('Submit',
+                       size: 40,
+                       Colors.blue, onPressed: () {
+                         if (controller.formKey.currentState!.validate()) {
+                           signUp(
+                               controller.emailController.text, controller.passwordController.text);
+                         }
+                       }),
+                  ),
                   SizedBox(height: 20),
                   GFButton(
                       text: "Back",

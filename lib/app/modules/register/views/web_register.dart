@@ -200,7 +200,7 @@ class _WebRegisterViewState extends State<WebRegisterView> {
                           SizedBox(height: 45),
                           _emailField(controller.emailController),
                           SizedBox(height: 30),
-                          wButton('Next', color: Colors.blue, onPressed: () {
+                          wButton('Next', Colors.blue, onPressed: () {
                             emailValidation();
                           }),
                           SizedBox(height: 30),
@@ -307,7 +307,7 @@ class _WebRegisterViewState extends State<WebRegisterView> {
                                  GFButton(onPressed: () {
                                    controller.currentScreen.value = 0;
                                  }, text: 'Back', color: Colors.red),
-                                 wButton('Next', color: Colors.blue, onPressed: () {
+                                 wButton('Next',  Colors.blue, onPressed: () {
                                    formValidation();
                                  }),
                                ],
@@ -416,7 +416,7 @@ class _WebRegisterViewState extends State<WebRegisterView> {
                               GFButton(onPressed: () {
                                 controller.currentScreen.value = 1;
                               }, text: 'Back', color: Colors.red),
-                              wButton('Next', color: Colors.blue, onPressed: () {
+                              wButton('Next', Colors.blue, onPressed: () {
                                 phoneValidation();
                               }),
                             ],
@@ -558,7 +558,7 @@ class _WebRegisterViewState extends State<WebRegisterView> {
                             GFButton(onPressed: () {
                               controller.currentScreen.value = 2;
                             }, text: 'Back', color: Colors.red),
-                            wButton('Next', color: Colors.blue, onPressed: () {
+                            wButton('Next', Colors.blue, onPressed: () {
                               passwordValidation();
                             }),
                           ],
@@ -678,7 +678,7 @@ class _WebRegisterViewState extends State<WebRegisterView> {
                                 title: aText("City: ${controller.addressController.text}",
                                     color: Colors.white)),
                             SizedBox(height: 20),
-                            wButton('Submit', color: Colors.blue, onPressed: () {
+                            wButton('Submit',  Colors.blue, onPressed: () {
                               if (controller.formKey.currentState!.validate()) {
                                 signUp(
                                     controller.emailController.text, controller.passwordController.text);

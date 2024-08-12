@@ -9,9 +9,10 @@ import 'package:wallet/global/global.dart';
 import 'package:wallet/models/realstate_model.dart';
 
 import '../widgets/mix_widgets.dart';
+
 class RatingScreen extends StatefulWidget {
- final String? sellerId;
- final RealStateModel? model;
+  final String? sellerId;
+  final RealStateModel? model;
   const RatingScreen({super.key, this.sellerId, this.model});
 
   @override
@@ -23,15 +24,11 @@ class _RatingScreenState extends State<RatingScreen> {
 
   double countStarsRating = 0.0;
 
-
-
   @override
   void dispose() {
     ratingController.dispose();
     super.dispose();
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +56,6 @@ class _RatingScreenState extends State<RatingScreen> {
       ),
     );
   }
-
 
   _buildDialog() {
     return Dialog(
@@ -114,9 +110,7 @@ class _RatingScreenState extends State<RatingScreen> {
               SizedBox(height: 20),
               wInput(hint: 'Comment', maxLines: 2),
               SizedBox(height: 20),
-              wButton(
-                color: Colors.blue,
-                  'Submit', onPressed: () {
+              wButton('Submit', Colors.blue, onPressed: () {
                 // Navigator.pop(context);
                 _saveRating(titleStarsRating);
               }),
@@ -126,7 +120,6 @@ class _RatingScreenState extends State<RatingScreen> {
         ),
       ),
     );
-
   }
 
   wInput({required String hint, required int maxLines}) {
@@ -136,35 +129,45 @@ class _RatingScreenState extends State<RatingScreen> {
       maxLines: maxLines,
       decoration: InputDecoration(
         hintText: hint,
-        border: OutlineInputBorder()
-        ,
+        border: OutlineInputBorder(),
       ),
     );
   }
 
-  void _saveRating(String value)async {
+  void _saveRating(String value) async {
     // save rating to database
     try {
       if (countStarsRating == 0.0) {
-        QuickAlert.show(context:Get.context!, title: 'Rating', text: 'Please rate', type: QuickAlertType.error);
+        QuickAlert.show(
+            context: Get.context!,
+            title: 'Rating',
+            text: 'Please rate',
+            type: QuickAlertType.error);
         return;
       }
       if (ratingController.text.isEmpty) {
-        QuickAlert.show(context:Get.context!, title: 'Rating', text: 'Please comment', type: QuickAlertType.error);
+        QuickAlert.show(
+            context: Get.context!,
+            title: 'Rating',
+            text: 'Please comment',
+            type: QuickAlertType.error);
         return;
       }
-      await FirebaseFirestore.instance.collection('sellers')
+      await FirebaseFirestore.instance
+          .collection('sellers')
           .doc(widget.sellerId)
           .get()
           .then((snap) async {
         if (snap.data()!["rating"] == null) {
-          FirebaseFirestore.instance.collection('sellers')
+          FirebaseFirestore.instance
+              .collection('sellers')
               .doc(widget.sellerId)
               // realstate
               .update({
             'rating': countStarsRating.toString(),
           });
-          await FirebaseFirestore.instance.collection('sellers')
+          await FirebaseFirestore.instance
+              .collection('sellers')
               .doc(widget.sellerId)
               .collection('rating')
               .doc(sharedPreferences?.getString('uid'))
@@ -180,15 +183,17 @@ class _RatingScreenState extends State<RatingScreen> {
           double pastRating = double.parse(snap.data()!["rating"].toString());
           double newRating = double.parse(countStarsRating.toString());
           double totalRating = (pastRating + newRating) / 2;
-          FirebaseFirestore.instance.collection('sellers')
+          FirebaseFirestore.instance
+              .collection('sellers')
               .doc(widget.sellerId)
               .update({
             'rating': totalRating.toString(),
           });
-          await FirebaseFirestore.instance.collection('sellers')
+          await FirebaseFirestore.instance
+              .collection('sellers')
               .doc(widget.sellerId)
               .collection('rating')
-          .doc(sharedPreferences?.getString('uid'))
+              .doc(sharedPreferences?.getString('uid'))
               .set({
             'rating': countStarsRating.toString(),
             "title": titleStarsRating,
@@ -201,14 +206,15 @@ class _RatingScreenState extends State<RatingScreen> {
       });
 
       Get.back();
-      Get.snackbar('Rating', 'Rating saved successfully', backgroundColor: Colors.green, colorText: Colors.white);
+      Get.snackbar('Rating', 'Rating saved successfully',
+          backgroundColor: Colors.green, colorText: Colors.white);
       setState(() {
         countStarsRating = 0.0;
         titleStarsRating = '';
       });
-
     } catch (e) {
-      Get.snackbar('Rating', 'Error saving rating', backgroundColor: Colors.red, colorText: Colors.white);
+      Get.snackbar('Rating', 'Error saving rating',
+          backgroundColor: Colors.red, colorText: Colors.white);
     }
   }
 
@@ -268,6 +274,5 @@ class _RatingScreenState extends State<RatingScreen> {
         ],
       ),
     );
-
   }
 }
