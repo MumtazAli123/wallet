@@ -14,7 +14,6 @@ import 'package:screenshot/screenshot.dart';
 import 'package:wallet/app/modules/statement/views/time_statement_view.dart';
 import 'package:wallet/global/global.dart';
 import 'package:wallet/models/realstate_model.dart';
-import 'package:wallet/models/seller_model.dart';
 
 import '../../../../models/user_model.dart';
 import '../../../../rating/rating_screen.dart';

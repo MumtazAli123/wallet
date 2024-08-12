@@ -6,6 +6,7 @@ import 'package:wallet/app/modules/products/bindings/products_binding.dart';
 import 'package:wallet/app/modules/products/views/products_view.dart';
 import 'package:wallet/app/modules/realstate/bindings/realstate_binding.dart';
 import 'package:wallet/app/modules/realstate/views/realstate_view.dart';
+import 'package:wallet/app/modules/register/views/mob_register_view.dart';
 import 'package:wallet/app/modules/save_friends/bindings/save_friends_binding.dart';
 import 'package:wallet/app/modules/save_friends/views/save_friends_view.dart';
 import 'package:wallet/app/modules/shops/bindings/shops_binding.dart';
@@ -19,9 +20,10 @@ import '../modules/home/views/bottom_page_view.dart';
 import '../modules/home/views/web_home_view.dart';
 import '../modules/login/bindings/login_binding.dart';
 import '../modules/login/views/login_view.dart';
+import '../modules/login/views/web_login.dart';
 import '../modules/realstate/views/realstate_edit_view.dart';
 import '../modules/register/bindings/register_binding.dart';
-import '../modules/register/views/register_view.dart';
+import '../modules/register/views/web_register.dart';
 import '../modules/send_money/bindings/send_money_binding.dart';
 import '../modules/send_money/views/send_money_view.dart';
 import '../modules/splash_screen/bindings/splash_screen_binding.dart';
@@ -30,6 +32,7 @@ import '../modules/statement/bindings/statement_binding.dart';
 import '../modules/statement/views/statement_view.dart';
 import '../modules/wallet/bindings/wallet_binding.dart';
 import '../modules/wallet/views/wallet_view.dart';
+import '../modules/wallet/views/web_wallet.dart';
 
 // ignore_for_file: prefer_const_constructors , prefer_const_literals_to_create_immutables
 
@@ -43,7 +46,13 @@ class AppPages {
   static final routes = [
     GetPage(
       name: _Paths.LOGIN,
-      page: () => const LoginView(),
+      page: () => LayoutBuilder(builder: (context, constraints) {
+        if (constraints.maxWidth < 950) {
+          return LoginView();
+        } else {
+          return WebLoginPage();
+        }
+      }),
       binding: LoginBinding(),
     ),
     GetPage(
@@ -53,7 +62,13 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.REGISTER,
-      page: () => const RegisterView(),
+      page: () => LayoutBuilder(builder: (context, constraints) {
+        if (constraints.maxWidth < 950) {
+          return MobRegisterView();
+        } else {
+          return WebRegisterView();
+        }
+      }),
       binding: RegisterBinding(),
     ),
     GetPage(
@@ -70,7 +85,13 @@ class AppPages {
     ),
     GetPage(
       name: _Paths.WALLET,
-      page: () => WalletView(),
+      page: () => LayoutBuilder(builder: (context, constraints) {
+        if (constraints.maxWidth < 950) {
+          return WalletView();
+        } else {
+          return WebWalletView();
+        }
+      }),
       binding: WalletBinding(),
     ),
     GetPage(

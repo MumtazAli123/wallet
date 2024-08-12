@@ -4,19 +4,22 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:get_time_ago/get_time_ago.dart';
-import 'package:quickalert/quickalert.dart';
-import 'package:wallet/global/global.dart';
-import 'package:wallet/widgets/currency_format.dart';
+import 'package:wallet/app/modules/products/views/show_products_view.dart';
+import 'package:wallet/app/modules/realstate/views/show_realstate.dart';
+import 'package:wallet/app/modules/vehicle/views/show_vehicle_view.dart';
+import 'package:wallet/models/seller_model.dart';
+import 'package:wallet/widgets/nav_appbar.dart';
 
-import '../../../../models/balance.dart';
+import '../../../../models/realstate_model.dart';
 import '../../../../models/user_model.dart';
+import '../../../../models/vehicle_model.dart';
 import '../../../../widgets/mix_widgets.dart';
 import '../../../../widgets/my_drawer.dart';
-import '../../send_money/views/send_money_view.dart';
+import '../../vehicle/views/vehicle_page_view.dart';
+import '../../wallet/views/web_wallet.dart';
 import '../controllers/home_controller.dart';
 
-class WebHomeView extends GetView {
+class WebHomeView extends GetView<HomeController> {
   final UserModel? userModel;
   WebHomeView({super.key, this.userModel});
 
@@ -29,446 +32,480 @@ class WebHomeView extends GetView {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: MyDrawer(),
-      appBar: AppBar(
-        title: Text('Home'),
-        centerTitle: true,
+      // drawer: MyDrawer(),
+      appBar: NavAppBar(
+        title: 'Home',
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              image: AssetImage('assets/images/login.png'),
-              fit: BoxFit.cover,
-            ),
-            gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [Colors.black, Colors.blue],
-            ),
-          ),
-          child: Wrap(
-            alignment: WrapAlignment.center,
-            children: [
-              _buildHeader(),
-              _buildContent(),
-              _buildFooter(),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  _buildHeader() {
-    final size = MediaQuery.of(Get.context!).size;
-    return SizedBox(
-      // acquires 90% of the height of the screen
-      height: size.height * 0.9,
-      width: 600,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
+      body: Row(
         children: [
-          Container(
-            height: size.height * 0.3,
-            width: 600,
-            margin: EdgeInsets.all(10.0),
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/wallet.png'),
-                fit: BoxFit.fill,
-              ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.all(18.0),
+          // Expanded(flex: 3, child: _buildSideBody()),
+          Expanded(
+            flex: 7,
+            child: SingleChildScrollView(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  wText("${sharedPreferences?.getString('name')}",
-                      color: Colors.white, size: 20.0),
-                  SizedBox(
-                    height: 60.0,
+                  SizedBox(height: 20.0),
+                  _buildBanner(),
+                  SizedBox(height: 10.0),
+                  _buildCategory(),
+                  SizedBox(height: 10.0),
+                  SizedBox(height: 10.0),
+                  Container(
+                    constraints: BoxConstraints(
+                      maxHeight: 400,
+                      maxWidth: 1000,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.blue,
+                      image: DecorationImage(
+                        image: AssetImage('assets/images/salewithus.png'),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
                   ),
-                  StreamBuilder(
-                      stream: FirebaseFirestore.instance
-                          .collection('sellers')
-                          .doc(user!.uid)
-                          .snapshots(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasData) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              wText(
-                                  "Balance: PKR: ${currencyFormat(double.parse(snapshot.data!['balance'].toString()))}",
-                                  color: Colors.white,
-                                  size: 20.0),
-                              Divider(
-                                color: Colors.white,
-                              ),
-                              Text(
-                                NumberToWord()
-                                    .convert(snapshot.data!['balance'].toInt()),
-                                // "${model?.name}",
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.start,
-                                maxLines: 2,
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w500,
-                                    fontSize: 12),
-                              ),
-                              SizedBox(
-                                height: 10.0,
-                              ),
-                              wText(
-                                  // show first 3 and ... last 4 digits of phone number
-                                  "Account Number: ${snapshot.data!['phone'].toString().substring(0, 5)}...${snapshot.data!['phone'].toString().substring(7, 11)}",
-                                  color: Colors.white,
-                                  size: 14.0),
-                            ],
-                          );
-                        }
-                        return wText("Balance: \$0",
-                            color: Colors.white, size: 20.0);
-                      })
+                  SizedBox(height: 10.0),
+                  Text(
+                    'Vehicles',
+                    style: TextStyle(
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  _buildVehicles(),
+                  SizedBox(height: 10.0),
+                  Text(
+                    'Real State',
+                    style: TextStyle(
+                      fontSize: 40,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  _buildRealState(),
+                  SizedBox(height: 10.0),
+                  Container(
+                    constraints: BoxConstraints(
+                      maxHeight: 400,
+                      maxWidth: 1000,
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.blue,
+                      image: DecorationImage(
+                        image: AssetImage('assets/images/zubipay.png'),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 40.0),
+
+                  // _buildRealState(),
+
+                  // Expanded(child: _buildRealState()),
+
+                  // _buildHeader(),
+                  // _buildContent(),
+                  // _buildFooter(),
                 ],
               ),
             ),
           ),
-          _buildAddSendMoneyButton(double, model),
-          SizedBox(
-            height: 20.0,
-          ),
-          _buildRecentTransactions(),
         ],
       ),
     );
-  }
-
-  _buildAddSendMoneyButton(Type double, model) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          ElevatedButton(
-            onPressed: () {
-              Get.to(() => SendMoneyView());
-            },
-            child: Text('Send Money'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Get.toNamed('/add-money');
-            },
-            child: Text('Add Money'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  _buildRecentTransactions() {
-    final size = MediaQuery.of(Get.context!).size;
-    try {
-      return Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Container(
-          height: size.height * 0.4,
-          width: 600,
-          margin: EdgeInsets.all(10.0),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(10.0),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SizedBox(
-                height: 10.0),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  wText("Recent Transactions"),
-                ],
-              ),
-              Divider(),
-              controller.isLoading.value
-                  ? Center(child: CircularProgressIndicator())
-                  : Expanded(
-                      child: StreamBuilder(
-                        stream: FirebaseFirestore.instance
-                            .collection('sellers')
-                            .doc(user!.uid)
-                            .collection('statement')
-                            .where('created_at',
-                                isGreaterThanOrEqualTo: DateTime(
-                                    now.year, now.month, now.day, 0, 0, 0))
-                            .orderBy('created_at', descending: true)
-                            .limit(4)
-                            .snapshots(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            return ListView.builder(
-                              itemCount: snapshot.data!.docs.length,
-                              itemBuilder: (context, index) {
-                                return ListTile(
-                                  leading: CircleAvatar(
-                                    child: Text(
-                                        // name first letter
-                                        snapshot.data?.docs[index]['name'] ==
-                                                null
-                                            ? ''
-                                            : snapshot
-                                                .data?.docs[index]['name'][0]
-                                                .toUpperCase()),
-                                  ),
-                                  title:
-                                      Text(snapshot.data?.docs[index]['name']),
-                                  subtitle: Text(snapshot.data?.docs[index]
-                                      ['description']),
-
-                                  //   type and amount
-                                  trailing: wText(
-                                    snapshot.data?.docs[index]['type'] ==
-                                            'send'
-                                        ? '+${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}'
-                                        : '-${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}',
-                                  ),
-                                  onTap: () {
-                                    _buildDetailDialog(
-                                        context,
-                                        BalanceModel(
-                                          name: snapshot.data?.docs[index]
-                                              ['name'],
-                                          description: snapshot
-                                              .data?.docs[index]['description'],
-                                          amount: snapshot.data?.docs[index]
-                                              ['amount'],
-                                          phone: snapshot.data?.docs[index]
-                                              ['phone'],
-                                          type: snapshot.data?.docs[index]
-                                              ['type'],
-                                          created_at:
-                                              'Time: ${GetTimeAgo.parse(DateTime.parse(snapshot.data!.docs[index]['created_at'].toDate().toString()), locale: 'en')}'
-                                              '\nDate: ${DateTime.parse(snapshot.data!.docs[index]['created_at'].toDate().toString()).toString().substring(0, 16)}',
-                                        ));
-                                  },
-                                );
-                              },
-                            );
-                          }
-                          return wText('No Transactions');
-                        },
-                      ),
-                    ),
-            ],
-          ),
-        ),
-      );
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  _buildContent() {
-    final size = MediaQuery.of(Get.context!).size;
-    return Padding(
-      padding: const EdgeInsets.only(
-          top: 22.0, bottom: 22.0, left: 10.0, right: 10.0),
-      child: Card(
-        elevation: 10.0,
-        child: Container(
-          // acquires 90% of the height of the screen
-          height: size.height * 0.8,
-          width: 600,
-          margin: EdgeInsets.all(15.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("Statement"),
-                  TextButton(onPressed: () {}, child: Text('View All'))
-                ],
-              ),
-              Divider(),
-              controller.isLoading.value
-                  ? Center(child: CircularProgressIndicator())
-                  : Expanded(
-                      child: StreamBuilder(
-                        stream: FirebaseFirestore.instance
-                            .collection('sellers')
-                            .doc(sharedPreferences?.getString('uid'))
-                            .collection('statement')
-                            .orderBy('created_at', descending: true)
-                            .snapshots(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            return ListView.builder(
-                              itemCount: snapshot.data!.docs.length,
-                              itemBuilder: (context, index) {
-                                return ListTile(
-                                  leading: CircleAvatar(
-                                    child: Text(
-                                        // name first letter
-                                        snapshot.data?.docs[index]['name'] ==
-                                                null
-                                            ? ''
-                                            : snapshot
-                                                .data?.docs[index]['name'][0]
-                                                .toUpperCase()),
-                                  ),
-                                  title:
-                                      Text(snapshot.data?.docs[index]['name']),
-                                  subtitle: Text(snapshot.data?.docs[index]
-                                      ['description']),
-
-                                  //   type and amount
-                                  trailing: wText(
-                                    snapshot.data?.docs[index]['type'] ==
-                                            'send'
-                                        ? '+${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}'
-                                        : '-${currencyFormat(double.parse(snapshot.data!.docs[index]['amount'].toString()))}',
-                                  ),
-                                  onTap: () {
-                                    _buildDetailDialog(
-                                        context,
-                                        BalanceModel(
-                                          name: snapshot.data?.docs[index]
-                                              ['name'],
-                                          description: snapshot
-                                              .data?.docs[index]['description'],
-                                          amount: snapshot.data?.docs[index]
-                                              ['amount'],
-                                          phone: snapshot.data?.docs[index]
-                                              ['phone'],
-                                          type: snapshot.data?.docs[index]
-                                              ['type'],
-                                          created_at:
-                                              'Time: ${GetTimeAgo.parse(DateTime.parse(snapshot.data!.docs[index]['created_at'].toDate().toString()), locale: 'en')}'
-                                              '\nDate: ${DateTime.parse(snapshot.data!.docs[index]['created_at'].toDate().toString()).toString().substring(0, 16)}',
-                                        ));
-                                  },
-                                );
-                              },
-                            );
-                          }
-                          return wText('No Transactions');
-                        },
-                      ),
-                    ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  _buildFooter() {
-    return Container(
-      alignment: Alignment.center,
-      color: Colors.blue,
-      // about wallet 10% of the height of the screen
-      child: SizedBox(
-        height: 100,
-        child: Center(
-          child: wText(
-              // about PaySaw wallet
-              'PaySaw Wallet'
-              '\n A digital wallet easy to use',
-              color: Colors.white, size: 20.0),
-        ),
-      ),
-    );
-  }
-
-  void _buildDetailDialog(BuildContext context, BalanceModel model) {
-    if (isMobile(context)) {
-      _buildDetailMobile(context, model);
-    } else {
-      _buildDetailDesktop(context, model);
-    }
   }
 
   isMobile(BuildContext context) {
     return MediaQuery.of(context).size.width < 600;
   }
 
-  _buildDetailMobile(BuildContext context, BalanceModel model) {
-    QuickAlert.show(
-        context: context,
-        type: QuickAlertType.info,
-        title: model.name,
-        text: "Details",
-        widget: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Divider(),
-            wText(
-              color: Colors.black,
-              "Amount: ${model.type == 'send' ? '+${currencyFormat(double.parse(model.amount.toString()))}' : '- ${currencyFormat(double.parse(model.amount.toString()))}'}",
-            ),
-            Text("Purpose: ${model.description}",
-                style: TextStyle(color: Colors.black)),
-            //   phone number
-
-            Text("Type: ${model.type == 'send' ? 'Credit' : 'Debit'}",
-                style: TextStyle(color: Colors.black)),
-            Text("Phone: ${model.phone}",
-                style: TextStyle(color: Colors.black)),
-            Text(
-              '${model.created_at}',
-              style: TextStyle(color: Colors.black),
-            ),
-          ],
-        ));
-  }
-
-  _buildDetailDesktop(BuildContext context, BalanceModel model) {
-    showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text(model.name ?? ''),
-            content: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Amount: ${model.amount}"),
-                Text(model.type == 'credit' ? 'Credit' : 'Debit'),
-                Text("Purpose: ${model.description}"),
-                Text("Type: ${model.type}"),
-                Text("Phone: ${model.phone}"),
-                //   date
-                Text(
-                  '${model.created_at}',
-                ),
-              ],
-            ),
-            actions: [
-              TextButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Text('Close'))
-            ],
-          );
-        });
-  }
-
   currencyFormat(double? balance) {
     // as per thousand separator
     return balance?.toStringAsFixed(2).replaceAllMapped(
         RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]},');
+  }
+
+  _buildCategory() {
+    return Container(
+      color: Get.theme.primaryColor.withOpacity(0.0),
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            // sale
+            SizedBox(height: 13.0),
+            // realState
+            Container(
+              width: 1100,
+              margin: EdgeInsets.only(bottom: 12.0, top: 12.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        Get.to(() => ShowProductsView());
+                      },
+                      child: Column(
+                        children: [
+                          Container(
+                            constraints: BoxConstraints(
+                              maxHeight: 150,
+                              maxWidth: 150,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.blue,
+                              image: DecorationImage(
+                                image: AssetImage('assets/images/products.png'),
+                                fit: BoxFit.fill,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 5.0,
+                          ),
+                          const Text(
+                            'Products',
+                            style: TextStyle(
+                              fontSize: 20,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  //   Wallet
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        Get.to(() => WebWalletView());
+                      },
+                      child: Column(
+                        children: [
+                          Container(
+                            constraints: BoxConstraints(
+                              maxHeight: 150,
+                              maxWidth: 150,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.blue,
+                              image: DecorationImage(
+                                image: AssetImage('assets/images/wallet.png'),
+                                fit: BoxFit.fill,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(
+                            height: 5.0,
+                          ),
+                          wText(
+                            'Wallet',
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        Get.to(() => ShowRealstate());
+                      },
+                      child: Column(
+                        children: [
+                          Container(
+                            constraints: BoxConstraints(
+                              maxHeight: 150,
+                              maxWidth: 150,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.blue,
+                              image: DecorationImage(
+                                image: AssetImage('assets/realstate.jpg'),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 5.0),
+                          const Text(
+                            'Real State',
+                            style: TextStyle(
+                              fontSize: 20,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  //   car
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () {
+                        Get.to(() => ShowProductsView());
+                      },
+                      child: Column(
+                        children: [
+                          Container(
+                            constraints: BoxConstraints(
+                              maxHeight: 150,
+                              maxWidth: 150,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: Colors.blue,
+                              image: DecorationImage(
+                                image: AssetImage('assets/images/vehicle.jpg'),
+                                fit: BoxFit.fill,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 5.0),
+                          const Text(
+                            'Vehicles',
+                            style: TextStyle(
+                              fontSize: 20,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  // vehicle
+                ],
+              ),
+            ),
+            SizedBox(height: 20.0),
+            //   products
+          ],
+        ),
+      ),
+    );
+  }
+
+  _buildBanner() {
+    return SingleChildScrollView(
+      child: Container(
+        color: Get.theme.primaryColor.withOpacity(0.0),
+        child: Column(
+          children: [
+            Container(
+              constraints: BoxConstraints(
+                maxHeight: 400,
+                maxWidth: 1000,
+              ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+                color: Colors.blue,
+                image: DecorationImage(
+                  image: AssetImage('assets/images/salewith.png'),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            SizedBox(height: 10.0),
+          ],
+        ),
+      ),
+    );
+  }
+
+  _buildRealState(){
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('realState')
+          .orderBy('publishedDate', descending: true)
+          .snapshots(),
+      builder: (context, snapshot) {
+        try {
+          if(snapshot.hasError){
+            return const Center(
+              child: Text('Error'),
+            );
+          }else if(snapshot.connectionState == ConnectionState.waiting){
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }else{
+            if (snapshot.hasData) {
+              return Center(
+                child: Padding(
+                  padding: const EdgeInsets.all(28.0),
+                  child: Container(
+                    height: 300,
+                    width: 1000,
+                    decoration: BoxDecoration(
+                      color: Get.theme.primaryColor.withOpacity(0.0),
+                    ),
+                    child: GridView.builder(
+                      itemCount: snapshot.data!.docs.length,
+                      controller: ScrollController(),
+                      scrollDirection: Axis.horizontal,
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 1,
+                        crossAxisSpacing: 10,
+                        mainAxisSpacing: 10,
+                      ), itemBuilder: (BuildContext context, int index) {
+                      var data = snapshot.data!.docs[index].data() as Map;
+                      RealStateModel model =
+                      RealStateModel.fromJson(data as Map<String, dynamic>);
+                      return _buildCard(
+                        onTap: () {
+                          // Get.to(() => RealStateViewPage(
+                          //     rModel: RealStateModel.fromJson(data), doc: model.toString()));
+                        },
+                        image: model.image.toString(),
+                        label: "${model.realStateType.toString()}\n"
+                            "For: ${model.realStateStatus.toString()}",
+                      );
+                    },
+                    ),
+
+                  ),
+                ),
+              );
+            } else {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          }
+        } catch (e) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
+    );
+  }
+
+
+  _buildCard(
+      {required String image,
+      required String label,
+      required Function() onTap}) {
+    return GestureDetector(
+      onTap: () {
+        onTap();
+      },
+      child: Container(
+        margin: EdgeInsets.only(right: 10),
+        width: 200,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          image: DecorationImage(
+            image: NetworkImage(image),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            gradient: LinearGradient(
+              begin: Alignment.bottomCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Colors.black.withOpacity(0.8),
+                Colors.black.withOpacity(0.1),
+              ],
+            ),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                padding: EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.4),
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                ),
+                child: Text(
+                  textAlign: TextAlign.center,
+                  label,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  _buildVehicles() {
+    return StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('vehicle')
+          .orderBy('publishedDate', descending: true)
+          .snapshots(),
+      builder: (context, snapshot) {
+        try {
+          if(snapshot.hasError){
+            return const Center(
+              child: Text('Error'),
+            );
+          }else if(snapshot.connectionState == ConnectionState.waiting){
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }else{
+          if (snapshot.hasData) {
+            return Center(
+              child: Padding(
+                padding: const EdgeInsets.all(28.0),
+                child: Container(
+                  height: 300,
+                  width: 1000,
+                  decoration: BoxDecoration(
+                    color: Get.theme.primaryColor.withOpacity(0.0),
+                  ),
+                  child: GridView.builder(
+                    itemCount: snapshot.data!.docs.length,
+                    controller: ScrollController(),
+                    scrollDirection: Axis.horizontal,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 1,
+                      crossAxisSpacing: 10,
+                      mainAxisSpacing: 10,
+                    ), itemBuilder: (BuildContext context, int index) {
+                      var data = snapshot.data!.docs[index].data() as Map;
+                      VehicleModel model =
+                          VehicleModel.fromJson(data as Map<String, dynamic>);
+                      return _buildCard(
+                        onTap: () {
+                          Get.to(() => VehiclePageView(
+                              vModel: VehicleModel.fromJson(data), doc: model.toString()));
+                        },
+                        image: model.image.toString(),
+                        label: "${model.vehicleType.toString()}\n"
+                            "For: ${model.vehicleStatus.toString()}",
+                      );
+                  },
+                        ),
+
+                ),
+              ),
+            );
+          } else {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          }
+        } catch (e) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
+    );
   }
 }

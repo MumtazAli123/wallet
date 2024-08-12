@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_picker/country_picker.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:quickalert/quickalert.dart';
@@ -57,14 +58,18 @@ class SaveFriendsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    print('SaveFriendsController onInit');
+    if (kDebugMode) {
+      print('SaveFriendsController onInit');
+    }
 
   }
 
   @override
   void onReady() {
     super.onReady();
-    print('SaveFriendsController onReady');
+    if (kDebugMode) {
+      print('SaveFriendsController onReady');
+    }
   }
 
   @override
@@ -166,8 +171,8 @@ class SaveFriendsController extends GetxController {
       width: 400,
       widget: Column(
         children: [
-          Divider(),
-           SizedBox(height: 10.0),
+          const Divider(),
+           const SizedBox(height: 10.0),
            Text(
               'Dear : ${sharedPreferences!.getString('name')}\n'
               'We are working on this feature. We will notify you once it is ready to use.\n\n'

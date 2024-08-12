@@ -10,7 +10,6 @@ import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:wallet/models/user_model.dart';
 
-import '../app/modules/home/views/bottom_page_view.dart';
 import '../app/modules/send_money/controllers/send_money_controller.dart';
 import '../global/global.dart';
 import '../widgets/mix_widgets.dart';

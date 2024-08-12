@@ -208,7 +208,7 @@ class _RatingScreenState extends State<RatingScreen> {
       });
 
     } catch (e) {
-      print(e);
+      Get.snackbar('Rating', 'Error saving rating', backgroundColor: Colors.red, colorText: Colors.white);
     }
   }
 

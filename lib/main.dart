@@ -7,7 +7,6 @@ import 'package:get/get_navigation/src/routes/transitions_type.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:wallet/notification/push_notification_sys.dart';
 import 'package:wallet/provider/address_changer.dart';
 
 import 'app/routes/app_pages.dart';

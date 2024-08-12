@@ -1,10 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:getwidget/components/avatar/gf_avatar.dart';
-import 'package:getwidget/components/image/gf_image_overlay.dart';
-import 'package:getwidget/components/list_tile/gf_list_tile.dart';
-import 'package:getwidget/shape/gf_avatar_shape.dart';
 import 'package:wallet/app/modules/vehicle/controllers/vehicle_controller.dart';
 
 import '../../../../../models/vehicle_model.dart';

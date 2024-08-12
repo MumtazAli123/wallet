@@ -4,7 +4,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:get/get_navigation/get_navigation.dart';
-import 'package:path/path.dart';
 import 'package:wallet/global/global.dart';
 import 'package:wallet/notification/push_notification_model.dart';
 

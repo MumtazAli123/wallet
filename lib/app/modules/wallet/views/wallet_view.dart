@@ -20,7 +20,6 @@ import '../../../../models/balance.dart';
 import '../../../../models/user_model.dart';
 import '../../../../widgets/mix_widgets.dart';
 import '../../home/controllers/home_controller.dart';
-import '../../home/views/wallet_view.dart';
 import '../../statement/views/receive_send.dart';
 import '../../statement/views/time_statement_view.dart';
 

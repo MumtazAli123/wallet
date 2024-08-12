@@ -1,5 +1,5 @@
 name: wallet
-version: 1.0.6+7
+version: 1.0.7+8
 publish_to: none
 description: A new Flutter project.
 environment: 
@@ -34,6 +34,7 @@ dependencies:
   awesome_dialog: ^3.2.1
   mobile_scanner: ^5.1.1
   qr_flutter: ^4.1.0
+  intl: any
   flutter_barcode_scanner: ^2.0.0
   carousel_slider: any
   smooth_star_rating_nsafe: any
@@ -66,7 +67,7 @@ dependencies:
     sdk: flutter
   fl_chart: ^0.68.0
 
-dev_dependencies: 
+dev_dependencies:
   flutter_lints: ^4.0.0
   flutter_launcher_icons: ^0.13.1
   flutter_test: 

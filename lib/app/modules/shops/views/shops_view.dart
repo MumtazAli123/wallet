@@ -14,7 +14,6 @@ import 'package:getwidget/components/rating/gf_rating.dart';
 import 'package:getwidget/shape/gf_avatar_shape.dart';
 import 'package:getwidget/types/gf_alert_type.dart';
 import 'package:lottie/lottie.dart';
-import 'package:screenshot/screenshot.dart';
 import 'package:wallet/app/modules/shops/views/vehicle_rating.dart';
 import 'package:wallet/models/realstate_model.dart';
 import 'package:wallet/widgets/my_drawer.dart';
@@ -84,9 +83,14 @@ class _ShopsViewState extends State<ShopsView> {
           headerSliverBuilder: (context, innerBoxIsScrolled) {
             return [
               SliverAppBar(
-                leading: Text(''),
+                leading: IconButton(
+                  onPressed: () {
+                    Scaffold.of(context).openDrawer();
+                  },
+                  icon: const Icon(Icons.menu),
+                ),
                 title: wText('ZubiPay'.tr, size: 20),
-                expandedHeight: 410.0,
+                expandedHeight: 550.0,
                 centerTitle: true,
                 floating: true,
                 pinned: true,
@@ -122,19 +126,44 @@ class _ShopsViewState extends State<ShopsView> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              GestureDetector(
-                onTap: () {
-                  Scaffold.of(context).openDrawer();
-                },
-                child: Lottie.asset('assets/lottie/home.json',
-                    width: 100, height: 100),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //   children: [
+          //     GestureDetector(
+          //       onTap: () {
+          //         Scaffold.of(context).openDrawer();
+          //       },
+          //       child: Container(
+          //         decoration: BoxDecoration(
+          //           color: Colors.grey[200],
+          //           borderRadius: BorderRadius.circular(10),
+          //         ),
+          //         child: Lottie.asset('assets/lottie/shop.json',
+          //             width: 80, height: 80),
+          //       ),
+          //     ),
+          //     Lottie.asset('assets/lottie/earn.json', width: 100, height: 100),
+          //     Lottie.asset('assets/lottie/sale.json', width: 100, height: 100),
+          //   ],
+          // ),
+          SizedBox(height: 40.0),
+          GestureDetector(
+            onTap: () {
+              _buildDialogProducts(context);
+            },
+            child: Container(
+              height: 180,
+              width: double.infinity,
+              padding: EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                image: DecorationImage(
+                  image: AssetImage('assets/images/zubipay.png'),
+                  fit: BoxFit.fill,
+                ),
+                borderRadius: BorderRadius.circular(10),
               ),
-              Lottie.asset('assets/lottie/earn.json', width: 100, height: 100),
-              Lottie.asset('assets/lottie/sale.json', width: 100, height: 100),
-            ],
+            ),
           ),
           SizedBox(height: 10.0),
           _buildCategories(),
@@ -191,12 +220,7 @@ class _ShopsViewState extends State<ShopsView> {
                         // controller.fetchShops();
                       },
                       name: 'All'.tr,
-                      selected: true))
-              .animate()
-              .rotate(duration: Duration(seconds: 2))
-              .slide(
-                duration: const Duration(seconds: 4),
-              ),
+                      selected: true)).animate().rotate(duration: Duration(seconds: 2)).slide(duration: const Duration(seconds: 4)),
           SizedBox(width: 10.0),
           Expanded(
               child: _buildCategoryItem(
@@ -509,114 +533,6 @@ class _ShopsViewState extends State<ShopsView> {
     );
   }
 
-  _buildAvatar() {
-    // return StreamBuilder<QuerySnapshot>(
-    //   stream: controller.allVehicleStream(),
-    //   builder: (context, snapshot) {
-    //     try {
-    //       if (snapshot.hasData) {
-    //         return GridView(
-    //           controller: ScrollController(),
-    //           scrollDirection: Axis.horizontal,
-    //           gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-    //           crossAxisCount: 1,
-    //           crossAxisSpacing: 10,
-    //           mainAxisSpacing: 10,
-    //         ),
-    //           children: List.generate(snapshot.data!.docs.length, (index) {
-    //             var data = snapshot.data!.docs[index].data() as Map;
-    //             VehicleModel model = VehicleModel.fromJson(data as Map<String, dynamic>);
-    //             return _buildAvatarItem(
-    //               onTap: () {
-    //                 Get.to(() => VehiclePageView(
-    //                     vModel: VehicleModel.fromJson(model.toJson()), doc: model.toString()));
-    //               },
-    //               image: model.image.toString(),
-    //               label: "${model.showroomName.toString()}\n"
-    //                   "${model.vehicleName.toString()}",
-    //             );
-    //           }),
-    //         );
-    //       } else {
-    //         return const Center(
-    //           child: CircularProgressIndicator(),
-    //         );
-    //       }
-    //     } catch (e) {
-    //       return const Center(
-    //         child: CircularProgressIndicator(),
-    //       );
-    //     }
-    //   },
-    // );
-    return Row(
-      children: [
-        Expanded(child: Lottie.asset('assets/lottie/home.json', width: 300, height: 300)),
-        Expanded(child: GestureDetector(
-          onTap: (){
-            Get.to(() => ShowRealstate());
-
-          },
-            child: Lottie.asset('assets/lottie/realState.json', width: 300, height: 300))),
-      ],
-    );
-  }
-
-  _buildAvatarItem({required Null Function() onTap, required String image, required String label}) {
-    return GestureDetector(
-      onTap: () {
-        onTap();
-      },
-      child: Container(
-        margin: EdgeInsets.only(right: 10),
-        width: 200,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          image: DecorationImage(
-            image: NetworkImage(image),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            gradient: LinearGradient(
-              begin: Alignment.bottomCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Colors.black.withOpacity(0.8),
-                Colors.black.withOpacity(0.1),
-              ],
-            ),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                padding: EdgeInsets.all( 5),
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.4),
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(10)
-                  ),
-                ),
-                child: Text(
-                  textAlign: TextAlign.center,
-                  label,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
 
 
 }

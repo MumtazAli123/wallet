@@ -93,6 +93,7 @@ class LoginController extends GetxController {
     } catch (e) {
       Get.back();
       QuickAlert.show(
+        width: 400,
           context: Get.context!,
           title: 'Error',
           text: 'User not found or wrong password',
@@ -120,6 +121,7 @@ class LoginController extends GetxController {
 
           Get.back();
           Get.offAllNamed('/home');
+          // Get.to(() => const BottomPageView());
           Get.snackbar('Success', 'Login successful',
               snackPosition: SnackPosition.TOP,
               backgroundColor: Colors.green,
@@ -129,6 +131,7 @@ class LoginController extends GetxController {
         } else {
           Get.back();
           QuickAlert.show(
+            width: 400,
               context: Get.context!,
               title: 'Error',
               text: 'Your account is not approved yet',

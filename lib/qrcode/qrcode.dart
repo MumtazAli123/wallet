@@ -24,9 +24,7 @@ import 'package:wallet/models/user_model.dart';
 import 'package:wallet/qrcode/result_screen.dart';
 import 'dart:typed_data';
 
-import '../notification/notification_page.dart';
 import '../widgets/mix_widgets.dart';
-import '../widgets/my_drawer.dart';
 
 class QrcodePage extends StatefulWidget {
   const QrcodePage({super.key});
@@ -49,7 +47,7 @@ class _QrcodePageState extends State<QrcodePage> {
     isQrScannedCompleted = false;
   }
 
-  Random random = new Random();
+  Random random = Random();
 
   int soundPosition = 0;
   final player = AudioPlayer();

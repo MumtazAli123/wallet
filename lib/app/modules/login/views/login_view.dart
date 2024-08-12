@@ -5,11 +5,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:lottie/lottie.dart';
 import 'package:wallet/models/seller_model.dart';
 
 import '../../../../widgets/mix_widgets.dart';
 import '../../../../widgets/responsive.dart';
-import '../../register/views/register_page_view.dart';
+import '../../register/views/mob_register_view.dart';
 import '../controllers/login_controller.dart';
 
 class LoginView extends StatefulWidget {
@@ -77,8 +78,20 @@ class _LoginViewState extends State<LoginView> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              SizedBox(height: 20),
+              Container(
+                height: 200,
+                width: 200,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  shape: BoxShape.circle,
+                ),
+                child: Lottie.asset('assets/lottie/animation.json'),
+              ),
+              SizedBox(height: 10.0),
+
               aText('Welcome to ZubiPay'.tr, size: 14, color: Colors.white),
-              aText('Login'.tr, size: 54, color: Colors.white),
+              // aText('Login'.tr, size: 54, color: Colors.white),
               SizedBox(height: 20),
               _emailField(),
               SizedBox(height: 20),
@@ -137,7 +150,7 @@ class _LoginViewState extends State<LoginView> {
                     TextButton(
                       onPressed: () {
                         // Get.toNamed('/register');
-                        Get.to(() => RegisterPageView());
+                        Get.to(() => MobRegisterView());
                         // Navigator.push(context, MaterialPageRoute(builder: (context) => RegisterScreen()));
                       },
                       child: aText('Register now', color: Colors.yellowAccent),
@@ -273,6 +286,7 @@ class _LoginViewState extends State<LoginView> {
     return Padding(
       padding: const EdgeInsets.all(18.0),
       child: Container(
+        height: 60,
         padding: const EdgeInsets.all(8.0),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -291,7 +305,7 @@ class _LoginViewState extends State<LoginView> {
           decoration: InputDecoration(
             hintStyle: TextStyle(color: Colors.black),
             labelStyle: TextStyle(color: Colors.black),
-            labelText: 'Email',
+            // labelText: 'Email',
             hintText: 'Enter your email',
             border: InputBorder.none,
             prefixIcon: Icon(Icons.email, color: Colors.black),
@@ -336,15 +350,15 @@ class _LoginViewState extends State<LoginView> {
       child: Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(10),
         ),
         padding: const EdgeInsets.all(8.0),
         child: FancyPasswordField(
           style: TextStyle(color: Colors.black),
           controller: controller.passwordController,
           decoration: InputDecoration(
+            hintText: 'Password',
             prefixIcon: Icon(Icons.lock, color: Colors.black),
-            labelText: 'Password',
             labelStyle: TextStyle(color: Colors.black),
             // border: InputBorder.none,
           ),

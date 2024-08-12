@@ -19,14 +19,14 @@ import '../../../../models/user_model.dart';
 import '../../../../widgets/mix_widgets.dart';
 import '../../home/views/bottom_page_view.dart';
 
-class RegisterPageView extends StatefulWidget {
-  const RegisterPageView({super.key});
+class MobRegisterView extends StatefulWidget {
+  const MobRegisterView({super.key});
 
   @override
-  State<RegisterPageView> createState() => _RegisterPageViewState();
+  State<MobRegisterView> createState() => _MobRegisterViewState();
 }
 
-class _RegisterPageViewState extends State<RegisterPageView> {
+class _MobRegisterViewState extends State<MobRegisterView> {
 
   final RegisterController controller = Get.put(RegisterController());
   bool isLogin = false;
@@ -236,15 +236,7 @@ class _RegisterPageViewState extends State<RegisterPageView> {
               padding: const EdgeInsets.all(18.0),
               child: Column(
                 children: [
-                  Container(
-                    height: 120,
-                    width: 200,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Lottie.asset('assets/lottie/login.json'),
-                  ),
+
                   SizedBox(height: 20),
                   _buildTextField(
                       controller.nameController, 'Name', Icons.person),
@@ -255,6 +247,16 @@ class _RegisterPageViewState extends State<RegisterPageView> {
                   _buildTextField(
                       controller.cityController, 'City', Icons.location_city),
 
+                  SizedBox(height: 20),
+                  Container(
+                    height: 400,
+                    width: 380,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      shape: BoxShape.circle,
+                    ),
+                    child: Image.asset('assets/images/login_image.png'),
+                  ),
                   SizedBox(height: 20),
                 ],
               ),
@@ -500,11 +502,11 @@ class _RegisterPageViewState extends State<RegisterPageView> {
                           color: Colors.white)),
                   ListTile(
                       leading: Icon(Icons.location_on, color: Colors.white),
-                      title: aText("Address: ${controller.cityController.text}",
+                      title: aText("Address: ${controller.addressController.text}",
                           color: Colors.white)),
                   ListTile(
                       leading: Icon(Icons.location_city, color: Colors.white),
-                      title: aText("City: ${controller.addressController.text}",
+                      title: aText("City: ${controller.cityController.text}",
                           color: Colors.white)),
                   SizedBox(height: 20),
                   wButton('Submit', color: Colors.blue, onPressed: () {
@@ -805,7 +807,7 @@ class _RegisterPageViewState extends State<RegisterPageView> {
       "+${controller.countryCode}${controller.phoneController.text}";
       userModel.image = value;
       userModel.sellerType = 'user';
-      userModel.balance = 100.0;
+      userModel.balance = 20.0;
       userModel.createdAt = date;
       userModel.updatedAt = date;
       //   save user data to firestore and save locally to shared preference

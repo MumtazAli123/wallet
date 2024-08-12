@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:provider/provider.dart';
@@ -34,7 +33,6 @@ class FriendsDesignWidget extends StatefulWidget {
 class _FriendsDesignWidgetState extends State<FriendsDesignWidget> {
   final TextEditingController _amountController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
   final db = FirebaseFirestore.instance;
   UserModel loggedInUser = UserModel();
   // double updatedBalance = 0.0;

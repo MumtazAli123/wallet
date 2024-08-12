@@ -2,11 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:getwidget/components/avatar/gf_avatar.dart';
 import 'package:getwidget/components/button/gf_button.dart';
-import 'package:getwidget/components/button/gf_button_bar.dart';
-import 'package:getwidget/components/card/gf_card.dart';
-import 'package:getwidget/components/list_tile/gf_list_tile.dart';
 import 'package:getwidget/components/tabs/gf_tabbar_view.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:wallet/app/modules/realstate/views/realstate_view.dart';
@@ -96,16 +92,6 @@ class _ShowRealstateState extends State<ShowRealstate> {
               ),
             ];
           },
-          // body: TabBarView(
-          //   children: [
-          //     AllRealstate(),
-          //     VillasView(),
-          //     Apartment(),
-          //     LandView(),
-          //     OfficesView(),
-          //     ShopsViewPage(),
-          //   ],
-          // )
         body: GFTabBarView(
           controller: controller.tabController,
           children: [
@@ -119,78 +105,8 @@ class _ShowRealstateState extends State<ShowRealstate> {
         ),
       ),
     );
-    // return StreamBuilder(
-    //     stream: controller.realStateStream(),
-    //     builder: (context, AsyncSnapshot<QuerySnapshot> snapshot) {
-    //       if (snapshot.connectionState == ConnectionState.waiting) {
-    //         return Center(child: CircularProgressIndicator());
-    //       }
-    //       if (snapshot.hasData) {
-    //         if (snapshot.data!.docs.isEmpty) {
-    //           return Center(child: Text('No Realstate found'));
-    //         }
-    //         return ListView.builder(
-    //             itemCount: snapshot.data!.docs.length,
-    //             itemBuilder: (context, index) {
-    //               return _buildRealstateCard(snapshot.data!.docs[index]);
-    //             });
-    //       }
-    //       return Center(child: Text('No Realstate found'));
-    //     });
   }
 
-  _buildRealstateCard(doc) {
-    return GFCard(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
-      semanticContainer: true,
-      showImage: true,
-      colorFilter:
-          ColorFilter.mode(Colors.black.withOpacity(0.5), BlendMode.darken),
-      title: GFListTile(
-        title: Row(
-          children: [
-            controller.user!.photoURL != null
-                ? GFAvatar(
-                    backgroundImage: NetworkImage(controller.user!.photoURL!),
-                  )
-                : GFAvatar(
-                    size: 15,
-                    child: Text("${doc['realStateType'][0]}"),
-                  ),
-            SizedBox(width: 10.0),
-            Text(doc['realStateType'] + ' For ' + doc['realStateStatus'])
-          ],
-        ),
-        subTitle: Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: Row(
-            children: [
-              Icon(
-                Icons.location_on,
-                color: Colors.blueAccent,
-              ),
-              SizedBox(width: 10.0),
-              Text('City: ${doc['city']}'),
-            ],
-          ),
-        ),
-        icon: Icon(Icons.favorite),
-      ),
-      image: Image.network(doc['image']),
-      content: Text('Realstate Agent: ${doc['sellerName']}'),
-      buttonBar: GFButtonBar(
-        children: [
-          // GFButton(
-          //   onPressed: onTap,
-          //   text: 'Scholarship',
-          //   color: Colors.green,
-          // ),
-        ],
-      ),
-    );
-  }
 
   void _buildDialogProducts(BuildContext context) {
     QuickAlert.show(context: context,

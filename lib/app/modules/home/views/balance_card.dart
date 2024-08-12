@@ -245,38 +245,41 @@ class _BalanceCardState extends State<BalanceCard> {
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Column(
-                    children: [
-                      wText('Total Credit', color: Colors.white, size: 12),
-                      SizedBox(width: 5),
-                      Container(
-                        width: 150,
-                        height: 30,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.green),
-                          borderRadius: BorderRadius.circular(5),
-                          color: Colors.green,
+                  Expanded(
+                    child: Column(
+                      children: [
+                        wText('Total Credit', color: Colors.white, size: 12),
+                        SizedBox(width: 5),
+                        Container(
+                          width: 150,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.green),
+                            borderRadius: BorderRadius.circular(5),
+                            color: Colors.green,
+                          ),
+                          child: wText('${currencyFormat(totalBalanceCredit)}', color: Colors.white),
                         ),
-                        child: wText('${currencyFormat(totalBalanceCredit)}', color: Colors.white),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                  SizedBox(width: 40),
-                  Column(
-                    children: [
-                      wText('Total Debit', color: Colors.white, size: 12),
-                      SizedBox(width: 10),
-                      Container(
-                        width: 150,
-                        height: 30,
-                        decoration: BoxDecoration(
-                          border: Border.all(color: Colors.red),
-                          borderRadius: BorderRadius.circular(5),
-                          color: Colors.red,
+                  Expanded(
+                    child: Column(
+                      children: [
+                        wText('Total Debit', color: Colors.white, size: 12),
+                        SizedBox(width: 10),
+                        Container(
+                          width: 150,
+                          height: 30,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.red),
+                            borderRadius: BorderRadius.circular(5),
+                            color: Colors.red,
+                          ),
+                          child: wText('${currencyFormat(totalBalanceDebit)}', color: Colors.white),
                         ),
-                        child: wText('${currencyFormat(totalBalanceDebit)}', color: Colors.white),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                   SizedBox(width: 10),
                 ],
@@ -606,50 +609,19 @@ class _BalanceCardState extends State<BalanceCard> {
             children: [
               wText("Profile".tr, size: 18.0),
               SizedBox(height: 10.0),
-              Container(
-                height: 100.0,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.grey.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    widget.model!.image!.isEmpty
-                        ? const CircleAvatar(
-                      backgroundColor: Colors.white,
-                      child: Icon(
-                        Icons.person,
-                        color: Colors.brown,
-                      ),
-                    )
-                        : GFAvatar(
-                      backgroundImage: NetworkImage(widget.model!.image!),
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        aText(
-                          "${widget.model!.name}",
-                        ),
-                        Text(
-                          textAlign: TextAlign.start,
-                          "${widget.model!.email}",
-                          style: GoogleFonts.poppins(
-                            fontSize: 14.0,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
 
               ListTile(
-                leading: Icon(Icons.person),
+                leading: widget.model!.image!.isEmpty
+                    ? const CircleAvatar(
+                  backgroundColor: Colors.white,
+                  child: Icon(
+                    Icons.person,
+                    color: Colors.brown,
+                  ),
+                )
+                    : GFAvatar(
+                  backgroundImage: NetworkImage(widget.model!.image!),
+                ),
                 title: Text(
                   'Name: ${widget.model!.name}',
                 ),
