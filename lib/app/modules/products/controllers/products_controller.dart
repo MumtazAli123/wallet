@@ -1,8 +1,15 @@
+import 'dart:io';
+
 import 'package:get/get.dart';
 
 class ProductsController extends GetxController {
 
-  final count = 0.obs;
+  bool uploading = false, next = false;
+  final List<File> _images = [];
+  List<String> urlList = [];
+  double val = 0;
+
+
   @override
   void onInit() {
     super.onInit();
@@ -15,5 +22,5 @@ class ProductsController extends GetxController {
 
   @override
   void onClose() {}
-  void increment() => count.value++;
+
 }

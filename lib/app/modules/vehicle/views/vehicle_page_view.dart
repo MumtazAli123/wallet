@@ -242,7 +242,7 @@ class _VehiclePageViewState extends State<VehiclePageView> {
                 Icons.location_on,
                 color: Colors.blue[800],
               ),
-              title: aText('Address:\n${widget.vModel.address}'),
+              title: aText('${widget.vModel.address}'),
             ),
             // price
             ListTile(

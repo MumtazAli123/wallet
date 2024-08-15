@@ -120,6 +120,7 @@ class _WebLoginPageState extends State<WebLoginPage> {
                       wButton(
                         'Login',
                           Colors.blue,
+                        size: 50,
 
                         onPressed: () {
                           controller.login();

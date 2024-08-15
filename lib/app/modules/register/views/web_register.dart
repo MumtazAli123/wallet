@@ -200,7 +200,7 @@ class _WebRegisterViewState extends State<WebRegisterView> {
                           SizedBox(height: 45),
                           _emailField(controller.emailController),
                           SizedBox(height: 30),
-                          wButton('Next', Colors.blue, onPressed: () {
+                          wButton('Next', size: 60, Colors.blue, onPressed: () {
                             emailValidation();
                           }),
                           SizedBox(height: 30),
@@ -302,12 +302,14 @@ class _WebRegisterViewState extends State<WebRegisterView> {
                                 height: 20,
                               ),
                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                mainAxisAlignment: MainAxisAlignment.center,
                                children: [
-                                 GFButton(onPressed: () {
+                                 wButton(
+                                     onPressed: () {
                                    controller.currentScreen.value = 0;
-                                 }, text: 'Back', color: Colors.red),
-                                 wButton('Next',  Colors.blue, onPressed: () {
+                                 },  'Previous', size: 60, Colors.grey),
+                                 SizedBox(width: 20.0),
+                                 wButton('Next ', size: 60,  Colors.blue, onPressed: () {
                                    formValidation();
                                  }),
                                ],
@@ -411,12 +413,13 @@ class _WebRegisterViewState extends State<WebRegisterView> {
                           width: 450,
                           margin: const EdgeInsets.only(top: 10),
                           child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              GFButton(onPressed: () {
+                              wButton(onPressed: () {
                                 controller.currentScreen.value = 1;
-                              }, text: 'Back', color: Colors.red),
-                              wButton('Next', Colors.blue, onPressed: () {
+                              },  'Previous', size: 57,  Colors.red),
+                              const SizedBox(width: 20.0),
+                              wButton('Next', size: 60, Colors.blue, onPressed: () {
                                 phoneValidation();
                               }),
                             ],
@@ -553,12 +556,14 @@ class _WebRegisterViewState extends State<WebRegisterView> {
                         width: 450,
                         margin: const EdgeInsets.only(top: 10),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            GFButton(onPressed: () {
+                            wButton(
+                                onPressed: () {
                               controller.currentScreen.value = 2;
-                            }, text: 'Back', color: Colors.red),
-                            wButton('Next', Colors.blue, onPressed: () {
+                            },  'Back',  Colors.red, size: 60,),
+                            SizedBox(width: 20.0),
+                            wButton('Next', size: 60, Colors.blue, onPressed: () {
                               passwordValidation();
                             }),
                           ],
@@ -678,12 +683,20 @@ class _WebRegisterViewState extends State<WebRegisterView> {
                                 title: aText("City: ${controller.addressController.text}",
                                     color: Colors.white)),
                             SizedBox(height: 20),
-                            wButton('Submit',  Colors.blue, onPressed: () {
-                              if (controller.formKey.currentState!.validate()) {
-                                signUp(
-                                    controller.emailController.text, controller.passwordController.text);
-                              }
-                            }),
+                           Container(
+                             width: 250,
+                             height: 50,
+                             decoration: BoxDecoration(
+                               color: Colors.white,
+                               borderRadius: BorderRadius.circular(10),
+                             ),
+                             child:  wButton('Submit',  Colors.blue, size: 60, onPressed: () {
+                               if (controller.formKey.currentState!.validate()) {
+                                 signUp(
+                                     controller.emailController.text, controller.passwordController.text);
+                               }
+                             }),
+                           ),
                             SizedBox(height: 20),
                             GFButton(
                                 text: "Back",

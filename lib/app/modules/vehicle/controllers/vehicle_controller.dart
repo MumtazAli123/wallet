@@ -216,6 +216,7 @@ class VehicleController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    imagePath.value = "";
     showroomNameController = TextEditingController();
     vehicleNameController = TextEditingController();
     vehiclePriceController = TextEditingController();
@@ -255,7 +256,7 @@ class VehicleController extends GetxController {
       showDialog(
           context: Get.context!, builder: (context) => wAppLoading(context));
       if (imageUrlPath.isNotEmpty) {
-        for (int i = 0; i < imageUrlPath.length; i++) {
+        for (int i = 1; i < imageUrlPath.length; i++) {
           File file = File(imageUrlPath[i]);
           fStorage.Reference storageRef = fStorage.FirebaseStorage.instance
               .ref()
@@ -270,6 +271,7 @@ class VehicleController extends GetxController {
           addVehicle();
         }
       }
+
     } catch (e) {
       Get.snackbar("Error", e.toString());
     }
@@ -328,8 +330,8 @@ class VehicleController extends GetxController {
           "phone": sharedPreferences!.getString("phone"),
           'sellerImage': sharedPreferences!.getString("image"),
           "image": downloadImageUrl,
-          'address': addressController.text,
-          'city': cityController.text,
+          'address': addressController.text.trim(),
+          'city': cityController.text.trim(),
           // "imagePath": imageUrlPath,
           "vehicleModel": vehicleModelValue,
           "vehicleType": vehicleTypeValue,
