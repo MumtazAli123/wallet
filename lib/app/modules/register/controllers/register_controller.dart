@@ -61,6 +61,29 @@ class RegisterController extends GetxController {
         'password': 'Mart@2022',
       };
 
+  late Rx<File?> pickedFile;
+
+  File? get profileImage => pickedFile.value;
+  XFile? imageFile;
+
+  pickImage(ImageSource gallery) async {
+    imageFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (imageFile != null) {
+      Get.snackbar('Success', 'Image Picked');
+      pickedFile = Rx<File?>(File(imageFile!.path));
+    } else {
+      Get.snackbar('Error', 'No Image Selected');
+    }
+  }
+
+  captureImage(ImageSource camera) async {
+    imageFile = await ImagePicker().pickImage(source: ImageSource.camera);
+    if (imageFile != null) {
+      Get.snackbar('Success', 'Image Captured');
+    }
+    pickedFile = Rx<File?>(File(imageFile!.path));
+  }
+
   @override
   void onInit() {
     super.onInit();

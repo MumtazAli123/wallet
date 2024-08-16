@@ -1,14 +1,18 @@
 // ignore_for_file: prefer_const_constructors , prefer_const_literals_to_create_immutables
 
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:fancy_password_field/fancy_password_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:getwidget/components/button/gf_button.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
 import 'package:quickalert/models/quickalert_type.dart';
 import 'package:quickalert/widgets/quickalert_dialog.dart';
@@ -27,14 +31,12 @@ class MobRegisterView extends StatefulWidget {
 }
 
 class _MobRegisterViewState extends State<MobRegisterView> {
-
   final RegisterController controller = Get.put(RegisterController());
   bool isLogin = false;
   var hintText = 'Email';
   String flagUri = '';
   final fStore = FirebaseFirestore.instance;
   final String date = DateTime.now().toString();
-
 
   // country flag
   UserModel model = UserModel();
@@ -61,6 +63,11 @@ class _MobRegisterViewState extends State<MobRegisterView> {
       wGetSnackBar(
         'Error',
         'Please enter name',
+      );
+    } else if (controller.imageFile == null) {
+      wGetSnackBar(
+        'Error',
+        'Please upload image',
       );
     } else if (controller.addressController.text.isEmpty) {
       wGetSnackBar(
@@ -111,7 +118,6 @@ class _MobRegisterViewState extends State<MobRegisterView> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -136,8 +142,8 @@ class _MobRegisterViewState extends State<MobRegisterView> {
         }),
       ),
     );
-
   }
+
   Widget emailFormScreen() {
     return Scaffold(
       backgroundColor: Colors.blue[900],
@@ -169,9 +175,7 @@ class _MobRegisterViewState extends State<MobRegisterView> {
                     SizedBox(height: 45),
                     _emailField(controller.emailController),
                     SizedBox(height: 30),
-                    wButton(
-                        size: 50,
-                        'Next', Colors.blue, onPressed: () {
+                    wButton(size: 50, 'Next', Colors.blue, onPressed: () {
                       emailValidation();
                     }),
                     SizedBox(height: 30),
@@ -202,9 +206,7 @@ class _MobRegisterViewState extends State<MobRegisterView> {
                   ),
                 ),
                 height: 55,
-                child: wButton('Previous',
-                    Colors.red,
-                    onPressed: () {
+                child: wButton('Previous', Colors.red, onPressed: () {
                   controller.currentScreen.value = 0;
                 }),
               ),
@@ -214,7 +216,7 @@ class _MobRegisterViewState extends State<MobRegisterView> {
             ),
             Expanded(
               child: Container(
-                margin:  EdgeInsets.only(right: 10),
+                margin: EdgeInsets.only(right: 10),
                 height: 57,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
@@ -229,7 +231,6 @@ class _MobRegisterViewState extends State<MobRegisterView> {
           ],
         ),
       ),
-
       appBar: AppBar(
         automaticallyImplyLeading: false,
         iconTheme: IconThemeData(color: Colors.white),
@@ -244,6 +245,30 @@ class _MobRegisterViewState extends State<MobRegisterView> {
               padding: const EdgeInsets.all(18.0),
               child: Column(
                 children: [
+                  GestureDetector(
+                    onTap: () {
+                      _buildPhotoBottomSheet();
+                    },
+                    child: CircleAvatar(
+                      radius: 70,
+                      backgroundColor: Colors.white,
+                      child: controller.imageFile == null
+                          ? Icon(
+                              Icons.camera_alt,
+                              size: 50,
+                              color: Colors.blue,
+                            )
+                          : CircleAvatar(
+                              radius: 67,
+                              backgroundImage: FileImage(
+                                File(controller.imageFile!.path),
+                              ),
+                            ),
+                    ),
+                  ),
+                  // plz upload image here
+                  wText("Upload Image", color: Colors.white),
+                  SizedBox(height: 20),
 
                   SizedBox(height: 20),
                   _buildTextField(
@@ -257,13 +282,18 @@ class _MobRegisterViewState extends State<MobRegisterView> {
 
                   SizedBox(height: 30),
                   Container(
-                    height: 300,
-                    width: 280,
+                    height: 200,
+                    width: 250,
                     decoration: BoxDecoration(
                       // color: Colors.blue,
                       borderRadius: BorderRadius.circular(40),
                     ),
-                    child: Lottie.asset('assets/lottie/sale.json', fit: BoxFit.fill, height: 200, width: 200,),
+                    child: Lottie.asset(
+                      'assets/lottie/sale.json',
+                      fit: BoxFit.fill,
+                      height: 150,
+                      width: 250,
+                    ),
                   ),
                   SizedBox(height: 20),
                 ],
@@ -492,7 +522,7 @@ class _MobRegisterViewState extends State<MobRegisterView> {
                   Text(
                     textAlign: TextAlign.center,
                     "Please check your information\n"
-                        "If you want to change, click back button",
+                    "If you want to change, click back button",
                     style: GoogleFonts.kadwa(
                       color: Colors.yellowAccent[700],
                       fontSize: 12,
@@ -518,34 +548,55 @@ class _MobRegisterViewState extends State<MobRegisterView> {
                           color: Colors.white)),
                   ListTile(
                       leading: Icon(Icons.location_on, color: Colors.white),
-                      title: aText("Address: ${controller.addressController.text}",
+                      title: aText(
+                          "Address: ${controller.addressController.text}",
                           color: Colors.white)),
                   ListTile(
                       leading: Icon(Icons.location_city, color: Colors.white),
                       title: aText("City: ${controller.cityController.text}",
                           color: Colors.white)),
                   SizedBox(height: 20),
-                 Container(
-                   padding: const EdgeInsets.all(5),
-                   width: 200,
-                   decoration: BoxDecoration(
-                     color: Colors.blue,
-                     borderRadius: BorderRadius.circular(10),
-                   ),
-                   child:  wButton('Submit',
-                       size: 40,
-                       Colors.blue, onPressed: () {
-                         if (controller.formKey.currentState!.validate()) {
-                           signUp(
-                               controller.emailController.text, controller.passwordController.text);
-                         }
-                       }),
+                  Container(
+                    padding: const EdgeInsets.all(5),
+                    width: 200,
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child:
+                        wButton('Submit', size: 40, Colors.blue,
+                            onPressed: () {
+                      // check if email already exists
+                      FirebaseFirestore.instance
+                          .collection('sellers')
+                          .where('email',
+                              isEqualTo: controller.emailController.text)
+                          .get()
+                          .then((value) {
+                        if (value.docs.isNotEmpty) {
+                          // Get.back();
+                          controller.currentScreen.value = 0;
+                          QuickAlert.show(
+                            context: Get.context!,
+                            type: QuickAlertType.error,
+                            title: 'Error',
+                            text: 'Email already exists',
+                          );
+                        } else {
+                          if (controller.formKey.currentState!.validate()) {
+                            // check if email already exists
+                            signUp(controller.emailController.text.trim(),
+                                controller.passwordController.text.trim());
+                          }
+                        }
+                      });
+                    }),
                   ),
                   SizedBox(height: 20),
                   GFButton(
                       text: "Back",
                       textStyle:
-                      TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                       color: Colors.red,
                       onPressed: () {
                         controller.currentScreen.value = 1;
@@ -597,21 +648,21 @@ class _MobRegisterViewState extends State<MobRegisterView> {
           helperMaxLines: 1,
           border: InputBorder.none,
           suffixIcon: hintText == 'Email' &&
-              controller.emailController.text.contains('.com')
+                  controller.emailController.text.contains('.com')
               ? Container(
-            margin: const EdgeInsets.only(right: 10),
-            height: 20,
-            width: 20,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.green,
-            ),
-            child: const Icon(
-              Icons.done,
-              color: Colors.white,
-              size: 20,
-            ),
-          )
+                  margin: const EdgeInsets.only(right: 10),
+                  height: 20,
+                  width: 20,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.green,
+                  ),
+                  child: const Icon(
+                    Icons.done,
+                    color: Colors.white,
+                    size: 20,
+                  ),
+                )
               : null,
         ),
       ),
@@ -686,19 +737,19 @@ class _MobRegisterViewState extends State<MobRegisterView> {
         ),
         suffixIcon: controller.phoneController.text.length > 9
             ? Container(
-          margin: const EdgeInsets.only(right: 10),
-          height: 20,
-          width: 20,
-          decoration: const BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.green,
-          ),
-          child: const Icon(
-            Icons.done,
-            color: Colors.white,
-            size: 20,
-          ),
-        )
+                margin: const EdgeInsets.only(right: 10),
+                height: 20,
+                width: 20,
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.green,
+                ),
+                child: const Icon(
+                  Icons.done,
+                  color: Colors.white,
+                  size: 20,
+                ),
+              )
             : null,
       ),
     );
@@ -742,7 +793,6 @@ class _MobRegisterViewState extends State<MobRegisterView> {
       ),
     );
   }
-
 
   _buildTextField(
       TextEditingController nameController, String hint, IconData icon) {
@@ -797,12 +847,18 @@ class _MobRegisterViewState extends State<MobRegisterView> {
             .createUserWithEmailAndPassword(email: email, password: password)
             .then((value) {
           uid = value.user!.uid;
-          // _uploadImageToFirebase();
-          _saveUserData('');
+          uploadImageToStorage(controller.profileImage!);
+          // _saveUserData('');
         });
       } else {
         Get.back();
-        wGetSnackBar('Error', 'Phone number already exists');
+        controller.currentScreen.value = 2;
+        QuickAlert.show(
+          context: Get.context!,
+          type: QuickAlertType.error,
+          title: 'Error',
+          text: 'Phone number already exists',
+        );
       }
     } catch (e) {
       Get.back();
@@ -819,6 +875,27 @@ class _MobRegisterViewState extends State<MobRegisterView> {
     return query.docs.isEmpty;
   }
 
+  Future<String> uploadImageToStorage(File imageFile) async {
+    try {
+      FirebaseStorage storage = FirebaseStorage.instance;
+      Reference reference = storage.ref().child('sellers').child('$uid.jpg');
+      UploadTask uploadTask = reference.putFile(imageFile);
+      TaskSnapshot taskSnapshot = await uploadTask.whenComplete(() => null);
+      String imageUrl = await taskSnapshot.ref.getDownloadURL();
+      _saveUserData(imageUrl);
+      return imageUrl;
+    } catch (e) {
+      Get.back();
+      QuickAlert.show(
+        context: Get.context!,
+        type: QuickAlertType.error,
+        title: 'Error',
+        text: e.toString(),
+      );
+      return '';
+    }
+  }
+
   void _saveUserData(String value) async {
     // to call firestore
 
@@ -830,7 +907,7 @@ class _MobRegisterViewState extends State<MobRegisterView> {
       userModel.email = user.email;
       userModel.name = controller.nameController.text;
       userModel.phone =
-      "+${controller.countryCode}${controller.phoneController.text}";
+          "+${controller.countryCode}${controller.phoneController.text}";
       userModel.image = value;
       userModel.sellerType = 'user';
       userModel.balance = 20.0;
@@ -859,8 +936,10 @@ class _MobRegisterViewState extends State<MobRegisterView> {
           'email', controller.emailController.text);
       await sharedPreferences?.setString('phone',
           '+${controller.countryCode}${controller.phoneController.text}');
-      await sharedPreferences?.setString('city', controller.cityController.text);
-      await sharedPreferences?.setString('address', controller.addressController.text);
+      await sharedPreferences?.setString(
+          'city', controller.cityController.text);
+      await sharedPreferences?.setString(
+          'address', controller.addressController.text);
       await sharedPreferences?.setString('image', value);
       await sharedPreferences?.setString('sellerType', 'user');
       await sharedPreferences?.setString('status', 'approved');
@@ -874,12 +953,63 @@ class _MobRegisterViewState extends State<MobRegisterView> {
 
       Get.back();
       Get.offAll(() => BottomPageView());
-      Get.snackbar('Success', 'User registered successfully', backgroundColor: Colors.green);
+      Get.snackbar('Success', 'User registered successfully',
+          backgroundColor: Colors.green, colorText: Colors.white);
     } catch (e) {
       Get.back();
       Get.snackbar('Error', e.toString());
     }
   }
 
-
+  void _buildPhotoBottomSheet() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) {
+        return Container(
+          padding: const EdgeInsets.all(20),
+          height: 150,
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  children: [
+                    IconButton(
+                      onPressed: () async {
+                        Get.back();
+                        await controller.captureImage(ImageSource.camera);
+                        setState(() {
+                          controller.imageFile;
+                        });
+                      },
+                      icon: Icon(Icons.camera_alt),
+                      iconSize: 50,
+                    ),
+                    Text('Camera'),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Column(
+                  children: [
+                    IconButton(
+                      onPressed: () async {
+                        Get.back();
+                        await controller.pickImage(ImageSource.gallery);
+                        setState(() {
+                          controller.imageFile;
+                        });
+                      },
+                      icon: Icon(Icons.photo),
+                      iconSize: 50,
+                    ),
+                    Text('Gallery'),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 }
