@@ -14,42 +14,40 @@ class CarVehicle extends GetView<VehicleController> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: StreamBuilder<QuerySnapshot>(
-        stream: controller.carVehicleStream(),
-        builder: (context, snapshot) {
-          try {
-            if(snapshot.hasError) {
-              return const Center(
-                child: Text('Something went wrong'),
-              );
-            }
-            if(snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            if(snapshot.data!.docs.isEmpty) {
-              return const Center(
-                child: Text('No Vehicle Found'),
-              );
-            }
-            return ListView.builder(
-              itemCount: snapshot.data!.docs.length,
-              itemBuilder: (context, index) {
-                var data = snapshot.data!.docs[index].data() as Map;
-                VehicleModel model =
-                VehicleModel.fromJson(data as Map<String, dynamic>);
-                return wBuildVehicleCard(model.toJson());
-              },
+    return StreamBuilder<QuerySnapshot>(
+      stream: controller.carVehicleStream(),
+      builder: (context, snapshot) {
+        try {
+          if(snapshot.hasError) {
+            return const Center(
+              child: Text('Something went wrong'),
             );
-          } catch (e) {
+          }
+          if(snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(),
             );
           }
-        },
-      ),
+          if(snapshot.data!.docs.isEmpty) {
+            return const Center(
+              child: Text('No Vehicle Found'),
+            );
+          }
+          return ListView.builder(
+            itemCount: snapshot.data!.docs.length,
+            itemBuilder: (context, index) {
+              var data = snapshot.data!.docs[index].data() as Map;
+              VehicleModel model =
+              VehicleModel.fromJson(data as Map<String, dynamic>);
+              return wBuildVehicleCard(model.toJson());
+            },
+          );
+        } catch (e) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+      },
     );
   }
 }

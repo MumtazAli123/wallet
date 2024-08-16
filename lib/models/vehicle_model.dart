@@ -59,6 +59,39 @@ class VehicleModel {
     this.vehicleType,
   });
 
+  static VehicleModel fromDataSnapshot(DocumentSnapshot snapshot) {
+    var dataSnap = snapshot.data() as Map<String, dynamic>;
+    return VehicleModel(
+      email: dataSnap['email'],
+      image: dataSnap['image'],
+      sellerImage: dataSnap['sellerImage'],
+      likeCount: dataSnap['likeCount'],
+      phone: dataSnap['phone'],
+      address: dataSnap['address'],
+      city: dataSnap['city'],
+      publishedDate: dataSnap['publishedDate'],
+      sellerId: dataSnap['sellerId'],
+      sellerName: dataSnap['sellerName'],
+      showroomName: dataSnap['showroomName'],
+      status: dataSnap['status'],
+      updatedDate: dataSnap['updatedDate'],
+      vehicleAmenities: dataSnap['vehicleAmenities'],
+      vehicleBodyType: dataSnap['vehicleBodyType'],
+      vehicleColor: dataSnap['vehicleColor'],
+      vehicleCondition: dataSnap['vehicleCondition'],
+      vehicleDescription: dataSnap['vehicleDescription'],
+      vehicleFuelType: dataSnap['vehicleFuelType'],
+      vehicleId: dataSnap['vehicleId'],
+      vehicleKm: dataSnap['vehicleKm'],
+      vehicleModel: dataSnap['vehicleModel'],
+      vehicleName: dataSnap['vehicleName'],
+      vehiclePrice: dataSnap['vehiclePrice'],
+      vehicleStatus: dataSnap['vehicleStatus'],
+      vehicleTransmission: dataSnap['vehicleTransmission'],
+      vehicleType: dataSnap['vehicleType'],
+    );
+  }
+
   factory VehicleModel.fromJson(Map<String, dynamic> json) {
     return VehicleModel(
       email: json['email'],

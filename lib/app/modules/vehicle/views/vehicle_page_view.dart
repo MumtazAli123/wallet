@@ -1,6 +1,6 @@
 // ignore_for_file: prefer_const_constructors , prefer_const_literals_to_create_immutables
 
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -13,8 +13,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/app/modules/vehicle/controllers/vehicle_controller.dart';
 import 'package:wallet/models/vehicle_model.dart';
-import 'package:wallet/widgets/currency_format.dart';
 
+import '../../../../widgets/currency_format.dart';
 import '../../../../widgets/mix_widgets.dart';
 
 class VehiclePageView extends StatefulWidget {
@@ -37,21 +37,33 @@ class _VehiclePageViewState extends State<VehiclePageView> {
     }
   }
 
+  // List<String> imageUrls = [];
 
-  List<String> imageUrls = [];
-
-
+  readCurrentVehicleData() async {
+    await FirebaseFirestore.instance
+        .collection('vehicle')
+        .doc(widget.doc)
+        .get()
+        .then((snapshot) {
+      if (snapshot.exists) {
+        setState(() {
+         controller.imageUrlPath = snapshot.data()!['image'];
+        });
+      }
+    });
+  }
 
   @override
   void initState() {
     super.initState();
+    // readCurrentVehicleData();
   }
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: Container(
+        color: Colors.transparent,
         padding: EdgeInsets.all(18.0),
         child: GFButtonBar(
           children: <Widget>[
@@ -142,7 +154,7 @@ class _VehiclePageViewState extends State<VehiclePageView> {
                 icon: const Icon(Icons.close, color: Colors.white),
               ),
             ),
-            expandedHeight: 400.0,
+            expandedHeight: 450.0,
             floating: false,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(

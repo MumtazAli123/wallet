@@ -213,6 +213,9 @@ class VehicleController extends GetxController {
   Rx<List<Map<String, dynamic>>> vehicleList =
       Rx<List<Map<String, dynamic>>>([]);
 
+  final Rx<List> vehicleProfilesList = Rx<List>([]);
+  List get vehicleProfiles => vehicleProfilesList.value;
+
   @override
   void onInit() {
     super.onInit();
@@ -271,7 +274,6 @@ class VehicleController extends GetxController {
           addVehicle();
         }
       }
-
     } catch (e) {
       Get.snackbar("Error", e.toString());
     }
@@ -468,4 +470,6 @@ class VehicleController extends GetxController {
         .limit(20)
         .snapshots();
   }
+
+  void favoriteSendAndReceive(String string, param1) {}
 }

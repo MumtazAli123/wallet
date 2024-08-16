@@ -212,36 +212,31 @@ class _ShopsViewState extends State<ShopsView> {
   _buildCategories() {
     return Center(
       child: SizedBox(
-        height: 50,
+        height: 65,
         child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-          Expanded(
-                  child: _buildCategoryItem(
-                      onTap: () {
-                        // controller.fetchShops();
-                      },
-                      name: 'All'.tr,
-                      selected: true)).animate().rotate(duration: Duration(seconds: 2)).slide(duration: const Duration(seconds: 4)),
-          SizedBox(width: 10.0),
           Expanded(
               child: _buildCategoryItem(
                   onTap: () {
                     Get.to(() => ShowRealstate());
                   },
-                  name: 'Real State'.tr)),
+                  name: 'Real State'.tr,
+                  icon: Icons.real_estate_agent)),
           SizedBox(width: 10.0),
           Expanded(
               child: _buildCategoryItem(
                   onTap: () {
                     Get.toNamed('/vehicle');
                   },
-                  name: 'Vehicle'.tr)),
+                  name: 'Vehicles'.tr,
+                  icon: Icons.local_taxi)),
           SizedBox(width: 10.0),
           Expanded(
               child: _buildCategoryItem(
                   onTap: () {
                     Get.toNamed('/products'.tr);
                   },
-                  name: 'Products'.tr)),
+                  name: 'Products'.tr,
+                  icon: Icons.shopping_cart)),
           // Expanded(child: _buildCategoryItem(name: 'Others')),
         ]),
       ),
@@ -335,14 +330,26 @@ class _ShopsViewState extends State<ShopsView> {
   }
 
   _buildCategoryItem(
-      {required String name, bool selected = false, Function()? onTap}) {
+      {required String name, bool selected = false, Function()? onTap, IconData? icon}) {
     return GestureDetector(
       onTap: onTap,
-      child: GFAvatar(
-        backgroundColor: selected ? Colors.green : Colors.grey[200],
-        shape: GFAvatarShape.standard,
-        size: 60,
-        child: wText(name, color: selected ? Colors.white : Colors.black),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+        decoration: BoxDecoration(
+          color: selected ? Get.theme.primaryColor : Colors.green[600],
+          borderRadius: BorderRadius.circular(10),
+        ),
+        child: Column(
+          children: [
+            Icon(
+              icon,
+              color: selected ? Colors.white : Colors.white,
+            ),
+            Center(
+              child: wText(name, color: selected ? Colors.white : Colors.white),
+            ),
+          ],
+        ),
       ),
     );
   }

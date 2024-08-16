@@ -42,7 +42,7 @@ class _SearchViewState extends State<SearchView> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Search'),
+          title: const Text('Search Vehicles'),
           centerTitle: true,
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(100.0),
