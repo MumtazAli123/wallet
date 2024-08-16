@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/components/button/gf_button.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:lottie/lottie.dart';
 import 'package:wallet/widgets/mix_widgets.dart';
 
 import '../../../../utils/translation.dart';
@@ -97,19 +98,21 @@ class _UploadProductsViewState extends State<UploadProductsView> {
 
   Widget defaultScreen() {
     return Scaffold(
+      backgroundColor: Colors.black,
       body: Container(
         decoration: BoxDecoration(
-          image: DecorationImage(
-            image: Image.asset(
-              "assets/images/popular_5.jpg",
-            ).image,
-            fit: BoxFit.cover,
-          ),
+          // image: DecorationImage(
+          //   image: Image.asset(
+          //     "assets/images/vendor.png",
+          //   ).image,
+          //   fit: BoxFit.contain,
+          // ),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             AppBar(
+              iconTheme: const IconThemeData(color: Colors.white),
                 centerTitle: true,
                 backgroundColor: Colors.transparent,
                 elevation: 0,
@@ -124,8 +127,8 @@ class _UploadProductsViewState extends State<UploadProductsView> {
                   style: const TextStyle(fontSize: 20, color: Colors.white),
                 )),
             wTitleMedium(
-              title: "Upload Vehicle Images",
-              subtitle: "Please select image for upload vehicle",
+              title: "Upload Products Images",
+              subtitle: "Please select image for upload products",
             ),
             IconButton(
                 onPressed: () {
@@ -145,7 +148,9 @@ class _UploadProductsViewState extends State<UploadProductsView> {
                 icon: Icons.image,
                 onPressed: () {
                   obtainImageBox();
-                })
+                }),
+            const SizedBox(height: 30.0),
+            Lottie.asset('assets/lottie/card.json', height: 300),
           ],
         ),
       ),
