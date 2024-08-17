@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class ProductsModel {
@@ -25,7 +24,8 @@ class ProductsModel {
   String? pSellerAddress;
   String? pSellerPhone;
   String? pSellerCity;
-
+  String? city;
+  String? address;
 
   ProductsModel(
       {this.pName,
@@ -50,8 +50,9 @@ class ProductsModel {
       this.pSellerPhoto,
       this.pSellerAddress,
       this.pSellerPhone,
-      this.pSellerCity
-      });
+      this.pSellerCity,
+      this.city,
+      this.address});
 
   static ProductsModel fromDataSnapshot(DocumentSnapshot snapshot) {
     return ProductsModel(
@@ -78,6 +79,8 @@ class ProductsModel {
       pSellerAddress: snapshot['pSellerAddress'],
       pSellerPhone: snapshot['pSellerPhone'],
       pSellerCity: snapshot['pSellerCity'],
+      city: snapshot['city'],
+      address: snapshot['address'],
     );
   }
 
@@ -106,6 +109,8 @@ class ProductsModel {
       pSellerAddress: json['pSellerAddress'],
       pSellerPhone: json['pSellerPhone'],
       pSellerCity: json['pSellerCity'],
+      city: json['city'],
+      address: json['address'],
     );
   }
 
@@ -134,7 +139,8 @@ class ProductsModel {
     data['pSellerAddress'] = pSellerAddress;
     data['pSellerPhone'] = pSellerPhone;
     data['pSellerCity'] = pSellerCity;
+    data['city'] = city;
+    data['address'] = address;
     return data;
   }
-
 }

@@ -60,6 +60,7 @@ class ShowProductsView extends GetView<ProductsController> {
           .collection('sellers')
           .doc(user!.uid)
           .collection('products')
+          .orderBy('pCreatedAt', descending: true)
           .snapshots(),
       builder: (context, snapshot) {
         try {

@@ -100,6 +100,8 @@ class ProductsController extends GetxController {
 
   var productList = [].obs;
 
+  bool selected = false;
+
   @override
   void onInit() {
     super.onInit();
@@ -185,6 +187,8 @@ class ProductsController extends GetxController {
         "pBrand": pBrandController.text.trim(),
         "pQuantity": pQuantityController.text.trim(),
         "pDiscount": pDiscountController.text.trim(),
+        "city": pCityController.text.trim(),
+        "address": pAddressController.text.trim(),
         "pCategory": pCategoryValue,
         "pCondition": pCondition,
         "pDelivery": pDelivery,
@@ -210,6 +214,8 @@ class ProductsController extends GetxController {
           "pBrand": pBrandController.text.trim(),
           "pQuantity": pQuantityController.text.trim(),
           "pDiscount": pDiscountController.text.trim(),
+          "city": pCityController.text.trim(),
+          "address": pAddressController.text.trim(),
           "pCategory": pCategoryValue,
           "pCondition": pCondition,
           "pDelivery": pDelivery,
@@ -265,5 +271,17 @@ class ProductsController extends GetxController {
     } catch (e) {
       Get.snackbar("Error", e.toString());
     }
+  }
+
+  allProductsStream() {
+    return FirebaseFirestore.instance
+        .collection("products")
+        .orderBy("pCreatedAt", descending: true)
+        .snapshots();
+
+  }
+
+  isFavorite(data) {
+    return false;
   }
 }
