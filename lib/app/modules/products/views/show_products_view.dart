@@ -1,9 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
-import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -12,7 +10,6 @@ import 'package:getwidget/components/button/gf_button_bar.dart';
 import 'package:getwidget/components/card/gf_card.dart';
 import 'package:getwidget/components/list_tile/gf_list_tile.dart';
 import 'package:getwidget/shape/gf_button_shape.dart';
-import 'package:getwidget/types/gf_button_type.dart';
 import 'package:wallet/app/modules/products/controllers/products_controller.dart';
 import 'package:wallet/app/modules/products/views/upload_products_view.dart';
 import 'package:wallet/models/products_model.dart';
