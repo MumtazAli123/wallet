@@ -13,6 +13,7 @@ import '../../../../widgets/mix_widgets.dart';
 import '../views/show_vehicle_view.dart';
 
 class VehicleController extends GetxController {
+
   // showroom name controller
   TextEditingController showroomNameController = TextEditingController();
   TextEditingController vehicleNameController = TextEditingController();

@@ -7,9 +7,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as fStorage;
 import 'package:wallet/global/global.dart';
 
-
 import '../../../../notification/push_notification_sys.dart';
 import '../../../../widgets/mix_widgets.dart';
+import '../views/show_products_view.dart';
 
 class ProductsController extends GetxController {
 
@@ -28,6 +28,8 @@ class ProductsController extends GetxController {
     "Electronics",
     "Phones",
     "Laptops",
+    "Tablets",
+    "Accessories & Parts",
     "Clothing",
     "Shoes",
     "Bags",
@@ -46,8 +48,36 @@ class ProductsController extends GetxController {
   List<String> pDeliveryList = ["Yes", "No"];
   List<String> pReturnList = ["Yes", "No"];
   List<String> pDiscountTypeList = ["Percentage", "Amount"];
-  List<String> pColorList = ["Red", "Blue", "Green", "Yellow", "Black", "White"];
-  List<String> pSizeList = ["S", "M", "L", "XL", "XXL"];
+  List<String> pColorList = [
+    "Red",
+    "Blue",
+    "Green",
+    "Yellow",
+    "Black",
+    "White",
+    "Sliver",
+    "Grey",
+    "Purple",
+    "Pink",
+    "Orange",
+    "Brown"
+  ];
+  List<String> pSizeList = [
+    "S",
+    "M",
+    "L",
+    "XL",
+    "XXL",
+    "XXXL",
+    "All Size",
+    "4XL",
+    "5XL",
+    "6XL",
+    "7XL",
+    "8XL",
+    "9XL",
+    "10XL"
+  ];
 
   String pCategoryValue = "Electronics";
   String pCondition = "New";
@@ -57,12 +87,7 @@ class ProductsController extends GetxController {
   String pColor = "Red";
   String pSize = "S";
 
-
-
-
-
   bool uploading = false, next = false;
-  final List<File> _images = [];
   List<String> urlList = [];
   double val = 0;
 
@@ -73,20 +98,33 @@ class ProductsController extends GetxController {
   var imageFileCount = 0.obs;
   var pUniqueId = DateTime.now().millisecondsSinceEpoch.toString();
 
-
+  var productList = [].obs;
 
   @override
   void onInit() {
     super.onInit();
+    pCategoryValue = pCategoryList[0];
+    pCondition = pConditionList[0];
+    pDelivery = pDeliveryList[0];
   }
 
   @override
   void onReady() {
-    super.onReady();
   }
 
   @override
-  void onClose() {}
+  void onClose() {
+    pNameController.dispose();
+    pPriceController.dispose();
+    pDescriptionController.dispose();
+    pBrandController.dispose();
+    pQuantityController.dispose();
+    pDiscountController.dispose();
+    pColorController.dispose();
+    pSizeController.dispose();
+    pAddressController.dispose();
+    pCityController.dispose();
+  }
 
   void selectMultipleImage() async {
     images = await _picker.pickMultiImage();
@@ -157,10 +195,7 @@ class ProductsController extends GetxController {
         "pImages": downloadImageUrl,
         "pCreatedAt": DateTime.now(),
       }).then((value) {
-        FirebaseFirestore.instance
-            .collection("products")
-            .doc(pUniqueId)
-            .set({
+        FirebaseFirestore.instance.collection("products").doc(pUniqueId).set({
           "pUniqueId": pUniqueId,
           "pSellerId": user!.uid,
           "pSellerName": sharedPreferences!.getString("name"),
@@ -188,6 +223,7 @@ class ProductsController extends GetxController {
 
         Get.back();
         Get.snackbar("Success", "Product added successfully");
+        Get.to(() =>  ShowProductsView());
         // PushNotificationSys().sendNotification(
         //     "New Product Added", "Product added successfully");
       });
@@ -196,5 +232,38 @@ class ProductsController extends GetxController {
     }
   }
 
+  productsStream() {
+    return FirebaseFirestore.instance
+        .collection("sellers")
+        .doc(user!.uid)
+        .collection("products")
+        .orderBy("publishedDate", descending: true)
+        .snapshots();
+  }
 
+  Stream<QuerySnapshot> searchProducts(String searchName) {
+    return FirebaseFirestore.instance
+        .collection("products")
+        .orderBy("pName")
+        .startAt([searchName]).endAt(["$searchName\uf8ff"])
+        .limit(5)
+        .snapshots();
+  }
+
+  void deleteProduct(String id) {
+    try {
+      FirebaseFirestore.instance
+          .collection("sellers")
+          .doc(user!.uid)
+          .collection("products")
+          .doc(id)
+          .delete()
+          .then((value) {
+        FirebaseFirestore.instance.collection("products").doc(id).delete();
+        Get.snackbar("Success", "Product deleted successfully", snackPosition: SnackPosition.BOTTOM);
+      });
+    } catch (e) {
+      Get.snackbar("Error", e.toString());
+    }
+  }
 }

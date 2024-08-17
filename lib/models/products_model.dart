@@ -15,8 +15,8 @@ class ProductsModel {
   String? pDiscountType;
   String? pColor;
   String? pSize;
-  List<String>? pImages;
-  DateTime? pCreatedAt;
+  String? pImages;
+  Timestamp? pCreatedAt;
   String? pUniqueId;
   String? pSellerId;
   String? pSellerName;
@@ -68,7 +68,7 @@ class ProductsModel {
       pDiscountType: snapshot['pDiscountType'],
       pColor: snapshot['pColor'],
       pSize: snapshot['pSize'],
-      pImages: List<String>.from(snapshot['pImages']),
+      pImages: snapshot['pImages'],
       pCreatedAt: snapshot['pCreatedAt'].toDate(),
       pUniqueId: snapshot['pUniqueId'],
       pSellerId: snapshot['pSellerId'],
@@ -96,7 +96,7 @@ class ProductsModel {
       pDiscountType: json['pDiscountType'],
       pColor: json['pColor'],
       pSize: json['pSize'],
-      pImages: List<String>.from(json['pImages']),
+      pImages: json['pImages'],
       pCreatedAt: json['pCreatedAt'],
       pUniqueId: json['pUniqueId'],
       pSellerId: json['pSellerId'],

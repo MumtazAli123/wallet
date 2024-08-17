@@ -2,6 +2,7 @@
 
 import 'dart:io';
 
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +27,6 @@ class _UploadProductsViewState extends State<UploadProductsView> {
   final controller = Get.put(ProductsController());
 
 
-  bool uploading = false, next = false;
   final List<File> _images = [];
   List<String> urlList = [];
   double val = 0;
@@ -89,6 +89,12 @@ class _UploadProductsViewState extends State<UploadProductsView> {
       });
       controller.uploadImage();
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    controller.selectMultipleImage();
   }
 
   @override
@@ -207,6 +213,7 @@ class _UploadProductsViewState extends State<UploadProductsView> {
       },
       child: Scaffold(
           appBar: AppBar(
+            iconTheme: const IconThemeData(color: Colors.white),
             backgroundColor: Colors.blue,
             actions: [
               //   uploadImage(),
@@ -216,7 +223,7 @@ class _UploadProductsViewState extends State<UploadProductsView> {
                   },
                   icon: const Icon(Icons.upload, color: Colors.white)),
             ],
-            title: const Text("Upload Vehicle",
+            title:  Text("Upload Products",
                 style: TextStyle(fontSize: 20, color: Colors.white)),
           ),
           body: ListView(children: [
@@ -300,32 +307,12 @@ class _UploadProductsViewState extends State<UploadProductsView> {
               child: GFButton(
                   size: 50,
                   onPressed: (){
-                    if (controller.imageUrlPath.length < 8) {
+                    if (controller.imageUrlPath.length < 5) {
                       obtainImageBox();
                     } else {
                       Get.snackbar("Error", "You can't select more than 8 images", backgroundColor: Colors.red, colorText: Colors.white);
                     }
                   }, child:  wText("Select More Images")),
-            ),
-            // product name
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: wTextField(
-                  keyboardType: "text",
-                  controller: controller.pNameController,
-                  labelText: "Product Name",
-                  hintText: "Enter Product Name",
-                  prefixIcon: Icons.home),
-            ),
-            // price
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: wTextField(
-                  keyboardType: "number",
-                  controller: controller.pPriceController,
-                  labelText: "Product Price",
-                  hintText: "Enter Product Price",
-                  prefixIcon: Icons.money),
             ),
             // Product category
             Padding(padding: const EdgeInsets.all(8.0),
@@ -333,7 +320,7 @@ class _UploadProductsViewState extends State<UploadProductsView> {
                 decoration: InputDecoration(
                   labelText: "Product Category",
                   hintText: "Select Product Category",
-                  prefixIcon: const Icon(Icons.directions_car),
+                  prefixIcon:  Icon(EvaIcons.tv),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -351,13 +338,77 @@ class _UploadProductsViewState extends State<UploadProductsView> {
                 }).toList(),
               ),
             ),
+            // product name
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: wTextField(
+                  keyboardType: "text",
+                  controller: controller.pNameController,
+                  labelText: "Product Name",
+                  hintText: "Enter Product Name",
+                  prefixIcon: EvaIcons.shoppingBag),
+            ),
+            // brand
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: wTextField(
+                  keyboardType: "text",
+                  controller: controller.pBrandController,
+                  labelText: "Brand Name",
+                  hintText: "Enter Brand Name",
+                  prefixIcon: Icons.branding_watermark),
+            ),
+            // price
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: wTextField(
+                  keyboardType: "number",
+                  controller: controller.pPriceController,
+                  labelText: "Product Price",
+                  hintText: "Enter Product Price",
+                  prefixIcon: Icons.money),
+            ),
+            // pDiscount
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: wTextField(
+                  keyboardType: "number",
+                  controller: controller.pDiscountController,
+                  labelText: "Product Discount",
+                  hintText: "Enter Product Discount",
+                  prefixIcon: Icons.money_off),
+            ),
+            //pDiscountType
+            Padding(padding: const EdgeInsets.all(8.0),
+              child: DropdownButtonFormField(
+                decoration: InputDecoration(
+                  labelText: "Product Discount Type",
+                  hintText: "Select Product Discount Type",
+                  prefixIcon:  Icon(EvaIcons.percent),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                value: controller.pDiscountType,
+                onChanged: (value) {
+                  controller.pDiscountType = value.toString();
+                  setState(() {});
+                },
+                items: controller.pDiscountTypeList.map((e) {
+                  return DropdownMenuItem(
+                    value: e,
+                    child: Text(e),
+                  );
+                }).toList(),
+              ),
+            ),
             // pCondition
             Padding(padding: const EdgeInsets.all(8.0),
               child: DropdownButtonFormField(
                 decoration: InputDecoration(
                   labelText: "Product Condition",
                   hintText: "Select Product Condition",
-                  prefixIcon: const Icon(Icons.directions_car),
+                  prefixIcon:  Icon(EvaIcons.calendar),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -375,13 +426,23 @@ class _UploadProductsViewState extends State<UploadProductsView> {
                 }).toList(),
               ),
             ),
+            // pQuantity
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: wTextField(
+                  keyboardType: "number",
+                  controller: controller.pQuantityController,
+                  labelText: "Product Quantity",
+                  hintText: "Enter Product Quantity",
+                  prefixIcon: Icons.add_shopping_cart),
+            ),
             // pDelivery
             Padding(padding: const EdgeInsets.all(8.0),
               child: DropdownButtonFormField(
                 decoration: InputDecoration(
                   labelText: "Product Delivery",
                   hintText: "Select Product Delivery",
-                  prefixIcon: const Icon(Icons.directions_car),
+                  prefixIcon:  Icon(Icons.delivery_dining),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -405,7 +466,7 @@ class _UploadProductsViewState extends State<UploadProductsView> {
                 decoration: InputDecoration(
                   labelText: "Product Return",
                   hintText: "Select Product Return",
-                  prefixIcon: const Icon(Icons.directions_car),
+                  prefixIcon:  Icon(EvaIcons.repeat),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -423,37 +484,14 @@ class _UploadProductsViewState extends State<UploadProductsView> {
                 }).toList(),
               ),
             ),
-            //pDiscountType
-            Padding(padding: const EdgeInsets.all(8.0),
-              child: DropdownButtonFormField(
-                decoration: InputDecoration(
-                  labelText: "Product Discount Type",
-                  hintText: "Select Product Discount Type",
-                  prefixIcon: const Icon(Icons.directions_car),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-                value: controller.pDiscountType,
-                onChanged: (value) {
-                  controller.pDiscountType = value.toString();
-                  setState(() {});
-                },
-                items: controller.pDiscountTypeList.map((e) {
-                  return DropdownMenuItem(
-                    value: e,
-                    child: Text(e),
-                  );
-                }).toList(),
-              ),
-            ),
+
             // pColor
             Padding(padding: const EdgeInsets.all(8.0),
               child: DropdownButtonFormField(
                 decoration: InputDecoration(
                   labelText: "Product Color",
                   hintText: "Select Product Color",
-                  prefixIcon: const Icon(Icons.directions_car),
+                  prefixIcon:  Icon(EvaIcons.colorPalette),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -477,7 +515,7 @@ class _UploadProductsViewState extends State<UploadProductsView> {
                 decoration: InputDecoration(
                   labelText: "Product Size",
                   hintText: "Select Product Size",
-                  prefixIcon: const Icon(Icons.directions_car),
+                  prefixIcon:  Icon(EvaIcons.options),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -541,8 +579,9 @@ class _UploadProductsViewState extends State<UploadProductsView> {
               child: GFButton(
                   size: 50,
                   onPressed: () {
-                    isUpLoading == true ? null : validateAndUploadForm();
-                  }, child: wText("Upload Vehicle")),
+                    validateAndUploadForm();
+                  },
+                  child: wText("Upload Product")),
             ),
 
 
