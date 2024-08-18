@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as fStorage;
 import 'package:wallet/global/global.dart';
+import 'package:wallet/models/products_model.dart';
 
 import '../../../../notification/push_notification_sys.dart';
 import '../../../../widgets/mix_widgets.dart';
@@ -102,12 +103,29 @@ class ProductsController extends GetxController {
 
   bool selected = false;
 
+  final Rx<List> productsList = Rx<List>([]);
+  List get allProductsDetails => productsList.value;
+
+
   @override
   void onInit() {
     super.onInit();
     pCategoryValue = pCategoryList[0];
     pCondition = pConditionList[0];
     pDelivery = pDeliveryList[0];
+
+    productList.bindStream(
+        FirebaseFirestore.instance
+            .collection('products')
+            .snapshots()
+            .map((snapshot) {
+          List<ProductsModel> pList = [];
+          for (var eachProfile in snapshot.docs) {
+            pList.add(ProductsModel.fromDataSnapshot(eachProfile));
+          }
+          return pList;
+        }));
+
   }
 
   @override
