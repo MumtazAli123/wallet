@@ -7,7 +7,19 @@ import 'package:get/get.dart';
 import 'package:getwidget/components/button/gf_icon_button.dart';
 import 'package:wallet/app/modules/products/views/show_products_view.dart';
 import 'package:wallet/app/modules/products/views/tabbar/all_products.dart';
+import 'package:wallet/app/modules/products/views/tabbar/appliances.dart';
+import 'package:wallet/app/modules/products/views/tabbar/bags.dart';
+import 'package:wallet/app/modules/products/views/tabbar/beauty.dart';
+import 'package:wallet/app/modules/products/views/tabbar/books.dart';
+import 'package:wallet/app/modules/products/views/tabbar/clothes.dart';
+import 'package:wallet/app/modules/products/views/tabbar/electronics.dart';
+import 'package:wallet/app/modules/products/views/tabbar/fashions.dart';
+import 'package:wallet/app/modules/products/views/tabbar/laptop_view.dart';
 import 'package:wallet/app/modules/products/views/tabbar/phones.dart';
+import 'package:wallet/app/modules/products/views/tabbar/shoes.dart';
+import 'package:wallet/app/modules/products/views/tabbar/sports.dart';
+import 'package:wallet/app/modules/products/views/tabbar/stationery.dart';
+import 'package:wallet/app/modules/products/views/tabbar/toys.dart';
 
 import '../../../../widgets/mix_widgets.dart';
 import '../controllers/products_controller.dart';
@@ -18,7 +30,7 @@ class ProductsView extends GetView<ProductsController> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 17,
+      length: 14,
       child: Scaffold(
         body: _buildBody(),
       ),
@@ -85,10 +97,6 @@ class ProductsView extends GetView<ProductsController> {
                     Tab(
                       icon: Icon(EvaIcons.shoppingBag),
                         text: 'Fashion'),
-                  //Home 9
-                    Tab(
-                      icon: Icon(EvaIcons.home),
-                        text: 'Home'),
                   //Appliances 10
                     Tab(
                       icon: Icon(EvaIcons.thermometer),
@@ -101,11 +109,6 @@ class ProductsView extends GetView<ProductsController> {
                     Tab(
                       icon: Icon(EvaIcons.gift),
                         text: 'Toys'),
-
-                  //Grocery 13
-                    Tab(
-                      icon: Icon(EvaIcons.shoppingCart),
-                        text: 'Grocery'),
                   //Sports 14
                     Tab(
                       icon: Icon(EvaIcons.umbrella),
@@ -118,10 +121,7 @@ class ProductsView extends GetView<ProductsController> {
                     Tab(
                       icon: Icon(EvaIcons.archive),
                         text: 'Stationery'),
-                  //Others 17
-                    Tab(
-                      icon: Icon(EvaIcons.options),
-                        text: 'Others'),
+
                   ],
                 ),
               ),
@@ -131,27 +131,18 @@ class ProductsView extends GetView<ProductsController> {
             children: [
               AllProducts(),
               PhonesView(),
-              Container(color: Colors.blue),
-              Container(color: Colors.yellow),
-              Container(color: Colors.orange),
-              Container(color: Colors.purple),
-              Container(color: Colors.pink),
-              Container(color: Colors.teal),
-              Container(color: Colors.brown),
-              Container(color: Colors.grey),
-              Container(color: Colors.indigo),
-              Container(color: Colors.lime),
-              Container(color: Colors.amber),
-              Container(color: Colors.cyan),
-              Container(color: Colors.deepOrange),
-              Container(color: Colors.deepPurple),
-              Container(color: Colors.lightGreen),
-              // AllRealState(),
-              // HouseView(),
-              // ApartmentView(),
-              // OfficesView(),
-              // LandView(),
-              // ShopsView(),
+              LaptopView(),
+              ElectronicsView(),
+              ClothesView(),
+              ShoesView(),
+              BagsView(),
+              FashionsView(),
+              AppliancesView(),
+              BeautyView(),
+              ToysView(),
+              SportsView(),
+              BooksView(),
+              StationeryView(),
             ],
           )),
     );

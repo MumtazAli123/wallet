@@ -13,7 +13,6 @@ import '../../../../widgets/mix_widgets.dart';
 import '../views/show_products_view.dart';
 
 class ProductsController extends GetxController {
-
   final pNameController = TextEditingController();
   final pPriceController = TextEditingController();
   final pDescriptionController = TextEditingController();
@@ -61,7 +60,11 @@ class ProductsController extends GetxController {
     "Purple",
     "Pink",
     "Orange",
-    "Brown"
+    "Brown",
+    "Gold",
+    "Multi",
+    "All Colors",
+    "Others"
   ];
   List<String> pSizeList = [
     "S",
@@ -106,6 +109,22 @@ class ProductsController extends GetxController {
   final Rx<List> productsList = Rx<List>([]);
   List get allProductsDetails => productsList.value;
 
+  void booksStream() {
+    productsList.bindStream(FirebaseFirestore.instance
+        .collection("products")
+        .where("pCategory", isEqualTo: "Books")
+        .where("pCreatedAt",
+            isGreaterThanOrEqualTo:
+                DateTime.now().subtract(const Duration(days: 30)))
+        .snapshots()
+        .map((event) {
+      List _productsList = [];
+      for (var product in event.docs) {
+        _productsList.add(product.data());
+      }
+      return _productsList;
+    }));
+  }
 
   @override
   void onInit() {
@@ -114,23 +133,20 @@ class ProductsController extends GetxController {
     pCondition = pConditionList[0];
     pDelivery = pDeliveryList[0];
 
-    productList.bindStream(
-        FirebaseFirestore.instance
-            .collection('products')
-            .snapshots()
-            .map((snapshot) {
-          List<ProductsModel> pList = [];
-          for (var eachProfile in snapshot.docs) {
-            pList.add(ProductsModel.fromDataSnapshot(eachProfile));
-          }
-          return pList;
-        }));
-
+    productList.bindStream(FirebaseFirestore.instance
+        .collection('products')
+        .snapshots()
+        .map((snapshot) {
+      List<ProductsModel> pList = [];
+      for (var eachProfile in snapshot.docs) {
+        pList.add(ProductsModel.fromDataSnapshot(eachProfile));
+      }
+      return pList;
+    }));
   }
 
   @override
-  void onReady() {
-  }
+  void onReady() {}
 
   @override
   void onClose() {
@@ -247,7 +263,7 @@ class ProductsController extends GetxController {
 
         Get.back();
         Get.snackbar("Success", "Product added successfully");
-        Get.to(() =>  ShowProductsView());
+        Get.to(() => ShowProductsView());
         // PushNotificationSys().sendNotification(
         //     "New Product Added", "Product added successfully");
       });
@@ -269,7 +285,8 @@ class ProductsController extends GetxController {
     return FirebaseFirestore.instance
         .collection("products")
         .orderBy("pName")
-        .startAt([searchName]).endAt(["$searchName\uf8ff"])
+        .startAt([searchName])
+        .endAt(["$searchName\uf8ff"])
         .limit(5)
         .snapshots();
   }
@@ -284,7 +301,8 @@ class ProductsController extends GetxController {
           .delete()
           .then((value) {
         FirebaseFirestore.instance.collection("products").doc(id).delete();
-        Get.snackbar("Success", "Product deleted successfully", snackPosition: SnackPosition.BOTTOM);
+        Get.snackbar("Success", "Product deleted successfully",
+            snackPosition: SnackPosition.BOTTOM);
       });
     } catch (e) {
       Get.snackbar("Error", e.toString());
@@ -296,10 +314,19 @@ class ProductsController extends GetxController {
         .collection("products")
         .orderBy("pCreatedAt", descending: true)
         .snapshots();
-
   }
 
   isFavorite(data) {
     return false;
+  }
+
+  getBooks() {
+    return FirebaseFirestore.instance
+        .collection("products")
+        .where("pCategory", isEqualTo: "Books")
+        // .where("pCreatedAt",
+        //     isGreaterThanOrEqualTo:
+        //         DateTime.now().subtract(const Duration(days: 30)))
+        .snapshots();
   }
 }

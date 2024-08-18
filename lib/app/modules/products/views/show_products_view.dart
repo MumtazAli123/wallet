@@ -38,6 +38,13 @@ class ShowProductsView extends GetView<ProductsController> {
         ),
       ),
       appBar: AppBar(
+        leading: IconButton(
+            onPressed: () {
+              Get.offAllNamed('/home');
+
+            },
+            icon: Icon(Icons.arrow_back)
+        ),
         title: Text('Your Products'),
         centerTitle: true,
       ),

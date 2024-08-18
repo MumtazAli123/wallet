@@ -11,6 +11,7 @@ import 'package:get/get.dart';
 import 'package:getwidget/components/button/gf_button.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
+import 'package:wallet/app/modules/products/views/show_products_view.dart';
 import 'package:wallet/widgets/mix_widgets.dart';
 
 import '../../../../utils/translation.dart';
@@ -76,14 +77,25 @@ class _UploadProductsViewState extends State<UploadProductsView> {
     }if (controller.pDescriptionController.text.isEmpty ||
         controller.pDescriptionController.text.length < 3 &&
             controller.pDescriptionController.text.length > 200) {
-      Get.snackbar("Error", "Please enter description min 3 and max 200");
+      wGetSnackBar("Error", "Please enter description min 3 and max 200");
       return;
     } else if (controller.pPriceController.text.isEmpty ||
         controller.pPriceController.text.length < 3 &&
             controller.pPriceController.text.length > 20) {
-      Get.snackbar("Error", "Please enter starting from min 3 and max 20");
+      wGetSnackBar("Error", "Please enter Price from min 3 and max 20");
       return;
-    } else {
+    }else if(controller.pDiscountController.text.isEmpty ||
+        controller.pDiscountController.text.isEmpty &&
+            controller.pDiscountController.text.length > 3){
+      wGetSnackBar("Error", "Please enter discount min 1 and max 3");
+      return;
+      } else if (controller.pQuantityController.text.isEmpty ||
+        controller.pQuantityController.text.isEmpty &&
+            controller.pQuantityController.text.length > 20) {
+      wGetSnackBar("Error", "Please enter quantity min 1 and max 20");
+      return;
+    }
+    else {
       setState(() {
         isUpLoading = true;
       });
@@ -213,6 +225,12 @@ class _UploadProductsViewState extends State<UploadProductsView> {
       },
       child: Scaffold(
           appBar: AppBar(
+            leading: IconButton(
+              onPressed: () {
+                Get.to(() =>  ShowProductsView());
+              },
+              icon: const Icon(Icons.arrow_back),
+            ),
             iconTheme: const IconThemeData(color: Colors.white),
             backgroundColor: Colors.blue,
             actions: [

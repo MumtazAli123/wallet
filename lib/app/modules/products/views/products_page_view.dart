@@ -8,6 +8,7 @@ import 'package:getwidget/components/button/gf_button.dart';
 import 'package:getwidget/shape/gf_button_shape.dart';
 import 'package:getwidget/types/gf_button_type.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/app/modules/products/controllers/products_controller.dart';
 import 'package:wallet/models/products_model.dart';
 
@@ -61,28 +62,32 @@ class _ProductViewState extends State<ProductView> {
           children: [
             // seller Image and name
             CircleAvatar(
-              backgroundImage:
-                  NetworkImage(widget.vModel.pSellerPhoto.toString()),
+              backgroundImage: widget.vModel.pSellerPhoto!.isEmpty
+                  ? Image.asset('assets/images/vehicles.jpg') as ImageProvider
+                  : NetworkImage(widget.vModel.pSellerPhoto.toString()),
+
             ),
             SizedBox(
               width: 10,
             ),
             // maximum seller name length is 7
-            widget.vModel.pSellerName!.length > 7
-                ? Text(
-                    '${widget.vModel.pSellerName!.substring(0, 7)}...',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
+            Expanded(
+              child: widget.vModel.pSellerName!.length > 6
+                  ? Text(
+                      '${widget.vModel.pSellerName!.substring(0, 6)}..',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                      ),
+                    )
+                  : Text(
+                      '${widget.vModel.pSellerName}',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 20,
+                      ),
                     ),
-                  )
-                : Text(
-                    '${widget.vModel.pSellerName}',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                    ),
-                  ),
+            ),
             IconButton(
               icon: Row(
                 children: [
@@ -96,7 +101,24 @@ class _ProductViewState extends State<ProductView> {
             //   add to cart
             Spacer(),
             GFButton(
-              onPressed: () {},
+              onPressed: () {
+                // send message to seller on whatsapp
+                launch(
+                    'https://wa.me/${widget.vModel.pSellerPhone}?text=ZubiPay\n'
+                        '\n'
+                        'I want to buy your product ${widget.vModel.pName}\n'
+                        'Rs: ${widget.vModel.pPrice}'
+                        '\nDiscount: ${widget.vModel.pDiscountType == "Percentage" ? "${widget.vModel.pDiscount!}%" : widget.vModel.pDiscount}\n'
+                        'After Discount: ${widget.vModel.pDiscountType == "Percentage" ? "${double.parse(widget.vModel.pPrice!) - (double.parse(widget.vModel.pPrice!) * double.parse(widget.vModel.pDiscount!) / 100)}" : "${double.parse(widget.vModel.pPrice!) - double.parse(widget.vModel.pDiscount!)}"}\n'
+                        '\nColor: ${widget.vModel.pColor}\n'
+                        'Description: ${widget.vModel.pDescription}\n'
+                        'Brand: ${widget.vModel.pBrand}\n'
+                        'Category: ${widget.vModel.pCategory}\n'
+                        'Size: ${widget.vModel.pSize}\n'
+                );
+
+
+              },
               text: 'Buy Now',
               textStyle: GoogleFonts.aBeeZee(fontSize: 20),
               type: GFButtonType.solid,
@@ -121,144 +143,6 @@ class _ProductViewState extends State<ProductView> {
   }
 
   _buildBody(ProductsModel model) {
-    // return PageView.builder(
-    //     scrollDirection: Axis.vertical,
-    //     itemBuilder: (context, index) {
-    //       return DecoratedBox(
-    //         decoration: BoxDecoration(
-    //             image: DecorationImage(
-    //               image: NetworkImage(widget.vModel.pImages.toString()),
-    //               fit: BoxFit.fill,
-    //             ),
-    //             color: Colors.blue),
-    //         child: Column(
-    //           crossAxisAlignment: CrossAxisAlignment.start,
-    //           children: [
-    //             SizedBox(
-    //               height: 50,
-    //             ),
-    //             Align(
-    //               alignment: Alignment.topLeft,
-    //               child: Container(
-    //                 decoration: BoxDecoration(
-    //                   color: Colors.black.withOpacity(0.7),
-    //                   borderRadius: BorderRadius.only(
-    //                     topRight: Radius.circular(20),
-    //                     bottomRight: Radius.circular(20),
-    //                   ),
-    //                 ),
-    //                 child: IconButton(
-    //                   icon: Icon(Icons.arrow_back, color: Colors.white),
-    //                   onPressed: () {
-    //                     Get.back();
-    //                   },
-    //                 ),
-    //               ),
-    //             ),
-    //             Spacer(),
-    //             Align(
-    //               alignment: Alignment.bottomLeft,
-    //               child: Column(
-    //                 children: [
-    //                   Text(
-    //                     '${widget.vModel.pName}',
-    //                     style: TextStyle(
-    //                       color: Colors.white,
-    //                       fontSize: 30,
-    //                       fontWeight: FontWeight.bold,
-    //                     ),
-    //                   ),
-    //                   SizedBox(
-    //                     height: 10,
-    //                   ),
-    //                   Text(
-    //                     '${widget.vModel.pDescription}',
-    //                     style: TextStyle(
-    //                       color: Colors.white,
-    //                       fontSize: 20,
-    //                     ),
-    //                   ),
-    //                   SizedBox(
-    //                     height: 10,
-    //                   ),
-    //                   Text(
-    //                     'Brand: ${widget.vModel.pBrand}',
-    //                     style: TextStyle(
-    //                       color: Colors.white,
-    //                       fontSize: 20,
-    //                     ),
-    //                   ),
-    //                   SizedBox(
-    //                     height: 10,
-    //                   ),
-    //                   Container(
-    //                     padding: EdgeInsets.all(20),
-    //                     decoration: BoxDecoration(
-    //                       color: Colors.black.withOpacity(0.5),
-    //                     ),
-    //                     child: Row(
-    //                       mainAxisSize: MainAxisSize.min,
-    //                       children: [
-    //                         // seller Image and name
-    //                         CircleAvatar(
-    //                           backgroundImage:
-    //                               NetworkImage(widget.vModel.pSellerPhoto.toString()),
-    //                         ),
-    //                         SizedBox(
-    //                           width: 10,
-    //                         ),
-    //                         // maximum seller name length is 7
-    //                         widget.vModel.pSellerName!.length > 7
-    //                             ? Text(
-    //                                 '${widget.vModel.pSellerName!.substring(0, 7)}...',
-    //                                 style: TextStyle(
-    //                                   color: Colors.white,
-    //                                   fontSize: 20,
-    //                                 ),
-    //                               )
-    //                             : Text(
-    //                                 '${widget.vModel.pSellerName}',
-    //                                 style: TextStyle(
-    //                                   color: Colors.white,
-    //                                   fontSize: 20,
-    //                                 ),
-    //                               ),
-    //                         IconButton(
-    //                           icon: Row(
-    //                             children: [
-    //                               Icon(Icons.star, color: Colors.yellow),
-    //                               Icon(Icons.star, color: Colors.yellow),
-    //                               Icon(Icons.star, color: Colors.yellow),
-    //                             ],
-    //                           ),
-    //                           onPressed: () {},
-    //                         ),
-    //                         //   add to cart
-    //                         Spacer(),
-    //                         GFButton(
-    //                           onPressed: () {},
-    //                           text: 'Buy Now',
-    //                           textStyle: GoogleFonts.aBeeZee(fontSize: 20),
-    //                           type: GFButtonType.solid,
-    //                           color: Colors.green,
-    //                           textColor: Colors.white,
-    //                           size: 50,
-    //                           shape: GFButtonShape.standard,
-    //                           icon: Icon(
-    //                             Icons.shopping_cart,
-    //                             color: Colors.white,
-    //                           ),
-    //                         ),
-    //                       ],
-    //                     ),
-    //                   ),
-    //                 ],
-    //               ),
-    //             ),
-    //           ],
-    //         ),
-    //       );
-    //     });
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -310,14 +194,10 @@ class _ProductViewState extends State<ProductView> {
                       mainAxisSize: MainAxisSize.min,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          maxLines: 1,
+                        wText(
                           '${widget.vModel.pName}',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          color: Colors.white,
+                          size: 24,
                         ),
                         SizedBox(
                           height: 10,
@@ -325,9 +205,9 @@ class _ProductViewState extends State<ProductView> {
                         Container(
                           padding: const EdgeInsets.all(8),
                           color: Colors.red,
-                          child: widget.vModel.pDiscount == "Percentage"
+                          child: widget.vModel.pDiscountType == "Percentage"
                               ? Text(
-                                  '${widget.vModel.pDiscount} OFF',
+                                  '${widget.vModel.pDiscount}% OFF',
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
@@ -349,8 +229,51 @@ class _ProductViewState extends State<ProductView> {
           SizedBox(
             height: 5.0,
           ),
+          SizedBox(
+            height: 80,
+            width: double.infinity,
+            child: Stack(
+              children: [
+                // show price and cross after show discount price
+                Positioned(
+                  left: 0,
+                  child: Column(
+
+                    children: [
+                      Text(
+                        'Rs:${widget.vModel.pPrice}',
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          decoration: TextDecoration.lineThrough,
+                        ),
+                      ),
+                      Container(
+                        height: 50,
+                        padding: const EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                          color: Colors.red,
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(20),
+                            bottomRight: Radius.circular(20),
+                          ),
+                        ),
+                        child: wText(
+                          widget.vModel.pDiscountType == "Percentage"
+                              ? 'Rs: ${double.parse(widget.vModel.pPrice!) - (double.parse(widget.vModel.pPrice!) * double.parse(widget.vModel.pDiscount!) / 100)}'
+                              : 'Rs: ${double.parse(widget.vModel.pPrice!) - double.parse(widget.vModel.pDiscount!)}',
+                          color: Colors.white,
+                          size: 20,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding:  EdgeInsets.only(left: 10.0),
             child: Column(
               children: [
                 Table(
@@ -422,48 +345,6 @@ class _ProductViewState extends State<ProductView> {
                       ),
                     ]),
                   ],
-                ),
-              ],
-            ),
-          ),
-          SizedBox(
-            height: 80,
-            width: double.infinity,
-            child: Stack(
-              children: [
-                // show price and cross after show discount price
-                Positioned(
-                  left: 0,
-                  child: Column(
-
-                    children: [
-                      Text(
-                        '\Rs:${widget.vModel.pPrice}',
-                        style: const TextStyle(
-                          color: Colors.grey,
-                          decoration: TextDecoration.lineThrough,
-                        ),
-                      ),
-                      Container(
-                        height: 50,
-                        padding: const EdgeInsets.all(5),
-                        decoration: BoxDecoration(
-                          color: Colors.red,
-                          borderRadius: BorderRadius.only(
-                            topRight: Radius.circular(20),
-                            bottomRight: Radius.circular(20),
-                          ),
-                        ),
-                        child: wText(
-                          widget.vModel.pDiscountType == "Percentage"
-                              ? '\Rs: ${double.parse(widget.vModel.pPrice!) - (double.parse(widget.vModel.pPrice!) * double.parse(widget.vModel.pDiscount!) / 100)}'
-                              : '\Rs: ${double.parse(widget.vModel.pPrice!) - double.parse(widget.vModel.pDiscount!)}',
-                          color: Colors.white,
-                          size: 20,
-                        ),
-                      ),
-                    ],
-                  ),
                 ),
               ],
             ),
