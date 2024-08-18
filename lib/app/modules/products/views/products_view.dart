@@ -66,6 +66,7 @@ class ProductsView extends GetView<ProductsController> {
                   tabAlignment: TabAlignment.center,
                   isScrollable: true,
                   tabs: [
+                    // All 1
                     Tab(
                       icon: Icon(Icons.all_inbox),
                         text: 'All'),
@@ -97,27 +98,27 @@ class ProductsView extends GetView<ProductsController> {
                     Tab(
                       icon: Icon(EvaIcons.shoppingBag),
                         text: 'Fashion'),
-                  //Appliances 10
+                  //Appliances 9
                     Tab(
                       icon: Icon(EvaIcons.thermometer),
                         text: 'Appliances'),
-                  //Beauty 11
+                  //Beauty 10
                     Tab(
                       icon: Icon(EvaIcons.heart),
                         text: 'Beauty'),
-                  //Toys 12
+                  //Toys 11
                     Tab(
                       icon: Icon(EvaIcons.gift),
                         text: 'Toys'),
-                  //Sports 14
+                  //Sports 12
                     Tab(
                       icon: Icon(EvaIcons.umbrella),
                         text: 'Sports'),
-                  //Books 15
+                  //Books 13
                     Tab(
                       icon: Icon(EvaIcons.bookOpen),
                         text: 'Books'),
-                  //Stationery 16
+                  //Stationery 14
                     Tab(
                       icon: Icon(EvaIcons.archive),
                         text: 'Stationery'),

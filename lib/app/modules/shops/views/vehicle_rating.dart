@@ -28,18 +28,21 @@ class VehicleRating extends StatelessWidget {
         return [
           SliverAppBar(
             leading: Container(
-              padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.5),
-                borderRadius: BorderRadius.circular(50),
+                color: Colors.black.withOpacity(0.7),
+                borderRadius: const BorderRadius.only(
+                  topRight: Radius.circular(20),
+                  bottomRight: Radius.circular(20),
+                ),
               ),
               child: IconButton(
+                icon: const Icon(Icons.arrow_back, color: Colors.white),
                 onPressed: () {
                   Get.back();
                 },
-                icon: const Icon(Icons.close, color: Colors.white),
               ),
             ),
+
 
             bottom: PreferredSize(
               preferredSize: const Size.fromHeight(100.0),
@@ -86,29 +89,23 @@ class VehicleRating extends StatelessWidget {
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
                 color: Colors.black.withOpacity(0.5),
-                borderRadius: BorderRadius.circular(5),
+                borderRadius: BorderRadius.circular(25),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  GFAvatar(
+                  sellerImage!.isEmpty
+                      ? Text(
+                    name.toString().substring(0, 1).toUpperCase(),
+                    style: const TextStyle(color: Colors.white),
+                  )
+                      : GFAvatar(
                     radius: 20,
                     backgroundColor: Colors.blue,
-                    backgroundImage: sellerImage != null
-                        ? NetworkImage(sellerImage.toString())
-                        : null,
-                    // if sellerImage is  null then show first letter of name
-                    child: sellerImage == null
-                        ? Text(
-                            name.toString().substring(0, 1).toUpperCase(),
-                            style: const TextStyle(color: Colors.white),
-                          )
-                        : null,
+                    backgroundImage: NetworkImage(sellerImage.toString()),
                   ),
                   const SizedBox(width: 10),
-                  wText(
-                      name.toString(),
-                      color: Colors.white,),
+                  wText(name.toString(), color: Colors.white),
                 ],
               ),
             ),
@@ -117,10 +114,9 @@ class VehicleRating extends StatelessWidget {
             pinned: true,
             expandedHeight: 200,
             flexibleSpace: FlexibleSpaceBar(
-              background: Image.network(
-                image.toString(),
-                fit: BoxFit.cover,
-              ),
+              background: sellerImage!.isEmpty
+                  ? Image.network(image!, fit: BoxFit.cover)
+                  : Image.network(sellerImage!, fit: BoxFit.cover),
             ),
           ),
         ];
@@ -165,20 +161,14 @@ class VehicleRating extends StatelessWidget {
     return Card(
       elevation: 5,
       child: ListTile(
-        leading: GFAvatar(
-          radius: 20,
-          backgroundColor: Colors.blue,
-          backgroundImage: sellerImage != null
-              ? NetworkImage(doc['image'].toString())
-              : null,
-          // if sellerImage is  null then show first letter of name
-          child: sellerImage == null
-              ? Text(
-            // name.toString().substring(0, 1).toUpperCase(),
-            doc['name'].toString().substring(0, 1).toUpperCase(),
-            style: const TextStyle(color: Colors.white),
-          )
-              : null,
+        leading: doc['image'].toString().isEmpty
+            ? const CircleAvatar(
+          radius: 30,
+          child: Icon(Icons.person),
+        )
+            : CircleAvatar(
+          radius: 30,
+          backgroundImage: NetworkImage(doc['image'].toString()),
         ),
         title: Text("Name: ${doc['name'].toString()}"),
         subtitle: Column(

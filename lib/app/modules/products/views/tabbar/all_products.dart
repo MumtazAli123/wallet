@@ -208,7 +208,7 @@ void wDialogMoreDetails(BuildContext context, data) {
       content: GestureDetector(
         onTap: () {
           Get.back();
-          Get.to(() => ProductView(
+          Get.to(() => ProductPageView(
               vModel: ProductsModel.fromJson(data), data: data.toString()));
         },
         child: SizedBox(

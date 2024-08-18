@@ -12,19 +12,21 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/app/modules/products/controllers/products_controller.dart';
 import 'package:wallet/models/products_model.dart';
 
+import '../../../../rating/rating_screen.dart';
 import '../../../../widgets/mix_widgets.dart';
+import '../../shops/views/vehicle_rating.dart';
 
-class ProductView extends StatefulWidget {
+class ProductPageView extends StatefulWidget {
   final String? data;
   final ProductsModel vModel;
 
-  const ProductView({super.key, required this.data, required this.vModel});
+  const ProductPageView({super.key, required this.data, required this.vModel});
 
   @override
-  State<ProductView> createState() => _ProductViewState();
+  State<ProductPageView> createState() => _ProductPageViewState();
 }
 
-class _ProductViewState extends State<ProductView> {
+class _ProductPageViewState extends State<ProductPageView> {
   final ProductsController controller = Get.put(ProductsController());
   String? senderName;
 
@@ -61,33 +63,40 @@ class _ProductViewState extends State<ProductView> {
           mainAxisSize: MainAxisSize.min,
           children: [
             // seller Image and name
-            CircleAvatar(
-              backgroundImage: widget.vModel.pSellerPhoto!.isEmpty
-                  ? Image.asset('assets/images/vehicles.jpg') as ImageProvider
-                  : NetworkImage(widget.vModel.pSellerPhoto.toString()),
-
-            ),
+            widget.vModel.pSellerPhoto!.isEmpty
+                ? CircleAvatar(
+                    radius: 30,
+                    backgroundColor: Colors.white,
+                    child: Icon(
+                      Icons.person,
+                      color: Colors.black,
+                    ),
+                  )
+                : CircleAvatar(
+                    radius: 30,
+                    backgroundImage: NetworkImage(widget.vModel.pSellerPhoto.toString()),
+                  ),
             SizedBox(
-              width: 10,
+              width: 5,
             ),
             // maximum seller name length is 7
-            Expanded(
-              child: widget.vModel.pSellerName!.length > 6
-                  ? Text(
-                      '${widget.vModel.pSellerName!.substring(0, 6)}..',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                      ),
-                    )
-                  : Text(
-                      '${widget.vModel.pSellerName}',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                      ),
-                    ),
-            ),
+            // Expanded(
+            //   child: widget.vModel.pSellerName!.length > 6
+            //       ? Text(
+            //           '${widget.vModel.pSellerName!.substring(0, 6)}..',
+            //           style: TextStyle(
+            //             color: Colors.white,
+            //             fontSize: 16,
+            //           ),
+            //         )
+            //       : Text(
+            //           '${widget.vModel.pSellerName}',
+            //           style: TextStyle(
+            //             color: Colors.white,
+            //             fontSize: 20,
+            //           ),
+            //         ),
+            // ),
             IconButton(
               icon: Row(
                 children: [
@@ -96,7 +105,15 @@ class _ProductViewState extends State<ProductView> {
                   Icon(Icons.star, color: Colors.yellow),
                 ],
               ),
-              onPressed: () {},
+              onPressed: () {
+                // add rating
+                Get.to(() => VehicleRating(
+                    // Transition.zoom,
+                  sellerId: widget.vModel.pSellerId,
+                  image: widget.vModel.pImages,
+                  name: widget.vModel.pSellerName,
+                  sellerImage: widget.vModel.pSellerPhoto,));
+              },
             ),
             //   add to cart
             Spacer(),
@@ -134,10 +151,6 @@ class _ProductViewState extends State<ProductView> {
           ],
         ),
       ),
-      // appBar: AppBar(
-      //   title: Text('${vModel.pName}'),
-      //   centerTitle: true,
-      // ),
       body: _buildBody(widget.vModel),
     );
   }
@@ -181,46 +194,32 @@ class _ProductViewState extends State<ProductView> {
                 ),
                 Spacer(),
                 Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Container(
-                    padding: EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                        topRight: Radius.circular(20),
-                      ),
-                      color: Colors.black.withOpacity(0.7),
-                    ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        wText(
-                          '${widget.vModel.pName}',
-                          color: Colors.white,
-                          size: 24,
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Container(
-                          padding: const EdgeInsets.all(8),
+                  alignment: Alignment.bottomRight,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
                           color: Colors.red,
-                          child: widget.vModel.pDiscountType == "Percentage"
-                              ? Text(
-                                  '${widget.vModel.pDiscount}% OFF',
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                )
-                              : wText('Rs: ${widget.vModel.pDiscount} OFF',
-                                  color: Colors.white, size: 14),
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(20),
+                            bottomLeft: Radius.circular(20),
+                          ),
                         ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                      ],
-                    ),
+                        child: widget.vModel.pDiscountType == "Percentage"
+                            ? Text(
+                                '${widget.vModel.pDiscount}% OFF',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )
+                            : wText('Rs: ${widget.vModel.pDiscount} OFF',
+                                color: Colors.white, size: 14),
+                      ),
+                    ],
                   ),
                 ),
               ],
@@ -251,7 +250,7 @@ class _ProductViewState extends State<ProductView> {
                         height: 50,
                         padding: const EdgeInsets.all(5),
                         decoration: BoxDecoration(
-                          color: Colors.red,
+                          color: Colors.green[800],
                           borderRadius: BorderRadius.only(
                             topRight: Radius.circular(20),
                             bottomRight: Radius.circular(20),
@@ -268,6 +267,7 @@ class _ProductViewState extends State<ProductView> {
                     ],
                   ),
                 ),
+
               ],
             ),
           ),
@@ -278,6 +278,13 @@ class _ProductViewState extends State<ProductView> {
               children: [
                 Table(
                   children: [
+                    TableRow(children: [
+                      Text('Product Name:'),
+                      aText(
+                        '${widget.vModel.pName}',
+                        size: 20,
+                      ),
+                    ]),
                     TableRow(children: [
                       Text('Category:'),
                       Text(model.pCategory!),

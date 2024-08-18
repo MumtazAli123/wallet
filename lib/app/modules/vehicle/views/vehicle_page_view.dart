@@ -154,7 +154,7 @@ class _VehiclePageViewState extends State<VehiclePageView> {
                 icon: const Icon(Icons.close, color: Colors.white),
               ),
             ),
-            expandedHeight: 450.0,
+            expandedHeight: 400.0,
             floating: false,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
@@ -179,124 +179,122 @@ class _VehiclePageViewState extends State<VehiclePageView> {
           ),
         ];
       },
-      body: SafeArea(
-        child: ListView(
-          addAutomaticKeepAlives: true,
-          addRepaintBoundaries: true,
-          shrinkWrap: true,
-          children: [
-            ListTile(
-              leading: Icon(Icons.directions_car, color: Colors.blue[800]),
-              title: aText('Vehicle: ${widget.vModel.vehicleName}'),
-              subtitle: aText('For: ${widget.vModel.vehicleStatus}'),
+      body: ListView(
+        addAutomaticKeepAlives: true,
+        addRepaintBoundaries: true,
+        shrinkWrap: true,
+        children: [
+          ListTile(
+            leading: Icon(Icons.directions_car, color: Colors.blue[800]),
+            title: aText('Vehicle: ${widget.vModel.vehicleName}'),
+            subtitle: aText('For: ${widget.vModel.vehicleStatus}'),
+          ),
+          ListTile(
+            // if color  then show same color icon
+            leading: Icon(
+              Icons.money,
+              color: Colors.blue[800],
             ),
-            ListTile(
-              // if color  then show same color icon
+            title: aText('Model: ${widget.vModel.vehicleModel}'),
+            subtitle: aText('Color: ${widget.vModel.vehicleColor}'
+                '\nCondition: ${widget.vModel.vehicleCondition}\n'
+                '${widget.vModel.status}'),
+          ),
+          ListTile(
+            leading: Icon(
+              Icons.description,
+              color: Colors.blue[800],
+            ),
+            title:
+                aText('Vehicle Type: ${widget.vModel.vehicleTransmission}'),
+          ),
+          ListTile(
+            leading: Icon(
+              Icons.directions_car,
+              color: Colors.blue[800],
+            ),
+            title: aText('Vehicle Body: ${widget.vModel.vehicleBodyType}'),
+          ),
+          ListTile(
+            leading: Icon(
+              Icons.money,
+              color: Colors.blue[800],
+            ),
+            title: aText('Km: ${widget.vModel.vehicleKm.toString()}'),
+          ),
+          ListTile(
+            leading: Icon(
+              Icons.email,
+              color: Colors.blue[800],
+            ),
+            title: aText('Vehicle Fuel: ${widget.vModel.vehicleFuelType}'),
+          ),
+          ListTile(
+            onTap: () {
+              // call
+              urlLauncher('tel:${widget.vModel.phone}');
+            },
+            leading: Icon(Icons.description, color: Colors.blue[800]),
+            title: aText('Description: '),
+            subtitle:
+                aText('${widget.vModel.vehicleDescription}', size: 12.0),
+          ),
+          // city
+          ListTile(
+            leading: Icon(
+              Icons.location_city,
+              color: Colors.blue[800],
+            ),
+            title: aText('City: ${widget.vModel.city}'),
+          ),
+          // address
+          ListTile(
+            leading: Icon(
+              Icons.location_on,
+              color: Colors.blue[800],
+            ),
+            title: aText('${widget.vModel.address}'),
+          ),
+          // price
+          ListTile(
               leading: Icon(
                 Icons.money,
                 color: Colors.blue[800],
               ),
-              title: aText('Model: ${widget.vModel.vehicleModel}'),
-              subtitle: aText('Color: ${widget.vModel.vehicleColor}'
-                  '\nCondition: ${widget.vModel.vehicleCondition}\n'
-                  '${widget.vModel.status}'),
+              title: aText('Price: ${widget.vModel.vehiclePrice}'),
+              subtitle: aText(
+                size: 10.0,
+                // rs 1000.00, like 1m 2 hundred 3 thousand 4 hundred 5 rupees
+                NumberToWord().convert(
+                    widget.vModel.vehiclePrice.toString().isNotEmpty
+                        ? int.parse(widget.vModel.vehiclePrice.toString())
+                        : 0),
+              )),
+          // phone
+          ListTile(
+            onTap: () {
+              // call
+              urlLauncher('tel:${widget.vModel.phone}');
+            },
+            leading: Icon(
+              Icons.phone,
+              color: Colors.blue[800],
             ),
-            ListTile(
-              leading: Icon(
-                Icons.description,
-                color: Colors.blue[800],
-              ),
-              title:
-                  aText('Vehicle Type: ${widget.vModel.vehicleTransmission}'),
+            title: aText('Phone: ${widget.vModel.phone}'),
+          ),
+          ListTile(
+            leading: Icon(
+              Icons.date_range,
+              color: Colors.blue[800],
             ),
-            ListTile(
-              leading: Icon(
-                Icons.directions_car,
-                color: Colors.blue[800],
-              ),
-              title: aText('Vehicle Body: ${widget.vModel.vehicleBodyType}'),
+            title: aText('Vehicle Update: Time'),
+            subtitle: Text(
+              "Upload: ${(GetTimeAgo.parse(DateTime.parse(widget.vModel.updatedDate!.toDate().toString()).toLocal()))}",
             ),
-            ListTile(
-              leading: Icon(
-                Icons.money,
-                color: Colors.blue[800],
-              ),
-              title: aText('Km: ${widget.vModel.vehicleKm.toString()}'),
-            ),
-            ListTile(
-              leading: Icon(
-                Icons.email,
-                color: Colors.blue[800],
-              ),
-              title: aText('Vehicle Fuel: ${widget.vModel.vehicleFuelType}'),
-            ),
-            ListTile(
-              onTap: () {
-                // call
-                urlLauncher('tel:${widget.vModel.phone}');
-              },
-              leading: Icon(Icons.description, color: Colors.blue[800]),
-              title: aText('Description: '),
-              subtitle:
-                  aText('${widget.vModel.vehicleDescription}', size: 12.0),
-            ),
-            // city
-            ListTile(
-              leading: Icon(
-                Icons.location_city,
-                color: Colors.blue[800],
-              ),
-              title: aText('City: ${widget.vModel.city}'),
-            ),
-            // address
-            ListTile(
-              leading: Icon(
-                Icons.location_on,
-                color: Colors.blue[800],
-              ),
-              title: aText('${widget.vModel.address}'),
-            ),
-            // price
-            ListTile(
-                leading: Icon(
-                  Icons.money,
-                  color: Colors.blue[800],
-                ),
-                title: aText('Price: ${widget.vModel.vehiclePrice}'),
-                subtitle: aText(
-                  size: 10.0,
-                  // rs 1000.00, like 1m 2 hundred 3 thousand 4 hundred 5 rupees
-                  NumberToWord().convert(
-                      widget.vModel.vehiclePrice.toString().isNotEmpty
-                          ? int.parse(widget.vModel.vehiclePrice.toString())
-                          : 0),
-                )),
-            // phone
-            ListTile(
-              onTap: () {
-                // call
-                urlLauncher('tel:${widget.vModel.phone}');
-              },
-              leading: Icon(
-                Icons.phone,
-                color: Colors.blue[800],
-              ),
-              title: aText('Phone: ${widget.vModel.phone}'),
-            ),
-            ListTile(
-              leading: Icon(
-                Icons.date_range,
-                color: Colors.blue[800],
-              ),
-              title: aText('Vehicle Update: Time'),
-              subtitle: Text(
-                "Upload: ${(GetTimeAgo.parse(DateTime.parse(widget.vModel.updatedDate!.toDate().toString()).toLocal()))}",
-              ),
-            ),
-          SizedBox(height: 20.0),
-          //   share on facebook, twitter, whatsapp, email as a post or message
-          ],
-        ),
+          ),
+        SizedBox(height: 20.0),
+        //   share on facebook, twitter, whatsapp, email as a post or message
+        ],
       ),
     );
   }

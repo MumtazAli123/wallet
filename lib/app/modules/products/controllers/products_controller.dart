@@ -6,11 +6,11 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as fStorage;
 import 'package:wallet/global/global.dart';
-import 'package:wallet/models/products_model.dart';
 
 import '../../../../notification/push_notification_sys.dart';
 import '../../../../widgets/mix_widgets.dart';
 import '../views/show_products_view.dart';
+import '../views/tabbar/all_products.dart';
 
 class ProductsController extends GetxController {
   final pNameController = TextEditingController();
@@ -109,22 +109,6 @@ class ProductsController extends GetxController {
   final Rx<List> productsList = Rx<List>([]);
   List get allProductsDetails => productsList.value;
 
-  void booksStream() {
-    productsList.bindStream(FirebaseFirestore.instance
-        .collection("products")
-        .where("pCategory", isEqualTo: "Books")
-        .where("pCreatedAt",
-            isGreaterThanOrEqualTo:
-                DateTime.now().subtract(const Duration(days: 30)))
-        .snapshots()
-        .map((event) {
-      List _productsList = [];
-      for (var product in event.docs) {
-        _productsList.add(product.data());
-      }
-      return _productsList;
-    }));
-  }
 
   @override
   void onInit() {
@@ -133,16 +117,6 @@ class ProductsController extends GetxController {
     pCondition = pConditionList[0];
     pDelivery = pDeliveryList[0];
 
-    productList.bindStream(FirebaseFirestore.instance
-        .collection('products')
-        .snapshots()
-        .map((snapshot) {
-      List<ProductsModel> pList = [];
-      for (var eachProfile in snapshot.docs) {
-        pList.add(ProductsModel.fromDataSnapshot(eachProfile));
-      }
-      return pList;
-    }));
   }
 
   @override
@@ -320,13 +294,156 @@ class ProductsController extends GetxController {
     return false;
   }
 
-  getBooks() {
+
+
+  Widget wBuildProductCard(Map<String, dynamic> data) {
+    return GestureDetector(
+      onTap: () {
+        wDialogMoreDetails(Get.context!, data);
+
+        // Get.to(() => VehiclePageView(
+        //     vModel: VehicleModel.fromJson(doc), doc: doc.toString()
+      },
+      child: Padding(
+        padding: const EdgeInsets.only(left: 2.0, right: 2.0, top: 2.0),
+        child: Card(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Stack(
+                  children: [
+                    Image.network(
+                      data['pImages'],
+                      fit: BoxFit.fill,
+                      height: 350,
+                      width: double.infinity,
+                    ),
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: IconButton(
+                        onPressed: () {
+                          // setState(() {
+                          //   _isAdded = !_isAdded;
+                          // });
+                        },
+                        icon: const Icon(
+                          Icons.favorite_outline_rounded,
+                          color: Colors.red,
+                        ),
+                      ),
+                    ),
+                    //   discount  show advance design
+                    Positioned(
+                      bottom: 0,
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        color: Colors.red,
+                        child: data['pDiscountType'] == "Percentage"
+                            ? Text(
+                          '${data['pDiscount']}% OFF',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
+                            : wText('Rs: ${data['pDiscount']} OFF',
+                            color: Colors.white, size: 14),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        data['pName'],
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        "Brand: ${data['pBrand']}",
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey,
+                        ),
+                      ),
+                      // description show
+                      Text(
+                        maxLines: 1,
+                        "Desc: ${data['pDescription']}",
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey,
+                        ),
+                      ),
+
+                      const SizedBox(height: 5),
+
+                      SizedBox(
+                        height: 60,
+                        width: double.infinity,
+                        child: Stack(
+                          children: [
+                            // show price and cross after show discount price
+
+                            Positioned(
+                              right: 0,
+                              child: Column(
+                                children: [
+                                  Text(
+                                    '\Rs:${data['pPrice']}',
+                                    style: const TextStyle(
+                                      color: Colors.grey,
+                                      decoration: TextDecoration.lineThrough,
+                                    ),
+                                  ),
+                                  Container(
+                                    padding: const EdgeInsets.all(5),
+                                    decoration: BoxDecoration(
+                                      color: Colors.green,
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                    child: Text(
+                                      data['pDiscountType'] == "Percentage"
+                                          ? '\Rs:${double.parse(data['pPrice']) - (double.parse(data['pPrice']) * double.parse(data['pDiscount']) / 100)}'
+                                          : '\Rs:${double.parse(data['pPrice']) - double.parse(data['pDiscount'])}',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  getProducts(String category) {
     return FirebaseFirestore.instance
         .collection("products")
-        .where("pCategory", isEqualTo: "Books")
-        // .where("pCreatedAt",
-        //     isGreaterThanOrEqualTo:
-        //         DateTime.now().subtract(const Duration(days: 30)))
+        .where("pCategory", isEqualTo: category)
         .snapshots();
   }
 }

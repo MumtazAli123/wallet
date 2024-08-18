@@ -110,7 +110,10 @@ class _RatingScreenState extends State<RatingScreen> {
               SizedBox(height: 20),
               wInput(hint: 'Comment', maxLines: 2),
               SizedBox(height: 20),
-              wButton('Submit', Colors.blue, onPressed: () {
+              wButton(
+                  'Submit', Colors.blue,
+                  size: 50,
+                  onPressed: () {
                 // Navigator.pop(context);
                 _saveRating(titleStarsRating);
               }),

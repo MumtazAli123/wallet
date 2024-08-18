@@ -6,31 +6,36 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wallet/app/modules/products/controllers/products_controller.dart';
 
+import 'all_products.dart';
+
 class BooksView extends GetView <ProductsController> {
   const BooksView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<QuerySnapshot>(
-        stream: controller.getBooks(),
+        stream: controller.getProducts('Books'),
         builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Text('Something went wrong');
-          }if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          }if(snapshot.hasData){
-            return ListView(
-              children: snapshot.data!.docs.map((DocumentSnapshot document) {
-                return ListTile(
-                  title: Text(document['pName']),
-                  subtitle: Text(document['pPrice']),
-                );
-              }).toList(),
+          if(snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          }if(snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+        }if(snapshot.hasData && snapshot.data!.docs.isEmpty) {
+            return const Center(child: Text('No products found'));
+        }else {
+            return GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                childAspectRatio: 0.6,
+              ),
+              itemCount: snapshot.data!.docs.length,
+              itemBuilder: (context, index) {
+                final doc = snapshot.data!.docs[index];
+                final data = doc.data() as Map<String, dynamic>;
+                return wBuildProductCard(data);
+              },
             );
           }
-          return Text('No data');
         },
     );
   }
