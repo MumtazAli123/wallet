@@ -4,9 +4,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
+import 'package:getwidget/components/avatar/gf_avatar.dart';
+import 'package:getwidget/components/carousel/gf_carousel.dart';
+import 'package:smooth_star_rating_nsafe/smooth_star_rating.dart';
 import 'package:wallet/app/modules/profile/controllers/profile_controller.dart';
 
+import '../../../../rating/show_rating_screen.dart';
 import '../../../../widgets/mix_widgets.dart';
+import '../../shops/views/vehicle_rating.dart';
 
 class UserDetailsView extends StatefulWidget {
   final String? userID;
@@ -25,6 +30,11 @@ class _UserDetailsViewState extends State<UserDetailsView> {
   String? address;
   String? city;
   String? image;
+  String? rating;
+  String? status;
+
+
+  bool isEmpty = false;
 
   // slider images
   String? image1 =
@@ -60,6 +70,8 @@ class _UserDetailsViewState extends State<UserDetailsView> {
           phone = snapshot.data()!['phone'];
           address = snapshot.data()!['address'];
           city = snapshot.data()!['city'];
+          rating = snapshot.data()!['rating'];
+          status = snapshot.data()!['status'];
         });
       }
     });
@@ -75,129 +87,166 @@ class _UserDetailsViewState extends State<UserDetailsView> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("User Details"),
+        title: Text("$name"),
         centerTitle: true,
       ),
       body: _buildBody(),
     );
   }
+
   _buildBody() {
+    final size = MediaQuery.of(context).size;
     return SingleChildScrollView(
       child: Padding(
         padding: EdgeInsets.all(20),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // user image
-            // SizedBox(
-            //   height: MediaQuery.of(context).size.height * 0.4,
-            //   width: MediaQuery.of(context).size.width,
-            //   child: Carousel(
-            //     indicatorBarColor: Colors.transparent,
-            //     indicatorBarHeight: 30,
-            //     indicatorHeight: 10,
-            //     indicatorWidth: 10,
-            //     autoScrollDuration: Duration(seconds: 3),
-            //     animationPageCurve: Curves.easeIn,
-            //     animationPageDuration: Duration(milliseconds: 500),
-            //     unActivatedIndicatorColor: Colors.grey,
-            //     stopAtEnd: true,
-            //     autoScroll: false,
-            //     items: [
-            //       Image.network(image1.toString(), fit: BoxFit.cover),
-            //       Image.network(image2.toString(), fit: BoxFit.cover),
-            //       Image.network(image3.toString(), fit: BoxFit.cover),
-            //       Image.network(image4.toString(), fit: BoxFit.cover),
-            //       Image.network(image5.toString(), fit: BoxFit.cover),
-            //     ],
-            //   ),
-            // ),
-            SizedBox(height: 20.0),
-            wText('User Info:', size: 20),
-            Text(''),
-            // Table of user info
-            Table(
-              border: TableBorder.all(color: Colors.black),
-              children: [
-                TableRow(children: [
-                  TableCell(
-                    child: Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Text('Name:'),
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // user image
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.4,
+                width: MediaQuery.of(context).size.width,
+                child: CarouselView(
+                  scrollDirection: Axis.horizontal,
+                  shrinkExtent: 0.5,
+                  itemExtent: MediaQuery.of(context).size.height * 0.4,
+                  children: [
+                    Image.network(image1.toString(), fit: BoxFit.cover),
+                    Image.network(image2.toString(), fit: BoxFit.cover),
+                    Image.network(image3.toString(), fit: BoxFit.cover),
+                    Image.network(image4.toString(), fit: BoxFit.cover),
+                    Image.network(image5.toString(), fit: BoxFit.cover),
+                  ],
+                ),
+              ),
+              SizedBox(height: 20.0),
+              wText('User Info:', size: 20),
+              Text(''),
+              // Table of user info
+              Table(
+                border: TableBorder.all(color: Colors.black),
+                children: [
+                  TableRow(children: [
+                    TableCell(
+                      child: Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Text('Name:'),
+                      ),
                     ),
-                  ),
-                  TableCell(
-                    child: Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Text("$name"),
+                    TableCell(
+                      child: Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Text("$name"),
+                      ),
                     ),
-                  ),
+                  ]),
+                  TableRow(children: [
+                    TableCell(
+                      child: Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Text('Email:'),
+                      ),
+                    ),
+                    TableCell(
+                      child: Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Text("$email"),
+                      ),
+                    ),
+                  ]),
+                  TableRow(children: [
+                    TableCell(
+                      child: Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Text('Phone:'),
+                      ),
+                    ),
+                    TableCell(
+                      child: Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Text("$phone"),
+                      ),
+                    ),
+                  ]),
+                  TableRow(children: [
+                    TableCell(
+                      child: Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Text('Address:'),
+                      ),
+                    ),
+                    TableCell(
+                      child: Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Text("$address"),
+                      ),
+                    ),
+                  ]),
+                  TableRow(children: [
+                    TableCell(
+                      child: Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Text('City:'),
+                      ),
+                    ),
+                    TableCell(
+                      child: Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Text("$city"),
+                      ),
+                    ),
+                  ]),
+                //   user rating
+                  TableRow(children: [
+                    TableCell(
+                      child: Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Text('Rating:'),
+                      ),
+                    ),
+                    TableCell(
+                      child: Padding(
+                        padding: EdgeInsets.all(8),
+                        child: Text("$rating"),
+                      ),
+                    ),
+                  ]),
+                ],
+              ),
+              //   user rating
+              SizedBox(height: 20.0),
+              // rating comment
+              Text(
+                "Great Seller",
+                style: TextStyle(fontSize: 20, color: Colors.black),
+              ),
+            //   status
+              Text(
+                // if status is active text show excellent else show poor
+                status == "active" ? "Poor" : "Excellent",
+                style: TextStyle(fontSize: 20, color: Colors.black),
+              ),
 
-
-                ]),
-                TableRow(children: [
-                  TableCell(
-                    child: Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Text('Email:'),
-                    ),
-                  ),
-                  TableCell(
-                    child: Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Text("$email"),
-                    ),
-                  ),
-                ]),
-                TableRow(children: [
-                  TableCell(
-                    child: Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Text('Phone:'),
-                    ),
-                  ),
-                  TableCell(
-                    child: Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Text("$phone"),
-                    ),
-                  ),
-                ]),
-                TableRow(children: [
-                  TableCell(
-                    child: Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Text('Address:'),
-                    ),
-                  ),
-                  TableCell(
-                    child: Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Text("$address"),
-                    ),
-                  ),
-                ]),
-                TableRow(children: [
-                  TableCell(
-                    child: Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Text('City:'),
-                    ),
-                  ),
-                  TableCell(
-                    child: Padding(
-                      padding: EdgeInsets.all(8),
-                      child: Text("$city"),
-                    ),
-                  ),
-                ]),
-              ],
-            ),
-          ],
-        ),
+              //   rating
+              SmoothStarRating(
+                rating: double.parse("4.5"),
+                size: 20,
+                color: Colors.amber,
+                borderColor: Colors.amber,
+                starCount: 5,
+                allowHalfRating: false,
+                spacing: 2.0,
+              ),
+              //   rating count
+              Text(
+                "Rating: ${rating.toString()}",
+                style: TextStyle(fontSize: 20, color: Colors.black),
+              ),
+              SizedBox(height: 20.0),
+            ]),
       ),
     );
   }
-
+  
 }

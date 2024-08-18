@@ -36,7 +36,6 @@ dependencies:
   qr_flutter: ^4.1.0
   intl: any
   flutter_barcode_scanner: ^2.0.0
-  carousel_slider: any
   smooth_star_rating_nsafe: any
   overlay_support: 2.1.0
   date_picker_plus: ^4.1.0
@@ -47,7 +46,7 @@ dependencies:
   url_launcher: ^6.3.0
   url_strategy: ^0.3.0
   audioplayers: 6.0.0
-  flutter_slidable: 3.1.1
+  flutter_slidable:
   country_state_city_picker: ^1.2.8
   csc_picker: ^0.2.7
   email_auth: 2.0.0

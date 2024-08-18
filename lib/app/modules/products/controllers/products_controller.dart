@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as fStorage;
+import 'package:like_button/like_button.dart';
 import 'package:wallet/global/global.dart';
 
 import '../../../../notification/push_notification_sys.dart';
@@ -107,8 +108,8 @@ class ProductsController extends GetxController {
   bool selected = false;
 
   final Rx<List> productsList = Rx<List>([]);
-  List get allProductsDetails => productsList.value;
 
+  List get allProductsDetails => productsList.value;
 
   @override
   void onInit() {
@@ -116,7 +117,6 @@ class ProductsController extends GetxController {
     pCategoryValue = pCategoryList[0];
     pCondition = pConditionList[0];
     pDelivery = pDeliveryList[0];
-
   }
 
   @override
@@ -294,8 +294,6 @@ class ProductsController extends GetxController {
     return false;
   }
 
-
-
   Widget wBuildProductCard(Map<String, dynamic> data) {
     return GestureDetector(
       onTap: () {
@@ -322,16 +320,20 @@ class ProductsController extends GetxController {
                     Positioned(
                       top: 8,
                       right: 8,
-                      child: IconButton(
-                        onPressed: () {
-                          // setState(() {
-                          //   _isAdded = !_isAdded;
-                          // });
+                      child: LikeButton(
+                        countPostion: CountPostion.right,
+                        onTap: (isFavorite) async {
+                          favoriteSendAndReceive(
+                              data['pUniqueId'], data['pSellerName']);
+                          return !isFavorite;
                         },
-                        icon: const Icon(
-                          Icons.favorite_outline_rounded,
-                          color: Colors.red,
-                        ),
+                        likeBuilder: (isFavorite) {
+                          return Icon(
+                            isFavorite ? Icons.favorite : Icons.favorite_border,
+                            color: isFavorite ? Colors.red : Colors.white,
+                            size: 30,
+                          );
+                        },
                       ),
                     ),
                     //   discount  show advance design
@@ -342,14 +344,14 @@ class ProductsController extends GetxController {
                         color: Colors.red,
                         child: data['pDiscountType'] == "Percentage"
                             ? Text(
-                          '${data['pDiscount']}% OFF',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
+                                '${data['pDiscount']}% OFF',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )
                             : wText('Rs: ${data['pDiscount']} OFF',
-                            color: Colors.white, size: 14),
+                                color: Colors.white, size: 14),
                       ),
                     ),
                   ],
@@ -425,7 +427,6 @@ class ProductsController extends GetxController {
                                 ],
                               ),
                             ),
-
                           ],
                         ),
                       ),
@@ -446,4 +447,6 @@ class ProductsController extends GetxController {
         .where("pCategory", isEqualTo: category)
         .snapshots();
   }
+
+  favoriteSendAndReceive(String toUserID, String userName) async {}
 }

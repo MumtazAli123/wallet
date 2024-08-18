@@ -3,6 +3,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:like_button/like_button.dart';
 import 'package:wallet/app/modules/products/controllers/products_controller.dart';
 import 'package:wallet/models/products_model.dart';
 
@@ -232,17 +233,24 @@ void wDialogMoreDetails(BuildContext context, data) {
                   Positioned(
                     top: 8,
                     right: 8,
-                    child: IconButton(
-                      onPressed: () {
-                        // setState(() {
-                        //   _isAdded = !_isAdded;
-                        // });
+                    child: LikeButton(
+                      countPostion: CountPostion.right,
+                      onTap: (isFavorite) async {
+
+                        return !isFavorite;
                       },
-                      icon: Icon(
-                        Icons.favorite_outline_rounded,
-                        color: Colors.red,
-                      ),
+                      likeBuilder: (isFavorite) {
+                        return Icon(
+                          isFavorite
+                              ? Icons.favorite
+                              : Icons.favorite_border,
+                          color:
+                          isFavorite ? Colors.red : Colors.white,
+                          size: 30,
+                        );
+                      },
                     ),
+
                   ),
                   //   discount  show advance design
                   Positioned(
