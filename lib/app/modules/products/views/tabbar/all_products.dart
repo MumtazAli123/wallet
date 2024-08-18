@@ -359,11 +359,20 @@ void wDialogMoreDetails(BuildContext context, data) {
         ),
       ),
       actions: [
+        // detail page show
+        TextButton(
+            onPressed: () {
+              Get.back();
+              Get.to(() => ProductPageView(
+                  vModel: ProductsModel.fromJson(data), data: data.toString()));
+            },
+            child: const Text('More Details')
+        ),
         TextButton(
           onPressed: () {
             Get.back();
           },
-          child: const Text('Close'),
+          child:  wText('Close', color: Colors.red),
         ),
       ],
     ),
