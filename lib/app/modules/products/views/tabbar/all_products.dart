@@ -4,8 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wallet/app/modules/products/controllers/products_controller.dart';
+import 'package:wallet/models/products_model.dart';
 
 import '../../../../../widgets/mix_widgets.dart';
+import '../products_page_view.dart';
 
 class AllProducts extends GetView<ProductsController> {
   const AllProducts({super.key});
@@ -199,185 +201,6 @@ Widget wBuildProductCard(Map<String, dynamic> data) {
 }
 
 void wDialogMoreDetails(BuildContext context, data) {
-  // showDialog(
-  //   context: context,
-  //   builder: (context) {
-  //     return AlertDialog(
-  //       alignment: Alignment.center,
-  //       actionsAlignment: MainAxisAlignment.end,
-  //       title: Text(data['pName']),
-  //
-  //       content: Column(
-  //         crossAxisAlignment: CrossAxisAlignment.start,
-  //         mainAxisSize: MainAxisSize.min,
-  //         children: [
-  //
-  //           Stack(
-  //             children: [
-  //               Container(
-  //                 height: 170,
-  //                 width: double.infinity,
-  //                 decoration: BoxDecoration(
-  //                   image: DecorationImage(
-  //                     image: NetworkImage(data['pImages']),
-  //                     fit: BoxFit.fill,
-  //                   ),
-  //                 ),
-  //               ),
-  //               Positioned(
-  //                 top: 8,
-  //                 right: 8,
-  //                 child: IconButton(
-  //                   onPressed: () {
-  //                     // setState(() {
-  //                     //   _isAdded = !_isAdded;
-  //                     // });
-  //                   },
-  //                   icon:  Icon(
-  //                     Icons.favorite_outline_rounded,
-  //                     color: Colors.red,
-  //                   ),
-  //                 ),
-  //               ),
-  //               //   discount  show advance design
-  //               Positioned(
-  //                 bottom: 0,
-  //                 child: Container(
-  //                   padding: const EdgeInsets.all(8),
-  //                   color: Colors.red,
-  //                   child: data['pDiscountType'] == "Percentage"
-  //                       ? Text(
-  //                     '${data['pDiscount']}% OFF',
-  //                     style: const TextStyle(
-  //                       color: Colors.white,
-  //                       fontWeight: FontWeight.bold,
-  //                     ),
-  //                   )
-  //                       : wText(
-  //                       'Rs: ${data['pDiscount']} OFF',
-  //                       color: Colors.white,
-  //                       size: 14
-  //                   ),
-  //                 ),
-  //               ),
-  //             ],
-  //           ),
-  //           Padding(
-  //             padding:  EdgeInsets.all(8.0),
-  //             child: Column(
-  //               crossAxisAlignment: CrossAxisAlignment.start,
-  //               children: [
-  //                 wText(
-  //                   data['pName'],
-  //                   size: 18,
-  //                 ),
-  //                  SizedBox(height: 5),
-  //                 Text(
-  //                   data['pCategory'],
-  //                 ),
-  //                 //   description show
-  //                  SizedBox(height: 5),
-  //                 Text(
-  //                   "Desc: ${data['pDescription']}",
-  //                 ),
-  //                  SizedBox(height: 5),
-  //                 // color show
-  //                 Text(
-  //                   "Color: ${data['pColor']}",
-  //                   style: const TextStyle(
-  //                     fontSize: 14,
-  //                   ),
-  //                 ),
-  //                 const SizedBox(height: 5),
-  //                 // size show
-  //                 Text(
-  //                   "Size: ${data['pSize']}",
-  //                   style: const TextStyle(
-  //                     fontSize: 14,
-  //                   ),
-  //                 ),
-  //                 const SizedBox(height: 5),
-  //                 // brand show
-  //                 Text(
-  //                   "Brand: ${data['pBrand']}",
-  //                   style: const TextStyle(
-  //                     fontSize: 14,
-  //                   ),
-  //                 ),
-  //
-  //                 SizedBox(
-  //                   height: 50,
-  //                   width: double.infinity,
-  //                   child: Stack(
-  //                     children: [
-  //                       // show price and cross after show discount price
-  //
-  //                       Positioned(
-  //                         right: 0,
-  //                         child: Column(
-  //                           children: [
-  //                             Text(
-  //                               '\Rs:${data['pPrice']}',
-  //                               style: const TextStyle(
-  //                                 color: Colors.grey,
-  //                                 decoration: TextDecoration.lineThrough,
-  //                               ),
-  //                             ),
-  //                             Container(
-  //                               padding: const EdgeInsets.all(5),
-  //                               decoration: BoxDecoration(
-  //                                 color: Colors.red,
-  //                                 borderRadius: BorderRadius.circular(5),
-  //                               ),
-  //                               child: wText(
-  //                                 data['pDiscountType'] == "Percentage"
-  //                                     ? '\Rs: ${double.parse(data['pPrice'])-  (double.parse(data['pPrice']) * double.parse(data['pDiscount']) / 100)}'
-  //                                     : '\Rs: ${double.parse(data['pPrice']) - double.parse(data['pDiscount'])}',
-  //                                 color: Colors.white,
-  //                                 size: 18,
-  //                               ),
-  //                             ),
-  //                           ],
-  //                         ),
-  //                       ),
-  //
-  //                       // show price after discount price
-  //                       // Container(
-  //                       //   padding: const EdgeInsets.all(5),
-  //                       //   decoration: BoxDecoration(
-  //                       //     color: Colors.red,
-  //                       //     borderRadius: BorderRadius.circular(5),
-  //                       //   ),
-  //                       //   child: Text(
-  //                       //     data['pDiscountType'] == "Percentage"
-  //                       //         ? '\Rs:${double.parse(data['pPrice'])-  (double.parse(data['pPrice']) * double.parse(data['pDiscount']) / 100)}'
-  //                       //         : '\Rs:${double.parse(data['pPrice']) - double.parse(data['pDiscount'])}',
-  //                       //     style: const TextStyle(
-  //                       //       color: Colors.white,
-  //                       //       fontWeight: FontWeight.bold,
-  //                       //     ),
-  //                       //   ),
-  //                       // ),
-  //                     ],
-  //                   ),
-  //                 ),
-  //
-  //               ],
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //       actions: [
-  //         TextButton(
-  //           onPressed: () {
-  //             Get.back();
-  //           },
-  //           child: const Text('Close'),
-  //         ),
-  //       ],
-  //     );
-  //   },
-  // );
   Get.dialog(
     AlertDialog(
       title: Text("Product Details"),
@@ -385,6 +208,8 @@ void wDialogMoreDetails(BuildContext context, data) {
       content: GestureDetector(
         onTap: () {
           Get.back();
+          Get.to(() => ProductView(
+              vModel: ProductsModel.fromJson(data), data: data.toString()));
         },
         child: SizedBox(
           width: 650,
