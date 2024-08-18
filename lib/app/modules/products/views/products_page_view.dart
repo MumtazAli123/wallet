@@ -12,8 +12,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/app/modules/products/controllers/products_controller.dart';
 import 'package:wallet/models/products_model.dart';
 
-import '../../../../rating/rating_screen.dart';
 import '../../../../widgets/mix_widgets.dart';
+import '../../profile/views/user_details_view.dart';
 import '../../shops/views/vehicle_rating.dart';
 
 class ProductPageView extends StatefulWidget {
@@ -63,19 +63,26 @@ class _ProductPageViewState extends State<ProductPageView> {
           mainAxisSize: MainAxisSize.min,
           children: [
             // seller Image and name
-            widget.vModel.pSellerPhoto!.isEmpty
-                ? CircleAvatar(
-                    radius: 30,
-                    backgroundColor: Colors.white,
-                    child: Icon(
-                      Icons.person,
-                      color: Colors.black,
+            GestureDetector(
+              onTap: () {
+                Get.to(() => UserDetailsView(
+                    userID: widget.vModel.pSellerId,
+                ));
+              },
+              child: widget.vModel.pSellerPhoto!.isEmpty
+                  ? CircleAvatar(
+                      radius: 30,
+                      backgroundColor: Colors.white,
+                      child: Icon(
+                        Icons.person,
+                        color: Colors.black,
+                      ),
+                    )
+                  : CircleAvatar(
+                      radius: 30,
+                      backgroundImage: NetworkImage(widget.vModel.pSellerPhoto.toString()),
                     ),
-                  )
-                : CircleAvatar(
-                    radius: 30,
-                    backgroundImage: NetworkImage(widget.vModel.pSellerPhoto.toString()),
-                  ),
+            ),
             SizedBox(
               width: 5,
             ),

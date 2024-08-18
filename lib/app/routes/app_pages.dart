@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 
 import 'package:wallet/app/modules/products/bindings/products_binding.dart';
 import 'package:wallet/app/modules/products/views/products_view.dart';
+import 'package:wallet/app/modules/profile/bindings/profile_binding.dart';
+import 'package:wallet/app/modules/profile/views/profile_view.dart';
 import 'package:wallet/app/modules/realstate/bindings/realstate_binding.dart';
 import 'package:wallet/app/modules/realstate/views/realstate_view.dart';
 import 'package:wallet/app/modules/register/views/mob_register_view.dart';
@@ -138,6 +140,11 @@ class AppPages {
       name: _Paths.PRODUCTS,
       page: () => ProductsView(),
       binding: ProductsBinding(),
+    ),
+    GetPage(
+      name: _Paths.PROFILE,
+      page: () => ProfileView(),
+      binding: ProfileBinding(),
     ),
   ];
 }

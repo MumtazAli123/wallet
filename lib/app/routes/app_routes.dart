@@ -17,6 +17,7 @@ abstract class Routes {
   static const REALSTATE_EDIT_VIEW = _Paths.REALSTATE_EDIT_VIEW;
   static const VEHICLE = _Paths.VEHICLE;
   static const PRODUCTS = _Paths.PRODUCTS;
+  static const PROFILE = _Paths.PROFILE;
 }
 
 abstract class _Paths {
@@ -35,4 +36,5 @@ abstract class _Paths {
   static const REALSTATE_EDIT_VIEW = '/realstate-edit';
   static const VEHICLE = '/vehicle';
   static const PRODUCTS = '/products';
+  static const PROFILE = '/profile';
 }
