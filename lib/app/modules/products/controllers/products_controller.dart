@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart' as fStorage;
 import 'package:like_button/like_button.dart';
 import 'package:wallet/global/global.dart';
+import 'package:wallet/models/products_model.dart';
 
 import '../../../../notification/push_notification_sys.dart';
 import '../../../../widgets/mix_widgets.dart';
@@ -14,16 +15,16 @@ import '../views/show_products_view.dart';
 import '../views/tabbar/all_products.dart';
 
 class ProductsController extends GetxController {
-  final pNameController = TextEditingController();
-  final pPriceController = TextEditingController();
-  final pDescriptionController = TextEditingController();
-  final pBrandController = TextEditingController();
-  final pQuantityController = TextEditingController();
-  final pDiscountController = TextEditingController();
-  final pColorController = TextEditingController();
-  final pSizeController = TextEditingController();
-  final pAddressController = TextEditingController();
-  final pCityController = TextEditingController();
+  TextEditingController pNameController = TextEditingController();
+  TextEditingController pPriceController = TextEditingController();
+  TextEditingController pDescriptionController = TextEditingController();
+  TextEditingController pBrandController = TextEditingController();
+  TextEditingController pQuantityController = TextEditingController();
+  TextEditingController pDiscountController = TextEditingController();
+  TextEditingController pColorController = TextEditingController();
+  TextEditingController pSizeController = TextEditingController();
+  TextEditingController pAddressController = TextEditingController();
+  TextEditingController pCityController = TextEditingController();
 
   List<String> pCategoryList = [
     "Electronics",
@@ -120,9 +121,17 @@ class ProductsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    pCategoryValue = pCategoryList[0];
-    pCondition = pConditionList[0];
-    pDelivery = pDeliveryList[0];
+    pNameController = TextEditingController();
+    pPriceController = TextEditingController();
+    pDescriptionController = TextEditingController();
+    pBrandController = TextEditingController();
+    pQuantityController = TextEditingController();
+    pDiscountController = TextEditingController();
+    pColorController = TextEditingController();
+    pSizeController = TextEditingController();
+    pAddressController = TextEditingController();
+    pCityController = TextEditingController();
+
   }
 
   @override
@@ -451,6 +460,25 @@ class ProductsController extends GetxController {
         .collection("products")
         .where("pCategory", isEqualTo: category)
         .snapshots();
+  }
+
+  void editProducts(ProductsModel model) {
+    FirebaseFirestore.instance
+        .collection("sellers")
+        .doc(user!.uid)
+        .collection("products")
+        .doc(model.pUniqueId)
+        .update(model.toJson())
+        .then((value) {
+      FirebaseFirestore.instance
+          .collection("products")
+          .doc(model.pUniqueId)
+          .update(model.toJson());
+      Get.back();
+      Get.snackbar("Success", "Vehicle Updated Successfully",
+          backgroundColor: Colors.green, colorText: Colors.white);
+      // Get.to(() => const ShowVehicleView());
+    });
   }
 
 }
