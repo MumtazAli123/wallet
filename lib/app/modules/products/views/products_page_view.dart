@@ -54,110 +54,7 @@ class _ProductPageViewState extends State<ProductPageView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: Container(
-        padding: EdgeInsets.only(bottom: 20, left: 15, right: 15, top: 5),
-        decoration: BoxDecoration(
-          color: Colors.green.withOpacity(0.5),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // seller Image and name
-            GestureDetector(
-              onTap: () {
-                Get.to(() => UserDetailsView(
-                    userID: widget.vModel.pSellerId,
-                ));
-              },
-              child: widget.vModel.pSellerPhoto!.isEmpty
-                  ? CircleAvatar(
-                      radius: 30,
-                      backgroundColor: Colors.white,
-                      child: Icon(
-                        Icons.person,
-                        color: Colors.black,
-                      ),
-                    )
-                  : CircleAvatar(
-                      radius: 30,
-                      backgroundImage: NetworkImage(widget.vModel.pSellerPhoto.toString()),
-                    ),
-            ),
-            SizedBox(
-              width: 5,
-            ),
-            // maximum seller name length is 7
-            // Expanded(
-            //   child: widget.vModel.pSellerName!.length > 6
-            //       ? Text(
-            //           '${widget.vModel.pSellerName!.substring(0, 6)}..',
-            //           style: TextStyle(
-            //             color: Colors.white,
-            //             fontSize: 16,
-            //           ),
-            //         )
-            //       : Text(
-            //           '${widget.vModel.pSellerName}',
-            //           style: TextStyle(
-            //             color: Colors.white,
-            //             fontSize: 20,
-            //           ),
-            //         ),
-            // ),
-            IconButton(
-              icon: Row(
-                children: [
-                  Icon(Icons.star, color: Colors.yellow),
-                  Icon(Icons.star, color: Colors.yellow),
-                  Icon(Icons.star, color: Colors.yellow),
-                ],
-              ),
-              onPressed: () {
-                // add rating
-                Get.to(() => VehicleRating(
-                    // Transition.zoom,
-                  sellerId: widget.vModel.pSellerId,
-                  image: widget.vModel.pImages,
-                  name: widget.vModel.pSellerName,
-                  sellerImage: widget.vModel.pSellerPhoto,));
-              },
-            ),
-            //   add to cart
-            Spacer(),
-            GFButton(
-              onPressed: () {
-                // send message to seller on whatsapp
-                launch(
-                    'https://wa.me/${widget.vModel.pSellerPhone}?text=ZubiPay\n'
-                        '\n'
-                        'I want to buy your product ${widget.vModel.pName}\n'
-                        'Rs: ${widget.vModel.pPrice}'
-                        '\nDiscount: ${widget.vModel.pDiscountType == "Percentage" ? "${widget.vModel.pDiscount!}%" : widget.vModel.pDiscount}\n'
-                        'After Discount: ${widget.vModel.pDiscountType == "Percentage" ? "${double.parse(widget.vModel.pPrice!) - (double.parse(widget.vModel.pPrice!) * double.parse(widget.vModel.pDiscount!) / 100)}" : "${double.parse(widget.vModel.pPrice!) - double.parse(widget.vModel.pDiscount!)}"}\n'
-                        '\nColor: ${widget.vModel.pColor}\n'
-                        'Description: ${widget.vModel.pDescription}\n'
-                        'Brand: ${widget.vModel.pBrand}\n'
-                        'Category: ${widget.vModel.pCategory}\n'
-                        'Size: ${widget.vModel.pSize}\n'
-                );
-
-
-              },
-              text: 'Buy Now',
-              textStyle: GoogleFonts.aBeeZee(fontSize: 20),
-              type: GFButtonType.solid,
-              color: Colors.green,
-              textColor: Colors.white,
-              size: 50,
-              shape: GFButtonShape.standard,
-              icon: Icon(
-                Icons.shopping_cart,
-                color: Colors.white,
-              ),
-            ),
-          ],
-        ),
-      ),
+      bottomNavigationBar: _buildBottomBar(),
       body: _buildBody(widget.vModel),
     );
   }
@@ -354,13 +251,103 @@ class _ProductPageViewState extends State<ProductPageView> {
                     TableRow(children: [
                       Text('Description:'),
                       Text(
-                        maxLines: 2,
                         "${model.pDescription}",
                       ),
                     ]),
                   ],
                 ),
               ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  _buildBottomBar() {
+    return Container(
+      padding: EdgeInsets.only(bottom: 20, left: 15, right: 15, top: 5),
+      decoration: BoxDecoration(
+        color: Colors.green.withOpacity(0.5),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // seller Image and name
+          GestureDetector(
+            onTap: () {
+              Get.to(() => UserDetailsView(
+                userID: widget.vModel.pSellerId,
+              ));
+            },
+            child: widget.vModel.pSellerPhoto!.isEmpty
+                ? CircleAvatar(
+              radius: 30,
+              backgroundColor: Colors.white,
+              child: Icon(
+                Icons.person,
+                color: Colors.black,
+              ),
+            )
+                : CircleAvatar(
+              radius: 30,
+              backgroundImage: NetworkImage(widget.vModel.pSellerPhoto.toString()),
+            ),
+          ),
+          SizedBox(
+            width: 5,
+          ),
+          IconButton(
+            icon: Row(
+              children: [
+                Icon(Icons.star, color: Colors.yellow),
+                Icon(Icons.star, color: Colors.yellow),
+                Icon(Icons.star, color: Colors.yellow),
+                Icon(Icons.star, color: Colors.yellow),
+                Icon(Icons.star, color: Colors.yellow),
+              ],
+            ),
+            onPressed: () {
+              // add rating
+              Get.to(() => VehicleRating(
+                // Transition.zoom,
+                sellerId: widget.vModel.pSellerId,
+                image: widget.vModel.pImages,
+                name: widget.vModel.pSellerName,
+                sellerImage: widget.vModel.pSellerPhoto,));
+            },
+          ),
+          //   add to cart
+          Spacer(),
+          GFButton(
+            onPressed: () {
+              // send message to seller on whatsapp
+              launch(
+                  'https://wa.me/${widget.vModel.pSellerPhone}?text=ZubiPay\n'
+                      '\n'
+                      'I want to buy your product ${widget.vModel.pName}\n'
+                      'Rs: ${widget.vModel.pPrice}'
+                      '\nDiscount: ${widget.vModel.pDiscountType == "Percentage" ? "${widget.vModel.pDiscount!}%" : widget.vModel.pDiscount}\n'
+                      'After Discount: ${widget.vModel.pDiscountType == "Percentage" ? "${double.parse(widget.vModel.pPrice!) - (double.parse(widget.vModel.pPrice!) * double.parse(widget.vModel.pDiscount!) / 100)}" : "${double.parse(widget.vModel.pPrice!) - double.parse(widget.vModel.pDiscount!)}"}\n'
+                      '\nColor: ${widget.vModel.pColor}\n'
+                      'Description: ${widget.vModel.pDescription}\n'
+                      'Brand: ${widget.vModel.pBrand}\n'
+                      'Category: ${widget.vModel.pCategory}\n'
+                      'Size: ${widget.vModel.pSize}\n'
+              );
+
+
+            },
+            text: 'Buy Now',
+            textStyle: GoogleFonts.aBeeZee(fontSize: 20),
+            type: GFButtonType.solid,
+            color: Colors.green,
+            textColor: Colors.white,
+            size: 50,
+            shape: GFButtonShape.standard,
+            icon: Icon(
+              Icons.shopping_cart,
+              color: Colors.white,
             ),
           ),
         ],
