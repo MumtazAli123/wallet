@@ -128,7 +128,7 @@ cText(String text, {Color? color, double size = 16}) {
   return Text(
     textAlign: TextAlign.start,
     text,
-    style: GoogleFonts.paprika(
+    style: GoogleFonts.habibi(
       fontSize: size,
       fontWeight: FontWeight.bold,
       color: color,

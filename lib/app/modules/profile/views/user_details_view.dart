@@ -4,14 +4,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:getwidget/components/avatar/gf_avatar.dart';
-import 'package:getwidget/components/carousel/gf_carousel.dart';
 import 'package:smooth_star_rating_nsafe/smooth_star_rating.dart';
 import 'package:wallet/app/modules/profile/controllers/profile_controller.dart';
 
-import '../../../../rating/show_rating_screen.dart';
 import '../../../../widgets/mix_widgets.dart';
-import '../../shops/views/vehicle_rating.dart';
+import '../../../../widgets/nav_appbar.dart';
 
 class UserDetailsView extends StatefulWidget {
   final String? userID;
@@ -86,16 +83,12 @@ class _UserDetailsViewState extends State<UserDetailsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("$name"),
-        centerTitle: true,
-      ),
+      appBar: NavAppBar(title: 'User Details'),
       body: _buildBody(),
     );
   }
 
   _buildBody() {
-    final size = MediaQuery.of(context).size;
     return SingleChildScrollView(
       child: Padding(
         padding: EdgeInsets.all(20),

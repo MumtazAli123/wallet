@@ -92,16 +92,22 @@ class ProductsController extends GetxController {
   String pColor = "Red";
   String pSize = "S";
 
-  bool uploading = false, next = false;
+  bool uploading = false,
+      next = false;
   List<String> urlList = [];
   double val = 0;
+
+  bool isFavorite = false;
 
   final ImagePicker _picker = ImagePicker();
   List<XFile>? images = [];
   List<String> imageUrlPath = [];
   String downloadImageUrl = "";
   var imageFileCount = 0.obs;
-  var pUniqueId = DateTime.now().millisecondsSinceEpoch.toString();
+  var pUniqueId = DateTime
+      .now()
+      .millisecondsSinceEpoch
+      .toString();
 
   var productList = [].obs;
 
@@ -290,9 +296,6 @@ class ProductsController extends GetxController {
         .snapshots();
   }
 
-  isFavorite(data) {
-    return false;
-  }
 
   Widget wBuildProductCard(Map<String, dynamic> data) {
     return GestureDetector(
@@ -323,8 +326,6 @@ class ProductsController extends GetxController {
                       child: LikeButton(
                         countPostion: CountPostion.right,
                         onTap: (isFavorite) async {
-                          favoriteSendAndReceive(
-                              data['pUniqueId'], data['pSellerName']);
                           return !isFavorite;
                         },
                         likeBuilder: (isFavorite) {
@@ -344,14 +345,14 @@ class ProductsController extends GetxController {
                         color: Colors.red,
                         child: data['pDiscountType'] == "Percentage"
                             ? Text(
-                                '${data['pDiscount']}% OFF',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              )
+                          '${data['pDiscount']}% OFF',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
                             : wText('Rs: ${data['pDiscount']} OFF',
-                                color: Colors.white, size: 14),
+                            color: Colors.white, size: 14),
                       ),
                     ),
                   ],
@@ -416,8 +417,14 @@ class ProductsController extends GetxController {
                                     ),
                                     child: Text(
                                       data['pDiscountType'] == "Percentage"
-                                          ? '\Rs:${double.parse(data['pPrice']) - (double.parse(data['pPrice']) * double.parse(data['pDiscount']) / 100)}'
-                                          : '\Rs:${double.parse(data['pPrice']) - double.parse(data['pDiscount'])}',
+                                          ? '\Rs:${double.parse(
+                                          data['pPrice']) -
+                                          (double.parse(data['pPrice']) *
+                                              double.parse(data['pDiscount']) /
+                                              100)}'
+                                          : '\Rs:${double.parse(
+                                          data['pPrice']) -
+                                          double.parse(data['pDiscount'])}',
                                       style: const TextStyle(
                                         color: Colors.white,
                                         fontWeight: FontWeight.bold,
@@ -448,5 +455,4 @@ class ProductsController extends GetxController {
         .snapshots();
   }
 
-  favoriteSendAndReceive(String toUserID, String userName) async {}
 }

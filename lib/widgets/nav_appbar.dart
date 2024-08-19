@@ -1,15 +1,13 @@
 // ignore_for_file: prefer_const_constructors , prefer_const_literals_to_create_immutables
 
-import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:wallet/app/modules/home/views/web_home_view.dart';
 import 'package:wallet/app/modules/realstate/views/show_realstate.dart';
+import 'package:wallet/widgets/responsive.dart';
 
-import '../app/modules/home/views/mob_home_view.dart';
 import 'mix_widgets.dart';
 
 
@@ -55,21 +53,29 @@ class _NavAppBarState extends State<NavAppBar>{
   @override
   void initState() {
     super.initState();
-   Timer.periodic(Duration(seconds: 1), (Timer t) => getCurrentLiveTimeDate());
+   // Timer.periodic(Duration(seconds: 1), (Timer t) => getCurrentLiveTimeDate());
   }
 
   @override
-  Widget build(BuildContext context)
-  {
+  void dispose() {
+    super.dispose();
+
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ResponsiveWidget(
+      mobiView: _buildMobileAppBar(),
+      webView: _buildWebAppBar(),
+    );
+  }
+
+  _buildMobileAppBar() {
     return AppBar(
-      automaticallyImplyLeading: false,
-      // leading: IconButton(
-      //   icon: const Icon(Icons.menu, color: Colors.white,),
-      //   onPressed: ()
-      //   {
-      //     Scaffold.of(context).openDrawer();
-      //   },
-      // ),
+      automaticallyImplyLeading: true,
+      iconTheme: IconThemeData(
+        color: Colors.white,
+      ),
       flexibleSpace: Container(
         decoration:  BoxDecoration(
             gradient: LinearGradient(
@@ -88,118 +94,157 @@ class _NavAppBarState extends State<NavAppBar>{
       title: GestureDetector(
         onTap: ()
         {
-          Navigator.push(context, MaterialPageRoute(builder: (c)=>  WebHomeView()));
+          Get.offAllNamed('/home');
         },
         child:  wText(
           "${widget.title}",
           color: Colors.white,
-          size: 26
+          size: 16
         ),
       ),
       centerTitle: false,
       actions: [
-        Row(
-          children: [
-            Padding(padding:  const EdgeInsets.all(8.0),
-              child: wText(
-                "$liveTime | $liveDate",
-                color: Colors.white,
-                size: 16,
-              ),
-            ),
-            SizedBox(width: 140,),
+        IconButton(onPressed: (){
+          Get.offAllNamed('/home');
+        }, icon: Icon(EvaIcons.home, color: Colors.white,)),
 
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextButton(
-                  onPressed: ()
-                  {
-                    Navigator.push(context, MaterialPageRoute(builder: (c)=> WebHomeView()));
-                  },
-                  child: const Text(
-                    "Home",
-                    style: TextStyle(
-                      color: Colors.white,
-                    ),
-                  ),
-              ),
-            ),
+        IconButton(onPressed: (){
+          Get.to( () => ShowRealstate());
+        }, icon: Icon(Icons.real_estate_agent, color: Colors.white,)),
+        // vehicles
+        IconButton(onPressed: (){
+          Get.toNamed('/vehicle');
+        }, icon: Icon(Icons.local_taxi, color: Colors.white,)),
+      //   products
+        IconButton(onPressed: (){
+          Get.toNamed('/products');
+        }, icon: Icon(Icons.shopping_bag_sharp, color: Colors.white,)),
+        // profile
+        // logout
+      ],
+    );
+  }
 
-            Text(
-              "|",
-              style: TextStyle(
-                color: Colors.white,
-              ),
-            ),
-
-
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextButton(
-                onPressed: ()
-                {
-                  Get.to( () => ShowRealstate());
-
-                },
-                child: const Text(
-                  "Real Estate",
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-
-            const Text(
-              "|",
-              style: TextStyle(
-                color: Colors.white,
-              ),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextButton(
-                onPressed: ()
-                {
-
-                },
-                child: const Text(
-                  "Vehicles ",
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-
-             Text(
-              "|",
-              style: TextStyle(
-                color: Colors.white,
-              ),
-            ),
-
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: TextButton(
-                onPressed: ()
-                {
-                  FirebaseAuth.instance.signOut();
-                  Get.toNamed('/login');
-
-                },
-                child: const Text(
-                  "Logout",
-                  style: TextStyle(
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-
-          ],
+  _buildWebAppBar() {
+    return AppBar(
+      automaticallyImplyLeading: true,
+      iconTheme: IconThemeData(
+        color: Colors.white,
+      ),
+      leading: IconButton(
+        icon: const Icon(Icons.menu, color: Colors.white,),
+        onPressed: ()
+        {
+          Scaffold.of(context).openDrawer();
+        },
+      ),
+      flexibleSpace: Container(
+        decoration:  BoxDecoration(
+            gradient: LinearGradient(
+              colors:
+              [
+                Colors.blue[900]!,
+                Colors.deepPurpleAccent,
+              ],
+              begin: FractionalOffset(0.0, 0.0),
+              end: FractionalOffset(1.0, 0.0),
+              stops: [0.0, 1.0],
+              tileMode: TileMode.clamp,
+            )
         ),
+      ),
+      title: GestureDetector(
+        onTap: ()
+        {
+          Get.offAllNamed('/home');
+        },
+        child:  wText(
+          "${widget.title}",
+          color: Colors.white,
+          size: 16
+        ),
+      ),
+      centerTitle: false,
+      actions: [
+        // time and date
+        // Padding(
+        //   padding: const EdgeInsets.all(8.0),
+        //   child: Text(
+        //     "$liveTime | $liveDate",
+        //     style: TextStyle(
+        //       color: Colors.white,
+        //     ),
+        //   ),
+        // ),
+        SizedBox(width: 50.0,),
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextButton(
+              onPressed: ()
+              {
+                Get.offAllNamed('/home');
+              },
+              child: const Text(
+                "Home",
+                style: TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+          ),
+        ),
+
+        Text(
+          "|",
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+
+
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextButton(
+            onPressed: ()
+            {
+              Get.to( () => ShowRealstate());
+
+            },
+            child: const Text(
+              "Real Estate",
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+
+        const Text(
+          "|",
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: TextButton(
+            onPressed: ()
+            {
+              Get.toNamed('/vehicle');
+
+            },
+            child: const Text(
+              "Vehicles ",
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+          ),
+        ),
+        // home
+
+
+
       ],
     );
   }

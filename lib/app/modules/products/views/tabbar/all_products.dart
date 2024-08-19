@@ -3,7 +3,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:like_button/like_button.dart';
 import 'package:wallet/app/modules/products/controllers/products_controller.dart';
 import 'package:wallet/models/products_model.dart';
 
@@ -161,7 +160,7 @@ Widget wBuildProductCard(Map<String, dynamic> data) {
                             child: Column(
                               children: [
                                 Text(
-                                  '\Rs:${data['pPrice']}',
+                                  'Rs:${data['pPrice']}',
                                   style: const TextStyle(
                                     color: Colors.grey,
                                     decoration: TextDecoration.lineThrough,
@@ -175,8 +174,8 @@ Widget wBuildProductCard(Map<String, dynamic> data) {
                                   ),
                                   child: Text(
                                     data['pDiscountType'] == "Percentage"
-                                        ? '\Rs:${double.parse(data['pPrice']) - (double.parse(data['pPrice']) * double.parse(data['pDiscount']) / 100)}'
-                                        : '\Rs:${double.parse(data['pPrice']) - double.parse(data['pDiscount'])}',
+                                        ? 'Rs:${double.parse(data['pPrice']) - (double.parse(data['pPrice']) * double.parse(data['pDiscount']) / 100)}'
+                                        : 'Rs:${double.parse(data['pPrice']) - double.parse(data['pDiscount'])}',
                                     style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
@@ -233,24 +232,17 @@ void wDialogMoreDetails(BuildContext context, data) {
                   Positioned(
                     top: 8,
                     right: 8,
-                    child: LikeButton(
-                      countPostion: CountPostion.right,
-                      onTap: (isFavorite) async {
-
-                        return !isFavorite;
+                    child: IconButton(
+                      onPressed: () {
+                        // setState(() {
+                        //   _isAdded = !_isAdded;
+                        // });
                       },
-                      likeBuilder: (isFavorite) {
-                        return Icon(
-                          isFavorite
-                              ? Icons.favorite
-                              : Icons.favorite_border,
-                          color:
-                          isFavorite ? Colors.red : Colors.white,
-                          size: 30,
-                        );
-                      },
+                      icon: Icon(
+                        Icons.favorite_outline_rounded,
+                        color: Colors.red,
+                      ),
                     ),
-
                   ),
                   //   discount  show advance design
                   Positioned(
@@ -380,7 +372,7 @@ void wDialogMoreDetails(BuildContext context, data) {
           onPressed: () {
             Get.back();
           },
-          child:  wText('Close', color: Colors.red),
+          child:  wText('Close', ),
         ),
       ],
     ),

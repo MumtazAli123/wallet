@@ -49,6 +49,10 @@ class _ShopsViewState extends State<ShopsView> {
     // pushNotificationSys.whenNotificationReceived();
 
   }
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
