@@ -55,9 +55,9 @@ class _ProductPageViewState extends State<ProductPageView> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: Container(
-        padding: EdgeInsets.all(20),
+        padding: EdgeInsets.only(bottom: 20, left: 15, right: 15, top: 5),
         decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.5),
+          color: Colors.green.withOpacity(0.5),
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
@@ -167,7 +167,7 @@ class _ProductPageViewState extends State<ProductPageView> {
       child: Column(
         children: [
           Container(
-            height: 490,
+            height: 400,
             decoration: BoxDecoration(
               image: DecorationImage(
                 image: NetworkImage(widget.vModel.pImages.toString(), scale: 1),

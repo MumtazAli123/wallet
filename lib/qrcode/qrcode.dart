@@ -167,6 +167,12 @@ class _QrcodePageState extends State<QrcodePage> {
                     fontWeight: FontWeight.bold,
                     color: Colors.black),
               ),
+              SizedBox(
+                height: 10.0,
+              ),
+              // name
+              wText('Name: ${sharedPreferences!.getString('name')}',
+                  color: Colors.black, size: 20),
               SizedBox(height: 50.0),
               Padding(
                 padding: const EdgeInsets.all(8.0),

@@ -115,82 +115,80 @@ Widget wBuildProductCard(Map<String, dynamic> data) {
                 ],
               ),
             ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      data['pName'],
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    data['pName'],
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
                     ),
-                    Text(
-                      "Brand: ${data['pBrand']}",
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
-                      ),
+                  ),
+                  Text(
+                    "Brand: ${data['pBrand']}",
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey,
                     ),
-                      // description show
-                    Text(
-                      maxLines: 1,
-                      "Desc: ${data['pDescription']}",
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
-                      ),
+                  ),
+                    // description show
+                  Text(
+                    maxLines: 1,
+                    "Desc: ${data['pDescription']}",
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey,
                     ),
-              
-                    const SizedBox(height: 5),
-              
-                    SizedBox(
-                      height: 60,
-                      width: double.infinity,
-                      child: Stack(
-                        children: [
-                          // show price and cross after show discount price
-              
-                          Positioned(
-                            right: 0,
-                            child: Column(
-                              children: [
-                                Text(
-                                  'Rs:${data['pPrice']}',
+                  ),
+
+                  const SizedBox(height: 5),
+
+                  SizedBox(
+                    height: 60,
+                    width: double.infinity,
+                    child: Stack(
+                      children: [
+                        // show price and cross after show discount price
+
+                        Positioned(
+                          right: 0,
+                          child: Column(
+                            children: [
+                              Text(
+                                'Rs:${data['pPrice']}',
+                                style: const TextStyle(
+                                  color: Colors.grey,
+                                  decoration: TextDecoration.lineThrough,
+                                ),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.all(5),
+                                decoration: BoxDecoration(
+                                  color: Colors.green,
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: Text(
+                                  data['pDiscountType'] == "Percentage"
+                                      ? 'Rs:${double.parse(data['pPrice']) - (double.parse(data['pPrice']) * double.parse(data['pDiscount']) / 100)}'
+                                      : 'Rs:${double.parse(data['pPrice']) - double.parse(data['pDiscount'])}',
                                   style: const TextStyle(
-                                    color: Colors.grey,
-                                    decoration: TextDecoration.lineThrough,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
                                   ),
                                 ),
-                                Container(
-                                  padding: const EdgeInsets.all(5),
-                                  decoration: BoxDecoration(
-                                    color: Colors.green,
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  child: Text(
-                                    data['pDiscountType'] == "Percentage"
-                                        ? 'Rs:${double.parse(data['pPrice']) - (double.parse(data['pPrice']) * double.parse(data['pDiscount']) / 100)}'
-                                        : 'Rs:${double.parse(data['pPrice']) - double.parse(data['pDiscount'])}',
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
-              
-                        ],
-                      ),
+                        ),
+
+                      ],
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ],
@@ -213,148 +211,150 @@ void wDialogMoreDetails(BuildContext context, data) {
         },
         child: SizedBox(
           width: 650,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Stack(
-                children: [
-                  Container(
-                    height: 170,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: NetworkImage(data['pImages']),
-                        fit: BoxFit.fill,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Stack(
+                  children: [
+                    Container(
+                      height: 170,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: NetworkImage(data['pImages']),
+                          fit: BoxFit.fill,
+                        ),
                       ),
                     ),
-                  ),
-                  Positioned(
-                    top: 8,
-                    right: 8,
-                    child: IconButton(
-                      onPressed: () {
-                        // setState(() {
-                        //   _isAdded = !_isAdded;
-                        // });
-                      },
-                      icon: Icon(
-                        Icons.favorite_outline_rounded,
+                    Positioned(
+                      top: 8,
+                      right: 8,
+                      child: IconButton(
+                        onPressed: () {
+                          // setState(() {
+                          //   _isAdded = !_isAdded;
+                          // });
+                        },
+                        icon: Icon(
+                          Icons.favorite_outline_rounded,
+                          color: Colors.red,
+                        ),
+                      ),
+                    ),
+                    //   discount  show advance design
+                    Positioned(
+                      bottom: 0,
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
                         color: Colors.red,
+                        child: data['pDiscountType'] == "Percentage"
+                            ? Text(
+                          '${data['pDiscount']}% OFF',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
+                            : wText('Rs: ${data['pDiscount']} OFF',
+                            color: Colors.white, size: 14),
                       ),
                     ),
-                  ),
-                  //   discount  show advance design
-                  Positioned(
-                    bottom: 0,
-                    child: Container(
-                      padding: const EdgeInsets.all(8),
-                      color: Colors.red,
-                      child: data['pDiscountType'] == "Percentage"
-                          ? Text(
-                        '${data['pDiscount']}% OFF',
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
+                  ],
+                ),
+                Padding(
+                  padding: EdgeInsets.all(8.0),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        wText(
+                          data['pName'],
+                          size: 18,
                         ),
-                      )
-                          : wText('Rs: ${data['pDiscount']} OFF',
-                          color: Colors.white, size: 14),
-                    ),
-                  ),
-                ],
-              ),
-              Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      wText(
-                        data['pName'],
-                        size: 18,
-                      ),
-                      const SizedBox(height: 5),
-                      Text(
-                        data['pCategory'],
-                      ),
-                      //   description show
-                      const SizedBox(height: 5),
-                      Text(
-                        "Desc: ${data['pDescription']}",
-                      ),
-                      const SizedBox(height: 5),
-                      // color show
-                      Text(
-                        "Color: ${data['pColor']}",
-                        style: const TextStyle(
-                          fontSize: 14,
+                        const SizedBox(height: 5),
+                        Text(
+                          data['pCategory'],
                         ),
-                      ),
-                      const SizedBox(height: 5),
-                      // size show
-                      Text(
-                        "Size: ${data['pSize']}",
-                        style: const TextStyle(
-                          fontSize: 14,
+                        //   description show
+                        const SizedBox(height: 5),
+                        Text(
+                          "Desc: ${data['pDescription']}",
                         ),
-                      ),
-                      const SizedBox(height: 5),
-                      // brand show
-                      Text(
-                        "Brand: ${data['pBrand']}",
-                        style: const TextStyle(
-                          fontSize: 14,
+                        const SizedBox(height: 5),
+                        // color show
+                        Text(
+                          "Color: ${data['pColor']}",
+                          style: const TextStyle(
+                            fontSize: 14,
+                          ),
                         ),
-                      ),
-                      //   stock show
-                      const SizedBox(height: 5),
-                      Text(
-                        "Stock: ${data['pQuantity']}",
-                        style: const TextStyle(
-                          fontSize: 14,
+                        const SizedBox(height: 5),
+                        // size show
+                        Text(
+                          "Size: ${data['pSize']}",
+                          style: const TextStyle(
+                            fontSize: 14,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 5),
-                      // condition show
-                      Text(
-                        "Condition: ${data['pCondition']}",
-                        style: const TextStyle(
-                          fontSize: 14,
+                        const SizedBox(height: 5),
+                        // brand show
+                        Text(
+                          "Brand: ${data['pBrand']}",
+                          style: const TextStyle(
+                            fontSize: 14,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 5),
-                      // delivery show
-                      data['pDelivery'] == "Yes"
-                          ? Text(
-                        "Delivery: Available",
-                        style: const TextStyle(
-                          fontSize: 14,
+                        //   stock show
+                        const SizedBox(height: 5),
+                        Text(
+                          "Stock: ${data['pQuantity']}",
+                          style: const TextStyle(
+                            fontSize: 14,
+                          ),
                         ),
-                      )
-                          : Text(
-                        "Delivery: Not Available",
-                        style: const TextStyle(
-                          fontSize: 14,
+                        const SizedBox(height: 5),
+                        // condition show
+                        Text(
+                          "Condition: ${data['pCondition']}",
+                          style: const TextStyle(
+                            fontSize: 14,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 5),
-                      // return show
-                      data['pReturn'] == "Yes"
-                          ? Text(
-                        "Return: Policy Available",
-                        style: const TextStyle(
-                          fontSize: 14,
+                        const SizedBox(height: 5),
+                        // delivery show
+                        data['pDelivery'] == "Yes"
+                            ? Text(
+                          "Delivery: Available",
+                          style: const TextStyle(
+                            fontSize: 14,
+                          ),
+                        )
+                            : Text(
+                          "Delivery: Not Available",
+                          style: const TextStyle(
+                            fontSize: 14,
+                          ),
                         ),
-                      )
-                          : Text(
-                        "Return: Not Available",
-                        style: const TextStyle(
-                          fontSize: 14,
+                        const SizedBox(height: 5),
+                        // return show
+                        data['pReturn'] == "Yes"
+                            ? Text(
+                          "Return: Policy Available",
+                          style: const TextStyle(
+                            fontSize: 14,
+                          ),
+                        )
+                            : Text(
+                          "Return: Not Available",
+                          style: const TextStyle(
+                            fontSize: 14,
+                          ),
                         ),
-                      ),
-                    ]),
-              ),
-            ],
+                      ]),
+                ),
+              ],
+            ),
           ),
         ),
       ),
