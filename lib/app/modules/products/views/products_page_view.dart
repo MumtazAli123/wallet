@@ -141,7 +141,6 @@ class _ProductPageViewState extends State<ProductPageView> {
                 Positioned(
                   left: 0,
                   child: Column(
-
                     children: [
                       Text(
                         'Rs:${widget.vModel.pPrice}',
@@ -171,24 +170,42 @@ class _ProductPageViewState extends State<ProductPageView> {
                     ],
                   ),
                 ),
-
               ],
             ),
           ),
-
           Padding(
-            padding:  EdgeInsets.only(left: 10.0),
+            padding: EdgeInsets.only(left: 10.0, right: 10.0),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                // product name
+                wText(
+                  widget.vModel.pName!,
+                  color: Colors.black,
+                  size: 20,
+                ),
+                // product description
+                Text(
+                  "Desc: ${widget.vModel.pDescription!}",
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                aText(
+                  'Product Details',
+                ),
                 Table(
+                  textBaseline: TextBaseline.ideographic,
+                  defaultVerticalAlignment: TableCellVerticalAlignment.intrinsicHeight,
+                  border: TableBorder.all(
+                    color: Colors.black,
+                    width: 1,
+                  ),
+                  columnWidths: {
+                    0: FlexColumnWidth(0.5),
+                    1: FlexColumnWidth(0.5),
+                  },
                   children: [
-                    TableRow(children: [
-                      Text('Product Name:'),
-                      aText(
-                        '${widget.vModel.pName}',
-                        size: 20,
-                      ),
-                    ]),
                     TableRow(children: [
                       Text('Category:'),
                       Text(model.pCategory!),
@@ -247,17 +264,13 @@ class _ProductPageViewState extends State<ProductPageView> {
                       Text('Brand:'),
                       Text(model.pBrand!),
                     ]),
-                    //   pDescription
-                    TableRow(children: [
-                      Text('Description:'),
-                      Text(
-                        "${model.pDescription}",
-                      ),
-                    ]),
                   ],
                 ),
               ],
             ),
+          ),
+          SizedBox(
+            height: 30,
           ),
         ],
       ),
@@ -277,22 +290,23 @@ class _ProductPageViewState extends State<ProductPageView> {
           GestureDetector(
             onTap: () {
               Get.to(() => UserDetailsView(
-                userID: widget.vModel.pSellerId,
-              ));
+                    userID: widget.vModel.pSellerId,
+                  ));
             },
             child: widget.vModel.pSellerPhoto!.isEmpty
                 ? CircleAvatar(
-              radius: 30,
-              backgroundColor: Colors.white,
-              child: Icon(
-                Icons.person,
-                color: Colors.black,
-              ),
-            )
+                    radius: 30,
+                    backgroundColor: Colors.white,
+                    child: Icon(
+                      Icons.person,
+                      color: Colors.black,
+                    ),
+                  )
                 : CircleAvatar(
-              radius: 30,
-              backgroundImage: NetworkImage(widget.vModel.pSellerPhoto.toString()),
-            ),
+                    radius: 30,
+                    backgroundImage:
+                        NetworkImage(widget.vModel.pSellerPhoto.toString()),
+                  ),
           ),
           SizedBox(
             width: 5,
@@ -310,11 +324,12 @@ class _ProductPageViewState extends State<ProductPageView> {
             onPressed: () {
               // add rating
               Get.to(() => VehicleRating(
-                // Transition.zoom,
-                sellerId: widget.vModel.pSellerId,
-                image: widget.vModel.pImages,
-                name: widget.vModel.pSellerName,
-                sellerImage: widget.vModel.pSellerPhoto,));
+                    // Transition.zoom,
+                    sellerId: widget.vModel.pSellerId,
+                    image: widget.vModel.pImages,
+                    name: widget.vModel.pSellerName,
+                    sellerImage: widget.vModel.pSellerPhoto,
+                  ));
             },
           ),
           //   add to cart
@@ -324,19 +339,16 @@ class _ProductPageViewState extends State<ProductPageView> {
               // send message to seller on whatsapp
               launch(
                   'https://wa.me/${widget.vModel.pSellerPhone}?text=ZubiPay\n'
-                      '\n'
-                      'I want to buy your product ${widget.vModel.pName}\n'
-                      'Rs: ${widget.vModel.pPrice}'
-                      '\nDiscount: ${widget.vModel.pDiscountType == "Percentage" ? "${widget.vModel.pDiscount!}%" : widget.vModel.pDiscount}\n'
-                      'After Discount: ${widget.vModel.pDiscountType == "Percentage" ? "${double.parse(widget.vModel.pPrice!) - (double.parse(widget.vModel.pPrice!) * double.parse(widget.vModel.pDiscount!) / 100)}" : "${double.parse(widget.vModel.pPrice!) - double.parse(widget.vModel.pDiscount!)}"}\n'
-                      '\nColor: ${widget.vModel.pColor}\n'
-                      'Description: ${widget.vModel.pDescription}\n'
-                      'Brand: ${widget.vModel.pBrand}\n'
-                      'Category: ${widget.vModel.pCategory}\n'
-                      'Size: ${widget.vModel.pSize}\n'
-              );
-
-
+                  '\n'
+                  'I want to buy your product ${widget.vModel.pName}\n'
+                  'Rs: ${widget.vModel.pPrice}'
+                  '\nDiscount: ${widget.vModel.pDiscountType == "Percentage" ? "${widget.vModel.pDiscount!}%" : widget.vModel.pDiscount}\n'
+                  'After Discount: ${widget.vModel.pDiscountType == "Percentage" ? "${double.parse(widget.vModel.pPrice!) - (double.parse(widget.vModel.pPrice!) * double.parse(widget.vModel.pDiscount!) / 100)}" : "${double.parse(widget.vModel.pPrice!) - double.parse(widget.vModel.pDiscount!)}"}\n'
+                  '\nColor: ${widget.vModel.pColor}\n'
+                  'Description: ${widget.vModel.pDescription}\n'
+                  'Brand: ${widget.vModel.pBrand}\n'
+                  'Category: ${widget.vModel.pCategory}\n'
+                  'Size: ${widget.vModel.pSize}\n');
             },
             text: 'Buy Now',
             textStyle: GoogleFonts.aBeeZee(fontSize: 20),
