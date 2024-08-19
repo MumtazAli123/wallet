@@ -8,7 +8,10 @@ import '../../../../global/global.dart';
 import '../../../../models/realstate_model.dart';
 
 class RealStateController extends GetxController {
-  final TextEditingController realStateNameController = TextEditingController();
+  TextEditingController realStateNameController = TextEditingController();
+  TextEditingController priceController = TextEditingController();
+  TextEditingController descController = TextEditingController();
+
   List<String> realStateType = [
     'House',
     'Apartment',
@@ -55,6 +58,8 @@ class RealStateController extends GetxController {
   var likeCount = 0.obs;
   var isLiked = false.obs;
 
+
+
   void likeUnlike(doc) {
     if (isLiked.value) {
       FirebaseFirestore.instance
@@ -75,6 +80,9 @@ class RealStateController extends GetxController {
   void onInit() {
     super.onInit();
     houseDataStream();
+    priceController = TextEditingController();
+    realStateNameController = TextEditingController();
+    descController = TextEditingController();
   }
 
   @override
@@ -84,7 +92,11 @@ class RealStateController extends GetxController {
   }
 
   @override
-  void onClose() {}
+  void onClose() {
+    realStateNameController.dispose();
+    priceController.dispose();
+    descController.dispose();
+  }
 
   realStateStream() {
     return FirebaseFirestore.instance

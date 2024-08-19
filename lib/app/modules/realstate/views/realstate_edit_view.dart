@@ -7,9 +7,18 @@ import 'package:wallet/models/realstate_model.dart';
 
 import '../../../../widgets/mix_widgets.dart';
 
-class RealstateEditView extends GetView<RealStateController> {
+class RealstateEditView extends StatefulWidget {
   final RealStateModel model;
   const RealstateEditView({super.key, required this.model});
+
+  @override
+  State<RealstateEditView> createState() => _RealstateEditViewState();
+}
+
+class _RealstateEditViewState extends State<RealstateEditView> {
+  final controller = Get.put(RealStateController());
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +50,7 @@ class RealstateEditView extends GetView<RealStateController> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: DropdownButtonFormField(
-              value: model.realStateType,
+              value: widget.model.realStateType,
               items: controller.realStateType
                   .map((e) => DropdownMenuItem(
                         value: e,
@@ -49,14 +58,16 @@ class RealstateEditView extends GetView<RealStateController> {
                       ))
                   .toList(),
               onChanged: (value) {
-                model.realStateType = value;
+                setState(() {
+                  widget.model.realStateType = value;
+                });
               },
             ),
           ),
 
           Padding(padding: const EdgeInsets.all(8.0),
           child: DropdownButtonFormField(
-            value: model.realStateStatus,
+            value: widget.model.realStateStatus,
             items: controller.realStateStatus
                 .map((e) => DropdownMenuItem(
                       value: e,
@@ -64,7 +75,9 @@ class RealstateEditView extends GetView<RealStateController> {
                     ))
                 .toList(),
             onChanged: (value) {
-              model.realStateStatus = value;
+              setState(() {
+                widget.model.realStateStatus = value;
+              });
             },
           ),
           ),
@@ -72,7 +85,7 @@ class RealstateEditView extends GetView<RealStateController> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: DropdownButtonFormField(
-              value: model.condition,
+              value: widget.model.condition,
               items: controller.realStateCondition
                   .map((e) => DropdownMenuItem(
                 value: e,
@@ -80,7 +93,9 @@ class RealstateEditView extends GetView<RealStateController> {
               ))
                   .toList(),
               onChanged: (value) {
-                model.condition = value;
+                setState(() {
+                  widget.model.condition = value;
+                });
               },
             ),
           ),
@@ -90,10 +105,12 @@ class RealstateEditView extends GetView<RealStateController> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextFormField(
-              initialValue: model.description,
+              initialValue: widget.model.description,
               decoration: const InputDecoration(labelText: 'Description'),
               onChanged: (value) {
-                model.description = value;
+                setState(() {
+                  widget.model.description = value;
+                });
               },
             ),
           ),
@@ -101,10 +118,35 @@ class RealstateEditView extends GetView<RealStateController> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: TextFormField(
-              initialValue: model.startingFrom.toString(),
+              keyboardType: TextInputType.number,
+              initialValue: widget.model.startingFrom.toString(),
               decoration: const InputDecoration(labelText: 'Price'),
               onChanged: (value) {
-                model.startingFrom = double.parse(value) as String?;
+                widget.model.startingFrom = value;
+              },
+            ),
+          ),
+        //   city
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextFormField(
+              initialValue: widget.model.city,
+              decoration: const InputDecoration(labelText: 'City'),
+              onChanged: (value) {
+                widget.model.city = value;
+              },
+            ),
+          ),
+        //   address
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextFormField(
+              initialValue: widget.model.address,
+              decoration: const InputDecoration(labelText: 'Address'),
+              onChanged: (value) {
+                setState(() {
+                  widget.model.address = value;
+                });
               },
             ),
           ),
@@ -120,15 +162,12 @@ class RealstateEditView extends GetView<RealStateController> {
       padding: const EdgeInsets.all(8.0),
       child: GFButton(
         onPressed: () {
-          controller.editRealState(model);
+          controller.editRealState(widget.model);
         },
         text: 'Update',
         color: Colors.blue,
       ),
     );
   }
-
-
-
 }
 
