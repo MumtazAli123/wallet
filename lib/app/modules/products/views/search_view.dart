@@ -23,7 +23,7 @@ class _ProductsSearchViewState extends State<ProductsSearchView> {
   final controller = Get.put(RegisterController());
   var searchName = '';
 
-  
+
 
   @override
   Widget build(BuildContext context) {
