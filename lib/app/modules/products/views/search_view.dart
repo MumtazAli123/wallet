@@ -22,6 +22,9 @@ class ProductsSearchView extends StatefulWidget {
 class _ProductsSearchViewState extends State<ProductsSearchView> {
   final controller = Get.put(RegisterController());
   var searchName = '';
+
+  
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -68,9 +71,7 @@ class _ProductsSearchViewState extends State<ProductsSearchView> {
     return SafeArea(
       child: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance.collection('products')
-        // search by vehicle name, by model, by color with lowercase
-            .orderBy('pCategory')
-             // .where('pName', isGreaterThanOrEqualTo: searchName)
+            .orderBy('pName')
             .startAt([searchName]).endAt(['$searchName\uf8ff'])
             .limit(5)
             .snapshots(),
