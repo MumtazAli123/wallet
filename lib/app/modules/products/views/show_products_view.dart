@@ -11,6 +11,7 @@ import 'package:getwidget/components/card/gf_card.dart';
 import 'package:getwidget/components/list_tile/gf_list_tile.dart';
 import 'package:getwidget/shape/gf_button_shape.dart';
 import 'package:wallet/app/modules/products/controllers/products_controller.dart';
+import 'package:wallet/app/modules/products/views/products_page_view.dart';
 import 'package:wallet/app/modules/products/views/upload_products_view.dart';
 import 'package:wallet/models/products_model.dart';
 import 'package:wallet/notification/push_notification_sys.dart';
@@ -158,9 +159,10 @@ class ShowProductsView extends GetView<ProductsController> {
         children: <Widget>[
           GFButton(
             onPressed: () {
-              // Get.to(() => VehiclePageView(
-              //   model: model,
-              // ));
+              Get.to(() => ProductPageView(
+                  vModel: ProductsModel.fromJson(model.toJson() ),
+                  data: model.toString()));
+
             },
             text: 'View',
             icon: Icon(Icons.remove_red_eye, color: Colors.white),
