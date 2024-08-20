@@ -208,62 +208,50 @@ class _ProductPageViewState extends State<ProductPageView> {
                   },
                   children: [
                     TableRow(children: [
-                      Text('Category:'),
-                      Text(model.pCategory!),
+                      eText('Category:'),
+                      eText(model.pCategory!),
                     ]),
                     TableRow(children: [
-                      Text('Condition:'),
-                      Text(model.pCondition!),
+                      eText('Condition:'),
+                      eText(model.pCondition!),
                     ]),
                     TableRow(children: [
-                      Text('Delivery:'),
+                      eText('Delivery:'),
                       widget.vModel.pDelivery == "Yes"
-                          ? Text(
+                          ? eText(
                               "Free Delivery",
-                              style: const TextStyle(
-                                fontSize: 14,
-                              ),
                             )
-                          : Text(
+                          : eText(
                               "Delivery: Not Available",
-                              style: const TextStyle(
-                                fontSize: 14,
-                              ),
                             ),
                     ]),
                     TableRow(children: [
-                      Text('Return:'),
+                      eText('Return:'),
                       widget.vModel.pReturn == "Yes"
-                          ? Text(
+                          ? eText(
                               "Policy: 7 Days",
-                              style: const TextStyle(
-                                fontSize: 14,
-                              ),
                             )
-                          : Text(
+                          : eText(
                               "Return: Not Available",
-                              style: const TextStyle(
-                                fontSize: 14,
-                              ),
                             ),
                     ]),
                     TableRow(children: [
-                      Text('Color:'),
-                      Text(model.pColor!),
+                      eText('Color:'),
+                      eText(model.pColor!),
                     ]),
                     TableRow(children: [
-                      Text('Size:'),
-                      Text(model.pSize!),
+                      eText('Size:'),
+                      eText(model.pSize!),
                     ]),
                     //   pQuantity
                     TableRow(children: [
-                      Text('Quantity:'),
-                      Text(model.pQuantity!),
+                      eText('Quantity:'),
+                      eText(model.pQuantity!),
                     ]),
                     //   pBrand
                     TableRow(children: [
-                      Text('Brand:'),
-                      Text(model.pBrand!),
+                      eText('Brand:'),
+                      eText(model.pBrand!),
                     ]),
                   ],
                 ),
