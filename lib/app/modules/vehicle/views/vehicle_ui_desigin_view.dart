@@ -10,7 +10,7 @@ class VehicleUiDesiginView extends GetView {
         title: Text('VehicleUiDesiginView'),
         centerTitle: true,
       ),
-      body: Center(
+      body: const Center(
         child: Text(
           'VehicleUiDesiginView is working',
           style: TextStyle(fontSize: 20),

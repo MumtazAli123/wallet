@@ -22,9 +22,10 @@ bool isLoading = false;
 wText(String text, {Color? color, double size = 16}) {
   return Text(
     maxLines: 1,
+
     textAlign: TextAlign.center,
     text,
-    style: GoogleFonts.gabriela(
+    style: GoogleFonts.quando(
       fontSize: size,
       fontWeight: FontWeight.bold,
       color: color,
@@ -32,11 +33,12 @@ wText(String text, {Color? color, double size = 16}) {
   );
 }
 
-eText(String s, {Color? color}) {
+eText(String text, {Color? color}) {
   return Padding(
     padding: const EdgeInsets.all(4.0),
     child: Text(
-      s,
+
+      text,
       style: TextStyle(color: color, fontSize: 16),
 
     ),

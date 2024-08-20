@@ -5,17 +5,21 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:get_time_ago/get_time_ago.dart';
-import 'package:getwidget/components/button/gf_button.dart';
-import 'package:getwidget/shape/gf_button_shape.dart';
-import 'package:getwidget/types/gf_button_type.dart';
+import 'package:getwidget/getwidget.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/app/modules/vehicle/controllers/vehicle_controller.dart';
 import 'package:wallet/app/modules/vehicle/views/offer_view.dart';
+import 'package:wallet/app/modules/vehicle/views/vehicle_view.dart';
 import 'package:wallet/models/vehicle_model.dart';
 
+import '../../../../models/products_model.dart';
+import '../../../../models/realstate_model.dart';
 import '../../../../widgets/mix_widgets.dart';
+import '../../products/views/products_page_view.dart';
 import '../../profile/views/user_details_view.dart';
+import '../../realstate/views/tabbar/realstate_view_page.dart';
 import '../../shops/views/vehicle_rating.dart';
 
 class VehiclePageView extends StatefulWidget {
@@ -176,28 +180,39 @@ class _VehiclePageViewState extends State<VehiclePageView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "Vehicle: ${widget.vModel.vehicleName!}",
-                    style: TextStyle(
-                      fontSize: 20.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue[800],
-                    ),
+                  Icon(
+                    Icons.directions_car,
+                    color: Colors.blue[800],
+                  ),
+                  SizedBox(width: 10.0),
+                  aText(
+                    '${widget.vModel.vehicleName}',
+                    size: 20,
                   ),
                   //   description
                   Text(
-                    "Model: ${widget.vModel.vehicleModel!}, For: ${widget.vModel.vehicleStatus}\n"
-                    "Desc: ${widget.vModel.vehicleDescription!}",
+                      "Model: ${widget.vModel.vehicleModel!}, For: ${widget.vModel.vehicleStatus}\n"),
+                  aText(
+                    'Description',
+                    size: 16,
+                  ),
+                  Card(
+                    elevation: 5,
+                    child: ListTile(
+                      leading: Icon(Icons.description),
+                      title: Text('${widget.vModel.vehicleDescription}'),
+                    ),
                   ),
                   //   details
                   SizedBox(
-                    height: 10,
+                    height: 30,
                   ),
                   aText(
                     'Vehicle Details',
                   ),
+                  Divider(),
                   Table(
-                    border: TableBorder.all(color: Colors.blue),
+                    // border: TableBorder.all(color: Colors.blue),
                     children: [
                       TableRow(
                         children: [
@@ -211,7 +226,8 @@ class _VehiclePageViewState extends State<VehiclePageView> {
                         ),
                         children: [
                           eText('Vehicle Body:', color: Colors.black),
-                          eText('${widget.vModel.vehicleBodyType}', color: Colors.black),
+                          eText('${widget.vModel.vehicleBodyType}',
+                              color: Colors.black),
                         ],
                       ),
                       TableRow(
@@ -226,7 +242,8 @@ class _VehiclePageViewState extends State<VehiclePageView> {
                         ),
                         children: [
                           eText('Vehicle Fuel:'),
-                          eText('${widget.vModel.vehicleFuelType}', color: Colors.black),
+                          eText('${widget.vModel.vehicleFuelType}',
+                              color: Colors.black),
                         ],
                       ),
                       // condition
@@ -243,7 +260,8 @@ class _VehiclePageViewState extends State<VehiclePageView> {
                         ),
                         children: [
                           eText('Vehicle Color:', color: Colors.black),
-                          eText('${widget.vModel.vehicleColor}', color: Colors.black),
+                          eText('${widget.vModel.vehicleColor}',
+                              color: Colors.black),
                         ],
                       ),
                       // status
@@ -255,7 +273,7 @@ class _VehiclePageViewState extends State<VehiclePageView> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 10.0),
+                  Divider(),
                   Text(
                     'Posted: ${(GetTimeAgo.parse(DateTime.parse(widget.vModel.updatedDate!.toDate().toString()).toLocal()))}',
                     style: TextStyle(
@@ -264,88 +282,155 @@ class _VehiclePageViewState extends State<VehiclePageView> {
                       color: Colors.blue[800],
                     ),
                   ),
-                  //   showroom
                   SizedBox(height: 10.0),
-                  aText('Showroom'),
+                  // location
+                  aText(
+                    'Location',
+                    size: 20,
+                  ),
                   Text(
-                    'Name: ${widget.vModel.showroomName!}',
+                    'City: ${widget.vModel.city}',
                     style: TextStyle(
-                      fontSize: 18.0,
+                      fontSize: 16.0,
                       fontWeight: FontWeight.bold,
-                      color: Colors.blue[800],
                     ),
                   ),
-                  //   location
-                  aText('Location'),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.location_on,
-                        color: Colors.green[800],
-                      ),
-                      Text(
-                        ' ${widget.vModel.city!}',
-                        style: TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.blue[800],
-                        ),
-                      ),
-                    ],
-                  ),
-                  //   address
                   Text(
-                    'Address: ${widget.vModel.address!}',
-                    style: TextStyle(),
+                    '${widget.vModel.address}',
                   ),
+                  //
+                  //  showroom
+                  Divider(),
+                  SizedBox(height: 20.0),
+                  aText(
+                    "Seller Details",
+                  ),
+
+                  ListTile(
+                    leading: Icon(Icons.person),
+                    title: eText('Name: ${widget.vModel.sellerName}'),
+                    subtitle: eText('Phone: ${widget.vModel.phone}'),
+                  ),
+                  //   explore insurance card
+                  SizedBox(height: 20.0),
+                  Divider(),
+                  Card(
+                    elevation: 5,
+                    child: ListTile(
+                      onTap: () {
+                        urlLauncher('https://paysaw.com/');
+                      },
+                      title: Text('Explore car Insurance'),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                              'Insurance Start at PKR 105,000. 3rd Party Insurance'),
+                          Text(
+                            "View plan details",
+                            style: TextStyle(
+                              color: Colors.blue,
+                            ),
+                          )
+                        ],
+                      ),
+                      trailing: SizedBox(
+                        height: 60,
+                        width: 60,
+                        child: Lottie.asset('assets/lottie/rstate.json'),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 20.0),
+                  // Explore Tacker GPS
+                  Card(
+                    elevation: 5,
+                    child: ListTile(
+                      onTap: () {
+                        urlLauncher('https://paysaw.com/');
+                      },
+                      title: Text('Explore Tacker GPS'),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Tacker GPS Start at PKR 3,000.'),
+                          Text(
+                            "View plan details",
+                            style: TextStyle(
+                              color: Colors.blue,
+                            ),
+                          )
+                        ],
+                      ),
+                      trailing: SizedBox(
+                        height: 60,
+                        width: 60,
+                        child: Icon(
+                          Icons.location_on,
+                          color: Colors.blue,
+                        ),
+                      ),
+                    ),
+                  ),
+                  //  more related vehicles
+                  SizedBox(height: 20.0),
+                  aText('More Related Vehicles'),
                   SizedBox(height: 10.0),
-                  //   contact
-                  aText('Contact'),
-                  GestureDetector(
-                    onTap: () {
-                      urlLauncher('tel:${widget.vModel.phone}');
-                    },
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.phone,
-                          color: Colors.green[800],
-                        ),
-                        Text(
-                          ' ${widget.vModel.phone!}',
-                          style: TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blue[800],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  //   email
-                  GestureDetector(
-                    onTap: () {
-                      urlLauncher('mailto:${widget.vModel.email}');
-                    },
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.email,
-                          color: Colors.green[800],
-                        ),
-                        Text(
-                          ' ${widget.vModel.email!}',
-                          style: TextStyle(
-                            fontSize: 12.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  //   date
+                  //   related vehicles
                   SizedBox(
-                    height: 10.0,
+                    height: 200,
+                    child: StreamBuilder<QuerySnapshot>(
+                        stream: FirebaseFirestore.instance
+                            .collection('vehicle')
+                            .where('vehicleType',
+                                isEqualTo: widget.vModel.vehicleType)
+                            .limit(15)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: snapshot.data!.docs.length,
+                              itemBuilder: (context, index) {
+                                return _buildBox(
+                                    snapshot.data!.docs[index].data());
+                              },
+                            );
+                          } else {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                        }),
+                  ),
+                  //   real state
+                  SizedBox(height: 20.0),
+                  aText('Products'),
+                  SizedBox(height: 10.0),
+                  //   related vehicles
+                  SizedBox(
+                    height: 280,
+                    child: StreamBuilder(
+                        stream: FirebaseFirestore.instance
+                            .collection("products")
+                            .orderBy("pCreatedAt", descending: true)
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasData) {
+                            return ListView.builder(
+                              scrollDirection: Axis.horizontal,
+                              itemCount: snapshot.data!.docs.length,
+                              itemBuilder: (context, index) {
+                                return wBuildRealstateC(
+                                    snapshot.data!.docs[index]);
+                              },
+                            );
+                          } else {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+                        }),
                   ),
                 ],
               ),
@@ -372,23 +457,23 @@ class _VehiclePageViewState extends State<VehiclePageView> {
           GestureDetector(
             onTap: () {
               Get.to(() => UserDetailsView(
-                userID: widget.vModel.sellerId,
-              ));
+                    userID: widget.vModel.sellerId,
+                  ));
             },
             child: widget.vModel.sellerImage!.isEmpty
                 ? CircleAvatar(
-              radius: 30,
-              backgroundColor: Colors.white,
-              child: Icon(
-                Icons.person,
-                color: Colors.black,
-              ),
-            )
+                    radius: 30,
+                    backgroundColor: Colors.white,
+                    child: Icon(
+                      Icons.person,
+                      color: Colors.black,
+                    ),
+                  )
                 : CircleAvatar(
-              radius: 30,
-              backgroundImage:
-              NetworkImage(widget.vModel.image.toString()),
-            ),
+                    radius: 25,
+                    backgroundImage:
+                        NetworkImage(widget.vModel.sellerImage.toString()),
+                  ),
           ),
           SizedBox(
             width: 5,
@@ -406,32 +491,19 @@ class _VehiclePageViewState extends State<VehiclePageView> {
             onPressed: () {
               // add rating
               Get.to(() => VehicleRating(
-                // Transition.zoom,
-                sellerId: widget.vModel.sellerId,
-                image: widget.vModel.sellerImage,
-                name: widget.vModel.sellerName,
-                sellerImage: widget.vModel.sellerImage,
-              ));
+                    // Transition.zoom,
+                    sellerId: widget.vModel.sellerId,
+                    image: widget.vModel.sellerImage,
+                    name: widget.vModel.sellerName,
+                    sellerImage: widget.vModel.sellerImage,
+                  ));
             },
           ),
           //   add to cart
           Spacer(),
           GFButton(
-            // onPressed: () {
-            //   // send message to seller on whatsapp
-            //   launch(
-            //       'https://wa.me/${widget.vModel.phone}?text=ZubiPay\n'
-            //           '\n'
-            //           'I want to buy your ${widget.vModel.vehicleName}\n'
-            //           'Rs: ${widget.vModel.vehiclePrice}'
-            //           '\nColor: ${widget.vModel.vehicleColor}\n'
-            //           'Description: ${widget.vModel.vehicleDescription}\n'
-            //           'Model: ${widget.vModel.vehicleModel}\n'
-            //           'Vehicle Type: ${widget.vModel.vehicleType}\n'
-            //           'Km: ${widget.vModel.vehicleKm}\n');
-            // },
-            onPressed: (){
-              Get.to(()=> OfferView(vehicle: widget.vModel));
+            onPressed: () {
+              Get.to(() => OfferView(vehicle: widget.vModel));
             },
             text: 'Give Offer',
             textStyle: GoogleFonts.aBeeZee(fontSize: 20),
@@ -446,6 +518,141 @@ class _VehiclePageViewState extends State<VehiclePageView> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  _buildBox(data) {
+    return SizedBox(
+      width: 200,
+      child: GestureDetector(
+        onTap: () {
+          //   show on  same page
+          Get.to(() => VehicleView());
+        },
+        child: Card(
+          elevation: 5,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Image.network(
+                data['image'],
+                height: 100,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
+              Text(
+                data['vehicleName'],
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              Text(
+                'Rs: ${data['vehiclePrice']}',
+                style: TextStyle(
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  wBuildRealstateC(QueryDocumentSnapshot<Map<String, dynamic>> doc) {
+    return SizedBox(
+      width: 200,
+      height: 300,
+      child: GestureDetector(
+        onTap: () {
+          //   show on  same page
+          Get.to(() => ProductPageView(
+              vModel: ProductsModel.fromJson(doc.data()), data: "products"));
+
+        },
+        child: Card(
+          elevation: 5,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Image.network(
+                doc['pImages'],
+                height: 100,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
+              Container(
+                padding: const EdgeInsets.all(3),
+                color: Colors.red,
+                child: doc['pDiscountType'] == "Percentage"
+                    ? Text(
+                        '${doc['pDiscount']}% OFF',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
+                    : aText(
+                        'Rs: ${doc['pDiscount']} OFF',
+                        color: Colors.white,
+                        size: 12,
+                      ),
+              ),
+              Text(
+                maxLines: 1,
+                "${doc['pName']} ",
+                style: TextStyle(
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              eText("${doc['pCondition']}"),
+              SizedBox(
+                height: 60,
+                width: double.infinity,
+                child: Stack(
+                  children: [
+                    // show price and cross after show discount price
+                    Positioned(
+                      right: 0,
+                      child: Column(
+                        children: [
+                          Text(
+                            'Rs:${doc['pPrice']}',
+                            style: const TextStyle(
+                              color: Colors.grey,
+                              decoration: TextDecoration.lineThrough,
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                              color: Colors.green,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Text(
+                              doc['pDiscountType'] == "Percentage"
+                                  ? 'Rs:${double.parse(doc['pPrice']) - (double.parse(doc['pPrice']) * double.parse(doc['pDiscount']) / 100)}'
+                                  : 'Rs:${double.parse(doc['pPrice']) - double.parse(doc['pDiscount'])}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

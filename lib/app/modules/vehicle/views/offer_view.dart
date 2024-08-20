@@ -23,6 +23,18 @@ class OfferView extends StatefulWidget {
 
 class _OfferViewState extends State<OfferView> {
   final controller = Get.put(VehicleController());
+
+  @override
+  void initState() {
+    super.initState();
+  }
+  @override
+  void dispose() {
+    controller.offerController.clear();
+    controller.offerDescriptionController.clear();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

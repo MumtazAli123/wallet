@@ -1,4 +1,3 @@
-import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -121,6 +120,7 @@ class _VehicleEditViewState extends State<VehicleEditView> {
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
                 controller: priceController,
+                keyboardType: TextInputType.number,
                 decoration:  InputDecoration(
                   labelText: 'Vehicle Price',
                   hintText: 'Vehicle Price (Rs) ${widget.model.vehiclePrice}',
@@ -132,13 +132,13 @@ class _VehicleEditViewState extends State<VehicleEditView> {
                 },
               ),
             ),
-
+            // vehicle
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: DropdownButtonFormField(
                 decoration: InputDecoration(
-                  labelText: 'Vehicle Type',
-                  hintText: 'Vehicle Type: ${widget.model.vehicleType}',
+                  labelText: 'Vehicle ',
+                  hintText: 'Vehicle : ${widget.model.vehicleType}',
                   prefixIcon: const Icon(Icons.directions_car),
                 ),
                 value: widget.model.vehicleType,
@@ -171,6 +171,29 @@ class _VehicleEditViewState extends State<VehicleEditView> {
                     .toList(),
                 onChanged: (value) {
                   widget.model.vehicleModel = value;
+                },
+              ),
+            ),
+            // vehicleTransmission
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: DropdownButtonFormField(
+                decoration: InputDecoration(
+                  labelText: 'Vehicle Type',
+                  hintText: 'Vehicle Type: ${widget.model.vehicleTransmission}',
+                  prefixIcon: const Icon(Icons.directions_car),
+                ),
+                value: widget.model.vehicleTransmission,
+                items: controller.vehicleTransmission
+                    .map((e) => DropdownMenuItem(
+                          value: e,
+                          child: Text(e),
+                        ))
+                    .toList(),
+                onChanged: (value) {
+                 setState(() {
+                    widget.model.vehicleTransmission = value;
+                 });
                 },
               ),
             ),
@@ -250,7 +273,7 @@ class _VehicleEditViewState extends State<VehicleEditView> {
                 decoration: InputDecoration(
                   labelText: 'City',
                   hintText: 'City: ${widget.model.city}',
-                  prefixIcon: Icon(Icons.location_city),
+                  prefixIcon: const Icon(Icons.location_city),
                 ),
                 onChanged: (value) {
                   widget.model.city = value;
@@ -269,7 +292,7 @@ class _VehicleEditViewState extends State<VehicleEditView> {
                 decoration: InputDecoration(
                   labelText: 'Address',
                   hintText: 'Address: ${widget.model.address}',
-                  prefixIcon: Icon(Icons.location_on),
+                  prefixIcon: const Icon(Icons.location_on),
                 ),
                 onChanged: (value) {
                   widget.model.address = value;
@@ -323,87 +346,6 @@ class _VehicleEditViewState extends State<VehicleEditView> {
           color: Colors.white,
         ),
         color: Colors.green,
-      ),
-    );
-  }
-  _phoneField() {
-    return TextFormField(
-      maxLength: 10,
-      onChanged: (value) {
-        setState(() {
-          hintText = 'Phone';
-        });
-      },
-      keyboardType: TextInputType.phone,
-      style: const TextStyle(
-        color: Colors.black,
-        fontSize: 18,
-        fontWeight: FontWeight.w500,
-      ),
-      decoration: InputDecoration(
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
-          borderSide: const BorderSide(
-            color: Colors.green,
-          ),
-        ),
-        hintText: 'Phone Number',
-        hintStyle: const TextStyle(
-          color: Colors.black,
-        ),
-        // like 300 1234567
-        helperText: 'Update ${widget.model.phone} Phone Number if required',
-        helperStyle: const TextStyle(
-          color: Colors.black,
-        ),
-
-        labelStyle: const TextStyle(
-          color: Colors.black,
-        ),
-        prefixStyle: const TextStyle(
-          color: Colors.black,
-        ),
-        prefixIcon: Container(
-          padding: const EdgeInsets.all(10),
-          child: TextButton(
-            onPressed: () {
-              showCountryPicker(
-                context: context,
-                showPhoneCode: true,
-                onSelect: (Country country) {
-                  setState(() {
-                    controller1.selectedCountry = country;
-                    controller1.countryCode = country.phoneCode;
-                    controller1.flagUri = country.flagEmoji;
-                  });
-                },
-              );
-            },
-            child: Text(
-              '${controller1.selectedCountry.flagEmoji} +${controller1.selectedCountry.phoneCode}',
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
-            ),
-          ),
-        ),
-        suffixIcon: controller1.phoneController.text.length > 9
-            ? Container(
-          margin: const EdgeInsets.only(right: 10),
-          height: 20,
-          width: 20,
-          decoration: const BoxDecoration(
-            shape: BoxShape.circle,
-            color: Colors.green,
-          ),
-          child: const Icon(
-            Icons.done,
-            color: Colors.white,
-            size: 20,
-          ),
-        )
-            : null,
       ),
     );
   }
