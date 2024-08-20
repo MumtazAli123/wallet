@@ -13,7 +13,6 @@ import '../../../../widgets/mix_widgets.dart';
 import '../views/show_vehicle_view.dart';
 
 class VehicleController extends GetxController {
-
   // showroom name controller
   TextEditingController showroomNameController = TextEditingController();
   TextEditingController vehicleNameController = TextEditingController();
@@ -22,6 +21,9 @@ class VehicleController extends GetxController {
   TextEditingController vehicleKmController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   TextEditingController cityController = TextEditingController();
+  // offer
+  TextEditingController offerController = TextEditingController();
+  TextEditingController offerDescriptionController = TextEditingController();
 
   // vehicle type
   List<String> vehicleModel = [
@@ -226,6 +228,8 @@ class VehicleController extends GetxController {
     vehiclePriceController = TextEditingController();
     vehicleDescriptionController = TextEditingController();
     vehicleKmController = TextEditingController();
+    offerController = TextEditingController();
+    offerDescriptionController = TextEditingController();
     // vehicleList.bindStream(realStateStream());
     vehicleList.value = [];
   }
@@ -241,6 +245,8 @@ class VehicleController extends GetxController {
     vehiclePriceController.dispose();
     vehicleDescriptionController.dispose();
     vehicleKmController.dispose();
+    offerController.dispose();
+    offerDescriptionController.dispose();
   }
 
   void selectMultipleImage() async {
@@ -473,4 +479,32 @@ class VehicleController extends GetxController {
   }
 
   void favoriteSendAndReceive(String string, param1) {}
+
+  void addVehicleToOffer(VehicleModel vehicle) async {
+    await FirebaseFirestore.instance
+        .collection("sellers")
+        .doc(user!.uid)
+        .collection("vehicle")
+        .doc(vehicle.vehicleId)
+        .collection("offer")
+        .doc(sharedPreferences!.getString("uid"))
+        .set({
+      "vehicleId": vehicle.vehicleId,
+      "showroomName": vehicle.showroomName,
+      "vName": vehicle.vehicleName,
+      "price": vehicle.vehiclePrice,
+      "description": vehicle.vehicleDescription,
+      'buyerId': sharedPreferences!.getString("uid"),
+      'buyerName': sharedPreferences!.getString("name"),
+      'buyerPhone': sharedPreferences!.getString("phone"),
+      "buyerOffer": offerController.text.trim(),
+      "buyerDescription": offerDescriptionController.text.trim(),
+      "buyerImage": sharedPreferences!.getString("image"),
+      "publishedDate": date,
+      "updatedDate": date,
+    }).then((value) {
+      Get.snackbar("Success", "Vehicle Added to Offer Successfully",
+          backgroundColor: Colors.green, colorText: Colors.white);
+    });
+  }
 }

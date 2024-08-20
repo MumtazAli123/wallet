@@ -103,7 +103,9 @@ class ShowVehicleView extends GetView<VehicleController> {
             ),
 
             SizedBox(width: 10.0),
-            wText('${model.vehicleName} For ${model.vehicleType!}'),
+            wText('${model.vehicleName} For ${model.vehicleStatus!}'),
+            SizedBox(width: 10.0),
+            Text('Model: ${model.vehicleModel}'),
           ],
         ),
         subTitle: Padding(
@@ -115,13 +117,9 @@ class ShowVehicleView extends GetView<VehicleController> {
                 color: Colors.blueAccent,
               ),
               SizedBox(width: 10.0),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('City: ${model.city}'),
-                  Text('Address: ${model.address}'),
-                ],
-              )
+              Text('City: ${model.city}\n'
+                  'Price: ${model.vehiclePrice}'),
+
             ],
           ),
         ),

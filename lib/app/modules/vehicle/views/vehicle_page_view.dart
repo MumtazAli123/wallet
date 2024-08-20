@@ -6,15 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:getwidget/components/button/gf_button.dart';
-import 'package:getwidget/components/button/gf_button_bar.dart';
 import 'package:getwidget/shape/gf_button_shape.dart';
 import 'package:getwidget/types/gf_button_type.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/app/modules/vehicle/controllers/vehicle_controller.dart';
+import 'package:wallet/app/modules/vehicle/views/offer_view.dart';
 import 'package:wallet/models/vehicle_model.dart';
 
-import '../../../../widgets/currency_format.dart';
 import '../../../../widgets/mix_widgets.dart';
 import '../../profile/views/user_details_view.dart';
 import '../../shops/views/vehicle_rating.dart';
@@ -202,8 +201,8 @@ class _VehiclePageViewState extends State<VehiclePageView> {
                     children: [
                       TableRow(
                         children: [
-                          Text('Vehicle Type:'),
-                          Text('${widget.vModel.vehicleTransmission}'),
+                          eText('Vehicle Type:'),
+                          eText('${widget.vModel.vehicleTransmission}'),
                         ],
                       ),
                       TableRow(
@@ -211,14 +210,14 @@ class _VehiclePageViewState extends State<VehiclePageView> {
                           color: Colors.blue[100],
                         ),
                         children: [
-                          Text('Vehicle Body:'),
-                          Text('${widget.vModel.vehicleBodyType}'),
+                          eText('Vehicle Body:', color: Colors.black),
+                          eText('${widget.vModel.vehicleBodyType}', color: Colors.black),
                         ],
                       ),
                       TableRow(
                         children: [
-                          Text('Km:'),
-                          Text('${widget.vModel.vehicleKm}'),
+                          eText('Km:'),
+                          eText('${widget.vModel.vehicleKm}'),
                         ],
                       ),
                       TableRow(
@@ -226,15 +225,15 @@ class _VehiclePageViewState extends State<VehiclePageView> {
                           color: Colors.blue[100],
                         ),
                         children: [
-                          Text('Vehicle Fuel:'),
-                          Text('${widget.vModel.vehicleFuelType}'),
+                          eText('Vehicle Fuel:'),
+                          eText('${widget.vModel.vehicleFuelType}', color: Colors.black),
                         ],
                       ),
                       // condition
                       TableRow(
                         children: [
-                          Text('Vehicle Condition:'),
-                          Text('${widget.vModel.vehicleCondition}'),
+                          eText('Vehicle Condition:'),
+                          eText('${widget.vModel.vehicleCondition}'),
                         ],
                       ),
                       // vehicleColor
@@ -243,15 +242,15 @@ class _VehiclePageViewState extends State<VehiclePageView> {
                           color: Colors.blue[100],
                         ),
                         children: [
-                          Text('Vehicle Color:'),
-                          Text('${widget.vModel.vehicleColor}'),
+                          eText('Vehicle Color:', color: Colors.black),
+                          eText('${widget.vModel.vehicleColor}', color: Colors.black),
                         ],
                       ),
                       // status
                       TableRow(
                         children: [
-                          Text('Vehicle Status:'),
-                          Text('${widget.vModel.status}'),
+                          eText('Vehicle Status:'),
+                          eText('${widget.vModel.status}'),
                         ],
                       ),
                     ],
@@ -418,20 +417,23 @@ class _VehiclePageViewState extends State<VehiclePageView> {
           //   add to cart
           Spacer(),
           GFButton(
-            onPressed: () {
-              // send message to seller on whatsapp
-              launch(
-                  'https://wa.me/${widget.vModel.phone}?text=ZubiPay\n'
-                      '\n'
-                      'I want to buy your ${widget.vModel.vehicleName}\n'
-                      'Rs: ${widget.vModel.vehiclePrice}'
-                      '\nColor: ${widget.vModel.vehicleColor}\n'
-                      'Description: ${widget.vModel.vehicleDescription}\n'
-                      'Model: ${widget.vModel.vehicleModel}\n'
-                      'Vehicle Type: ${widget.vModel.vehicleType}\n'
-                      'Km: ${widget.vModel.vehicleKm}\n');
+            // onPressed: () {
+            //   // send message to seller on whatsapp
+            //   launch(
+            //       'https://wa.me/${widget.vModel.phone}?text=ZubiPay\n'
+            //           '\n'
+            //           'I want to buy your ${widget.vModel.vehicleName}\n'
+            //           'Rs: ${widget.vModel.vehiclePrice}'
+            //           '\nColor: ${widget.vModel.vehicleColor}\n'
+            //           'Description: ${widget.vModel.vehicleDescription}\n'
+            //           'Model: ${widget.vModel.vehicleModel}\n'
+            //           'Vehicle Type: ${widget.vModel.vehicleType}\n'
+            //           'Km: ${widget.vModel.vehicleKm}\n');
+            // },
+            onPressed: (){
+              Get.to(()=> OfferView(vehicle: widget.vModel));
             },
-            text: 'Buy Now',
+            text: 'Give Offer',
             textStyle: GoogleFonts.aBeeZee(fontSize: 20),
             type: GFButtonType.solid,
             color: Colors.green,

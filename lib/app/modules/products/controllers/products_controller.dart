@@ -76,6 +76,10 @@ class ProductsController extends GetxController {
     "XXL",
     "XXXL",
     "All Size",
+    "Others",
+    "1ft",
+    "2ft",
+    "3ft",
     "4XL",
     "5XL",
     "6XL",
@@ -192,7 +196,7 @@ class ProductsController extends GetxController {
     try {
       FirebaseFirestore.instance
           .collection("sellers")
-          .doc(user!.uid)
+          .doc(sharedPreferences!.getString("uid"))
           .collection("products")
           .doc(pUniqueId)
           .set({
@@ -264,7 +268,7 @@ class ProductsController extends GetxController {
   productsStream() {
     return FirebaseFirestore.instance
         .collection("sellers")
-        .doc(user!.uid)
+        .doc(sharedPreferences!.getString("uid"))
         .collection("products")
         .orderBy("publishedDate", descending: true)
         .snapshots();
@@ -284,7 +288,7 @@ class ProductsController extends GetxController {
     try {
       FirebaseFirestore.instance
           .collection("sellers")
-          .doc(user!.uid)
+          .doc(sharedPreferences!.getString("uid"))
           .collection("products")
           .doc(id)
           .delete()
@@ -411,7 +415,7 @@ class ProductsController extends GetxController {
                             child: Column(
                               children: [
                                 Text(
-                                  '\Rs:${data['pPrice']}',
+                                  'Rs:${data['pPrice']}',
                                   style: const TextStyle(
                                     color: Colors.grey,
                                     decoration: TextDecoration.lineThrough,
@@ -425,12 +429,12 @@ class ProductsController extends GetxController {
                                   ),
                                   child: Text(
                                     data['pDiscountType'] == "Percentage"
-                                        ? '\Rs:${double.parse(
+                                        ? 'Rs:${double.parse(
                                         data['pPrice']) -
                                         (double.parse(data['pPrice']) *
                                             double.parse(data['pDiscount']) /
                                             100)}'
-                                        : '\Rs:${double.parse(
+                                        : 'Rs:${double.parse(
                                         data['pPrice']) -
                                         double.parse(data['pDiscount'])}',
                                     style: const TextStyle(

@@ -32,10 +32,14 @@ wText(String text, {Color? color, double size = 16}) {
   );
 }
 
-eText(String s, {required Color color}) {
-  return Text(
-    s,
-    style: TextStyle(color: color),
+eText(String s, {Color? color}) {
+  return Padding(
+    padding: const EdgeInsets.all(4.0),
+    child: Text(
+      s,
+      style: TextStyle(color: color, fontSize: 16),
+
+    ),
   );
 }
 

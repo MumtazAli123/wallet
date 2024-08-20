@@ -14,6 +14,7 @@ import 'package:wallet/app/modules/products/controllers/products_controller.dart
 import 'package:wallet/app/modules/products/views/products_edit_view.dart';
 import 'package:wallet/app/modules/products/views/products_page_view.dart';
 import 'package:wallet/app/modules/products/views/upload_products_view.dart';
+import 'package:wallet/global/global.dart';
 import 'package:wallet/models/products_model.dart';
 import 'package:wallet/notification/push_notification_sys.dart';
 
@@ -67,7 +68,7 @@ class ShowProductsView extends GetView<ProductsController> {
     return StreamBuilder<QuerySnapshot>(
       stream: FirebaseFirestore.instance
           .collection('sellers')
-          .doc(user!.uid)
+          .doc(sharedPreferences!.getString('uid'))
           .collection('products')
           .orderBy('pCreatedAt', descending: true)
           .snapshots(),
