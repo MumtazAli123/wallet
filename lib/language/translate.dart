@@ -85,6 +85,7 @@ class LanguageTranslate extends Translations {
     },
     //   sindhi
     Utils.getLanguageCode('Sindhi'): {
+      "Your Balance:": "اوهان جو بيلنس: ",
       'Text Extractor App': 'ٽيڪسٽ ايگزٽر ايپ',
       'Price': 'قيمت',
       'Add Product': 'پروڊڪٽ شامل ڪريو',

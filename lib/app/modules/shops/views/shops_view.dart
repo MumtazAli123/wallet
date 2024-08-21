@@ -132,7 +132,6 @@ class _ShopsViewState extends State<ShopsView> {
         _buildShops(),
         AllProducts(),
         _buildRealState(),
-        // _buildShops(),
       ],
     );
   }
@@ -934,7 +933,19 @@ class _ShopsViewState extends State<ShopsView> {
                       ),
 
                       title: Text('Welcome ${snapshot.data!['name']}'),
-                      subtitle: Text('Your Balance: ${snapshot.data!['balance']}'),
+                      subtitle: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('Your Balance:'.tr),
+                          Text(
+                            'Rs: ${snapshot.data!['balance']}',
+                            style: TextStyle(
+                              color: Colors.green,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
                       trailing: IconButton(
                         onPressed: () {
                           _buildBottomSheet(context);
