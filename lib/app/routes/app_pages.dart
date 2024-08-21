@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:get/get.dart';
 
+import 'package:wallet/app/modules/inspection/bindings/inspection_binding.dart';
+import 'package:wallet/app/modules/inspection/views/inspection_view.dart';
 import 'package:wallet/app/modules/products/bindings/products_binding.dart';
 import 'package:wallet/app/modules/products/views/products_view.dart';
 import 'package:wallet/app/modules/profile/bindings/profile_binding.dart';
@@ -145,6 +147,11 @@ class AppPages {
       name: _Paths.PROFILE,
       page: () => ProfileView(),
       binding: ProfileBinding(),
+    ),
+    GetPage(
+      name: _Paths.INSPECTION,
+      page: () => InspectionView(),
+      binding: InspectionBinding(),
     ),
   ];
 }

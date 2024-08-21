@@ -2,26 +2,27 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 
 import 'package:get/get.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:getwidget/components/alert/gf_alert.dart';
-import 'package:getwidget/components/avatar/gf_avatar.dart';
 import 'package:getwidget/components/button/gf_button.dart';
 import 'package:getwidget/components/button/gf_button_bar.dart';
 import 'package:getwidget/components/rating/gf_rating.dart';
-import 'package:getwidget/shape/gf_avatar_shape.dart';
 import 'package:getwidget/types/gf_alert_type.dart';
 import 'package:lottie/lottie.dart';
+import 'package:wallet/app/modules/products/controllers/products_controller.dart';
 import 'package:wallet/app/modules/shops/views/vehicle_rating.dart';
 import 'package:wallet/models/realstate_model.dart';
 import 'package:wallet/widgets/my_drawer.dart';
 
 import '../../../../global/global.dart';
+import '../../../../models/products_model.dart';
 import '../../../../models/vehicle_model.dart';
 import '../../../../widgets/mix_widgets.dart';
+import '../../products/views/products_page_view.dart';
 import '../../products/views/show_products_view.dart';
+import '../../products/views/tabbar/all_products.dart';
 import '../../realstate/views/show_realstate.dart';
 import '../../realstate/views/tabbar/realstate_view_page.dart';
 import '../../vehicle/controllers/vehicle_controller.dart';
@@ -36,19 +37,20 @@ class ShopsView extends StatefulWidget {
 }
 
 class _ShopsViewState extends State<ShopsView> {
-  final controller = Get.put(VehicleController());
+  final controllerVehicle = Get.put(VehicleController());
+  final controller = Get.put(ProductsController());
   bool isLoading = false;
   final Dio dio = Dio();
 
   @override
   void initState() {
     super.initState();
-    controller.allVehicleStream();
+    controllerVehicle.allVehicleStream();
     // PushNotificationSys pushNotificationSys = PushNotificationSys();
     // pushNotificationSys.generateDeviceToken();
     // pushNotificationSys.whenNotificationReceived();
-
   }
+
   @override
   void dispose() {
     super.dispose();
@@ -57,7 +59,7 @@ class _ShopsViewState extends State<ShopsView> {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 5,
+      length: 4,
       child: GestureDetector(
         onTap: () {
           FocusScope.of(context).unfocus();
@@ -75,6 +77,47 @@ class _ShopsViewState extends State<ShopsView> {
               color: Colors.white,
             ),
           ),
+          appBar: AppBar(
+            title: wText('ZubiPay'.tr, size: 20),
+            centerTitle: true,
+            actions: [
+              IconButton(
+                onPressed: () {
+                  wBuildLanguageBottomSheet(context);
+                },
+                icon: const Icon(Icons.language),
+              ),
+              IconButton(
+                onPressed: () {
+                  _buildDialogProducts(context);
+                },
+                icon: Icon(Icons.add),
+              ),
+            ],
+            bottom: TabBar(
+              tabAlignment: TabAlignment.center,
+              controller: controller.fabController,
+              isScrollable: true,
+              tabs: [
+                Tab(
+                  icon: Icon(Icons.home),
+                  text: 'Home'.tr,
+                ),
+                Tab(
+                  icon: Icon(Icons.car_rental),
+                  text: 'Vehicles'.tr,
+                ),
+                Tab(
+                  icon: Icon(Icons.shopping_cart),
+                  text: 'Products'.tr,
+                ),
+                Tab(
+                  icon: Icon(Icons.real_estate_agent),
+                  text: 'Real State'.tr,
+                ),
+              ],
+            ),
+          ),
           body: _buildBody(),
         ),
       ),
@@ -82,111 +125,21 @@ class _ShopsViewState extends State<ShopsView> {
   }
 
   Widget _buildBody() {
-    return SafeArea(
-      child: NestedScrollView(
-          headerSliverBuilder: (context, innerBoxIsScrolled) {
-            return [
-              SliverAppBar(
-                leading: IconButton(
-                  onPressed: () {
-                    Scaffold.of(context).openDrawer();
-                  },
-                  icon: const Icon(Icons.menu),
-                ),
-                title: wText('ZubiPay'.tr, size: 20),
-                expandedHeight: 550.0,
-                centerTitle: true,
-                floating: true,
-                pinned: true,
-                snap: true,
-                actions: [
-                  IconButton(
-                    onPressed: () {
-                      wBuildLanguageBottomSheet(context);
-                    },
-                    icon: const Icon(Icons.language),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      _buildDialogProducts(context);
-                    },
-                    icon: Icon(Icons.add),
-                  ),
-                ],
-                flexibleSpace: FlexibleSpaceBar(
-                  background: _buildHeader(),
-                ),
-              ),
-            ];
-          },
-          body: _buildShops()),
+    return TabBarView(
+      children: [
+        _buildHome(),
+        _buildShops(),
+        AllProducts(),
+        _buildRealState(),
+        // _buildShops(),
+      ],
     );
   }
 
-  _buildHeader() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          //   children: [
-          //     GestureDetector(
-          //       onTap: () {
-          //         Scaffold.of(context).openDrawer();
-          //       },
-          //       child: Container(
-          //         decoration: BoxDecoration(
-          //           color: Colors.grey[200],
-          //           borderRadius: BorderRadius.circular(10),
-          //         ),
-          //         child: Lottie.asset('assets/lottie/shop.json',
-          //             width: 80, height: 80),
-          //       ),
-          //     ),
-          //     Lottie.asset('assets/lottie/earn.json', width: 100, height: 100),
-          //     Lottie.asset('assets/lottie/sale.json', width: 100, height: 100),
-          //   ],
-          // ),
-          SizedBox(height: 40.0),
-          GestureDetector(
-            onTap: () {
-              _buildDialogProducts(context);
-            },
-            child: Container(
-              height: 180,
-              width: double.infinity,
-              padding: EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                image: DecorationImage(
-                  image: AssetImage('assets/images/zubipay.png'),
-                  fit: BoxFit.fill,
-                ),
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-          ),
-          SizedBox(height: 10.0),
-          _buildCategories(),
-          SizedBox(height: 10.0),
-          // _buildRealState(),
-          Expanded(child: _buildRealState()),
-          // SizedBox(height: 10.0),
-          // aText(
-          //     "Vehicle's".tr),
-          // Expanded(child: _buildAvatar()),
-
-        ],
-      ),
-    );
-  }
 
   _buildShops() {
     return StreamBuilder<QuerySnapshot>(
-      stream: controller.allVehicleStream(),
+      stream: controllerVehicle.allVehicleStream(),
       builder: (context, snapshot) {
         try {
           if (snapshot.hasData) {
@@ -213,39 +166,6 @@ class _ShopsViewState extends State<ShopsView> {
     );
   }
 
-  _buildCategories() {
-    return Center(
-      child: SizedBox(
-        height: 65,
-        child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-          Expanded(
-              child: _buildCategoryItem(
-                  onTap: () {
-                    Get.to(() => ShowRealstate());
-                  },
-                  name: 'Real State'.tr,
-                  icon: Icons.real_estate_agent)),
-          SizedBox(width: 10.0),
-          Expanded(
-              child: _buildCategoryItem(
-                  onTap: () {
-                    Get.toNamed('/vehicle');
-                  },
-                  name: 'Vehicles'.tr,
-                  icon: Icons.local_taxi)),
-          SizedBox(width: 10.0),
-          Expanded(
-              child: _buildCategoryItem(
-                  onTap: () {
-                    Get.toNamed('/products'.tr);
-                  },
-                  name: 'Products'.tr,
-                  icon: Icons.shopping_cart)),
-          // Expanded(child: _buildCategoryItem(name: 'Others')),
-        ]),
-      ),
-    );
-  }
 
   _buildShopItem(model) {
     return GestureDetector(
@@ -333,30 +253,6 @@ class _ShopsViewState extends State<ShopsView> {
     );
   }
 
-  _buildCategoryItem(
-      {required String name, bool selected = false, Function()? onTap, IconData? icon}) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        decoration: BoxDecoration(
-          color: selected ? Get.theme.primaryColor : Colors.green[600],
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Column(
-          children: [
-            Icon(
-              icon,
-              color: selected ? Colors.white : Colors.white,
-            ),
-            Center(
-              child: wText(name, color: selected ? Colors.white : Colors.white),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
   ratingBar(int i) {
     return Row(
@@ -446,26 +342,27 @@ class _ShopsViewState extends State<ShopsView> {
 
   _buildRealState() {
     return StreamBuilder<QuerySnapshot>(
-      stream: controller.allRealStateStream(),
+      stream: controllerVehicle.allRealStateStream(),
       builder: (context, snapshot) {
         try {
           if (snapshot.hasData) {
             return GridView(
               controller: ScrollController(),
-              scrollDirection: Axis.horizontal,
+              scrollDirection: Axis.vertical,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 1,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-            ),
+                crossAxisCount: 2,
+                crossAxisSpacing: 5,
+                mainAxisSpacing: 5,
+              ),
               children: List.generate(snapshot.data!.docs.length, (index) {
                 var data = snapshot.data!.docs[index].data() as Map;
-                RealStateModel model = RealStateModel.fromJson(data as Map<String, dynamic>);
+                RealStateModel model =
+                    RealStateModel.fromJson(data as Map<String, dynamic>);
                 return _buildCard(
                   onTap: () {
                     Get.to(() => RealstateViewPage(
-                        rsModel: RealStateModel.fromJson(model.toJson()), doc: ''));
-
+                        rsModel: RealStateModel.fromJson(model.toJson()),
+                        doc: ''));
                   },
                   image: model.image.toString(),
                   label: "${model.realStateType.toString()}\n"
@@ -487,8 +384,10 @@ class _ShopsViewState extends State<ShopsView> {
     );
   }
 
-
-  _buildCard({required String image, required String label, required Function() onTap}) {
+  _buildCard(
+      {required String image,
+      required String label,
+      required Function() onTap}) {
     return GestureDetector(
       onTap: () {
         onTap();
@@ -520,12 +419,10 @@ class _ShopsViewState extends State<ShopsView> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                padding: EdgeInsets.all( 5),
+                padding: EdgeInsets.all(5),
                 decoration: BoxDecoration(
                   color: Colors.black.withOpacity(0.4),
-                  borderRadius: BorderRadius.all(
-                    Radius.circular(10)
-                  ),
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
                 ),
                 child: Text(
                   textAlign: TextAlign.center,
@@ -544,6 +441,475 @@ class _ShopsViewState extends State<ShopsView> {
     );
   }
 
+  _buildHome() {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // welcome
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+              decoration: BoxDecoration(
+                color: Theme.of(context).secondaryHeaderColor,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                      radius: 15,
+                      backgroundImage: AssetImage("assets/images/call.png")),
+                  SizedBox(width: 5.0),
+                  aText('Welcome to ZubiPay'.tr, size: 16),
+                  Spacer(),
+                 IconButton(onPressed: (){
+                   _buildBottomSheet(context);
+                 }, icon:  Icon(Icons.more_vert)),
+                ],
+              ),
+            ),
+            SizedBox(height: 10.0),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Expanded(
+                    child: _buildButtonCard(
+                        "Vehicles".tr, "assets/lottie/rstate.json")),
+                // Expanded(
+                //     child: _buildButtonCard("Receive Money".tr, Icons.money)),
+                Expanded(
+                    child: _buildButtonCard(
+                        "Real State".tr, "assets/lottie/pro.json")),
+                Expanded(
+                    child: _buildButtonCard(
+                        "Products".tr, "assets/lottie/shop.json")),
+              ],
+            ),
+            SizedBox(height: 10.0),
+            // vehicle
+            Text('Vehicles'.tr,
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            _buildVehicles(),
+            SizedBox(height: 10.0),
+            // products
+            wText("Products".tr, size: 20),
+            _buildProductsBox(),
+            SizedBox(height: 10.0),
+            wText("Real State".tr, size: 20),
+            _buildRealStateBox(),
+          ],
+        ),
+      ),
+    );
+  }
+
+  _buildButtonCard(
+    String s,
+    String send,
+  ) {
+    return GestureDetector(
+      onTap: () {
+        if (s == 'Vehicles'.tr) {
+          Get.toNamed('/vehicle');
+        } else if (s == 'Real State'.tr) {
+          Get.to(() => ShowRealstate());
+        } else if (s == 'Products'.tr) {
+          Get.toNamed('/products');
+        }
+      },
+      child: Container(
+        height: 150,
+        padding: EdgeInsets.symmetric(horizontal: 3.0, vertical: 4.0),
+        margin: EdgeInsets.symmetric(horizontal: 2.0, vertical: 2.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 1,
+              blurRadius: 7,
+              offset: Offset(0, 3), // changes position of shadow
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Lottie.asset(send, height: 80, width: double.infinity),
+            // Icon(send, size: 30.0, color: Theme.of(context).primaryColor),
+            SizedBox(height: 10.0),
+            wText(s, size: 16.0, color: Theme.of(Get.context!).primaryColor),
+          ],
+        ),
+      ),
+    );
+  }
+
+  _buildVehicles() {
+    return SizedBox(
+      height: 220,
+      child: StreamBuilder<QuerySnapshot>(
+          stream: FirebaseFirestore.instance
+              .collection('vehicle')
+              .orderBy("updatedDate", descending: true)
+              .limit(15)
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: snapshot.data!.docs.length,
+                itemBuilder: (context, index) {
+                  return _buildVehicleBox(snapshot.data!.docs[index].data());
+                },
+              );
+            } else {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          }),
+    );
+  }
+
+  _buildVehicleBox(data) {
+    return SizedBox(
+      width: 200,
+      child: GestureDetector(
+        onTap: () {
+          //   show on  same page
+          Get.to(() => VehiclePageView(
+              vModel: VehicleModel.fromJson(data), doc: data.toString()));
 
 
+        },
+        child: Card(
+          elevation: 5,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Image.network(
+                data['image'],
+                height: 100,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
+              rText(data['vehicleName'], size: 18),
+              // model for sale
+              eText(
+                "Model: ${data["vehicleModel"]}\n"
+                "For: ${data["vehicleStatus"]}",
+              ),
+              eText(
+                'Rs: ${data['vehiclePrice']}',
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  _buildProductsBox() {
+    return SizedBox(
+      height: 250,
+      child: StreamBuilder(
+          stream: FirebaseFirestore.instance
+              .collection("products")
+              .orderBy("pCreatedAt", descending: true)
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: snapshot.data!.docs.length,
+                itemBuilder: (context, index) {
+                  return wBuildProductsC(snapshot.data!.docs[index]);
+                },
+              );
+            } else {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          }),
+    );
+  }
+
+  wBuildProductsC(QueryDocumentSnapshot<Map<String, dynamic>> doc) {
+    return GestureDetector(
+      onTap: () {
+        Get.to(() => ShowProductsView());
+      },
+      child: SizedBox(
+        width: 200,
+        child: GestureDetector(
+          onTap: () {
+            //   show on  same page
+            Get.to(() => ProductPageView(
+                vModel: ProductsModel.fromJson(doc.data()), data: "products"));
+          },
+          child: Card(
+            elevation: 5,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                doc["pImages"] != null
+                    ? Image.network(
+                        doc["pImages"],
+                        height: 100,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      )
+                    : Container(),
+                Container(
+                  padding: const EdgeInsets.all(3),
+                  color: Colors.red,
+                  child: doc['pDiscountType'] == "Percentage"
+                      ? Text(
+                          '${doc['pDiscount']}% OFF',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
+                      : aText(
+                          'Rs: ${doc['pDiscount']} OFF',
+                          color: Colors.white,
+                          size: 12,
+                        ),
+                ),
+                Text(
+                  maxLines: 1,
+                  "${doc['pName']} ",
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                eText("${doc['pCondition']}"),
+                SizedBox(
+                  height: 60,
+                  width: double.infinity,
+                  child: Stack(
+                    children: [
+                      // show price and cross after show discount price
+                      Positioned(
+                        right: 0,
+                        child: Column(
+                          children: [
+                            Text(
+                              'Rs:${doc['pPrice']}',
+                              style: const TextStyle(
+                                color: Colors.grey,
+                                decoration: TextDecoration.lineThrough,
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                color: Colors.green,
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Text(
+                                doc['pDiscountType'] == "Percentage"
+                                    ? 'Rs:${double.parse(doc['pPrice']) - (double.parse(doc['pPrice']) * double.parse(doc['pDiscount']) / 100)}'
+                                    : 'Rs:${double.parse(doc['pPrice']) - double.parse(doc['pDiscount'])}',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  _buildRealStateBox() {
+    return SizedBox(
+      height: 250,
+      child: StreamBuilder(
+          stream: FirebaseFirestore.instance
+              .collection("realState")
+              .orderBy("updatedDate", descending: true)
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: snapshot.data!.docs.length,
+                itemBuilder: (context, index) {
+                  return wBuildRealstateBox(snapshot.data!.docs[index]);
+                },
+              );
+            } else {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          }),
+    );
+  }
+
+  wBuildRealstateBox(QueryDocumentSnapshot<Map<String, dynamic>> doc) {
+    return GestureDetector(
+        onTap: () {
+          Get.to(() => ShowRealstate());
+        },
+        child: SizedBox(
+            width: 200,
+            child: GestureDetector(
+                onTap: () {
+                  //   show on  same page
+                  Get.to(() => RealstateViewPage(
+                      rsModel: RealStateModel.fromJson(doc.data()),
+                      doc: "realstate"));
+                },
+                child: Card(
+                    elevation: 5,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        doc["image"] != null
+                            ? Image.network(
+                                doc["image"],
+                                height: 100,
+                                width: double.infinity,
+                                fit: BoxFit.cover,
+                              )
+                            : Container(),
+                        Container(
+                          padding: const EdgeInsets.all(3),
+                          color: Colors.red,
+                          child: doc['realStateStatus'] == "Sale"
+                              ? Text(
+                                  'For Sale',
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                )
+                              : aText(
+                                  'For Rent',
+                                  color: Colors.white,
+                                  size: 12,
+                                ),
+                        ),
+                        Text(
+                          maxLines: 1,
+                          "${doc['realStateType']} ",
+                          style: TextStyle(
+                            fontSize: 14.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        eText("${doc['city']}"),
+                        SizedBox(
+                          height: 60,
+                          width: double.infinity,
+                          child: Stack(
+                            children: [
+                              // show price and cross after show discount price
+                              Positioned(
+                                right: 0,
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      'Rs:${doc['startingFrom']}',
+                                      style: const TextStyle(
+                                        color: Colors.grey,
+                                        decoration: TextDecoration.lineThrough,
+                                      ),
+                                    ),
+                                    Container(
+                                      padding: const EdgeInsets.all(5),
+                                      decoration: BoxDecoration(
+                                        color: Colors.green,
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      child: Text(
+                                        doc['realStateStatus'] == "Sale"
+                                            ? 'Rs:${doc['startingFrom']}'
+                                            : 'Rs:${doc['startingFrom']}',
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    )))));
+  }
+
+  void _buildBottomSheet(BuildContext context) {
+    showModalBottomSheet(
+      barrierLabel: 'Cancel',
+        context: context,
+        builder: (context) {
+          return Container(
+            padding: EdgeInsets.all(10.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const SizedBox(height: 20),
+                Container(
+                  height: 5,
+                  width: 50,
+                  decoration: BoxDecoration(
+                    color: Colors.grey,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                ListTile(
+                  leading: Icon(Icons.language),
+                  title: Text('Change Language'),
+                  onTap: () {
+                    Get.back();
+                    wBuildLanguageBottomSheet(context);
+                  },
+                ),
+                // Inspection vehicle with us
+                ListTile(
+                  leading: Icon(Icons.car_rental),
+                  title: Text('Inspection Vehicle'),
+                  onTap: () {
+                    Get.back();
+                    Get.toNamed('/inspection');
+                  },
+                ),
+                ListTile(
+                  leading: Icon(Icons.lock),
+                  title: Text('Logout'),
+                  onTap: () {
+                    Get.offAllNamed('/login');
+                  },
+                ),
+                SizedBox(height: 50.0),
+              ],
+            ),
+          );
+        });
+  }
 }

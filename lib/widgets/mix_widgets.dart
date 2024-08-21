@@ -35,11 +35,24 @@ wText(String text, {Color? color, double size = 16}) {
 
 eText(String text, {Color? color}) {
   return Padding(
-    padding: const EdgeInsets.all(4.0),
+    padding: const EdgeInsets.only(left: 4.0),
     child: Text(
 
       text,
       style: TextStyle(color: color, fontSize: 16),
+
+    ),
+  );
+}
+rText(String text, {Color? color, double? size}){
+  return Padding(
+    padding: const EdgeInsets.only(left: 4.0,top: 3.0),
+    child: Text(
+      text,
+      style: GoogleFonts.aBeeZee(
+          color: color, fontSize: size,
+        fontWeight: FontWeight.bold
+      ),
 
     ),
   );

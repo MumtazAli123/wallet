@@ -122,6 +122,8 @@ class ProductsController extends GetxController {
 
   List get allProductsDetails => productsList.value;
 
+  var fabController;
+
   @override
   void onInit() {
     super.onInit();
