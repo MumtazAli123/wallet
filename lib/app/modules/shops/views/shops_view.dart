@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
+import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
@@ -449,27 +450,28 @@ class _ShopsViewState extends State<ShopsView> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // welcome
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-              decoration: BoxDecoration(
-                color: Theme.of(context).secondaryHeaderColor,
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: _buildBalance(),
-              // child: Row(
-              //   children: [
-              //     CircleAvatar(
-              //         radius: 15,
-              //         backgroundImage: AssetImage("assets/images/call.png")),
-              //     SizedBox(width: 5.0),
-              //     aText('Welcome to ZubiPay'.tr, size: 16),
-              //     Spacer(),
-              //    IconButton(onPressed: (){
-              //      _buildBottomSheet(context);
-              //    }, icon:  Icon(Icons.more_vert)),
-              //   ],
-              // ),
-            ),
+            _buildBalance(),
+            // Container(
+            //   padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
+            //   decoration: BoxDecoration(
+            //     color: Theme.of(context).secondaryHeaderColor,
+            //     borderRadius: BorderRadius.circular(10),
+            //   ),
+            //   child: _buildBalance(),
+            //   // child: Row(
+            //   //   children: [
+            //   //     CircleAvatar(
+            //   //         radius: 15,
+            //   //         backgroundImage: AssetImage("assets/images/call.png")),
+            //   //     SizedBox(width: 5.0),
+            //   //     aText('Welcome to ZubiPay'.tr, size: 16),
+            //   //     Spacer(),
+            //   //    IconButton(onPressed: (){
+            //   //      _buildBottomSheet(context);
+            //   //    }, icon:  Icon(Icons.more_vert)),
+            //   //   ],
+            //   // ),
+            // ),
             SizedBox(height: 10.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -920,18 +922,26 @@ class _ShopsViewState extends State<ShopsView> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 SizedBox(height: 10.0),
-                ListTile(
-                  leading: CircleAvatar(
-                    radius: 20,
-                    backgroundImage: NetworkImage(snapshot.data!['image']),
-                  ),
-                  title: Text('Welcome ${snapshot.data!['name']}'),
-                  subtitle: Text('Your Balance: ${snapshot.data!['balance']}'),
-                  trailing: IconButton(
-                    onPressed: () {
-                      _buildBottomSheet(context);
-                    },
-                    icon: Icon(Icons.more_vert),
+                Card(
+                  elevation: 5,
+                  child: FlipCard(
+                    front: ListTile(
+                      leading: snapshot.data!["image"].toString().isEmpty
+                       ? Icon(Icons.person)
+                      : CircleAvatar(
+                        radius: 20,
+                        backgroundImage: NetworkImage(snapshot.data!['image']),
+                      ),
+
+                      title: Text('Welcome ${snapshot.data!['name']}'),
+                      subtitle: Text('Your Balance: ${snapshot.data!['balance']}'),
+                      trailing: IconButton(
+                        onPressed: () {
+                          _buildBottomSheet(context);
+                        },
+                        icon: Icon(Icons.more_vert),
+                      ),
+                    ), back: Container(),
                   ),
                 ),
               ],
