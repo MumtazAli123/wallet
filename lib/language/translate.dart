@@ -86,6 +86,8 @@ class LanguageTranslate extends Translations {
     //   sindhi
     Utils.getLanguageCode('Sindhi'): {
       "Your Balance:": "اوهان جو بيلنس: ",
+      "Tacker GPS": "ٽيڪر جي پي ايس",
+      "Car Insurance": "گاڏي جي انشورنس",
       'Text Extractor App': 'ٽيڪسٽ ايگزٽر ايپ',
       'Price': 'قيمت',
       'Add Product': 'پروڊڪٽ شامل ڪريو',

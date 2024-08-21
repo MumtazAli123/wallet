@@ -450,27 +450,6 @@ class _ShopsViewState extends State<ShopsView> {
           children: [
             // welcome
             _buildBalance(),
-            // Container(
-            //   padding: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-            //   decoration: BoxDecoration(
-            //     color: Theme.of(context).secondaryHeaderColor,
-            //     borderRadius: BorderRadius.circular(10),
-            //   ),
-            //   child: _buildBalance(),
-            //   // child: Row(
-            //   //   children: [
-            //   //     CircleAvatar(
-            //   //         radius: 15,
-            //   //         backgroundImage: AssetImage("assets/images/call.png")),
-            //   //     SizedBox(width: 5.0),
-            //   //     aText('Welcome to ZubiPay'.tr, size: 16),
-            //   //     Spacer(),
-            //   //    IconButton(onPressed: (){
-            //   //      _buildBottomSheet(context);
-            //   //    }, icon:  Icon(Icons.more_vert)),
-            //   //   ],
-            //   // ),
-            // ),
             SizedBox(height: 10.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -493,6 +472,9 @@ class _ShopsViewState extends State<ShopsView> {
             Text('Vehicles'.tr,
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             _buildVehicles(),
+            // Tacker card
+            _buildTackerCard(),
+            SizedBox(height: 10.0),
             SizedBox(height: 10.0),
             // products
             wText("Products".tr, size: 20),
@@ -500,6 +482,12 @@ class _ShopsViewState extends State<ShopsView> {
             SizedBox(height: 10.0),
             wText("Real State".tr, size: 20),
             _buildRealStateBox(),
+            SizedBox(height: 10.0),
+          // search your partner
+            _buildLifePartner(),
+
+
+          //   build grid view
           ],
         ),
       ),
@@ -952,7 +940,10 @@ class _ShopsViewState extends State<ShopsView> {
                         },
                         icon: Icon(Icons.more_vert),
                       ),
-                    ), back: Container(),
+                    ), back: ListTile(
+                      leading: Icon(Icons.phone),
+                      title: Text('Phone: ${snapshot.data!['phone']}'),
+                    ),
                   ),
                 ),
               ],
@@ -963,5 +954,82 @@ class _ShopsViewState extends State<ShopsView> {
           }
         });
   }
+
+  _buildTackerCard() {
+    return GestureDetector(
+      onTap: () {
+        Get.toNamed('/inspection');
+      },
+      child: Card(
+        elevation: 5,
+        child: Column(
+          children: [
+
+            ListTile(
+              leading: Icon(Icons.location_on),
+              title: Text('Tacker GPS'.tr),
+              subtitle: Text('Car Insurance'.tr),
+
+              trailing: IconButton(
+                onPressed: () {
+                  Get.toNamed('/inspection');
+                },
+                icon: Icon(Icons.more_vert),
+              ),
+            ),
+            Container(
+              height: 257,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/insh.png'),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+            // Image.asset('assets/images/insur.png', height: 200, width: double.infinity, fit: BoxFit.cover),
+          ],
+        ),
+      ),
+    );
+  }
+
+  _buildLifePartner() {
+    return GestureDetector(
+      onTap: () {
+        Get.toNamed('/partner');
+      },
+      child: Card(
+        elevation: 5,
+        child: Column(
+          children: [
+            ListTile(
+              leading: Icon(Icons.favorite),
+              title: Text('Search Your Life Partner'.tr),
+              subtitle: Text('Find Your Partner'.tr),
+              trailing: IconButton(
+                onPressed: () {
+                  Get.toNamed('/partner');
+                },
+                icon: Icon(Icons.more_vert),
+              ),
+            ),
+            Container(
+              height: 257,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/insur.png'),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+
 }
 
