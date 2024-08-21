@@ -96,7 +96,7 @@ class LanguageTranslate extends Translations {
       'All': 'سڀ',
       "Real State": "ريئل اسٽيٽ",
       'Products': ' پروڊڪٽس',
-      'ZubiPay': ' ٻلي ڪري آيا',
+      'ZubiPay': ' ڀلي ڪري آيا',
       'Shops': 'شاپس',
       'Add': 'اپلوڊ ڪيو',
       'Not Yet Scanned': 'اڃا تائين اسڪين ٿيل ناهي',

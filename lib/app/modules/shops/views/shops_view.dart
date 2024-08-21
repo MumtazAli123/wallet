@@ -455,19 +455,20 @@ class _ShopsViewState extends State<ShopsView> {
                 color: Theme.of(context).secondaryHeaderColor,
                 borderRadius: BorderRadius.circular(10),
               ),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                      radius: 15,
-                      backgroundImage: AssetImage("assets/images/call.png")),
-                  SizedBox(width: 5.0),
-                  aText('Welcome to ZubiPay'.tr, size: 16),
-                  Spacer(),
-                 IconButton(onPressed: (){
-                   _buildBottomSheet(context);
-                 }, icon:  Icon(Icons.more_vert)),
-                ],
-              ),
+              child: _buildBalance(),
+              // child: Row(
+              //   children: [
+              //     CircleAvatar(
+              //         radius: 15,
+              //         backgroundImage: AssetImage("assets/images/call.png")),
+              //     SizedBox(width: 5.0),
+              //     aText('Welcome to ZubiPay'.tr, size: 16),
+              //     Spacer(),
+              //    IconButton(onPressed: (){
+              //      _buildBottomSheet(context);
+              //    }, icon:  Icon(Icons.more_vert)),
+              //   ],
+              // ),
             ),
             SizedBox(height: 10.0),
             Row(
@@ -550,7 +551,7 @@ class _ShopsViewState extends State<ShopsView> {
 
   _buildVehicles() {
     return SizedBox(
-      height: 220,
+      height: 230,
       child: StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance
               .collection('vehicle')
@@ -598,15 +599,15 @@ class _ShopsViewState extends State<ShopsView> {
                 width: double.infinity,
                 fit: BoxFit.cover,
               ),
-              rText(data['vehicleName'], size: 18),
+              rText(data['vehicleName'], size: 16),
               // model for sale
               eText(
                 "Model: ${data["vehicleModel"]}\n"
                 "For: ${data["vehicleStatus"]}",
               ),
-              eText(
-                'Rs: ${data['vehiclePrice']}',
-              ),
+             Expanded(child:  eText(
+               'Rs: ${data['vehiclePrice']}',
+             ))
             ],
           ),
         ),
@@ -616,7 +617,7 @@ class _ShopsViewState extends State<ShopsView> {
 
   _buildProductsBox() {
     return SizedBox(
-      height: 250,
+      height: 260,
       child: StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection("products")
@@ -707,7 +708,6 @@ class _ShopsViewState extends State<ShopsView> {
                               'Rs:${doc['pPrice']}',
                               style: const TextStyle(
                                 color: Colors.grey,
-                                decoration: TextDecoration.lineThrough,
                               ),
                             ),
                             Container(
@@ -742,7 +742,7 @@ class _ShopsViewState extends State<ShopsView> {
 
   _buildRealStateBox() {
     return SizedBox(
-      height: 250,
+      height: 255,
       child: StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection("realState")
@@ -830,13 +830,6 @@ class _ShopsViewState extends State<ShopsView> {
                                 right: 0,
                                 child: Column(
                                   children: [
-                                    Text(
-                                      'Rs:${doc['startingFrom']}',
-                                      style: const TextStyle(
-                                        color: Colors.grey,
-                                        decoration: TextDecoration.lineThrough,
-                                      ),
-                                    ),
                                     Container(
                                       padding: const EdgeInsets.all(5),
                                       decoration: BoxDecoration(
@@ -844,14 +837,12 @@ class _ShopsViewState extends State<ShopsView> {
                                         borderRadius: BorderRadius.circular(5),
                                       ),
                                       child: Text(
-                                        doc['realStateStatus'] == "Sale"
-                                            ? 'Rs:${doc['startingFrom']}'
-                                            : 'Rs:${doc['startingFrom']}',
+                                        'Rs:${doc['startingFrom']}',
                                         style: const TextStyle(
                                           color: Colors.white,
-                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
+
                                     ),
                                   ],
                                 ),
@@ -912,4 +903,44 @@ class _ShopsViewState extends State<ShopsView> {
           );
         });
   }
+
+  _buildBalance() {
+    return StreamBuilder(
+        stream: FirebaseFirestore.instance
+        .collection('sellers')
+        .doc(sharedPreferences?.getString('uid'))
+        .snapshots(),
+        builder: (context, snapshot) {
+          if(snapshot.hasError){
+            return Text('Error: ${snapshot.error}');
+          }if(snapshot.connectionState == ConnectionState.waiting){
+            return Center(child: CircularProgressIndicator(),);
+          }if(snapshot.hasData){
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(height: 10.0),
+                ListTile(
+                  leading: CircleAvatar(
+                    radius: 20,
+                    backgroundImage: NetworkImage(snapshot.data!['image']),
+                  ),
+                  title: Text('Welcome ${snapshot.data!['name']}'),
+                  subtitle: Text('Your Balance: ${snapshot.data!['balance']}'),
+                  trailing: IconButton(
+                    onPressed: () {
+                      _buildBottomSheet(context);
+                    },
+                    icon: Icon(Icons.more_vert),
+                  ),
+                ),
+              ],
+            );
+          }else{
+            return Center(child: CircularProgressIndicator()
+            );
+          }
+        });
+  }
 }
+
