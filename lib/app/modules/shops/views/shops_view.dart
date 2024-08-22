@@ -136,7 +136,6 @@ class _ShopsViewState extends State<ShopsView> {
     );
   }
 
-
   _buildShops() {
     return StreamBuilder<QuerySnapshot>(
       stream: controllerVehicle.allVehicleStream(),
@@ -165,7 +164,6 @@ class _ShopsViewState extends State<ShopsView> {
       },
     );
   }
-
 
   _buildShopItem(model) {
     return GestureDetector(
@@ -252,7 +250,6 @@ class _ShopsViewState extends State<ShopsView> {
       ),
     );
   }
-
 
   ratingBar(int i) {
     return Row(
@@ -441,6 +438,64 @@ class _ShopsViewState extends State<ShopsView> {
     );
   }
 
+  _buildMixCard(
+      {required String image,
+      required String label,
+      required Function() onTap}) {
+    return GestureDetector(
+      onTap: () {
+        onTap();
+      },
+      child: Container(
+        margin: EdgeInsets.only(right: 10),
+        width: 200,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          image: DecorationImage(
+            image: NetworkImage(image.toString()),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            gradient: LinearGradient(
+              begin: Alignment.bottomCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Colors.black.withOpacity(0.8),
+                Colors.black.withOpacity(0.1),
+              ],
+            ),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                padding: EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  color: Colors.black.withOpacity(0.4),
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                ),
+                child: Text(
+                  textAlign: TextAlign.center,
+                  label,
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   _buildHome() {
     return SingleChildScrollView(
       child: Padding(
@@ -483,12 +538,11 @@ class _ShopsViewState extends State<ShopsView> {
             wText("Real State".tr, size: 20),
             _buildRealStateBox(),
             SizedBox(height: 10.0),
-          // search your partner
+            // search your partner
             _buildLifePartner(),
             SizedBox(height: 40.0),
 
-
-          //   build grid view
+            //   build grid view
           ],
         ),
       ),
@@ -549,63 +603,122 @@ class _ShopsViewState extends State<ShopsView> {
               .limit(15)
               .snapshots(),
           builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            }
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: Text('Loading...'),
+              );
+            }
             if (snapshot.hasData) {
               return ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: snapshot.data!.docs.length,
                 itemBuilder: (context, index) {
-                  return _buildVehicleBox(snapshot.data!.docs[index].data());
+                  var data = snapshot.data!.docs[index].data() as Map;
+                  VehicleModel model =
+                      VehicleModel.fromJson(data as Map<String, dynamic>);
+                  return _buildCard(
+                    image: model.image.toString(),
+                    label: "${model.vehicleName.toString()}\n"
+                        "For ${model.vehicleStatus.toString()}",
+                    onTap: () {
+                      Get.to(() => VehiclePageView(
+                          vModel: VehicleModel.fromJson(model.toJson()),
+                          doc: ''));
+                    },
+                  );
                 },
               );
             } else {
               return Center(
-                child: CircularProgressIndicator(),
+                child: Text('No Data Found'),
               );
             }
           }),
     );
   }
 
-  _buildVehicleBox(data) {
+  _buildVehicleBox(model) {
     return SizedBox(
       width: 200,
       child: GestureDetector(
         onTap: () {
           //   show on  same page
           Get.to(() => VehiclePageView(
-              vModel: VehicleModel.fromJson(data), doc: data.toString()));
+              vModel: VehicleModel.fromJson(model), doc: model.toString()));
         },
         child: Card(
           elevation: 5,
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              data["image"] != null
-              ? Container(
-                height: 100,
-                color: Colors.blue,
-                child: Align(
-                  child: eText("Check Network", color: Colors.white),
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                model['image'] != null
+                    ? Image.network(
+                        model['image'],
+                        height: 100,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      )
+                    : Container(),
+                Container(
+                  padding: const EdgeInsets.all(3),
+                  color: Colors.red,
+                  child: model['status'] == "Sale"
+                      ? Text(
+                          'For Sale',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
+                      : aText(
+                          'For Rent',
+                          color: Colors.white,
+                          size: 12,
+                        ),
                 ),
-              )
-              :Image.network(
-                data['image'].toString(),
-                height: 100,
-                width: double.infinity,
-                fit: BoxFit.cover,
-              ),
-              rText(data['vehicleName'], size: 16),
-              // model for sale
-              eText(
-                "Model: ${data["vehicleModel"]}\n"
-                "For: ${data["vehicleStatus"]}",
-              ),
-             Expanded(child:  eText(
-               'Rs: ${data['vehiclePrice']}',
-             ))
-            ],
-          ),
+                Text(
+                  maxLines: 1,
+                  "${model['vehicleName']} ",
+                  style: TextStyle(
+                    fontSize: 14.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                eText("${model['vehicleModel']}"),
+                SizedBox(
+                  height: 60,
+                  width: double.infinity,
+                  child: Stack(
+                    children: [
+                      // show price and cross after show discount price
+                      Positioned(
+                        right: 0,
+                        child: Column(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(5),
+                              decoration: BoxDecoration(
+                                color: Colors.green,
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: Text(
+                                'Rs:${model['vehiclePrice']}',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ]),
         ),
       ),
     );
@@ -620,6 +733,14 @@ class _ShopsViewState extends State<ShopsView> {
               .orderBy("pCreatedAt", descending: true)
               .snapshots(),
           builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            }
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: Text('Loading...'),
+              );
+            }
             if (snapshot.hasData) {
               return ListView.builder(
                 scrollDirection: Axis.horizontal,
@@ -630,7 +751,7 @@ class _ShopsViewState extends State<ShopsView> {
               );
             } else {
               return Center(
-                child: CircularProgressIndicator(),
+                child: Text('No Data Found'),
               );
             }
           }),
@@ -657,8 +778,19 @@ class _ShopsViewState extends State<ShopsView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 doc["pImages"].isEmpty
-                    ? Container()
-                    : Container(),
+                    ? Container(
+                        height: 100,
+                        color: Colors.blue,
+                        child: Align(
+                          child: eText("Check Network", color: Colors.white),
+                        ),
+                      )
+                    : Image.network(
+                        doc['pImages'].toString(),
+                        height: 100,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                      ),
                 Container(
                   padding: const EdgeInsets.all(3),
                   color: Colors.red,
@@ -740,6 +872,14 @@ class _ShopsViewState extends State<ShopsView> {
               .orderBy("updatedDate", descending: true)
               .snapshots(),
           builder: (context, snapshot) {
+            if (snapshot.hasError) {
+              return Text('Error: ${snapshot.error}');
+            }
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: Text('Loading...'),
+              );
+            }
             if (snapshot.hasData) {
               return ListView.builder(
                 scrollDirection: Axis.horizontal,
@@ -750,7 +890,7 @@ class _ShopsViewState extends State<ShopsView> {
               );
             } else {
               return Center(
-                child: CircularProgressIndicator(),
+                child: Text('No Data Found'),
               );
             }
           }),
@@ -833,7 +973,6 @@ class _ShopsViewState extends State<ShopsView> {
                                           color: Colors.white,
                                         ),
                                       ),
-
                                     ),
                                   ],
                                 ),
@@ -847,7 +986,7 @@ class _ShopsViewState extends State<ShopsView> {
 
   void _buildBottomSheet(BuildContext context) {
     showModalBottomSheet(
-      barrierLabel: 'Cancel',
+        barrierLabel: 'Cancel',
         context: context,
         builder: (context) {
           return Container(
@@ -898,15 +1037,19 @@ class _ShopsViewState extends State<ShopsView> {
   _buildBalance() {
     return StreamBuilder(
         stream: FirebaseFirestore.instance
-        .collection('sellers')
-        .doc(sharedPreferences?.getString('uid'))
-        .snapshots(),
+            .collection('sellers')
+            .doc(sharedPreferences?.getString('uid'))
+            .snapshots(),
         builder: (context, snapshot) {
-          if(snapshot.hasError){
+          if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
-          }if(snapshot.connectionState == ConnectionState.waiting){
-            return Center(child: CircularProgressIndicator(),);
-          }if(snapshot.hasData){
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          if (snapshot.hasData) {
             return Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -916,12 +1059,12 @@ class _ShopsViewState extends State<ShopsView> {
                   child: FlipCard(
                     front: ListTile(
                       leading: snapshot.data!["image"].toString().isEmpty
-                       ? Icon(Icons.person)
-                      : CircleAvatar(
-                        radius: 20,
-                        backgroundImage: NetworkImage(snapshot.data!['image']),
-                      ),
-
+                          ? Icon(Icons.person)
+                          : CircleAvatar(
+                              radius: 20,
+                              backgroundImage:
+                                  NetworkImage(snapshot.data!['image']),
+                            ),
                       title: Text('Welcome ${snapshot.data!['name']}'),
                       subtitle: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -942,7 +1085,8 @@ class _ShopsViewState extends State<ShopsView> {
                         },
                         icon: Icon(Icons.more_vert),
                       ),
-                    ), back: ListTile(
+                    ),
+                    back: ListTile(
                       leading: Icon(Icons.phone),
                       title: Text('Phone: ${snapshot.data!['phone']}'),
                     ),
@@ -950,9 +1094,8 @@ class _ShopsViewState extends State<ShopsView> {
                 ),
               ],
             );
-          }else{
-            return Center(child: CircularProgressIndicator()
-            );
+          } else {
+            return Center(child: CircularProgressIndicator());
           }
         });
   }
@@ -966,12 +1109,10 @@ class _ShopsViewState extends State<ShopsView> {
         elevation: 5,
         child: Column(
           children: [
-
             ListTile(
               leading: Icon(Icons.location_on),
               title: Text('Tacker GPS'.tr),
               subtitle: Text('Car Insurance'.tr),
-
               trailing: IconButton(
                 onPressed: () {
                   Get.toNamed('/inspection');
@@ -1031,7 +1172,4 @@ class _ShopsViewState extends State<ShopsView> {
       ),
     );
   }
-
-
 }
-
