@@ -1,12 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:getwidget/components/avatar/gf_avatar.dart';
+import 'package:quickalert/models/quickalert_type.dart';
+import 'package:quickalert/widgets/quickalert_dialog.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/app/modules/home/controllers/home_controller.dart';
 import 'package:wallet/widgets/privacy_policy.dart';
 
 import '../addressScreen/address_screen.dart';
 import '../global/global.dart';
+import 'mix_widgets.dart';
 
 class MyDrawer extends StatefulWidget {
   const MyDrawer({super.key});
@@ -17,31 +21,42 @@ class MyDrawer extends StatefulWidget {
 
 class _MyDrawerState extends State<MyDrawer> {
   final controller = Get.put(HomeController());
+  TextEditingController phoneController = TextEditingController();
 
   String name = sharedPreferences!.getString('name') ?? '';
   String email = sharedPreferences!.getString('email') ?? '';
   String phoneNumber = sharedPreferences!.getString('phone') ?? '';
   final profileImage = sharedPreferences!.getString('image') ?? '';
-
-
+  String city = sharedPreferences!.getString('city') ?? '';
 
   var url_launcher = Get.find<HomeController>();
   bool isSelect = false;
+  var hintText = 'Phone';
 
   @override
   void initState() {
     super.initState();
-    // controller.getUserData();
+    phoneController.text = phoneNumber;
+  }
+
+  @override
+  void dispose() {
+    phoneController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Drawer(
-
-      elevation: 10,
-      // backgroundColor: Theme.of(context).cardColor,
-      surfaceTintColor: Colors.white,
-      child: _buildBody(),
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Drawer(
+        elevation: 10,
+        // backgroundColor: Theme.of(context).cardColor,
+        surfaceTintColor: Colors.white,
+        child: _buildBody(),
+      ),
     );
   }
 
@@ -62,9 +77,7 @@ class _MyDrawerState extends State<MyDrawer> {
       otherAccountsPictures: [
         IconButton(
           onPressed: () {
-            // controller.updateSellerName(
-            //   name: name,
-            // );
+            _editPhoneNum();
           },
           icon: const Icon(Icons.edit),
         ),
@@ -88,17 +101,16 @@ class _MyDrawerState extends State<MyDrawer> {
       children: [
         ListTile(
           leading: const Icon(Icons.email, color: Colors.orange),
-          title:  Text(email),
+          title: Text(email),
           onTap: () {
             // url_launcher.launch('mailto:$email');
             launch('mailto:$email');
-
           },
         ),
         ListTile(
           // address
           leading: const Icon(Icons.location_on),
-          title: const Text('Address'),
+          title: Text("City: $city"),
           onTap: () {
             Get.to(() => const AddressScreen());
           },
@@ -118,7 +130,6 @@ class _MyDrawerState extends State<MyDrawer> {
             // Navigator.push(context, MaterialPageRoute(builder: (context)=>const ShiftedOrdersScreen()));
           },
         ),
-
         ListTile(
           leading: const Icon(Icons.privacy_tip),
           title: const Text('Privacy Policy'),
@@ -133,13 +144,13 @@ class _MyDrawerState extends State<MyDrawer> {
             Get.toNamed('/wallet');
           },
         ),
-         ListTile(
-            leading: const Icon(Icons.settings),
-            title: const Text('Settings'),
-            onTap: () {
-              // Navigator.of(context).pushNamed('/gas');
-            },
-          ),
+        ListTile(
+          leading: const Icon(Icons.settings),
+          title: const Text('Settings'),
+          onTap: () {
+            // Navigator.of(context).pushNamed('/gas');
+          },
+        ),
         ListTile(
           leading: const Icon(Icons.logout),
           title: const Text('Logout'),
@@ -152,4 +163,116 @@ class _MyDrawerState extends State<MyDrawer> {
     );
   }
 
+  void _editPhoneNum() {
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Edit Phone Number'),
+          content: TextField(
+            maxLength: 13,
+            keyboardType: TextInputType.phone,
+            controller: phoneNumber.isNotEmpty
+                ? phoneController
+                : TextEditingController(text: phoneNumber),
+            decoration:  const InputDecoration(
+              hintText: 'Enter your phone number',
+
+            ),
+
+            onChanged: (value) {
+              phoneNumber = value;
+            },
+            style: const TextStyle(
+              fontSize: 20,
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                if (phoneController.text.isNotEmpty) {
+                  Navigator.pop(context);
+                } else if (phoneController.text.length < 13) {
+                  QuickAlert.show(
+                    context: Get.context!,
+                    type: QuickAlertType.error,
+                    text: 'Phone number is too short',
+                  );
+                }
+                  else {
+                  QuickAlert.show(
+                    context: Get.context!,
+                    type: QuickAlertType.error,
+                    text: 'Phone number cannot be empty',
+                  );
+                }
+              },
+              child:  eText('Cancel', color: Colors.red),
+            ),
+            TextButton(
+              onPressed: () {
+                setState(() {
+                  _savePhoneNum();
+                });
+              },
+              child:  eText('Update', color: Colors.green),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _savePhoneNum() async {
+    try {
+      if(phoneController.text.isEmpty){
+        QuickAlert.show(
+          context: Get.context!,
+          type: QuickAlertType.error,
+          text: 'Phone number cannot be empty',
+        );
+        return;
+      }else if(phoneController.text.length < 13){
+        QuickAlert.show(
+          context: Get.context!,
+          type: QuickAlertType.error,
+          text: 'Phone number is too short',
+        );
+        return;
+      }else{
+        phoneNumber = phoneController.text;
+      }
+      FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+      final query = await firebaseFirestore
+          .collection("sellers")
+          .where("phone", isEqualTo: phoneNumber)
+          .get();
+      return query.docs.isEmpty
+          ? firebaseFirestore
+              .collection('sellers')
+              .doc(sharedPreferences!.getString('uid'))
+              .update({'phone': phoneNumber}).then((value) {
+              sharedPreferences!.setString('phone', phoneNumber);
+              Navigator.pop(Get.context!);
+              QuickAlert.show(
+                context: Get.context!,
+                type: QuickAlertType.success,
+                text: 'Phone number updated successfully',
+              );
+            })
+          : QuickAlert.show(
+              context: Get.context!,
+              type: QuickAlertType.error,
+              text: 'Phone number already exists',
+
+            );
+    } catch (e) {
+      QuickAlert.show(
+        context: Get.context!,
+        type: QuickAlertType.error,
+        text: e.toString(),
+      );
+    }
+  }
 }

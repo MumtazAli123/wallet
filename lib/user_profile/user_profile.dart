@@ -57,6 +57,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final UserModel userModel = UserModel();
 
   String  message = 'Description Updated';
+  String  city = 'City Updated';
 
   Future<void> _refresh() async {
     setState(() {
@@ -68,7 +69,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
     _refresh();
-    // _getUserProfile();
+    descController.text = sharedPreferences!.getString('description')!;
+    cityController.text = sharedPreferences!.getString('city')!;
     isLoading = false;
   }
 
@@ -600,8 +602,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     QuickAlert.show(
       context: context,
       type: QuickAlertType.confirm,
-      title: 'Update Description'.tr,
-      text: "You can update your description here.",
+      title: 'Update Data'.tr,
+      text: "You can update your data here.",
       widget: Column(
         children: [
           TextField(
@@ -612,6 +614,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
             maxLength: 100,
             maxLines: 1,
             keyboardType: TextInputType.text,
+            onChanged: (value) {
+              setState(() {
+                message = value;
+              });
+            },
             decoration: InputDecoration(
               border: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.black),
@@ -632,6 +639,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             controller: cityController,
             maxLength: 100,
+            onChanged: (value) {
+              setState(() {
+                city = value;
+              });
+            },
             maxLines: 1,
             keyboardType: TextInputType.text,
             decoration: InputDecoration(
@@ -657,13 +669,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
           'city': cityController.text.trim()
         });
         sharedPreferences!.setString('description', descController.text);
+        sharedPreferences!.setString('city', cityController.text);
         Get.back();
         QuickAlert.show(
           context: context,
           barrierDismissible: false,
           type: QuickAlertType.success,
-          title: 'Description Updated'.tr,
-          text: "Your description has been updated successfully.",
+          title: 'Dat Updated'.tr,
+          text: "Your Data has been updated successfully.",
           showConfirmBtn: true,
           showCancelBtn: false,
           confirmBtnText: "Confirm".tr,

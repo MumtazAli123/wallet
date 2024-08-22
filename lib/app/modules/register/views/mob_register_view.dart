@@ -88,12 +88,12 @@ class _MobRegisterViewState extends State<MobRegisterView> {
     if (controller.phoneController.text.isEmpty) {
       wGetSnackBar(
         'Error',
-        'Please enter phone',
+        'Please enter phone number',
       );
     } else if (controller.phoneController.text.length < 10) {
       wGetSnackBar(
         'Error',
-        'Please enter valid phone',
+        'Please enter valid phone number',
       );
     } else {
       controller.currentScreen.value = 3;

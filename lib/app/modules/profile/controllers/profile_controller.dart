@@ -1,12 +1,22 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:wallet/global/global.dart';
+import 'package:wallet/notification/push_notification_sys.dart';
 
 class ProfileController extends GetxController {
-  //TODO: Implement ProfileController
+
+  TextEditingController nameController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController cityController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
 
   final count = 0.obs;
   @override
   void onInit() {
     super.onInit();
+
   }
 
   @override
@@ -15,6 +25,38 @@ class ProfileController extends GetxController {
   }
 
   @override
-  void onClose() {}
+  void onClose() {
+    nameController.dispose();
+    phoneController.dispose();
+    cityController.dispose();
+    addressController.dispose();
+  }
   void increment() => count.value++;
+
+  // get user data
+  void getUserData() {
+    try {
+     FirebaseFirestore.instance
+         .collection('sellers')
+         .doc(sharedPreferences!.getString('uid'))
+         .get().then((DocumentSnapshot user) {
+        if (user.exists) {
+          print('Document exists on the database');
+          print(user.data());
+        } else {
+          print('Document does not exist on the database');
+        }
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void updateProfile() {
+    print(nameController.text);
+    print(phoneController.text);
+    print(cityController.text);
+    print(addressController.text);
+  }
+
 }

@@ -12,6 +12,7 @@ import 'package:getwidget/components/button/gf_button_bar.dart';
 import 'package:getwidget/components/rating/gf_rating.dart';
 import 'package:getwidget/types/gf_alert_type.dart';
 import 'package:lottie/lottie.dart';
+import 'package:quickalert/quickalert.dart';
 import 'package:wallet/app/modules/products/controllers/products_controller.dart';
 import 'package:wallet/app/modules/shops/views/vehicle_rating.dart';
 import 'package:wallet/models/realstate_model.dart';
@@ -423,6 +424,7 @@ class _ShopsViewState extends State<ShopsView> {
                 ),
                 child: Text(
                   textAlign: TextAlign.center,
+                  maxLines: 2,
                   label,
                   style: TextStyle(
                     color: Colors.white,
@@ -431,64 +433,6 @@ class _ShopsViewState extends State<ShopsView> {
                   ),
                 ),
               ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  _buildMixCard(
-      {required String image,
-      required String label,
-      required Function() onTap}) {
-    return GestureDetector(
-      onTap: () {
-        onTap();
-      },
-      child: Container(
-        margin: EdgeInsets.only(right: 10),
-        width: 200,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          image: DecorationImage(
-            image: NetworkImage(image.toString()),
-            fit: BoxFit.cover,
-          ),
-        ),
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            gradient: LinearGradient(
-              begin: Alignment.bottomCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Colors.black.withOpacity(0.8),
-                Colors.black.withOpacity(0.1),
-              ],
-            ),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Container(
-                padding: EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.4),
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                ),
-                child: Text(
-                  textAlign: TextAlign.center,
-                  label,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-
             ],
           ),
         ),
@@ -726,7 +670,7 @@ class _ShopsViewState extends State<ShopsView> {
 
   _buildProductsBox() {
     return SizedBox(
-      height: 260,
+      height: 280,
       child: StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection("products")
@@ -746,7 +690,9 @@ class _ShopsViewState extends State<ShopsView> {
                 scrollDirection: Axis.horizontal,
                 itemCount: snapshot.data!.docs.length,
                 itemBuilder: (context, index) {
-                  return wBuildProductsC(snapshot.data!.docs[index]);
+                  final data = snapshot.data!.docs[index].data();
+                  ProductsModel model = ProductsModel.fromJson(data);
+                  return wBuildProductsC(model.toJson());
                 },
               );
             } else {
@@ -758,105 +704,164 @@ class _ShopsViewState extends State<ShopsView> {
     );
   }
 
-  wBuildProductsC(QueryDocumentSnapshot<Map<String, dynamic>> doc) {
-    return GestureDetector(
-      onTap: () {
-        Get.to(() => ShowProductsView());
-      },
-      child: SizedBox(
-        width: 200,
-        child: GestureDetector(
-          onTap: () {
-            //   show on  same page
-            Get.to(() => ProductPageView(
-                vModel: ProductsModel.fromJson(doc.data()), data: "products"));
-          },
-          child: Card(
-            elevation: 5,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                doc["pImages"].isEmpty
-                    ? Container(
-                        height: 100,
-                        color: Colors.blue,
-                        child: Align(
-                          child: eText("Check Network", color: Colors.white),
+  wBuildProductsC(Map<String, dynamic> doc) {
+    return SizedBox(
+      width: 200,
+      child: GestureDetector(
+        onTap: () {
+          //   show on  same page
+          Get.to(() => ProductPageView(
+              vModel: ProductsModel.fromJson(doc), data: "products"));
+        },
+        child: Card(
+          elevation: 5,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              doc["pImages"].isEmpty
+                  ? Container(
+                      height: 100,
+                      color: Colors.blue,
+                      child: Align(
+                        child: eText("Check Network", color: Colors.white),
+                      ),
+                    )
+                  : Image.network(
+                      doc['pImages'].toString(),
+                      height: 100,
+                      width: double.infinity,
+                      fit: BoxFit.cover,
+                    ),
+              Container(
+                padding: const EdgeInsets.all(3),
+                color: Colors.red,
+                child: doc['pDiscountType'] == "Percentage"
+                    ? Text(
+                        '${doc['pDiscount']}% OFF',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
                         ),
                       )
-                    : Image.network(
-                        doc['pImages'].toString(),
-                        height: 100,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
+                    : aText(
+                        'Rs: ${doc['pDiscount']} OFF',
+                        color: Colors.white,
+                        size: 12,
                       ),
-                Container(
-                  padding: const EdgeInsets.all(3),
-                  color: Colors.red,
-                  child: doc['pDiscountType'] == "Percentage"
-                      ? Text(
-                          '${doc['pDiscount']}% OFF',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
+              ),
+              Text(
+                maxLines: 1,
+                "${doc['pName']} ",
+                style: TextStyle(
+                  fontSize: 14.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+
+              eText("${doc['pCondition']}"),
+              // rating
+              Align(
+                alignment: Alignment.bottomLeft,
+                child: GFRating(
+                  size: 20,
+                  borderColor: Colors.amber,
+                  color: Colors.amber,
+                  value: 3.5,
+                  onChanged: (double rating) {
+                  if (sharedPreferences?.getString('uid') != null) {
+                    FirebaseFirestore.instance
+                        .collection('products')
+                        .doc(doc['pUniqueId'])
+                        .update({
+                      'rating': rating,
+                    });
+                  if (rating == 1) {
+                    QuickAlert.show(
+                      context: context,
+                      type: QuickAlertType.error,
+                      title: 'Very Bad',
+                      text: '$rating Star',
+                    );
+                  }else if (rating == 2) {
+                    QuickAlert.show(
+                      context: context,
+                      type: QuickAlertType.error,
+                      title: 'Bad',
+                      text: ' $rating Star',
+                    );
+                  }else if (rating == 3) {
+                    QuickAlert.show(
+                      context: context,
+                      type: QuickAlertType.success,
+                      title: 'Good',
+                      text: '$rating Star',
+                    );
+                  }else if (rating == 4) {
+                    QuickAlert.show(
+                      context: context,
+                      type: QuickAlertType.success,
+                      title: 'Very Good',
+                      text: '$rating Star',
+                    );
+                  }else if (rating == 5) {
+                    QuickAlert.show(
+                      context: context,
+                      type: QuickAlertType.success,
+                      title: 'Excellent',
+                      text: '$rating Star',
+                    );
+                  }
+                  } else {
+                    QuickAlert.show(
+                      context: context,
+                      type: QuickAlertType.error,
+                      title: 'Error',
+                      text: 'Please Login First',
+                    );
+                  }
+                },
+                ),
+              ),
+              SizedBox(
+                height: 60,
+                width: double.infinity,
+                child: Stack(
+                  children: [
+                    // show price and cross after show discount price
+                    Positioned(
+                      right: 0,
+                      child: Column(
+                        children: [
+                          Text(
+                            'Rs:${doc['pPrice']}',
+                            style: const TextStyle(
+                              color: Colors.grey,
+                            ),
                           ),
-                        )
-                      : aText(
-                          'Rs: ${doc['pDiscount']} OFF',
-                          color: Colors.white,
-                          size: 12,
-                        ),
-                ),
-                Text(
-                  maxLines: 1,
-                  "${doc['pName']} ",
-                  style: TextStyle(
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                eText("${doc['pCondition']}"),
-                SizedBox(
-                  height: 60,
-                  width: double.infinity,
-                  child: Stack(
-                    children: [
-                      // show price and cross after show discount price
-                      Positioned(
-                        right: 0,
-                        child: Column(
-                          children: [
-                            Text(
-                              'Rs:${doc['pPrice']}',
+                          Container(
+                            padding: const EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                              color: Colors.green,
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Text(
+                              doc['pDiscountType'] == "Percentage"
+                                  ? 'Rs:${double.parse(doc['pPrice']) - (double.parse(doc['pPrice']) * double.parse(doc['pDiscount']) / 100)}'
+                                  : 'Rs:${double.parse(doc['pPrice']) - double.parse(doc['pDiscount'])}',
                               style: const TextStyle(
-                                color: Colors.grey,
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                            Container(
-                              padding: const EdgeInsets.all(5),
-                              decoration: BoxDecoration(
-                                color: Colors.green,
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: Text(
-                                doc['pDiscountType'] == "Percentage"
-                                    ? 'Rs:${double.parse(doc['pPrice']) - (double.parse(doc['pPrice']) * double.parse(doc['pDiscount']) / 100)}'
-                                    : 'Rs:${double.parse(doc['pPrice']) - double.parse(doc['pDiscount'])}',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -885,7 +890,18 @@ class _ShopsViewState extends State<ShopsView> {
                 scrollDirection: Axis.horizontal,
                 itemCount: snapshot.data!.docs.length,
                 itemBuilder: (context, index) {
-                  return wBuildRealstateBox(snapshot.data!.docs[index]);
+                  final data = snapshot.data!.docs[index].data();
+                  RealStateModel model = RealStateModel.fromJson(data);
+                  return _buildCard(
+                    image: model.image.toString(),
+                    label: "${model.realStateType.toString()}\n"
+                        "For ${model.realStateStatus.toString()}",
+                    onTap: () {
+                      Get.to(() => RealstateViewPage(
+                          rsModel: RealStateModel.fromJson(model.toJson()),
+                          doc: "realstate"));
+                    },
+                  );
                 },
               );
             } else {
@@ -1172,4 +1188,5 @@ class _ShopsViewState extends State<ShopsView> {
       ),
     );
   }
+
 }
