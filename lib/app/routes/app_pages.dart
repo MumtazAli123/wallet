@@ -2,8 +2,6 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:get/get.dart';
 
-import 'package:wallet/app/modules/inspection/bindings/inspection_binding.dart';
-import 'package:wallet/app/modules/inspection/views/inspection_view.dart';
 import 'package:wallet/app/modules/partner/bindings/partner_binding.dart';
 import 'package:wallet/app/modules/partner/views/partner_view.dart';
 import 'package:wallet/app/modules/products/bindings/products_binding.dart';
@@ -21,6 +19,8 @@ import 'package:wallet/app/modules/vehicle/bindings/vehicle_binding.dart';
 import 'package:wallet/app/modules/vehicle/views/vehicle_view.dart';
 import 'package:wallet/models/realstate_model.dart';
 
+import '../modules/gps/bindings/inspection_binding.dart';
+import '../modules/gps/views/gps_view.dart';
 import '../modules/home/bindings/home_binding.dart';
 import '../modules/home/views/bottom_page_view.dart';
 import '../modules/home/views/web_home_view.dart';

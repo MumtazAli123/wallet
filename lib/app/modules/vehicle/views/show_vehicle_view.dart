@@ -103,7 +103,7 @@ class ShowVehicleView extends GetView<VehicleController> {
             ),
 
             SizedBox(width: 10.0),
-            wText('${model.vehicleName} For ${model.vehicleStatus!}'),
+            wText('${model.vehicleName}'),
             SizedBox(width: 10.0),
             Text('Model: ${model.vehicleModel}'),
           ],
@@ -118,7 +118,7 @@ class ShowVehicleView extends GetView<VehicleController> {
               ),
               SizedBox(width: 10.0),
               Text('City: ${model.city}\n'
-                  'Price: ${model.vehiclePrice}'),
+                  'Price: ${model.vehiclePrice}\N'),
 
             ],
           ),

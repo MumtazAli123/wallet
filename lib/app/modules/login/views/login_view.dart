@@ -12,6 +12,7 @@ import '../../../../widgets/mix_widgets.dart';
 import '../../../../widgets/responsive.dart';
 import '../../register/views/mob_register_view.dart';
 import '../controllers/login_controller.dart';
+import 'forgot_view.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -116,7 +117,9 @@ class _LoginViewState extends State<LoginView> {
                     ],
                   ),
                   Expanded(child: TextButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        Get.to(() => ForgotView());
+                      },
                       child: aText('Forgot password?', color: Colors.yellowAccent, size: 14)),
                   ),
                 ],

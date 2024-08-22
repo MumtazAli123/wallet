@@ -1,9 +1,9 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
-import 'package:wallet/global/global.dart';
 
 import '../../../../widgets/mix_widgets.dart';
 import '../controllers/partner_controller.dart';
@@ -15,16 +15,17 @@ class PartnerView extends GetView<PartnerController> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: PageView.builder(
-          itemCount: 10,
+          itemCount: 5,
         scrollDirection: Axis.vertical,
           itemBuilder: (context, index) {
         return  DecoratedBox(
             decoration: BoxDecoration(
-              image: DecorationImage(
-                // image: NetworkImage(sharedPreferences.getString('image')),
-                image: AssetImage('assets/images/bg.png'),
-                fit: BoxFit.cover,
-              ),
+              image: controller.image != ''
+                  ? DecorationImage(
+                      image: NetworkImage(controller.image),
+                      fit: BoxFit.cover,
+                    )
+                  : null,
                 color: Colors.blue),
 
             child: Center(
@@ -42,11 +43,30 @@ class PartnerView extends GetView<PartnerController> {
                     ),
                   ),
                   wText('Index: $index', color: Colors.white),
+                  Spacer(),
+                  // partner name
+                  Container(
+                    padding: EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.5),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: wText("Coming Soon".tr, color: Colors.white, size: 30),
+                  ),
+                  SizedBox(height: 10),
+                  // wr work on it
+                  ElevatedButton(onPressed: (){}, child: wText("We are working on it".tr,)),
+
+                  SizedBox(height: 30),
+
                 ],
               ),
             ),
         );
       }),
+      // body: _buildBody(),
+
     );
   }
+
 }

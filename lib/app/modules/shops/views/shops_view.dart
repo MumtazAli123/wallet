@@ -398,7 +398,7 @@ class _ShopsViewState extends State<ShopsView> {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
           image: DecorationImage(
-            image: NetworkImage(image),
+            image: NetworkImage(image.toString()),
             fit: BoxFit.cover,
           ),
         ),
@@ -485,6 +485,7 @@ class _ShopsViewState extends State<ShopsView> {
             SizedBox(height: 10.0),
           // search your partner
             _buildLifePartner(),
+            SizedBox(height: 40.0),
 
 
           //   build grid view
@@ -573,8 +574,6 @@ class _ShopsViewState extends State<ShopsView> {
           //   show on  same page
           Get.to(() => VehiclePageView(
               vModel: VehicleModel.fromJson(data), doc: data.toString()));
-
-
         },
         child: Card(
           elevation: 5,
@@ -582,8 +581,16 @@ class _ShopsViewState extends State<ShopsView> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Image.network(
-                data['image'],
+              data["image"] != null
+              ? Container(
+                height: 100,
+                color: Colors.blue,
+                child: Align(
+                  child: eText("Check Network", color: Colors.white),
+                ),
+              )
+              :Image.network(
+                data['image'].toString(),
                 height: 100,
                 width: double.infinity,
                 fit: BoxFit.cover,
@@ -649,13 +656,8 @@ class _ShopsViewState extends State<ShopsView> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                doc["pImages"] != null
-                    ? Image.network(
-                        doc["pImages"],
-                        height: 100,
-                        width: double.infinity,
-                        fit: BoxFit.cover,
-                      )
+                doc["pImages"].isEmpty
+                    ? Container()
                     : Container(),
                 Container(
                   padding: const EdgeInsets.all(3),
@@ -978,11 +980,11 @@ class _ShopsViewState extends State<ShopsView> {
               ),
             ),
             Container(
-              height: 257,
+              height: 277,
               width: double.infinity,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('assets/images/insh.png'),
+                  image: AssetImage('assets/images/gps.png'),
                   fit: BoxFit.cover,
                 ),
               ),
@@ -1019,8 +1021,8 @@ class _ShopsViewState extends State<ShopsView> {
               width: double.infinity,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('assets/images/insur.png'),
-                  fit: BoxFit.cover,
+                  image: AssetImage('assets/images/life.png'),
+                  fit: BoxFit.fill,
                 ),
               ),
             ),

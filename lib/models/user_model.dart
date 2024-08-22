@@ -147,4 +147,25 @@ class UserModel {
         city: doc['city'],
         address: doc['address']);
   }
+
+  static UserModel fromDataSnapshot(eachProfile) {
+    return UserModel(
+        uid: eachProfile['uid'],
+        email: eachProfile['email'],
+        phone: eachProfile['phone'],
+        name: eachProfile['name'],
+        username: eachProfile['username'],
+        image: eachProfile['image'],
+        balance: eachProfile['balance'],
+        description: eachProfile['description'],
+        lastTransaction: eachProfile['lastTransaction'],
+        sellerType: eachProfile['sellerType'],
+        status: eachProfile['status'],
+        createdAt: eachProfile['createdAt'],
+        updatedAt: eachProfile['updatedAt'],
+        sellerDeviceToken: eachProfile['sellerDeviceToken'],
+        desc: eachProfile['desc'],
+        city: eachProfile['city'],
+        address: eachProfile['address']);
+  }
 }

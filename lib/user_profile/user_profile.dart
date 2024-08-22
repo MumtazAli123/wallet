@@ -224,33 +224,25 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
                   SizedBox(height: 10.0),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 3.0),
-                    child: Row(
-                      children: [
-                        // qr code
-                        QrImageView(
-                          backgroundColor: Colors.white,
-                          data: sharedPreferences!.getString('phone')!,
-                          size: 100.0,
-                        ),
-                        SizedBox(width: 10.0),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            wText(
-                              data['name'],
-                              size: 16.0,
-                            ),
-                            wText(
-                              // phone number show first 5 digits and last 4 digits
-                              'Phone: ${data["phone"]!.toString().substring(0, 5)}****${data["phone"]!.toString().substring(9, 13)}',
-                              size: 14.0,
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                  Row(
+                    children: [
+                      // qr code
+                      QrImageView(
+                        backgroundColor: Colors.white,
+                        data: sharedPreferences!.getString('phone')!,
+                        size: 100.0,
+                      ),
+                      SizedBox(width: 10.0),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          wText(
+                            data['name'],
+                            size: 16.0,
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                   SizedBox(height: 10.0),
                   Row(
@@ -263,6 +255,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ],
                   ),
                   SizedBox(height: 10.0),
+                  Row(
+                    children: [
+                      Icon(Icons.phone),
+                      SizedBox(width: 10.0),
+                      wText(
+                        data['phone'],
+                      ),
+                    ],
+                  ),
                   Row(
                     children: [
                       Icon(Icons.location_city),
@@ -316,7 +317,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       SizedBox(width: 10.0),
                       wText(
                         // just show date and time not need to show full date
-                        'Created At: ${data["createdAt"]!.toString().substring(0, 16)}',
+                        'Date: ${data["createdAt"]!.toString().substring(0, 16)}',
                       ),
                     ],
                   ),
