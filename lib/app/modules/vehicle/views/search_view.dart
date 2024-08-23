@@ -23,15 +23,32 @@ class _SearchViewState extends State<SearchView> {
   Stream<QuerySnapshot> searchVehicles() {
     // Convert search term to lowercase
     String lowerCaseSearchName = searchName.toLowerCase();
-
+    while (lowerCaseSearchName.contains(' ')) {
+      lowerCaseSearchName = lowerCaseSearchName.replaceAll(' ', '');
+    }
     return FirebaseFirestore.instance
         .collection('vehicle')
-    // Perform case-insensitive search
+        // Perform case-insensitive search
         .orderBy('vehicleName')
         .startAt([lowerCaseSearchName])
         .endAt(['$lowerCaseSearchName\uf8ff'])
         .limit(3)
         .snapshots();
+
+    // return FirebaseFirestore.instance
+    //     .collection('vehicle')
+    // // Perform case-insensitive search
+    //     .orderBy('vehicleName')
+    //     .startAt([lowerCaseSearchName])
+    //     .endAt(['$lowerCaseSearchName\uf8ff'])
+    //     .limit(3)
+    //     .snapshots();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    searchVehicles();
   }
 
   @override
@@ -42,38 +59,38 @@ class _SearchViewState extends State<SearchView> {
       },
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Search Vehicles'),
-          centerTitle: true,
-          bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(100.0),
-            child: Padding(
-              padding: const EdgeInsets.only(left: 10, right: 10),
-              child: TextField(
-                textInputAction: TextInputAction.search,
-                inputFormatters: [
-                  // ignore: deprecated_member_use
-                  controller1.upperCaseTextFormatter,
-                ],
-                decoration: InputDecoration(
-                  hintText: 'Search',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide.none,
+            title: const Text('Search Vehicles'),
+            centerTitle: true,
+            bottom: PreferredSize(
+              preferredSize: const Size.fromHeight(100.0),
+              child: Padding(
+                padding: const EdgeInsets.only(left: 10, right: 10),
+                child: TextField(
+                  textInputAction: TextInputAction.search,
+                  inputFormatters: [
+                    // ignore: deprecated_member_use
+                    controller1.upperCaseTextFormatter,
+                  ],
+                  decoration: InputDecoration(
+                    hintText: 'Search',
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(8),
+                      borderSide: BorderSide.none,
+                    ),
+                    prefixIcon: const Icon(Icons.search),
+                    helperText: 'Search by vehicle name',
+                    filled: true,
+                    fillColor:
+                        Get.isDarkMode ? Colors.grey[800] : Colors.grey[200],
                   ),
-                  prefixIcon: const Icon(Icons.search),
-                  helperText: 'Search by vehicle name',
-                  filled: true,
-                  fillColor: Get.isDarkMode ? Colors.grey[800] : Colors.grey[200],
+                  onChanged: (value) {
+                    setState(() {
+                      searchName = value;
+                    });
+                  },
                 ),
-                onChanged: (value) {
-                  setState(() {
-                    searchName = value;
-                  });
-                },
               ),
-            ),
-          )
-        ),
+            )),
         body: _buildBody(),
       ),
     );
@@ -86,30 +103,21 @@ class _SearchViewState extends State<SearchView> {
   _buildSearchItems() {
     return SafeArea(
       child: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance.collection('vehicle')
-            // search by vehicle name, by model, by color with lowercase
-            .orderBy('vehicleName')
-            .startAt([searchName]).endAt(['$searchName\uf8ff'])
-            .limit(5)
-            .snapshots(),
-
+        stream: searchVehicles(),
         builder: (context, snapshot) {
-          if(snapshot.hasError){
+          if (snapshot.hasError) {
             return const Center(
               child: CircularProgressIndicator(),
             );
-          }
-          else if(snapshot.connectionState == ConnectionState.waiting){
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: CircularProgressIndicator(),
             );
-          }
-          else if(snapshot.data!.docs.isEmpty){
+          } else if (snapshot.data!.docs.isEmpty) {
             return const Center(
               child: Text('No data found'),
             );
-          }
-          else{
+          } else {
             return ListView.builder(
               // less than 3 items will not show
               // itemCount: snapshot.data!.docs.length,
@@ -117,7 +125,7 @@ class _SearchViewState extends State<SearchView> {
               itemBuilder: (context, index) {
                 var data = snapshot.data!.docs[index].data() as Map;
                 VehicleModel model =
-                VehicleModel.fromJson(data as Map<String, dynamic>);
+                    VehicleModel.fromJson(data as Map<String, dynamic>);
                 return wVehicleCard(model.toJson());
               },
             );
@@ -126,15 +134,13 @@ class _SearchViewState extends State<SearchView> {
       ),
     );
   }
-
 }
+
 Widget wVehicleCard(doc) {
   return GestureDetector(
     onTap: () {
       Get.to(() => VehiclePageView(
-          vModel: VehicleModel.fromJson(doc), doc: doc.toString()
-
-      ));
+          vModel: VehicleModel.fromJson(doc), doc: doc.toString()));
     },
     child: Padding(
       padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 0.0),
@@ -178,6 +184,8 @@ Widget wVehicleCard(doc) {
                     // leading: const Icon(Icons.directions_car),
                     title: Text("Vehicle: ${doc['vehicleName']}"
                         "\nModel: ${doc['vehicleModel']}\n"
+                        "Color: ${doc['vehicleColor']}\n"
+                        "For ${doc['vehicleStatus']}\n"
                         "Price: ${doc['vehiclePrice']}"),
                   ),
                 ],

@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:get/get.dart';
 
+import 'package:wallet/app/modules/job/bindings/job_binding.dart';
+import 'package:wallet/app/modules/job/views/job_view.dart';
 import 'package:wallet/app/modules/partner/bindings/partner_binding.dart';
 import 'package:wallet/app/modules/partner/views/partner_view.dart';
 import 'package:wallet/app/modules/products/bindings/products_binding.dart';
@@ -159,6 +161,11 @@ class AppPages {
       name: _Paths.PARTNER,
       page: () => PartnerView(),
       binding: PartnerBinding(),
+    ),
+    GetPage(
+      name: _Paths.JOB,
+      page: () => JobView(),
+      binding: JobBinding(),
     ),
   ];
 }

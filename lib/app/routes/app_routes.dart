@@ -20,6 +20,7 @@ abstract class Routes {
   static const PROFILE = _Paths.PROFILE;
   static const INSPECTION = _Paths.INSPECTION;
   static const PARTNER = _Paths.PARTNER;
+  static const JOB = _Paths.JOB;
 }
 
 abstract class _Paths {
@@ -41,4 +42,5 @@ abstract class _Paths {
   static const PROFILE = '/profile';
   static const INSPECTION = '/inspection';
   static const PARTNER = '/partner';
+  static const JOB = '/job';
 }

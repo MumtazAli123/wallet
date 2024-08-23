@@ -138,6 +138,48 @@ class _ShopsViewState extends State<ShopsView> {
     );
   }
 
+  _buildHome() {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // welcome
+            _buildBalance(),
+            SizedBox(height: 10.0),
+            _buildButton(),
+            SizedBox(height: 10.0),
+            // vehicle
+            Text('Vehicles'.tr,
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            _buildVehicles(),
+            // Tacker card
+            SizedBox(height: 10.0),
+            // products
+            wText("Products".tr, size: 20),
+            _buildProductsBox(),
+            SizedBox(height: 10.0),
+            wText("Real State".tr, size: 20),
+            _buildRealStateBox(),
+            SizedBox(height: 10.0),
+            // search your partner
+            _buildLifePartner(),
+            SizedBox(height: 10.0),
+            // find job
+            _buildFindJob(),
+            SizedBox(height: 10.0),
+            _buildTackerCard(),
+            SizedBox(height: 40.0),
+
+            //   build grid view
+          ],
+        ),
+      ),
+    );
+  }
+
+
   _buildShops() {
     return StreamBuilder<QuerySnapshot>(
       stream: controllerVehicle.allVehicleStream(),
@@ -441,58 +483,6 @@ class _ShopsViewState extends State<ShopsView> {
     );
   }
 
-  _buildHome() {
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // welcome
-            _buildBalance(),
-            SizedBox(height: 10.0),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Expanded(
-                    child: _buildButtonCard(
-                        "Vehicles".tr, "assets/lottie/rstate.json")),
-                // Expanded(
-                //     child: _buildButtonCard("Receive Money".tr, Icons.money)),
-                Expanded(
-                    child: _buildButtonCard(
-                        "Real State".tr, "assets/lottie/pro.json")),
-                Expanded(
-                    child: _buildButtonCard(
-                        "Products".tr, "assets/lottie/shop.json")),
-              ],
-            ),
-            SizedBox(height: 10.0),
-            // vehicle
-            Text('Vehicles'.tr,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            _buildVehicles(),
-            // Tacker card
-            _buildTackerCard(),
-            SizedBox(height: 10.0),
-            SizedBox(height: 10.0),
-            // products
-            wText("Products".tr, size: 20),
-            _buildProductsBox(),
-            SizedBox(height: 10.0),
-            wText("Real State".tr, size: 20),
-            _buildRealStateBox(),
-            SizedBox(height: 10.0),
-            // search your partner
-            _buildLifePartner(),
-            SizedBox(height: 40.0),
-
-            //   build grid view
-          ],
-        ),
-      ),
-    );
-  }
 
   _buildButtonCard(
     String s,
@@ -574,6 +564,7 @@ class _ShopsViewState extends State<ShopsView> {
                           doc: ''));
                     },
                   );
+                  // return _buildVehicleBox(model);
                 },
               );
             } else {
@@ -1119,6 +1110,26 @@ class _ShopsViewState extends State<ShopsView> {
         });
   }
 
+  _buildButton() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Expanded(
+            child: _buildButtonCard(
+                "Vehicles".tr, "assets/lottie/rstate.json")),
+        // Expanded(
+        //     child: _buildButtonCard("Receive Money".tr, Icons.money)),
+        Expanded(
+            child: _buildButtonCard(
+                "Real State".tr, "assets/lottie/pro.json")),
+        Expanded(
+            child: _buildButtonCard(
+                "Products".tr, "assets/lottie/shop.json")),
+      ],
+    );
+  }
+
+
   _buildTackerCard() {
     return GestureDetector(
       onTap: () {
@@ -1144,8 +1155,8 @@ class _ShopsViewState extends State<ShopsView> {
               width: double.infinity,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('assets/images/onzubi.png'),
-                  fit: BoxFit.cover,
+                  image: AssetImage('assets/images/trac.png'),
+                  fit: BoxFit.fill,
                 ),
               ),
             ),
@@ -1182,6 +1193,42 @@ class _ShopsViewState extends State<ShopsView> {
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage('assets/images/life.png'),
+                  fit: BoxFit.fill,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  _buildFindJob() {
+    return GestureDetector(
+      onTap: () {
+        Get.toNamed('/job');
+      },
+      child: Card(
+        elevation: 10,
+        child: Column(
+          children: [
+            ListTile(
+              leading: Icon(Icons.work),
+              title: Text('Find Dream Job'.tr),
+              subtitle: Text('Find Your Job'.tr),
+              // trailing: IconButton(
+              //   onPressed: () {
+              //     Get.toNamed('/job');
+              //   },
+              //   icon: Icon(Icons.more_vert),
+              // ),
+            ),
+            Container(
+              height: 257,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/job.png'),
                   fit: BoxFit.fill,
                 ),
               ),
