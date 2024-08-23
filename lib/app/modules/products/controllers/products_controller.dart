@@ -295,7 +295,9 @@ class ProductsController extends GetxController {
           .doc(id)
           .delete()
           .then((value) {
-        FirebaseFirestore.instance.collection("products").doc(id).delete();
+        FirebaseFirestore.instance
+            .collection("products")
+            .doc(id).delete();
         Get.snackbar("Success", "Product deleted successfully",
             snackPosition: SnackPosition.BOTTOM);
       });
@@ -485,6 +487,20 @@ class ProductsController extends GetxController {
           backgroundColor: Colors.green, colorText: Colors.white);
       // Get.to(() => const ShowVehicleView());
     });
+  }
+
+  getMoreProducts(String? pSellerId) {
+    return FirebaseFirestore.instance
+        .collection("products")
+        .where("pSellerId", isEqualTo: pSellerId)
+        .snapshots();
+  }
+
+  getRelatedProducts(String? pCategory) {
+    return FirebaseFirestore.instance
+        .collection("products")
+        .where("pCategory", isEqualTo: pCategory)
+        .snapshots();
   }
 
 }

@@ -143,6 +143,9 @@ class _RealStateUiDesignWidgetState extends State<RealStateUiDesignWidget> {
                   children: [
                     Text('City: ${widget.model!.city}'),
                     Text('State: ${widget.model!.state}'),
+                    widget.model!.currency == "AED"
+                        ? Text('${widget.model!.currency}: ${widget.model!.startingFrom}')
+                        : Text('Rs: ${widget.model!.startingFrom}'),
                   ],
                 )
               ],

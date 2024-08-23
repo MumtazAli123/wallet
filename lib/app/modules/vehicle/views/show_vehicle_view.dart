@@ -102,24 +102,53 @@ class ShowVehicleView extends GetView<VehicleController> {
               child: wText(model.vehicleName![0], color: Colors.white),
             ),
 
-            SizedBox(width: 10.0),
-            wText('${model.vehicleName}'),
-            SizedBox(width: 10.0),
-            Text('Model: ${model.vehicleModel}'),
+            SizedBox(width: 4.0),
+            Expanded(child: Text(model.vehicleName!)),
+            SizedBox(width: 4.0),
+            Expanded(child: Text("Model: ${model.vehicleModel!}")),
           ],
         ),
         subTitle: Padding(
           padding: const EdgeInsets.only(top: 8.0),
-          child: Row(
+          child: Column(
             children: [
-              Icon(
-                Icons.location_on,
-                color: Colors.blueAccent,
-              ),
-              SizedBox(width: 10.0),
-              Text('City: ${model.city}\n'
-                  'Price: ${model.vehiclePrice}\N'),
+              Row(
+                children: [
+                  Icon(
+                    Icons.attach_money,
+                    color: Colors.blueAccent,
+                  ),
+                  SizedBox(width: 10.0),
+                  Expanded(
+                      child:
+                      model.currency == "AED"
+                          ? aText("${model.currency}: ${model.vehiclePrice}")
+                          : aText("Rs: ${model.vehiclePrice}")
+                  ),
 
+                ],
+              ),
+            //   const SizedBox(height: 5),
+              Row(
+                children: [
+                  Icon(
+                    Icons.location_on,
+                    color: Colors.blueAccent,
+                  ),
+                  SizedBox(width: 10.0),
+                  Expanded(child: aText("City: ${model.city}")),
+                ],
+              ),
+              Row(
+                children: [
+                  Icon(
+                    Icons.location_city,
+                    color: Colors.blueAccent,
+                  ),
+                  SizedBox(width: 10.0),
+                  Expanded(child: aText("Area: ${model.address}")),
+                ],
+              ),
             ],
           ),
         ),

@@ -32,7 +32,8 @@ class _UploadVehicleViewState extends State<UploadVehicleView> {
     if (imageFile == null) {
       Get.snackbar("Error", "Please select image");
       return;
-    }if (controller.vehicleDescriptionController.text.isEmpty ||
+    }
+    if (controller.vehicleDescriptionController.text.isEmpty ||
         controller.vehicleDescriptionController.text.length < 3 &&
             controller.vehicleDescriptionController.text.length > 200) {
       Get.snackbar("Error", "Please enter description min 3 and max 200");
@@ -49,7 +50,6 @@ class _UploadVehicleViewState extends State<UploadVehicleView> {
       controller.uploadImage();
     }
   }
-
 
   uploadFormScreen() {
     return GestureDetector(
@@ -76,7 +76,6 @@ class _UploadVehicleViewState extends State<UploadVehicleView> {
               height: 200,
               width: MediaQuery.of(context).size.width,
               child: GridView.builder(
-
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                 ),
@@ -94,7 +93,8 @@ class _UploadVehicleViewState extends State<UploadVehicleView> {
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   image: DecorationImage(
-                                    image: FileImage(File(controller.imageUrlPath[index])),
+                                    image: FileImage(
+                                        File(controller.imageUrlPath[index])),
                                     fit: BoxFit.cover,
                                   ),
                                 ),
@@ -104,10 +104,12 @@ class _UploadVehicleViewState extends State<UploadVehicleView> {
                                 child: IconButton(
                                   onPressed: () {
                                     controller.imageUrlPath.removeAt(index);
-                                    controller.imageFileCount.value = controller.imageUrlPath.length;
+                                    controller.imageFileCount.value =
+                                        controller.imageUrlPath.length;
                                     setState(() {});
                                   },
-                                  icon: const Icon(Icons.delete, color: Colors.red),
+                                  icon: const Icon(Icons.delete,
+                                      color: Colors.red),
                                 ),
                               ),
                             ],
@@ -123,7 +125,8 @@ class _UploadVehicleViewState extends State<UploadVehicleView> {
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   image: DecorationImage(
-                                    image: FileImage(File(controller.imageUrlPath[index])),
+                                    image: FileImage(
+                                        File(controller.imageUrlPath[index])),
                                     fit: BoxFit.cover,
                                   ),
                                 ),
@@ -133,10 +136,12 @@ class _UploadVehicleViewState extends State<UploadVehicleView> {
                                 child: IconButton(
                                   onPressed: () {
                                     controller.imageUrlPath.removeAt(index);
-                                    controller.imageFileCount.value = controller.imageUrlPath.length;
+                                    controller.imageFileCount.value =
+                                        controller.imageUrlPath.length;
                                     setState(() {});
                                   },
-                                  icon: const Icon(Icons.delete, color: Colors.red),
+                                  icon: const Icon(Icons.delete,
+                                      color: Colors.red),
                                 ),
                               ),
                             ],
@@ -178,26 +183,30 @@ class _UploadVehicleViewState extends State<UploadVehicleView> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: GFButton(
-                size: 50,
-                  onPressed: (){
-                if (controller.imageUrlPath.length < 8) {
-                  obtainImageBox();
-                } else {
-                  Get.snackbar("Error", "You can't select more than 8 images", backgroundColor: Colors.red, colorText: Colors.white);
-                }
-              }, child:  wText("Select More Images")),
+                  size: 50,
+                  onPressed: () {
+                    if (controller.imageUrlPath.length < 8) {
+                      obtainImageBox();
+                    } else {
+                      Get.snackbar(
+                          "Error", "You can't select more than 8 images",
+                          backgroundColor: Colors.red, colorText: Colors.white);
+                    }
+                  },
+                  child: wText("Select More Images")),
             ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: wTextField(
-                keyboardType: "text",
+                  keyboardType: "text",
                   controller: controller.showroomNameController,
                   labelText: "Showroom Name",
                   hintText: "Enter Showroom Name",
                   prefixIcon: Icons.home),
             ),
             // vehicle type
-            Padding(padding: const EdgeInsets.all(8.0),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
               child: DropdownButtonFormField(
                 decoration: InputDecoration(
                   labelText: "Vehicle Type",
@@ -223,33 +232,59 @@ class _UploadVehicleViewState extends State<UploadVehicleView> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: wTextField(
-                keyboardType: 'text',
+                  keyboardType: 'text',
                   controller: controller.vehicleNameController,
                   labelText: "Vehicle Name",
                   hintText: "Enter Vehicle Name",
                   prefixIcon: Icons.car_rental),
             ),
+            // currency
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: DropdownButtonFormField(
+                decoration: InputDecoration(
+                  labelText: "Currency",
+                  hintText: "Select Currency",
+                  prefixIcon: const Icon(Icons.money),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                value: controller.currencyValue,
+                onChanged: (value) {
+                  controller.currencyValue = value.toString();
+                  setState(() {});
+                },
+                items: controller.currency.map((e) {
+                  return DropdownMenuItem(
+                    value: e,
+                    child: Text(e),
+                  );
+                }).toList(),
+              ),
+            ),
             // price
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: wTextField(
-                keyboardType: "number",
+                  keyboardType: "number",
                   controller: controller.vehiclePriceController,
                   labelText: "Vehicle Price",
                   hintText: "Enter Vehicle Price",
                   prefixIcon: Icons.money),
             ),
+
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: wTextField(
-                keyboardType: "number",
+                  keyboardType: "number",
                   controller: controller.vehicleKmController,
-
                   labelText: "Vehicle Km",
                   hintText: "Enter Vehicle Km",
                   prefixIcon: Icons.directions_car),
             ),
-            Padding(padding: const EdgeInsets.all(8.0),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
               child: DropdownButtonFormField(
                 decoration: InputDecoration(
                   labelText: "Vehicle Model",
@@ -273,7 +308,8 @@ class _UploadVehicleViewState extends State<UploadVehicleView> {
               ),
             ),
             // vehicle fuel type
-            Padding(padding: const EdgeInsets.all(8.0),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
               child: DropdownButtonFormField(
                 decoration: InputDecoration(
                   labelText: "Vehicle Fuel Type",
@@ -297,7 +333,8 @@ class _UploadVehicleViewState extends State<UploadVehicleView> {
               ),
             ),
             // vehicle transmission
-            Padding(padding: const EdgeInsets.all(8.0),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
               child: DropdownButtonFormField(
                 decoration: InputDecoration(
                   labelText: "Vehicle Transmission",
@@ -321,7 +358,8 @@ class _UploadVehicleViewState extends State<UploadVehicleView> {
               ),
             ),
             // vehicle condition
-            Padding(padding: const EdgeInsets.all(8.0),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
               child: DropdownButtonFormField(
                 decoration: InputDecoration(
                   labelText: "Vehicle Condition",
@@ -345,7 +383,8 @@ class _UploadVehicleViewState extends State<UploadVehicleView> {
               ),
             ),
             // vehicle status
-            Padding(padding: const EdgeInsets.all(8.0),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
               child: DropdownButtonFormField(
                 decoration: InputDecoration(
                   labelText: "Vehicle Status",
@@ -393,7 +432,8 @@ class _UploadVehicleViewState extends State<UploadVehicleView> {
             //   ),
             // ),
             // vehicle color
-            Padding(padding: const EdgeInsets.all(8.0),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
               child: DropdownButtonFormField(
                 decoration: InputDecoration(
                   labelText: "Vehicle Color",
@@ -417,7 +457,8 @@ class _UploadVehicleViewState extends State<UploadVehicleView> {
               ),
             ),
             // vehicle body type
-            Padding(padding: const EdgeInsets.all(8.0),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
               child: DropdownButtonFormField(
                 decoration: InputDecoration(
                   labelText: "Vehicle Body Type",
@@ -484,13 +525,12 @@ class _UploadVehicleViewState extends State<UploadVehicleView> {
             Padding(
               padding: const EdgeInsets.all(18.0),
               child: GFButton(
-                size: 50,
+                  size: 50,
                   onPressed: () {
-                isUpLoading == true ? null : validateAndUploadForm();
-              }, child: wText("Upload Vehicle")),
+                    isUpLoading == true ? null : validateAndUploadForm();
+                  },
+                  child: wText("Upload Vehicle")),
             ),
-
-
           ])),
     );
   }
@@ -507,13 +547,11 @@ class _UploadVehicleViewState extends State<UploadVehicleView> {
   @override
   void dispose() {
     super.dispose();
-    controller.vehiclePriceController.dispose();
-    controller.vehicleKmController.dispose();
-    controller.vehicleNameController.dispose();
-    controller.vehicleDescriptionController.dispose();
-
+    // controller.vehiclePriceController.dispose();
+    // controller.vehicleKmController.dispose();
+    // controller.vehicleNameController.dispose();
+    // controller.vehicleDescriptionController.dispose();
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -587,8 +625,9 @@ class _UploadVehicleViewState extends State<UploadVehicleView> {
       });
     }
   }
+
   void obtainImageBox() {
-     showDialog(
+    showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
@@ -616,7 +655,5 @@ class _UploadVehicleViewState extends State<UploadVehicleView> {
             ),
           );
         });
-
   }
-
 }

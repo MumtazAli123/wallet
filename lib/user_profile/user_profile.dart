@@ -16,6 +16,9 @@ import 'package:quickalert/quickalert.dart';
 import 'package:wallet/global/global.dart';
 import 'package:http/http.dart' as http;
 import 'package:wallet/models/user_model.dart';
+import 'package:wallet/user_profile/tabbar/user_all_products.dart';
+import 'package:wallet/user_profile/tabbar/user_all_realstate.dart';
+import 'package:wallet/user_profile/tabbar/user_all_vehicles.dart';
 
 import '../app/modules/home/views/wallet_view.dart';
 import '../notification/notification_page.dart';
@@ -52,12 +55,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   var _image = sharedPreferences!.getString('image');
   var balance = '';
 
+  var fabController;
+
   FocusNode focusNode = FocusNode();
 
   final UserModel userModel = UserModel();
 
-  String  message = 'Description Updated';
-  String  city = 'City Updated';
+  String message = 'Description Updated';
+  String city = 'City Updated';
 
   Future<void> _refresh() async {
     setState(() {
@@ -84,35 +89,83 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-        onTap: () {
-          FocusScope.of(context).unfocus();
-        },
-        child: RefreshIndicator(
-          onRefresh: _refresh,
-          child: SafeArea(
-            child: Scaffold(
-                body: _buildBody(),
-                appBar: AppBar(
-                  actions: [
-                    IconButton(
-                      icon: Icon(Icons.edit),
-                      onPressed: () async {
-                        _updateDescription();
-                        // Get.to(() => EditProfileScreen());
-                      },
+    return DefaultTabController(
+      length: 5,
+      child: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          child: RefreshIndicator(
+            onRefresh: _refresh,
+            child: SafeArea(
+              child: Scaffold(
+                  body: _buildBody(),
+                  appBar: AppBar(
+                    title: Text('Profile'.tr),
+                    centerTitle: true,
+                    bottom: TabBar(
+                      tabAlignment: TabAlignment.center,
+                      controller: fabController,
+                      isScrollable: true,
+                      tabs: [
+                        Tab(
+                          icon: Icon(Icons.account_circle),
+                          text: 'Profile'.tr,
+                        ),
+                        Tab(
+                          icon: Icon(Icons.shopping_cart),
+                          text: 'Products'.tr,
+                        ),
+                        Tab(
+                          icon: Icon(Icons.car_rental),
+                          text: 'Vehicles'.tr,
+                        ),
+                        // real estate
+                        Tab(
+                          icon: Icon(Icons.home),
+                          text: 'Real Estate'.tr,
+                        ),
+                        Tab(
+                          icon: Icon(Icons.favorite),
+                          text: 'Favorite'.tr,
+                        ),
+                      ],
                     ),
-                  ],
-                )),
-          ),
-        ));
+                    actions: [
+                      IconButton(
+                        icon: Icon(Icons.edit),
+                        onPressed: () async {
+                          _updateDescription();
+                          // Get.to(() => EditProfileScreen());
+                        },
+                      ),
+                    ],
+                  )),
+            ),
+          )),
+    );
   }
 
   _buildBody() {
+    return TabBarView(
+      children: [
+        _buildBodyContent(),
+        MyAllProducts(),
+        MyAllVehicles(),
+        MyAllRealState(),
+        Center(
+          child: Text('Favorite'.tr),
+        ),
+      ],
+    );
+  }
+
+  _buildBodyContent() {
     return Center(
       child: SingleChildScrollView(
         child: Column(
           children: [
+            SizedBox(height: 20.0),
             Stack(
               children: [
                 sharedPreferences!.getString('image')!.isEmpty
@@ -120,9 +173,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         'https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png',
                         70.0)
                     : MixWidgets.buildAvatar(
-                        sharedPreferences!.getString('image')!,
-                        70.0),
-
+                        sharedPreferences!.getString('image')!, 70.0),
                 Positioned(
                   top: 95.0,
                   right: 0.0,
@@ -136,7 +187,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ],
             ),
-
             SizedBox(height: 10.0),
 
             wText(
@@ -353,7 +403,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     Navigator.pushNamedAndRemoveUntil(context, '/login', (route) => false);
   }
 
-
   _buildSocialIcons() {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
@@ -559,7 +608,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       value.ref.getDownloadURL().then((value) {
         db.doc(user!.uid).update({
           'image': value,
-
         });
         sharedPreferences!.setString('image', value);
         // vehicle image updated successfully
@@ -628,11 +676,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
               labelStyle: GoogleFonts.poppins(
                 color: Colors.black,
               ),
-              hintText: 'Description: ${sharedPreferences!.getString('description')}'.tr,
+              hintText:
+                  'Description: ${sharedPreferences!.getString('description')}'
+                      .tr,
             ),
           ),
           SizedBox(height: 10),
-        //   city
+          //   city
           TextField(
             style: GoogleFonts.poppins(
               color: Colors.black,
@@ -648,9 +698,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             keyboardType: TextInputType.text,
             decoration: InputDecoration(
               border: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.black),
-                borderRadius: BorderRadius.circular(10.0)
-              ),
+                  borderSide: BorderSide(color: Colors.black),
+                  borderRadius: BorderRadius.circular(10.0)),
               labelText: 'City'.tr,
               labelStyle: GoogleFonts.poppins(
                 color: Colors.black,
@@ -744,7 +793,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     };
 
     http.post(Uri.parse(url), headers: header, body: jsonEncode(request)).then(
-          (response) {
+      (response) {
         if (response.statusCode == 200) {
           if (kDebugMode) {
             print('Notification sent successfully');
@@ -758,4 +807,3 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 }
-

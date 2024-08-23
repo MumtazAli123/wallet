@@ -106,7 +106,9 @@ Widget wBuildVehicleCard(doc) {
                 ),
                 ListTile(
                   // leading: const Icon(Icons.money),
-                  subtitle: aText("Price: ${doc['vehiclePrice']}"),
+                  subtitle: doc["currency"] == "AED"
+                      ? aText("${doc["currency"]}: ${doc['vehiclePrice']}")
+                      : aText("Rs: ${doc['vehiclePrice']}"),
                   title: Text("Color: ${doc['vehicleColor']}\nFor: ${doc['vehicleStatus']}"),
                 ),
               ],

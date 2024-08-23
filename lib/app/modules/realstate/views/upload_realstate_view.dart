@@ -15,6 +15,7 @@ import '../../../../global/global.dart';
 import '../../../../models/brands.dart';
 import '../../../../utils/translation.dart';
 import '../../../../widgets/mix_widgets.dart';
+import '../controllers/realstate_controller.dart';
 
 class UploadRealstateView extends StatefulWidget {
   UploadRealstateView({super.key, this.models});
@@ -26,6 +27,7 @@ class UploadRealstateView extends StatefulWidget {
 }
 
 class _UploadRealstateViewState extends State<UploadRealstateView> {
+  final controller = Get.find<RealStateController>();
   XFile? imageFile;
   ImagePicker image = ImagePicker();
 
@@ -110,6 +112,7 @@ class _UploadRealstateViewState extends State<UploadRealstateView> {
       "country": countryValue,
       "state": stateValue,
       "city": cityValue,
+      "currency": controller.currencyValue,
       "address": addressController.text.trim(),
       "sellerId": sharedPreferences!.getString("uid"),
       "sellerName": sharedPreferences!.getString("name"),
@@ -134,6 +137,7 @@ class _UploadRealstateViewState extends State<UploadRealstateView> {
         "country": countryValue,
         "state": stateValue,
         "city": cityValue,
+        "currency": controller.currencyValue,
         "address": addressController.text.trim(),
         "sellerId": sharedPreferences!.getString("uid"),
         "sellerName": sharedPreferences!.getString("name"),
@@ -345,7 +349,28 @@ class _UploadRealstateViewState extends State<UploadRealstateView> {
 
               ),
             ),
-
+            const SizedBox(height: 2),
+            // select currency
+            Padding(padding: const EdgeInsets.all(8.0),
+              child: DropdownButtonFormField(
+                decoration: const InputDecoration(
+                  labelText: "Select Currency",
+                  border: OutlineInputBorder(),
+                ),
+                value: "PKR",
+                onChanged: (newValue) {
+                  setState(() {
+                    controller.currencyValue = newValue.toString();
+                  });
+                },
+                items: controller.currencyList.map((valueItem) {
+                  return DropdownMenuItem(
+                    value: valueItem,
+                    child: Text(valueItem),
+                  );
+                }).toList(),
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
@@ -354,6 +379,7 @@ class _UploadRealstateViewState extends State<UploadRealstateView> {
                 decoration: const InputDecoration(
                   labelText: "Enter Price",
                   hintText: "Enter Price",
+                  prefixIcon: Icon(Icons.money),
                   border: OutlineInputBorder(),
                 ),
               ),

@@ -162,6 +162,8 @@ class VehicleController extends GetxController {
     'Truck',
     'Other'
   ];
+  // list of currency
+  List<String> currency = ['AED', 'USD', 'PKR', 'INR', 'EUR', 'GBP', "CAD", "SAR", "BHD", 'Other'];
 
   // vehicle type value
   String? vehicleTypeValue;
@@ -174,6 +176,7 @@ class VehicleController extends GetxController {
   String? vehicleColorValue;
   String? vehicleModelValue;
   String? vehicleBodyTypeValue;
+  String? currencyValue;
 
   String vehicleUniqueId = DateTime.now().millisecondsSinceEpoch.toString();
 
@@ -290,7 +293,7 @@ class VehicleController extends GetxController {
     try {
       await FirebaseFirestore.instance
           .collection("sellers")
-          .doc(user!.uid)
+          .doc(sharedPreferences!.getString("uid"))
           .collection("vehicle")
           .doc(vehicleUniqueId)
           .set({
@@ -318,6 +321,7 @@ class VehicleController extends GetxController {
         "vehicleAmenities": vehicleAmenitiesValue,
         "vehicleColor": vehicleColorValue,
         "vehicleBodyType": vehicleBodyTypeValue,
+        "currency": currencyValue,
         "status": "available",
         "likeCount": 5,
         "publishedDate": date,
@@ -351,6 +355,7 @@ class VehicleController extends GetxController {
           "vehicleAmenities": vehicleAmenitiesValue,
           "vehicleColor": vehicleColorValue,
           "vehicleBodyType": vehicleBodyTypeValue,
+          "currency": currencyValue,
           "status": "available",
           "likeCount": 5,
           "publishedDate": date,

@@ -34,11 +34,31 @@ class RealStateController extends GetxController {
     'Under Construction',
     'Other'
   ];
+  // currency list
+  List<String> currencyList = [
+    'USD',
+    'EUR',
+    'JPY',
+    'GBP',
+    'AUD',
+    'CAD',
+    'HKD',
+    'TRY',
+    'INR',
+    'AED',
+    'SAR',
+    'QAR',
+    'PKR',
+    'BHD',
+    "MYR"
+
+    ];
 
   String? realStateTypeValue;
   String? realStateStatusValue;
   String? realStateFurnishingValue;
   String? conditionValue;
+  String? currencyValue;
 
   String? realStateAmenitiesValue = 'Gym';
   String? realStateRatingValue = '1';

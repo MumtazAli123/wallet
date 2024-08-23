@@ -23,6 +23,7 @@ class RealStateModel {
   String? parking;
   String? condition;
   String? rating;
+  String? currency;
   String? status;
   Timestamp? publishedDate;
   Timestamp? updatedDate;
@@ -50,12 +51,11 @@ class RealStateModel {
     this.parking,
     this.condition,
     this.rating,
+    this.currency,
     this.status,
     this.publishedDate,
     this.updatedDate,
   });
-
-
 
   toJson() {
     return {
@@ -81,6 +81,7 @@ class RealStateModel {
       'parking': parking,
       'condition': condition,
       'rating': rating,
+      'currency': currency,
       'status': status,
       'publishedDate': publishedDate,
       'updatedDate': updatedDate,
@@ -110,6 +111,7 @@ class RealStateModel {
     condition = json['condition'];
     furnishing = json['furnishing'];
     rating = json['rating'];
+    currency = json['currency'];
     status = json['status'];
     publishedDate = json['publishedDate'];
     updatedDate = json['updatedDate'];

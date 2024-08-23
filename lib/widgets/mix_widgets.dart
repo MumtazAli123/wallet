@@ -144,13 +144,16 @@ wLinearProgressBar(BuildContext context) {
 }
 
 cText(String text, {Color? color, double size = 16}) {
-  return Text(
-    textAlign: TextAlign.start,
-    text,
-    style: GoogleFonts.habibi(
-      fontSize: size,
-      fontWeight: FontWeight.bold,
-      color: color,
+  return Padding(
+    padding: const EdgeInsets.only(left: 8.0),
+    child: Text(
+      textAlign: TextAlign.start,
+      text,
+      style: GoogleFonts.habibi(
+        fontSize: size,
+        fontWeight: FontWeight.bold,
+        color: color,
+      ),
     ),
   );
 }

@@ -89,7 +89,9 @@ class RealstateViewPage extends GetView<RealStateController> {
                 // price
               },
               // rs 1000.00, like 1m 2 hundred 3 thousand 4 hundred 5 rupees
-              text: 'Rs: ${(rsModel.startingFrom!)}',
+              text: rsModel.currency == "AED"
+                  ? '${rsModel.currency}: ${rsModel.startingFrom}'
+                  : 'Rs: ${rsModel.startingFrom}',
               textStyle: GoogleFonts.roboto(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
@@ -183,23 +185,10 @@ class RealstateViewPage extends GetView<RealStateController> {
             // price
             ListTile(
                 leading:   Icon(Icons.money, color: Colors.orange[900],),
-                title: Text(
-                  "Price:\nRs: ${rsModel.startingFrom.toString()}",
-                  style: GoogleFonts.roboto(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.green[900],
-                  ),
-                )
-                    .animate(
-                      onInit: (controller) => controller.forward(),
-                    )
-                    .slide(
-                        duration: const Duration(seconds: 4),
-                        begin: const Offset(0, 1),
-                        end: const Offset(0, 0))
-                    .scale()
-                    .rotate(),
+                title:  rsModel.currency == "AED"
+                    ? aText('${rsModel.currency}: ${rsModel.startingFrom}')
+                    : aText('Rs: ${rsModel.startingFrom}'),
+
                 subtitle: aText(
                   size: 12.0,
                   // rs 1000.00, like 1m 2 hundred 3 thousand 4 hundred 5 rupees

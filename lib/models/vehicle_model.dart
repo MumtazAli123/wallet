@@ -28,6 +28,7 @@ class VehicleModel {
   String? vehicleStatus;
   String? vehicleTransmission;
   String? vehicleType;
+  String? currency;
 
   VehicleModel({
     this.email,
@@ -57,6 +58,7 @@ class VehicleModel {
     this.vehicleStatus,
     this.vehicleTransmission,
     this.vehicleType,
+    this.currency,
   });
 
   static VehicleModel fromDataSnapshot(DocumentSnapshot snapshot) {
@@ -89,6 +91,7 @@ class VehicleModel {
       vehicleStatus: dataSnap['vehicleStatus'],
       vehicleTransmission: dataSnap['vehicleTransmission'],
       vehicleType: dataSnap['vehicleType'],
+      currency: dataSnap['currency'],
     );
   }
 
@@ -121,6 +124,7 @@ class VehicleModel {
       vehicleStatus: json['vehicleStatus'],
       vehicleTransmission: json['vehicleTransmission'],
       vehicleType: json['vehicleType'],
+      currency: json['currency'],
     );
   }
 
@@ -153,6 +157,7 @@ class VehicleModel {
       'vehicleStatus': vehicleStatus,
       'vehicleTransmission': vehicleTransmission,
       'vehicleType': vehicleType,
+      'currency': currency,
     };
   }
 }

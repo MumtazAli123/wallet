@@ -15,11 +15,9 @@ import 'package:wallet/app/modules/vehicle/views/vehicle_view.dart';
 import 'package:wallet/models/vehicle_model.dart';
 
 import '../../../../models/products_model.dart';
-import '../../../../models/realstate_model.dart';
 import '../../../../widgets/mix_widgets.dart';
 import '../../products/views/products_page_view.dart';
 import '../../profile/views/user_details_view.dart';
-import '../../realstate/views/tabbar/realstate_view_page.dart';
 import '../../shops/views/vehicle_rating.dart';
 
 class VehiclePageView extends StatefulWidget {
@@ -161,10 +159,16 @@ class _VehiclePageViewState extends State<VehiclePageView> {
                             ),
                           ),
                           child: Center(
-                            child: wText(
-                              'Rs: ${widget.vModel.vehiclePrice}',
-                              color: Colors.white,
-                              size: 20,
+                            child: widget.vModel.currency == "AED"
+                                ? aText(
+                                    "${widget.vModel.currency}: ${widget.vModel.vehiclePrice}",
+                                    color: Colors.white,
+                                    size: 20,
+                                  )
+                                : aText(
+                                    "Rs: ${widget.vModel.vehiclePrice}",
+                                    color: Colors.white,
+                                    size: 20,
                             ),
                           ),
                         ),

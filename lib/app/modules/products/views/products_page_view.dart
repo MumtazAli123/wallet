@@ -11,7 +11,9 @@ import 'package:getwidget/types/gf_button_type.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/app/modules/products/controllers/products_controller.dart';
+import 'package:wallet/app/modules/vehicle/views/vehicle_page_view.dart';
 import 'package:wallet/models/products_model.dart';
+import 'package:wallet/models/vehicle_model.dart';
 
 import '../../../../widgets/mix_widgets.dart';
 import '../../profile/views/user_details_view.dart';
@@ -63,6 +65,7 @@ class _ProductPageViewState extends State<ProductPageView> {
   _buildBody(ProductsModel model) {
     return SingleChildScrollView(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
             height: 400,
@@ -197,7 +200,8 @@ class _ProductPageViewState extends State<ProductPageView> {
                 ),
                 Table(
                   textBaseline: TextBaseline.ideographic,
-                  defaultVerticalAlignment: TableCellVerticalAlignment.intrinsicHeight,
+                  defaultVerticalAlignment:
+                      TableCellVerticalAlignment.intrinsicHeight,
                   border: TableBorder.all(
                     color: Colors.black,
                     width: 1,
@@ -264,12 +268,207 @@ class _ProductPageViewState extends State<ProductPageView> {
                     color: Colors.blue[800],
                   ),
                 ),
+                SizedBox(height: 10.0),
+                //   city
+                wText("Location:", size: 30),
+                Text(
+                  'City: ${widget.vModel.city}',
+                  style: TextStyle(
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue[800],
+                  ),
+                ),
+                //   address
+                Text(
+                  'Address: ${widget.vModel.address}',
+                  style: TextStyle(
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue[800],
+                  ),
+                ),
+                SizedBox(height: 10.0),
+                Divider(),
+                SizedBox(
+                  height: 10.0,
+                ),
+                //   seller Details
+                wText('Seller Details', size: 22),
+                Table(
+                  textBaseline: TextBaseline.ideographic,
+                  defaultVerticalAlignment:
+                      TableCellVerticalAlignment.intrinsicHeight,
+                  border: TableBorder.all(
+                    color: Colors.black,
+                    width: 1,
+                  ),
+                  columnWidths: {
+                    0: FlexColumnWidth(0.5),
+                    1: FlexColumnWidth(0.5),
+                  },
+                  children: [
+                    TableRow(children: [
+                      eText('Name:'),
+                      eText(widget.vModel.pSellerName!),
+                    ]),
+                    TableRow(children: [
+                      eText('Phone:'),
+                      eText(widget.vModel.pSellerPhone!),
+                    ]),
+                  ],
+                ),
               ],
             ),
           ),
           SizedBox(
             height: 30,
           ),
+          cText(
+            'More Products from ${widget.vModel.pSellerName}',
+            size: 20,
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          //   more products
+          SizedBox(
+            height: 200,
+            child: StreamBuilder<QuerySnapshot>(
+              stream: controller.getMoreProducts(widget.vModel.pSellerId),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context, index) {
+                      var data = snapshot.data!.docs[index];
+                      return GestureDetector(
+                        onTap: () {
+                          //   show product details page
+                          _buildBodyDialog(data);
+                        },
+                        child: Container(
+                          width: 150,
+                          margin: EdgeInsets.only(right: 10),
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              image: NetworkImage(data['pImages'].toString()),
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          child: Column(
+                            // crossAxisAlignment: CrossAxisAlignment.s,
+                            children: [
+                              Align(
+                                alignment: Alignment.bottomRight,
+                                child: Container(
+                                  padding: EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                    color: Colors.red.withOpacity(0.5),
+                                  ),
+                                  child: Text(
+                                    data['pDiscountType'] == "Percentage"
+                                        ? '${data['pDiscount']}% OFF'
+                                        : 'Rs: ${data['pDiscount']} OFF',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Spacer(),
+                              //   product name
+                              Text(
+                                data['pName'],
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              //   product price after discount
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: Container(
+                                  padding: EdgeInsets.all(5),
+                                  decoration: BoxDecoration(
+                                    color: Colors.green.withOpacity(0.5),
+                                  ),
+                                  child: Text(
+                                    data['pDiscountType'] == "Percentage"
+                                        ? 'Rs: ${double.parse(data['pPrice']) - (double.parse(data['pPrice']) * double.parse(data['pDiscount']) / 100)}'
+                                        : 'Rs: ${double.parse(data['pPrice']) - double.parse(data['pDiscount'])}',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                } else {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              },
+            ),
+          ),
+          SizedBox(height: 20.0),
+          //   related products
+          cText(
+            'Vehicles ',
+            size: 30,
+          ),
+          SizedBox(
+            height: 10,
+          ),
+          SizedBox(
+            height: 200,
+            child: StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection('vehicle')
+                  .orderBy('publishedDate', descending: true)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.hasError) {
+                  return Text('Something went wrong');
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                if (snapshot.data!.docs.isEmpty) {
+                  return Center(
+                    child: Text('No Vehicles Found'),
+                  );
+                }
+                if (snapshot.hasData) {
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context, index) {
+                      var data = snapshot.data!.docs[index];
+                      return _buildVehicleCard(data);
+                    },
+                  );
+                } else {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              },
+            ),
+          ),
+          SizedBox(height: 30.0),
         ],
       ),
     );
@@ -361,6 +560,93 @@ class _ProductPageViewState extends State<ProductPageView> {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  void _buildBodyDialog(data) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(data['pName']),
+          content: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Image.network(data['pImages'],
+                    height: 200, width: 400, fit: BoxFit.cover),
+                Text('Price: ${data['pPrice']}'),
+                Text('Discount: ${data['pDiscount']}'),
+                Text('Category: ${data['pCategory']}'),
+                Text('Color: ${data['pColor']}'),
+                Text('Size: ${data['pSize']}'),
+                Text('Brand: ${data['pBrand']}'),
+                Text('Description: ${data['pDescription']}'),
+                Text(
+                    'Posted: ${(GetTimeAgo.parse(DateTime.parse(data['pCreatedAt'].toDate().toString()).toLocal()))}'),
+                Text('City: ${data['city']}'),
+                Text('Address: ${data['address']}'),
+              ],
+            ),
+          ),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                Get.back();
+              },
+              child: Text('Close'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Get.back();
+                Get.to(() => ProductPageView(
+                      data: "",
+                      vModel:
+                          ProductsModel.fromJson(data as Map<String, dynamic>),
+                    ));
+              },
+              child: Text('View'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  _buildVehicleCard(QueryDocumentSnapshot<Object?> data) {
+    return GestureDetector(
+      onTap: () {
+        Get.to(() => VehiclePageView(
+            vModel: VehicleModel.fromJson(data.data() as Map<String, dynamic>),
+            doc: ''));
+      },
+      child: Container(
+        width: 150,
+        margin: EdgeInsets.only(right: 10),
+        decoration: BoxDecoration(
+          image: DecorationImage(
+            image: NetworkImage(data['image'].toString()),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Column(
+          // crossAxisAlignment: CrossAxisAlignment.s,
+          children: [
+            Spacer(),
+            //   product name
+            Text(
+              data['vehicleName'],
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            //   product price after discount
+          ],
+        ),
       ),
     );
   }

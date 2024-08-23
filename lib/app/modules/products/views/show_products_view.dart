@@ -101,6 +101,7 @@ class ShowProductsView extends GetView<ProductsController> {
   wBuildVehicleItem(ProductsModel model) {
     return GFCard(
       title: GFListTile(
+        color: Colors.orange,
         titleText: model.pName,
         // discount price show after discount price
         subTitleText: model.pDiscountType == "Percentage"
