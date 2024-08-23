@@ -11,6 +11,7 @@ import 'package:getwidget/types/gf_button_type.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/app/modules/products/controllers/products_controller.dart';
+import 'package:wallet/app/modules/products/views/products_view.dart';
 import 'package:wallet/app/modules/vehicle/views/vehicle_page_view.dart';
 import 'package:wallet/models/products_model.dart';
 import 'package:wallet/models/vehicle_model.dart';
@@ -596,18 +597,20 @@ class _ProductPageViewState extends State<ProductPageView> {
               onPressed: () {
                 Get.back();
               },
-              child: Text('Close'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.red,
+              ),
+              child: eText('Close', color: Colors.white),
             ),
             ElevatedButton(
               onPressed: () {
                 Get.back();
-                Get.to(() => ProductPageView(
-                      data: "",
-                      vModel:
-                          ProductsModel.fromJson(data as Map<String, dynamic>),
-                    ));
+                Get.to(() => ProductsView());
               },
-              child: Text('View'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.green,
+              ),
+              child: eText('View More', color: Colors.white),
             ),
           ],
         );
