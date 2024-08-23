@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 
@@ -1040,6 +1041,8 @@ class _ShopsViewState extends State<ShopsView> {
                   leading: Icon(Icons.lock),
                   title: Text('Logout'),
                   onTap: () {
+                    //  logout user
+                    FirebaseAuth.instance.signOut();
                     Get.offAllNamed('/login');
                   },
                 ),
@@ -1141,7 +1144,7 @@ class _ShopsViewState extends State<ShopsView> {
               width: double.infinity,
               decoration: BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('assets/images/gps.png'),
+                  image: AssetImage('assets/images/onzubi.png'),
                   fit: BoxFit.cover,
                 ),
               ),

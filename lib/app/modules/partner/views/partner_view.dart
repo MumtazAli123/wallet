@@ -15,7 +15,7 @@ class PartnerView extends GetView<PartnerController> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: PageView.builder(
-          itemCount: 5,
+          itemCount: 2,
         scrollDirection: Axis.vertical,
           itemBuilder: (context, index) {
         return  DecoratedBox(
