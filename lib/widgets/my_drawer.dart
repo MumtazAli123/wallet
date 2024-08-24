@@ -146,9 +146,9 @@ class _MyDrawerState extends State<MyDrawer> {
         ),
         ListTile(
           leading: const Icon(Icons.settings),
-          title: const Text('Settings'),
+          title: const Text('Update App'),
           onTap: () {
-            // Navigator.of(context).pushNamed('/gas');
+            launch('https://play.google.com/store/apps/details?id=com.paysaw.chatty');
           },
         ),
         ListTile(
