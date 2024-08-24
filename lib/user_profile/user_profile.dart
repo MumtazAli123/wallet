@@ -713,7 +713,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       showConfirmBtn: false,
       cancelBtnText: "Update".tr,
       onCancelBtnTap: () {
-        db.doc(user!.uid).update({
+        db.doc(sharedPreferences!.getString("uid")).update({
           'description': descController.text.trim(),
           'city': cityController.text.trim()
         });
@@ -730,7 +730,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           showCancelBtn: false,
           confirmBtnText: "Confirm".tr,
           onConfirmBtnTap: () {
-            sendNotification(message);
+            // sendNotification(message);
 
             _refresh();
             Get.back();

@@ -530,7 +530,7 @@ class _ShopsViewState extends State<ShopsView> {
 
   _buildVehicles() {
     return SizedBox(
-      height: 230,
+      height: 240,
       child: StreamBuilder<QuerySnapshot>(
           stream: FirebaseFirestore.instance
               .collection('vehicle')
@@ -554,17 +554,17 @@ class _ShopsViewState extends State<ShopsView> {
                   var data = snapshot.data!.docs[index].data() as Map;
                   VehicleModel model =
                       VehicleModel.fromJson(data as Map<String, dynamic>);
-                  return _buildCard(
-                    image: model.image.toString(),
-                    label: "${model.vehicleName.toString()}\n"
-                        "For ${model.vehicleStatus.toString()}",
-                    onTap: () {
-                      Get.to(() => VehiclePageView(
-                          vModel: VehicleModel.fromJson(model.toJson()),
-                          doc: ''));
-                    },
-                  );
-                  // return _buildVehicleBox(model);
+                  // return _buildCard(
+                  //   image: model.image.toString(),
+                  //   label: "${model.vehicleName.toString()}\n"
+                  //       "For ${model.vehicleStatus.toString()}",
+                  //   onTap: () {
+                  //     Get.to(() => VehiclePageView(
+                  //         vModel: VehicleModel.fromJson(model.toJson()),
+                  //         doc: ''));
+                  //   },
+                  // );
+                  return _buildVehicleBox(model);
                 },
               );
             } else {
@@ -583,7 +583,9 @@ class _ShopsViewState extends State<ShopsView> {
         onTap: () {
           //   show on  same page
           Get.to(() => VehiclePageView(
-              vModel: VehicleModel.fromJson(model), doc: model.toString()));
+              vModel: VehicleModel.fromJson(model.toJson()), doc: '',
+
+          ));
         },
         child: Card(
           elevation: 5,
@@ -591,18 +593,19 @@ class _ShopsViewState extends State<ShopsView> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                model['image'] != null
+                model.image != null
                     ? Image.network(
-                        model['image'],
+                        model.image.toString(),
                         height: 100,
                         width: double.infinity,
                         fit: BoxFit.cover,
                       )
                     : Container(),
+
                 Container(
                   padding: const EdgeInsets.all(3),
                   color: Colors.red,
-                  child: model['status'] == "Sale"
+                  child: model.vehicleStatus == "Sale"
                       ? Text(
                           'For Sale',
                           style: const TextStyle(
@@ -616,42 +619,41 @@ class _ShopsViewState extends State<ShopsView> {
                           size: 12,
                         ),
                 ),
-                Text(
-                  maxLines: 1,
-                  "${model['vehicleName']} ",
-                  style: TextStyle(
-                    fontSize: 14.0,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                eText("${model['vehicleModel']}"),
-                SizedBox(
-                  height: 60,
-                  width: double.infinity,
-                  child: Stack(
-                    children: [
-                      // show price and cross after show discount price
-                      Positioned(
-                        right: 0,
-                        child: Column(
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(5),
-                              decoration: BoxDecoration(
-                                color: Colors.green,
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: Text(
-                                'Rs:${model['vehiclePrice']}',
-                                style: const TextStyle(
-                                  color: Colors.white,
+                Expanded(child: rText(
+                  "${model.vehicleName}",
+                  size: 16.0,
+                )),
+                Expanded(child: rText("Model: ${model.vehicleModel}")),
+                Expanded(
+                  child: SizedBox(
+                    height: 60,
+                    width: double.infinity,
+                    child: Stack(
+                      children: [
+                        // show price and cross after show discount price
+                        Positioned(
+                          right: 0,
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Container(
+                                padding: const EdgeInsets.all(5),
+                                decoration: BoxDecoration(
+                                  color: Colors.green,
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                                child: Text(
+                                  'Rs:${model.vehiclePrice}'.toString(),
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ]),

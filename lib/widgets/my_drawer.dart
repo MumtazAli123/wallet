@@ -77,7 +77,19 @@ class _MyDrawerState extends State<MyDrawer> {
       otherAccountsPictures: [
         IconButton(
           onPressed: () {
-            _editPhoneNum();
+            _buildRUSureDialog(
+              context: context,
+              title: 'Edit Phone Number',
+              content: 'Are you sure you want to edit your phone number?\n\n'
+                  'Note: You can only edit your phone number once!\n'
+                  'and it cannot be changed again.\n\n'
+                  '${phoneController.text.isEmpty ? 'Your current phone number is $phoneNumber' : 'Your current phone number is ${phoneController.text}'}',
+              onPressed: () {
+                Navigator.pop(context);
+                _editPhoneNum();
+              },
+            );
+            // _editPhoneNum();
           },
           icon: const Icon(Icons.edit),
         ),
@@ -160,6 +172,30 @@ class _MyDrawerState extends State<MyDrawer> {
           },
         ),
       ],
+    );
+  }
+
+  void _buildRUSureDialog({required BuildContext context, required String title, required String content, required Null Function() onPressed}) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text(title),
+          content: Text(content),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text('No'),
+            ),
+            TextButton(
+              onPressed: onPressed,
+              child: const Text('Yes'),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -249,12 +285,12 @@ class _MyDrawerState extends State<MyDrawer> {
           .where("phone", isEqualTo: phoneNumber)
           .get();
       return query.docs.isEmpty
-          ? firebaseFirestore
-              .collection('sellers')
-              .doc(sharedPreferences!.getString('uid'))
-              .update({'phone': phoneNumber}).then((value) {
+          // note: once phone number is updated, it cannot be changed again
+          ? await firebaseFirestore.collection("sellers").doc(fAuth.currentUser!.uid).update({
+              'phone': phoneNumber,
+            }).then((value) {
               sharedPreferences!.setString('phone', phoneNumber);
-              Navigator.pop(Get.context!);
+              Get.back();
               QuickAlert.show(
                 context: Get.context!,
                 type: QuickAlertType.success,
@@ -275,4 +311,5 @@ class _MyDrawerState extends State<MyDrawer> {
       );
     }
   }
+
 }

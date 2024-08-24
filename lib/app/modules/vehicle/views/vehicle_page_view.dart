@@ -8,10 +8,12 @@ import 'package:get_time_ago/get_time_ago.dart';
 import 'package:getwidget/getwidget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lottie/lottie.dart';
+import 'package:smooth_star_rating_nsafe/smooth_star_rating.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/app/modules/vehicle/controllers/vehicle_controller.dart';
 import 'package:wallet/app/modules/vehicle/views/offer_view.dart';
 import 'package:wallet/app/modules/vehicle/views/vehicle_view.dart';
+import 'package:wallet/global/global.dart';
 import 'package:wallet/models/vehicle_model.dart';
 
 import '../../../../models/products_model.dart';
@@ -55,6 +57,7 @@ class _VehiclePageViewState extends State<VehiclePageView> {
       }
     });
   }
+  bool isRating = false;
 
   @override
   void initState() {
@@ -169,7 +172,7 @@ class _VehiclePageViewState extends State<VehiclePageView> {
                                     "Rs: ${widget.vModel.vehiclePrice}",
                                     color: Colors.white,
                                     size: 20,
-                            ),
+                                  ),
                           ),
                         ),
                       ],
@@ -196,17 +199,14 @@ class _VehiclePageViewState extends State<VehiclePageView> {
                   //   description
                   Text(
                       "Model: ${widget.vModel.vehicleModel!}, For: ${widget.vModel.vehicleStatus}\n"),
+                  Divider(),
                   aText(
                     'Description',
                     size: 16,
                   ),
-                  Card(
-                    elevation: 5,
-                    child: ListTile(
-                      leading: Icon(Icons.description),
-                      title: Text('${widget.vModel.vehicleDescription}'),
-                    ),
-                  ),
+                  Text('${widget.vModel.vehicleDescription}'),
+                  SizedBox(height: 10.0),
+                  Divider(),
                   //   details
                   SizedBox(
                     height: 30,
@@ -302,22 +302,58 @@ class _VehiclePageViewState extends State<VehiclePageView> {
                   Text(
                     '${widget.vModel.address}',
                   ),
-                  //
-                  //  showroom
                   Divider(),
+                  // seller details
                   SizedBox(height: 20.0),
                   aText(
                     "Seller Details",
                   ),
-
-                  ListTile(
-                    leading: Icon(Icons.person),
-                    title: eText('Name: ${widget.vModel.sellerName}'),
-                    subtitle: eText('Phone: ${widget.vModel.phone}'),
-                  ),
-                  //   explore insurance card
+                  Text('Name: ${widget.vModel.sellerName}\n'
+                      'Phone: ${widget.vModel.phone}'),
                   SizedBox(height: 20.0),
                   Divider(),
+                  // seller rating
+                  SizedBox(height: 20.0),
+                  Row(
+                    children: [
+                      aText('Seller Rating'),
+                      SizedBox(width: 10.0),
+                      SmoothStarRating(
+                        rating: 3.2,
+                        size: 20,
+                        color: Colors.amber,
+                        borderColor: Colors.amber,
+                        starCount: 5,
+                        allowHalfRating: true,
+                        spacing: 2.0,
+                      ),
+                      SizedBox(width: 10.0),
+                      // _getRating(widget.vModel.sellerId),
+                    ],
+                  ),
+
+
+                  // if rating is available then show rating or show add rating button
+                  isRating
+                      ?  Container(
+                    height: 50,
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(
+                      children: [
+                        aText('Not Rating yet', color: Colors.white),
+                        const Spacer(),
+                        Icon(Icons.star, color: Colors.amber),
+                      ],
+                    ),
+                  )
+                      : _buildRatingBar(widget.vModel.sellerId),
+                  //   add rating
+
+                  //   explore car insurance
                   Card(
                     elevation: 5,
                     child: ListTile(
@@ -575,7 +611,6 @@ class _VehiclePageViewState extends State<VehiclePageView> {
           //   show on  same page
           Get.to(() => ProductPageView(
               vModel: ProductsModel.fromJson(doc.data()), data: "products"));
-
         },
         child: Card(
           elevation: 5,
@@ -659,5 +694,121 @@ class _VehiclePageViewState extends State<VehiclePageView> {
         ),
       ),
     );
+  }
+
+  _buildRatingBar(String? sellerId) {
+    return Column(
+      children: [
+        SizedBox(height: 10.0),
+        SizedBox(
+          height: 270,
+          child: StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance
+                .collection('sellers')
+                .doc(sellerId)
+                .collection('rating')
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (snapshot.data!.docs.isEmpty) {
+                return const Center(
+                  child: Text('Not available Rating yet'),
+                );
+              } else {
+                return ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: snapshot.data!.docs.length,
+                  itemBuilder: (context, index) {
+                    var data = snapshot.data!.docs[index].data() as Map;
+                    return wBuildRatingCard(data);
+                  },
+                );
+              }
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  wBuildRatingCard(Map data) {
+    return Card(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0, left: 4.0),
+            child: Row(
+              children: [
+                data['image'].toString().isNotEmpty
+                    ? GFAvatar(
+                        backgroundImage: NetworkImage(data['image']),
+                      )
+                    : GFAvatar(
+                        size: 15,
+                        child: Text("${data['name'][0]}"),
+                      ),
+                SizedBox(width: 10.0),
+                Text(data['name']),
+              ],
+            ),
+          ),
+          rText(data['title'].toString()),
+          Expanded(child: Container(
+            padding: const EdgeInsets.all(5),
+              width: 270,
+
+              child: Text(data['comment'].toString()))),
+
+          Expanded(child:Row(
+            children: [
+              SmoothStarRating(
+                rating: double.parse(data['rating'].toString()),
+                size: 20,
+                color: Colors.amber,
+                borderColor: Colors.amber,
+                starCount: 5,
+                allowHalfRating: true,
+                spacing: 2.0,
+              ),
+              Text(
+                ' ${data['rating']}',
+                style: TextStyle(
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ), )
+        ],
+      ),
+    );
+  }
+
+  _getRating(String? sellerId) {
+    return StreamBuilder(
+        stream: FirebaseFirestore.instance
+        .collection('sellers')
+        .doc(sellerId)
+        .snapshots(),
+        builder: (context, snapshot) {
+          if(snapshot.hasError){
+            return Text("Error");
+          }
+          else {
+            return Text('Rating: 0');
+          }
+        }
+    );
+
+
   }
 }

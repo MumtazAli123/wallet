@@ -169,6 +169,7 @@ class _RatingScreenState extends State<RatingScreen> {
               .update({
             'rating': countStarsRating.toString(),
           });
+          await sharedPreferences?.setString('rating', countStarsRating.toString());
           await FirebaseFirestore.instance
               .collection('sellers')
               .doc(widget.sellerId)
@@ -176,6 +177,7 @@ class _RatingScreenState extends State<RatingScreen> {
               .doc(sharedPreferences?.getString('uid'))
               .set({
             'rating': countStarsRating.toString(),
+            "totalRating": countStarsRating.toString(),
             "title": titleStarsRating,
             'comment': ratingController.text,
             'name': sharedPreferences?.getString('name'),
@@ -192,6 +194,7 @@ class _RatingScreenState extends State<RatingScreen> {
               .update({
             'rating': totalRating.toString(),
           });
+          await sharedPreferences?.setString('rating', totalRating.toString());
           await FirebaseFirestore.instance
               .collection('sellers')
               .doc(widget.sellerId)
@@ -199,6 +202,7 @@ class _RatingScreenState extends State<RatingScreen> {
               .doc(sharedPreferences?.getString('uid'))
               .set({
             'rating': countStarsRating.toString(),
+            "totalRating": totalRating.toString(),
             "title": titleStarsRating,
             'comment': ratingController.text,
             'name': sharedPreferences?.getString('name'),

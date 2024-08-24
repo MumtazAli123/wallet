@@ -48,6 +48,7 @@ rText(String text, {Color? color, double? size}){
   return Padding(
     padding: const EdgeInsets.only(left: 4.0,top: 3.0),
     child: Text(
+      maxLines: 1,
       text,
       style: GoogleFonts.aBeeZee(
           color: color, fontSize: size,
