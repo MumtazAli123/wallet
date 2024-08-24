@@ -695,6 +695,7 @@ class _VehiclePageViewState extends State<VehiclePageView> {
                 .collection('sellers')
                 .doc(sellerId)
                 .collection('rating')
+                .orderBy('date', descending: true)
                 .snapshots(),
             builder: (context, snapshot) {
               if (snapshot.hasError) {
