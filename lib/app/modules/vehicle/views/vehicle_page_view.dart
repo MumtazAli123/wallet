@@ -335,21 +335,7 @@ class _VehiclePageViewState extends State<VehiclePageView> {
 
                   // if rating is available then show rating or show add rating button
                   isRating
-                      ?  Container(
-                    height: 50,
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Row(
-                      children: [
-                        aText('Not Rating yet', color: Colors.white),
-                        const Spacer(),
-                        Icon(Icons.star, color: Colors.amber),
-                      ],
-                    ),
-                  )
+                      ?  Container()
                       : _buildRatingBar(widget.vModel.sellerId),
                   //   add rating
 
@@ -802,6 +788,10 @@ class _VehiclePageViewState extends State<VehiclePageView> {
         builder: (context, snapshot) {
           if(snapshot.hasError){
             return Text("Error");
+          } else if(snapshot.connectionState == ConnectionState.waiting){
+            return Text("Loading...");
+          } else if(snapshot.data!.data() != null){
+            return Text('Rating: ${snapshot.data!.data()!['rating']}');
           }
           else {
             return Text('Rating: 0');
