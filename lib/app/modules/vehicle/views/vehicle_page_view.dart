@@ -316,7 +316,7 @@ class _VehiclePageViewState extends State<VehiclePageView> {
                   SizedBox(height: 20.0),
                   Row(
                     children: [
-                      aText('Seller Rating'),
+                      aText('Seller Reviews'),
                       SizedBox(width: 10.0),
                       SmoothStarRating(
                         rating: 3.2,
@@ -329,6 +329,8 @@ class _VehiclePageViewState extends State<VehiclePageView> {
                       ),
                       SizedBox(width: 10.0),
                       // _getRating(widget.vModel.sellerId),
+                      _getRating(widget.vModel.sellerId) ?? Text('Rating: 0'),
+
                     ],
                   ),
 
@@ -705,7 +707,7 @@ class _VehiclePageViewState extends State<VehiclePageView> {
                 );
               } else if (snapshot.data!.docs.isEmpty) {
                 return const Center(
-                  child: Text('Not available Rating yet'),
+                  child: Text('Not available reviews yet'),
                 );
               } else {
                 return ListView.builder(
@@ -730,6 +732,7 @@ class _VehiclePageViewState extends State<VehiclePageView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
+
           Padding(
             padding: const EdgeInsets.only(top: 8.0, left: 4.0),
             child: Row(
@@ -748,13 +751,15 @@ class _VehiclePageViewState extends State<VehiclePageView> {
             ),
           ),
           rText(data['title'].toString()),
-          Expanded(child: Container(
-            padding: const EdgeInsets.all(5),
-              width: 270,
+          Expanded(child: SingleChildScrollView(
+            child: Container(
+              padding: const EdgeInsets.all(5),
+                width: 270,
+            
+                child: Text("${data['comment']}".toString())),
+          )),
 
-              child: Text(data['comment'].toString()))),
-
-          Expanded(child:Row(
+          Row(
             children: [
               SmoothStarRating(
                 rating: double.parse(data['rating'].toString()),
@@ -773,7 +778,17 @@ class _VehiclePageViewState extends State<VehiclePageView> {
                 ),
               ),
             ],
-          ), )
+          ),
+          Text(
+            (GetTimeAgo.parse(DateTime.parse(data['date']).toLocal())),
+            style: TextStyle(
+              fontSize: 12.0,
+              fontWeight: FontWeight.bold,
+              color: Colors.blue[800],
+            ),
+          ),
+
+
         ],
       ),
     );
@@ -791,7 +806,8 @@ class _VehiclePageViewState extends State<VehiclePageView> {
           } else if(snapshot.connectionState == ConnectionState.waiting){
             return Text("Loading...");
           } else if(snapshot.data!.data() != null){
-            return Text('Rating: ${snapshot.data!.data()!['rating']}');
+            return Text('/ ${snapshot.data!.data()!['rating']}'.toString().substring(0, 3)
+            );
           }
           else {
             return Text('Rating: 0');
