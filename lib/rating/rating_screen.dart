@@ -115,7 +115,18 @@ class _RatingScreenState extends State<RatingScreen> {
                   size: 50,
                   onPressed: () {
                 // Navigator.pop(context);
-                _saveRating(titleStarsRating);
+                //     if same current user have own profile then not allow to rate
+                if (sharedPreferences?.getString('uid') == widget.sellerId) {
+                  Get.back();
+                  QuickAlert.show(
+                      context: Get.context!,
+                      title: 'Rating',
+                      text: 'You can not reviews add yourself',
+                      type: QuickAlertType.error);
+                  return;
+                }else{
+                  _saveRating(ratingController.text);
+                }
               }),
               SizedBox(height: 20),
             ],
