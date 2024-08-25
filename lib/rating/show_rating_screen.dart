@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_time_ago/get_time_ago.dart';
 import 'package:getwidget/components/avatar/gf_avatar.dart';
 import 'package:smooth_star_rating_nsafe/smooth_star_rating.dart';
 import 'package:wallet/rating/rating_screen.dart';
@@ -24,6 +25,18 @@ class _ShowRatingScreenState extends State<ShowRatingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: Colors.orange,
+        onPressed: () {
+          Get.to(() => RatingScreen(
+              sellerId: widget.sellerId, model: widget.model));
+        },
+        label: wText('Add Rating', color: Colors.white),
+        icon: const Icon(
+          Icons.star,
+          color: Colors.white,
+        ),
+      ),
       body: _buildBody(),
     );
   }
@@ -190,6 +203,8 @@ class _ShowRatingScreenState extends State<ShowRatingScreen> {
             ),
             aText(doc['title'].toString(), size: 14),
             Text(doc['comment'].toString()),
+            const SizedBox(height: 10),
+            Text(GetTimeAgo.parse(DateTime.parse(doc['date'].toString()))),
           ],
         ),
       ),

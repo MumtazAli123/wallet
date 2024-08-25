@@ -64,17 +64,24 @@ class ShowVehicleView extends GetView<VehicleController> {
       stream: controller.vehicleStream(),
       builder: (context, snapshot) {
         try {
-          if (snapshot.hasData) {
+         if(snapshot.hasError){
+           return Center(
+             child: Text('Error: ${snapshot.error}'),
+           );
+          }if(snapshot.connectionState == ConnectionState.waiting){
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }if(snapshot.hasData){
             return ListView.builder(
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, index) {
-                var data = snapshot.data!.docs[index].data() as Map;
-                VehicleModel model =
-                    VehicleModel.fromJson(data as Map<String, dynamic>);
+                VehicleModel model = VehicleModel.fromJson(snapshot.data!.docs[index].data() as Map<String, dynamic>);
                 return wBuildVehicleItem(model);
               },
             );
-          } else {
+         }
+          else {
             return Center(
               child: CircularProgressIndicator(),
             );

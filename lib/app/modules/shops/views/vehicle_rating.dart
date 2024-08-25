@@ -18,6 +18,18 @@ class VehicleRating extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton.extended(
+        backgroundColor: Colors.orange,
+        onPressed: () {
+          Get.to(() => RatingScreen(
+              sellerId: sellerId));
+        },
+        label: wText('Add Rating'.tr, color: Colors.white),
+        icon: const Icon(
+          Icons.star,
+          color: Colors.white,
+        ),
+      ),
       body: _buildBody(),
     );
   }
@@ -115,8 +127,9 @@ class VehicleRating extends StatelessWidget {
             expandedHeight: 200,
             flexibleSpace: FlexibleSpaceBar(
               background: sellerImage!.isEmpty
-                  ? Image.network(image!, fit: BoxFit.cover)
-                  : Image.network(sellerImage!, fit: BoxFit.cover),
+
+                  ? Image.network(sellerImage!, fit: BoxFit.cover)
+                  :Image.network(image!, fit: BoxFit.cover)
             ),
           ),
         ];

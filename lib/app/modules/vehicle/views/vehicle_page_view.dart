@@ -13,7 +13,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/app/modules/vehicle/controllers/vehicle_controller.dart';
 import 'package:wallet/app/modules/vehicle/views/offer_view.dart';
 import 'package:wallet/app/modules/vehicle/views/vehicle_view.dart';
-import 'package:wallet/global/global.dart';
 import 'package:wallet/models/vehicle_model.dart';
 
 import '../../../../models/products_model.dart';
@@ -215,67 +214,9 @@ class _VehiclePageViewState extends State<VehiclePageView> {
                     'Vehicle Details',
                   ),
                   Divider(),
-                  Table(
-                    // border: TableBorder.all(color: Colors.blue),
-                    children: [
-                      TableRow(
-                        children: [
-                          eText('Vehicle Type:'),
-                          eText('${widget.vModel.vehicleTransmission}'),
-                        ],
-                      ),
-                      TableRow(
-                        decoration: BoxDecoration(
-                          color: Colors.blue[100],
-                        ),
-                        children: [
-                          eText('Vehicle Body:', color: Colors.black),
-                          eText('${widget.vModel.vehicleBodyType}',
-                              color: Colors.black),
-                        ],
-                      ),
-                      TableRow(
-                        children: [
-                          eText('Km:'),
-                          eText('${widget.vModel.vehicleKm}'),
-                        ],
-                      ),
-                      TableRow(
-                        decoration: BoxDecoration(
-                          color: Colors.blue[100],
-                        ),
-                        children: [
-                          eText('Vehicle Fuel:'),
-                          eText('${widget.vModel.vehicleFuelType}',
-                              color: Colors.black),
-                        ],
-                      ),
-                      // condition
-                      TableRow(
-                        children: [
-                          eText('Vehicle Condition:'),
-                          eText('${widget.vModel.vehicleCondition}'),
-                        ],
-                      ),
-                      // vehicleColor
-                      TableRow(
-                        decoration: BoxDecoration(
-                          color: Colors.blue[100],
-                        ),
-                        children: [
-                          eText('Vehicle Color:', color: Colors.black),
-                          eText('${widget.vModel.vehicleColor}',
-                              color: Colors.black),
-                        ],
-                      ),
-                      // status
-                      TableRow(
-                        children: [
-                          eText('Vehicle Status:'),
-                          eText('${widget.vModel.status}'),
-                        ],
-                      ),
-                    ],
+                  _tableData(
+                    'Vehicle Type',
+                    '${widget.vModel.vehicleType}',
                   ),
                   Divider(),
                   Text(
@@ -302,8 +243,19 @@ class _VehiclePageViewState extends State<VehiclePageView> {
                   Text(
                     '${widget.vModel.address}',
                   ),
+                  SizedBox(height: 10.0),
+
                   Divider(),
-                  // seller details
+                  SizedBox(height: 10.0),
+                  aText('Offers'),
+                  SizedBox(height: 5.0),
+                  isRating
+                      ? Container()
+                      : _buildOffers(widget.vModel.vehicleId),
+
+                  //   explore car insurance
+                  SizedBox(height: 20.0),
+                  Divider(),
                   SizedBox(height: 20.0),
                   aText(
                     "Seller Details",
@@ -312,36 +264,65 @@ class _VehiclePageViewState extends State<VehiclePageView> {
                       'Phone: ${widget.vModel.phone}'),
                   SizedBox(height: 20.0),
                   Divider(),
-                  // seller rating
                   SizedBox(height: 20.0),
-                  Row(
-                    children: [
-                      aText('Seller Reviews'),
-                      SizedBox(width: 10.0),
-                      SmoothStarRating(
-                        rating: 3.2,
-                        size: 20,
-                        color: Colors.amber,
-                        borderColor: Colors.amber,
-                        starCount: 5,
-                        allowHalfRating: true,
-                        spacing: 2.0,
-                      ),
-                      SizedBox(width: 10.0),
-                      // _getRating(widget.vModel.sellerId),
-                      _getRating(widget.vModel.sellerId) ?? Text('Rating: 0'),
+                  // seller rating
+                  GestureDetector(
+                    onTap: () {
+                      Get.to(() => VehicleRating(
+                        // Transition.zoom,
+                        sellerId: widget.vModel.sellerId,
+                        image: widget.vModel.sellerImage,
+                        name: widget.vModel.sellerName,
+                        sellerImage: widget.vModel.sellerImage,
+                      ));
 
-                    ],
+                    },
+                    child: Row(
+                      children: [
+                        aText('Seller Reviews'),
+                        SizedBox(width: 10.0),
+                        SmoothStarRating(
+                          onRatingChanged: (v) {
+                            // add rating
+                            Get.to(() => VehicleRating(
+                              // Transition.zoom,
+                              sellerId: widget.vModel.sellerId,
+                              image: widget.vModel.sellerImage,
+                              name: widget.vModel.sellerName,
+                              sellerImage: widget.vModel.sellerImage,
+                            ));
+                          },
+                          rating: 3.2,
+                          size: 20,
+                          color: Colors.amber,
+                          borderColor: Colors.amber,
+                          starCount: 5,
+                          allowHalfRating: true,
+                          spacing: 2.0,
+                        ),
+                        SizedBox(width: 10.0),
+                        // _getRating(widget.vModel.sellerId),
+                        isRating
+                            ? Text('Rating: 0.0')
+                            : _getRating(widget.vModel.sellerId),
+                        SizedBox(width: 1.0),
+                        Text(', Star')
+
+                      ],
+                    ),
                   ),
-
-
                   // if rating is available then show rating or show add rating button
                   isRating
                       ?  Container()
                       : _buildRatingBar(widget.vModel.sellerId),
                   //   add rating
+                  SizedBox(height: 20.0),
+                  Divider(),
 
-                  //   explore car insurance
+                  // on vehicle offers
+                  SizedBox(height: 10.0),
+                  //   offers
+
                   Card(
                     elevation: 5,
                     child: ListTile(
@@ -476,7 +457,7 @@ class _VehiclePageViewState extends State<VehiclePageView> {
     return Container(
       padding: EdgeInsets.only(bottom: 20, left: 15, right: 15, top: 5),
       decoration: BoxDecoration(
-        color: Colors.green.withOpacity(0.5),
+        // color: Colors.blue[800],
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -506,28 +487,17 @@ class _VehiclePageViewState extends State<VehiclePageView> {
           SizedBox(
             width: 5,
           ),
-          IconButton(
-            icon: Row(
-              children: [
-                Icon(Icons.star, color: Colors.yellow),
-                Icon(Icons.star, color: Colors.yellow),
-                Icon(Icons.star, color: Colors.yellow),
-                Icon(Icons.star, color: Colors.yellow),
-                Icon(Icons.star, color: Colors.yellow),
-              ],
-            ),
-            onPressed: () {
-              // add rating
-              Get.to(() => VehicleRating(
-                    // Transition.zoom,
-                    sellerId: widget.vModel.sellerId,
-                    image: widget.vModel.sellerImage,
-                    name: widget.vModel.sellerName,
-                    sellerImage: widget.vModel.sellerImage,
-                  ));
-            },
-          ),
           //   add to cart
+          Expanded(
+            child: Text(
+              maxLines: 1,
+              '${widget.vModel.sellerName}',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
           Spacer(),
           GFButton(
             onPressed: () {
@@ -728,69 +698,81 @@ class _VehiclePageViewState extends State<VehiclePageView> {
   }
 
   wBuildRatingCard(Map data) {
-    return Card(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
+    return GestureDetector(
+      onTap: () {
+        //   show on  same page
+        Get.to(() => VehicleRating(
+          // Transition.zoom,
+          sellerId: widget.vModel.sellerId,
+          image: widget.vModel.sellerImage,
+          name: widget.vModel.sellerName,
+          sellerImage: widget.vModel.sellerImage,
+        ));
+      },
+      child: Card(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
+          children: [
 
-          Padding(
-            padding: const EdgeInsets.only(top: 8.0, left: 4.0),
-            child: Row(
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0, left: 4.0),
+              child: Row(
+                children: [
+                  data['image'].toString().isNotEmpty
+                      ? GFAvatar(
+                          backgroundImage: NetworkImage(data['image']),
+                        )
+                      : GFAvatar(
+                          size: 15,
+                          child: Text("${data['name'][0]}"),
+                        ),
+                  SizedBox(width: 10.0),
+                  Text(data['name']),
+                ],
+              ),
+            ),
+            rText(data['title'].toString()),
+            Expanded(child: SingleChildScrollView(
+              child: Container(
+                padding: const EdgeInsets.all(5),
+                  width: 270,
+
+                  child: Text("${data['comment']}".toString())),
+            )),
+
+            Row(
               children: [
-                data['image'].toString().isNotEmpty
-                    ? GFAvatar(
-                        backgroundImage: NetworkImage(data['image']),
-                      )
-                    : GFAvatar(
-                        size: 15,
-                        child: Text("${data['name'][0]}"),
-                      ),
-                SizedBox(width: 10.0),
-                Text(data['name']),
+                SmoothStarRating(
+                  rating: double.parse(data['rating'].toString()),
+                  size: 20,
+                  color: Colors.amber,
+                  borderColor: Colors.amber,
+                  starCount: 5,
+                  allowHalfRating: true,
+                  spacing: 2.0,
+                ),
+                Text(
+                  ' ${data['rating']}',
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ],
             ),
-          ),
-          rText(data['title'].toString()),
-          Expanded(child: SingleChildScrollView(
-            child: Container(
-              padding: const EdgeInsets.all(5),
-                width: 270,
-            
-                child: Text("${data['comment']}".toString())),
-          )),
-
-          Row(
-            children: [
-              SmoothStarRating(
-                rating: double.parse(data['rating'].toString()),
-                size: 20,
-                color: Colors.amber,
-                borderColor: Colors.amber,
-                starCount: 5,
-                allowHalfRating: true,
-                spacing: 2.0,
+            Text(
+              (GetTimeAgo.parse(DateTime.parse(data['date']).toLocal())),
+              style: TextStyle(
+                fontSize: 12.0,
+                fontWeight: FontWeight.bold,
+                color: Colors.blue[800],
               ),
-              Text(
-                ' ${data['rating']}',
-                style: TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-          Text(
-            (GetTimeAgo.parse(DateTime.parse(data['date']).toLocal())),
-            style: TextStyle(
-              fontSize: 12.0,
-              fontWeight: FontWeight.bold,
-              color: Colors.blue[800],
             ),
-          ),
 
 
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -817,5 +799,159 @@ class _VehiclePageViewState extends State<VehiclePageView> {
     );
 
 
+  }
+
+  _buildOffers(String? vehicleId) {
+    return SizedBox(
+      height: 200,
+      child: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+        .collection("sellers")
+        .doc(widget.vModel.sellerId)
+            .collection('vehicle')
+            .doc(vehicleId)
+            .collection('offers')
+            .orderBy('date', descending: true)
+            // .where('vehicleId', isEqualTo: vehicleId)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if(snapshot.hasError){
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if(snapshot.connectionState == ConnectionState.waiting){
+            return const Center(
+              child: Text('Loading...'),
+            );
+          } else if(snapshot.data!.docs.isEmpty){
+            return const Center(
+              child: Text('No offers yet'),
+            );
+          } else {
+            return ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: snapshot.data!.docs.length,
+              itemBuilder: (context, index) {
+                var data = snapshot.data!.docs[index].data() as Map;
+                return _buildOfferCard(data);
+              },
+            );
+          }
+        },
+      ),
+    );
+  }
+
+  _buildOfferCard(data) {
+    return GestureDetector(
+      onTap: () {
+        //   show on  same page
+        Get.to(() => OfferView(vehicle: widget.vModel));
+      },
+      child: SizedBox(
+        width: 200,
+        child: Card(
+          elevation: 5,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              data['buyerPhoto'].toString().isEmpty
+                  ? CircleAvatar(
+                      radius: 30,
+                      backgroundColor: Colors.white,
+                      child: Icon(
+                        Icons.person,
+                        color: Colors.black,
+                      ),
+                    )
+                  : SizedBox(
+                      height: 90,
+                      width: double.infinity,
+                      child: Image.network(
+                        data['buyerPhoto'],
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+              rText(
+                data['buyerName'],
+                size: 18,
+              ),
+              rText(
+                "Offers: ${data['buyerOffer']}",
+              ),
+              rText(
+                (GetTimeAgo.parse(DateTime.parse(data['date']).toLocal())),
+              ),
+
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  _tableData(String s, String t) {
+    return Table(
+      // border: TableBorder.all(color: Colors.blue),
+      children: [
+        TableRow(
+          children: [
+            eText('Vehicle Type:'),
+            eText('${widget.vModel.vehicleTransmission}'),
+          ],
+        ),
+        TableRow(
+          decoration: BoxDecoration(
+            color: Get.theme.primaryColor.withOpacity(0.1),
+          ),
+          children: [
+            eText('Vehicle Body:'),
+            eText('${widget.vModel.vehicleBodyType}'),
+          ],
+        ),
+        TableRow(
+          children: [
+            eText('Km:'),
+            eText('${widget.vModel.vehicleKm}'),
+          ],
+        ),
+        TableRow(
+          decoration: BoxDecoration(
+            color: Get.theme.primaryColor.withOpacity(0.1),
+          ),
+          children: [
+            eText('Vehicle Fuel:'),
+            eText('${widget.vModel.vehicleFuelType}',
+            ),
+          ],
+        ),
+        // condition
+        TableRow(
+          children: [
+            eText('Vehicle Condition:'),
+            eText('${widget.vModel.vehicleCondition}'),
+          ],
+        ),
+        // vehicleColor
+        TableRow(
+          decoration: BoxDecoration(
+            color: Get.theme.primaryColor.withOpacity(0.1),
+          ),
+          children: [
+            eText('Vehicle Color:'),
+            eText('${widget.vModel.vehicleColor}',
+               ),
+          ],
+        ),
+        // status
+        TableRow(
+          children: [
+            eText('Vehicle Status:'),
+            eText('${widget.vModel.status}'),
+          ],
+        ),
+      ],
+    );
   }
 }

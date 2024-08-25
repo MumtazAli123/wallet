@@ -394,7 +394,7 @@ class VehicleController extends GetxController {
   vehicleStream() {
     return FirebaseFirestore.instance
         .collection("sellers")
-        .doc(user!.uid)
+        .doc(sharedPreferences!.getString("uid"))
         .collection("vehicle")
         .orderBy("publishedDate", descending: true)
         .snapshots();

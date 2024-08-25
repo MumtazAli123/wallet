@@ -151,18 +151,6 @@ class _ShopsViewState extends State<ShopsView> {
             _buildButton(),
             SizedBox(height: 10.0),
             // vehicle
-            Text('Vehicles'.tr,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            _buildVehicles(),
-            // Tacker card
-            SizedBox(height: 10.0),
-            // products
-            wText("Products".tr, size: 20),
-            _buildProductsBox(),
-            SizedBox(height: 10.0),
-            wText("Real State".tr, size: 20),
-            _buildRealStateBox(),
-            SizedBox(height: 10.0),
             // search your partner
             _buildLifePartner(),
             SizedBox(height: 10.0),
@@ -170,6 +158,19 @@ class _ShopsViewState extends State<ShopsView> {
             _buildFindJob(),
             SizedBox(height: 10.0),
             _buildTackerCard(),
+            SizedBox(height: 10.0),
+            Text('Vehicles'.tr,
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+            _buildVehicles(),
+            // Tacker card
+
+            SizedBox(height: 10.0),
+            wText("Real State".tr, size: 20),
+            _buildRealStateBox(),
+            SizedBox(height: 10.0),
+            // products
+            wText("Products".tr, size: 20),
+            _buildProductsBox(),
             SizedBox(height: 40.0),
 
             //   build grid view
@@ -185,17 +186,22 @@ class _ShopsViewState extends State<ShopsView> {
       stream: controllerVehicle.allVehicleStream(),
       builder: (context, snapshot) {
         try {
-          if (snapshot.hasData) {
+          if(snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          }if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }if (snapshot.hasData) {
             return ListView.builder(
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, index) {
                 var data = snapshot.data!.docs[index].data() as Map;
-                VehicleModel model =
-                    VehicleModel.fromJson(data as Map<String, dynamic>);
-                return _buildShopItem(model.toJson());
+                return _buildShopItem(data);
               },
             );
-          } else {
+          }
+          else {
             return const Center(
               child: CircularProgressIndicator(),
             );
@@ -554,17 +560,17 @@ class _ShopsViewState extends State<ShopsView> {
                   var data = snapshot.data!.docs[index].data() as Map;
                   VehicleModel model =
                       VehicleModel.fromJson(data as Map<String, dynamic>);
-                  // return _buildCard(
-                  //   image: model.image.toString(),
-                  //   label: "${model.vehicleName.toString()}\n"
-                  //       "For ${model.vehicleStatus.toString()}",
-                  //   onTap: () {
-                  //     Get.to(() => VehiclePageView(
-                  //         vModel: VehicleModel.fromJson(model.toJson()),
-                  //         doc: ''));
-                  //   },
-                  // );
-                  return _buildVehicleBox(model);
+                  return _buildCard(
+                    image: model.image.toString(),
+                    label: "${model.vehicleName.toString()}\n"
+                        "For ${model.vehicleStatus.toString()}",
+                    onTap: () {
+                      Get.to(() => VehiclePageView(
+                          vModel: VehicleModel.fromJson(model.toJson()),
+                          doc: ''));
+                    },
+                  );
+                  // return _buildVehicleBox(model);
                 },
               );
             } else {

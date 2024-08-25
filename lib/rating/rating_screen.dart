@@ -193,6 +193,8 @@ class _RatingScreenState extends State<RatingScreen> {
             'comment': ratingController.text,
             'name': sharedPreferences?.getString('name'),
             "image": sharedPreferences?.getString('image'),
+            "email": sharedPreferences?.getString('email'),
+            'phone': sharedPreferences?.getString('phone'),
             'date': DateTime.now().toString(),
           });
         } else {
@@ -218,6 +220,8 @@ class _RatingScreenState extends State<RatingScreen> {
             'comment': ratingController.text,
             'name': sharedPreferences?.getString('name'),
             "image": sharedPreferences?.getString('image'),
+            "email": sharedPreferences?.getString('email'),
+            'phone': sharedPreferences?.getString('phone'),
             'date': DateTime.now().toString(),
           });
         }
