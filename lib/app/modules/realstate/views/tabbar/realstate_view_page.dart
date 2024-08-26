@@ -90,8 +90,12 @@ class RealstateViewPage extends GetView<RealStateController> {
               },
               // rs 1000.00, like 1m 2 hundred 3 thousand 4 hundred 5 rupees
               text: rsModel.currency == "AED"
-                  ? '${rsModel.currency}: ${rsModel.startingFrom}'
-                  : 'Rs: ${rsModel.startingFrom}',
+                  ? '${rsModel.currency}: ${rsModel.startingFrom}'.splitMapJoin(
+                      RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"),
+                      onMatch: (m) => '${m[1]},')
+                  : 'Rs: ${rsModel.startingFrom}'.splitMapJoin(
+                      RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"),
+                      onMatch: (m) => '${m[1]},'),
               textStyle: GoogleFonts.roboto(
                 fontSize: 18.0,
                 fontWeight: FontWeight.bold,
@@ -163,7 +167,10 @@ class RealstateViewPage extends GetView<RealStateController> {
             ),
             // description
             ListTile(
-              leading: const Icon(Icons.description,color: Colors.green,),
+              leading: const Icon(
+                Icons.description,
+                color: Colors.green,
+              ),
               title: aText("Description:"),
               subtitle: Text(
                 rsModel.description.toString(),
@@ -171,7 +178,10 @@ class RealstateViewPage extends GetView<RealStateController> {
               ),
             ),
             ListTile(
-              leading:  const Icon(Icons.location_on, color: Colors.red,),
+              leading: const Icon(
+                Icons.location_on,
+                color: Colors.red,
+              ),
               title: aText("City: ${rsModel.city.toString()}"),
               subtitle: aText("State: ${rsModel.state.toString()}", size: 12),
               trailing: aText(rsModel.country.toString(), size: 12),
@@ -184,11 +194,17 @@ class RealstateViewPage extends GetView<RealStateController> {
             ),
             // price
             ListTile(
-                leading:   Icon(Icons.money, color: Colors.orange[900],),
-                title:  rsModel.currency == "AED"
-                    ? aText('${rsModel.currency}: ${rsModel.startingFrom}')
-                    : aText('Rs: ${rsModel.startingFrom}'),
-
+                leading: Icon(
+                  Icons.money,
+                  color: Colors.orange[900],
+                ),
+                title: rsModel.currency == "AED"
+                    ? aText('${rsModel.currency}: ${rsModel.startingFrom}'.splitMapJoin(
+                        RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"),
+                        onMatch: (m) => '${m[1]},'))
+                    : aText('Rs: ${rsModel.startingFrom}'.splitMapJoin(
+                        RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"),
+                        onMatch: (m) => '${m[1]},')),
                 subtitle: aText(
                   size: 12.0,
                   // rs 1000.00, like 1m 2 hundred 3 thousand 4 hundred 5 rupees
