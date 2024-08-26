@@ -107,8 +107,13 @@ Widget wBuildVehicleCard(doc) {
                 ListTile(
                   // leading: const Icon(Icons.money),
                   subtitle: doc["currency"] == "AED"
-                      ? aText("${doc["currency"]}: ${doc['vehiclePrice']}")
-                      : aText("Rs: ${doc['vehiclePrice']}"),
+                      ? aText("${doc["currency"]}: ${doc['vehiclePrice']}".splitMapJoin(
+                      RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"),
+                          onMatch: (m) => '${m[1]},',)
+                  )
+                      : aText("Rs: ${doc['vehiclePrice']}".splitMapJoin(
+                      RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"),
+                  onMatch: (m) => '${m[1]},',)),
                   title: Text("Color: ${doc['vehicleColor']}\nFor: ${doc['vehicleStatus']}"),
                 ),
               ],
