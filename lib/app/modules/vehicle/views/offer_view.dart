@@ -154,7 +154,7 @@ class _OfferViewState extends State<OfferView> {
               keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 border: OutlineInputBorder(),
-                labelText: 'Offer Price',
+                labelText: 'Offer Price'.splitMapJoin(' '),
                 labelStyle: TextStyle(color: Colors.black),
               ),
             ),

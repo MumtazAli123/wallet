@@ -136,6 +136,9 @@ class _ProductPageViewState extends State<ProductPageView> {
               ],
             ),
           ),
+          _buildVDetailsAvatar(
+            model,
+          ),
           SizedBox(
             height: 5.0,
           ),
@@ -172,14 +175,15 @@ class _ProductPageViewState extends State<ProductPageView> {
                         child: wText(
                           widget.vModel.pDiscountType == "Percentage"
                               ? 'Rs: ${double.parse(widget.vModel.pPrice!) - (double.parse(widget.vModel.pPrice!) * double.parse(widget.vModel.pDiscount!) / 100)}'
-                          .splitMapJoin(
-                            RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"),
-                            onMatch: (m) => '${m[1]},',
-                          )
-                              : 'Rs: ${double.parse(widget.vModel.pPrice!) - double.parse(widget.vModel.pDiscount!)}'.splitMapJoin(
-                            RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"),
-                            onMatch: (m) => '${m[1]},',
-                          ),
+                                  .splitMapJoin(
+                                  RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"),
+                                  onMatch: (m) => '${m[1]},',
+                                )
+                              : 'Rs: ${double.parse(widget.vModel.pPrice!) - double.parse(widget.vModel.pDiscount!)}'
+                                  .splitMapJoin(
+                                  RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"),
+                                  onMatch: (m) => '${m[1]},',
+                                ),
                           color: Colors.white,
                           size: 20,
                         ),
@@ -226,14 +230,14 @@ class _ProductPageViewState extends State<ProductPageView> {
                       eText(model.pCategory!),
                     ]),
                     TableRow(
-                      decoration: BoxDecoration(
-                        color: Theme.of(context).primaryColor.withOpacity(0.1),
-                      ),
+                        decoration: BoxDecoration(
+                          color:
+                              Theme.of(context).primaryColor.withOpacity(0.1),
+                        ),
                         children: [
-                      eText('Condition:'),
-
-                      eText(model.pCondition!),
-                    ]),
+                          eText('Condition:'),
+                          eText(model.pCondition!),
+                        ]),
                     TableRow(children: [
                       eText('Delivery:'),
                       widget.vModel.pDelivery == "Yes"
@@ -246,30 +250,32 @@ class _ProductPageViewState extends State<ProductPageView> {
                     ]),
                     TableRow(
                         decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor.withOpacity(0.1),
+                          color:
+                              Theme.of(context).primaryColor.withOpacity(0.1),
                         ),
                         children: [
-                      eText('Return:'),
-                      widget.vModel.pReturn == "Yes"
-                          ? eText(
-                              "Policy: 7 Days",
-                            )
-                          : eText(
-                              "Return: Not Available",
-                            ),
-                    ]),
+                          eText('Return:'),
+                          widget.vModel.pReturn == "Yes"
+                              ? eText(
+                                  "Policy: 7 Days",
+                                )
+                              : eText(
+                                  "Return: Not Available",
+                                ),
+                        ]),
                     TableRow(children: [
                       eText('Color:'),
                       eText(model.pColor!),
                     ]),
                     TableRow(
                         decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor.withOpacity(0.1),
+                          color:
+                              Theme.of(context).primaryColor.withOpacity(0.1),
                         ),
                         children: [
-                      eText('Size:'),
-                      eText(model.pSize!),
-                    ]),
+                          eText('Size:'),
+                          eText(model.pSize!),
+                        ]),
                     //   pQuantity
                     TableRow(children: [
                       eText('Quantity:'),
@@ -278,12 +284,13 @@ class _ProductPageViewState extends State<ProductPageView> {
                     //   pBrand
                     TableRow(
                         decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor.withOpacity(0.1),
+                          color:
+                              Theme.of(context).primaryColor.withOpacity(0.1),
                         ),
                         children: [
-                      eText('Brand:'),
-                      eText(model.pBrand!),
-                    ]),
+                          eText('Brand:'),
+                          eText(model.pBrand!),
+                        ]),
                   ],
                 ),
                 Divider(),
@@ -322,94 +329,118 @@ class _ProductPageViewState extends State<ProductPageView> {
                 ),
                 //   seller Details
                 wText('Seller Details', size: 22),
-                Table(
-                  textBaseline: TextBaseline.ideographic,
-                  defaultVerticalAlignment:
-                      TableCellVerticalAlignment.intrinsicHeight,
-                  border: TableBorder.all(
-                    color: Colors.black,
-                    width: 1,
-                  ),
-                  columnWidths: {
-                    0: FlexColumnWidth(0.5),
-                    1: FlexColumnWidth(0.5),
-                  },
+                Row(
                   children: [
-                    TableRow(children: [
-                      eText('Name:'),
-                      eText(widget.vModel.pSellerName!),
-                    ]),
-                    TableRow(children: [
-                      eText('Phone:'),
-                      eText(widget.vModel.pSellerPhone!),
-                    ]),
+                    widget.vModel.pSellerPhoto!.isEmpty
+                        ? CircleAvatar(
+                            radius: 30,
+                            backgroundColor: Colors.white,
+                            child: Icon(
+                              Icons.person,
+                              color: Colors.black,
+                            ),
+                          )
+                        : CircleAvatar(
+                            radius: 30,
+                            backgroundImage: NetworkImage(
+                                widget.vModel.pSellerPhoto.toString()),
+                          ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.vModel.pSellerName!,
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          'Phone: ${widget.vModel.pSellerPhone}',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          'Email: ${widget.vModel.pSellerEmail}',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
+                SizedBox(
+                  height: 30,
+                ),
+                Divider(),
+                _buildReviews(),
+                cText(
+                  'More Products from ${widget.vModel.pSellerName}',
+                  size: 20,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                //   more products
+                _moreProducts(),
+                SizedBox(height: 20.0),
+                //   related products
+                cText(
+                  'Vehicles ',
+                  size: 30,
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                SizedBox(
+                  height: 200,
+                  child: StreamBuilder<QuerySnapshot>(
+                    stream: FirebaseFirestore.instance
+                        .collection('vehicle')
+                        .orderBy('publishedDate', descending: true)
+                        .snapshots(),
+                    builder: (context, snapshot) {
+                      if (snapshot.hasError) {
+                        return Text('Something went wrong');
+                      }
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                      if (snapshot.data!.docs.isEmpty) {
+                        return Center(
+                          child: Text('No Vehicles Found'),
+                        );
+                      }
+                      if (snapshot.hasData) {
+                        return ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: snapshot.data!.docs.length,
+                          itemBuilder: (context, index) {
+                            var data = snapshot.data!.docs[index];
+                            return _buildVehicleCard(data);
+                          },
+                        );
+                      } else {
+                        return Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+                    },
+                  ),
+                ),
+                SizedBox(height: 30.0),
               ],
             ),
           ),
-          SizedBox(
-            height: 30,
-          ),
-          Divider(),
-          _buildReviews(),
-          cText(
-            'More Products from ${widget.vModel.pSellerName}',
-            size: 20,
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          //   more products
-          _moreProducts(),
-          SizedBox(height: 20.0),
-          //   related products
-          cText(
-            'Vehicles ',
-            size: 30,
-          ),
-          SizedBox(
-            height: 10,
-          ),
-          SizedBox(
-            height: 200,
-            child: StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection('vehicle')
-                  .orderBy('publishedDate', descending: true)
-                  .snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return Text('Something went wrong');
-                }
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                if (snapshot.data!.docs.isEmpty) {
-                  return Center(
-                    child: Text('No Vehicles Found'),
-                  );
-                }
-                if (snapshot.hasData) {
-                  return ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: snapshot.data!.docs.length,
-                    itemBuilder: (context, index) {
-                      var data = snapshot.data!.docs[index];
-                      return _buildVehicleCard(data);
-                    },
-                  );
-                } else {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              },
-            ),
-          ),
-          SizedBox(height: 30.0),
         ],
       ),
     );
@@ -446,26 +477,15 @@ class _ProductPageViewState extends State<ProductPageView> {
           SizedBox(
             width: 5,
           ),
-          IconButton(
-            icon: Row(
-              children: [
-                Icon(Icons.star, color: Colors.yellow),
-                Icon(Icons.star, color: Colors.yellow),
-                Icon(Icons.star, color: Colors.yellow),
-                Icon(Icons.star, color: Colors.yellow),
-                Icon(Icons.star, color: Colors.yellow),
-              ],
+          Expanded(
+            child: Text(
+              maxLines: 1,
+              widget.vModel.pSellerName!,
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            onPressed: () {
-              // add rating
-              Get.to(() => VehicleRating(
-                    // Transition.zoom,
-                    sellerId: widget.vModel.pSellerId,
-                    image: widget.vModel.pImages,
-                    name: widget.vModel.pSellerName,
-                    sellerImage: widget.vModel.pSellerPhoto,
-                  ));
-            },
           ),
           //   add to cart
           Spacer(),
@@ -647,7 +667,9 @@ class _ProductPageViewState extends State<ProductPageView> {
                             decoration: BoxDecoration(
                               color: Colors.green.withOpacity(0.9),
                             ),
-                            child: Text("${data['pName']}",
+                            child: Text(
+                              maxLines: 1,
+                                "${data['pName']}",
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -678,43 +700,24 @@ class _ProductPageViewState extends State<ProductPageView> {
           GestureDetector(
             onTap: () {
               Get.to(() => VehicleRating(
-                // Transition.zoom,
-                sellerId: widget.vModel.pSellerId,
-                image: widget.vModel.pImages,
-                name: widget.vModel.pSellerName,
-                sellerImage: widget.vModel.pSellerPhoto,
-              ));
+                    // Transition.zoom,
+                    sellerId: widget.vModel.pSellerId,
+                    image: widget.vModel.pImages,
+                    name: widget.vModel.pSellerName,
+                    sellerImage: widget.vModel.pSellerPhoto,
+                  ));
             },
             child: Row(
               children: [
-                aText('Seller Reviews'),
+                Expanded(child: aText('Seller Reviews', size: 14),),
                 SizedBox(width: 10.0),
-                SmoothStarRating(
-                  onRatingChanged: (v) {
-                    // add rating
-                    Get.to(() => VehicleRating(
-                      // Transition.zoom,
-                      sellerId: widget.vModel.pSellerId,
-                      image: widget.vModel.pImages,
-                      name: widget.vModel.pSellerName,
-                      sellerImage: widget.vModel.pSellerPhoto,
-                    ));
-                  },
-                  rating: 3.2,
-                  size: 20,
-                  color: Colors.amber,
-                  borderColor: Colors.amber,
-                  starCount: 5,
-                  allowHalfRating: true,
-                  spacing: 2.0,
-                ),
+                Icon(Icons.star, color: Colors.amber),
                 SizedBox(width: 10.0),
                 // _getRating(widget.vModel.sellerId),
-                isRating
+                Expanded(child: isRating
                     ? Text('Rating: 0.0')
-                    : _getRating(widget.vModel.pSellerId),
-                SizedBox(width: 1.0),
-                Text(', Star')
+                    : _getRating(widget.vModel.pSellerId)),
+                    SizedBox(width: 1.0),
               ],
             ),
           ),
@@ -796,12 +799,12 @@ class _ProductPageViewState extends State<ProductPageView> {
       onTap: () {
         //   show on  same page
         Get.to(() => VehicleRating(
-          // Transition.zoom,
-          sellerId: widget.vModel.pSellerId,
-          image: widget.vModel.pImages,
-          name: widget.vModel.pSellerName,
-          sellerImage: widget.vModel.pSellerPhoto,
-        ));
+              // Transition.zoom,
+              sellerId: widget.vModel.pSellerId,
+              image: widget.vModel.pImages,
+              name: widget.vModel.pSellerName,
+              sellerImage: widget.vModel.pSellerPhoto,
+            ));
       },
       child: Card(
         child: Padding(
@@ -816,12 +819,12 @@ class _ProductPageViewState extends State<ProductPageView> {
                   children: [
                     data['image'].toString().isNotEmpty
                         ? GFAvatar(
-                      backgroundImage: NetworkImage(data['image']),
-                    )
+                            backgroundImage: NetworkImage(data['image']),
+                          )
                         : GFAvatar(
-                      size: 15,
-                      child: Text("${data['name'][0]}"),
-                    ),
+                            size: 15,
+                            child: Text("${data['name'][0]}"),
+                          ),
                     SizedBox(width: 10.0),
                     Text(data['name']),
                   ],
@@ -830,11 +833,11 @@ class _ProductPageViewState extends State<ProductPageView> {
               rText(data['title'].toString()),
               Expanded(
                   child: SingleChildScrollView(
-                    child: Container(
-                        padding: const EdgeInsets.all(5),
-                        width: 270,
-                        child: Text("${data['comment']}".toString())),
-                  )),
+                child: Container(
+                    padding: const EdgeInsets.all(5),
+                    width: 270,
+                    child: Text("${data['comment']}".toString())),
+              )),
               Row(
                 children: [
                   SmoothStarRating(
@@ -865,6 +868,61 @@ class _ProductPageViewState extends State<ProductPageView> {
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  _buildVDetailsAvatar(ProductsModel model) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          Row(children: [
+            Expanded(
+                child: _buildVDetails(
+                    Icons.category, 'Category', model.pCategory)),
+            Expanded(
+                child: _buildVDetails(Icons.color_lens, 'Color', model.pColor)),
+            Expanded(
+                child: _buildVDetails(
+                    Icons.branding_watermark, 'Brand', model.pBrand)),
+          ]),
+        ],
+      ),
+    );
+  }
+
+  _buildVDetails(IconData icon, String? title, String? value) {
+    return Card(
+      elevation: 5,
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              icon,
+              size: 30,
+              color: Colors.green[800],
+            ),
+            Text(
+              title!,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              maxLines: 1,
+              value!,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
         ),
       ),
     );
