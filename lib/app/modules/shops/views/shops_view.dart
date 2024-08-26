@@ -834,9 +834,13 @@ class _ShopsViewState extends State<ShopsView> {
                       child: Column(
                         children: [
                           Text(
-                            'Rs:${doc['pPrice']}',
+                            'Rs:${doc['pPrice']}'.splitMapJoin(
+                              RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"),
+                              onMatch: (m) => '${m[1]},',
+                            ),
                             style: const TextStyle(
-                              color: Colors.grey,
+                              color: Colors.red,
+                              decoration: TextDecoration.lineThrough,
                             ),
                           ),
                           Container(
@@ -847,8 +851,14 @@ class _ShopsViewState extends State<ShopsView> {
                             ),
                             child: Text(
                               doc['pDiscountType'] == "Percentage"
-                                  ? 'Rs:${double.parse(doc['pPrice']) - (double.parse(doc['pPrice']) * double.parse(doc['pDiscount']) / 100)}'
-                                  : 'Rs:${double.parse(doc['pPrice']) - double.parse(doc['pDiscount'])}',
+                                  ? 'Rs:${double.parse(doc['pPrice']) - (double.parse(doc['pPrice']) * double.parse(doc['pDiscount']) / 100)}'.splitMapJoin(
+                                      RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"),
+                                      onMatch: (m) => '${m[1]},',
+                              )
+                                  : 'Rs:${double.parse(doc['pPrice']) - double.parse(doc['pDiscount'])}'.splitMapJoin(
+                                      RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"),
+                                      onMatch: (m) => '${m[1]},',
+                                    ),
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -1089,7 +1099,10 @@ class _ShopsViewState extends State<ShopsView> {
                         children: [
                           Text('Your Balance:'.tr),
                           Text(
-                            'Rs: ${snapshot.data!['balance']}',
+                            'Rs: ${snapshot.data!['balance']}'.splitMapJoin(
+                              RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"),
+                              onMatch: (m) => '${m[1]},',
+                            ),
                             style: TextStyle(
                               color: Colors.green,
                               fontWeight: FontWeight.bold,

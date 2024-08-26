@@ -56,6 +56,7 @@ class _VehiclePageViewState extends State<VehiclePageView> {
       }
     });
   }
+
   bool isRating = false;
 
   @override
@@ -95,18 +96,22 @@ class _VehiclePageViewState extends State<VehiclePageView> {
         return <Widget>[
           SliverAppBar(
             leading: Container(
+              margin: const EdgeInsets.only(bottom: 14, top: 1),
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.7),
+                color: Colors.green[800],
                 borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(20),
                   bottomRight: Radius.circular(20),
+                  topRight: Radius.circular(20),
                 ),
               ),
               child: IconButton(
-                icon: Icon(Icons.arrow_back, color: Colors.white),
                 onPressed: () {
                   Get.back();
                 },
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: Colors.white,
+                ),
               ),
             ),
             expandedHeight: 350.0,
@@ -114,16 +119,31 @@ class _VehiclePageViewState extends State<VehiclePageView> {
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
               title: Container(
-                padding: const EdgeInsets.all(8),
+                height: 40,
+                width: 200,
+                padding: const EdgeInsets.all(5),
                 decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.5),
-                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.green[800],
+                  borderRadius: BorderRadius.circular(20),
                 ),
-                child: Text(
-                  ": ${widget.vModel.showroomName!}",
-                  style: const TextStyle(
-                    color: Colors.white,
-                  ),
+                child: Center(
+                  child: widget.vModel.currency == "AED"
+                      ? aText(
+                          "${widget.vModel.currency}: ${widget.vModel.vehiclePrice}".splitMapJoin(
+                            RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"),
+                            onMatch: (m) => '${m[1]},',
+                          ),
+                          color: Colors.white,
+                          size: 18,
+                        )
+                      : aText(
+                          "Rs: ${widget.vModel.vehiclePrice}".splitMapJoin(
+                            RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"),
+                            onMatch: (m) => '${m[1]},',
+                          ),
+                          color: Colors.white,
+                          size: 18,
+                        ),
                 ),
               ),
               background: Image.network(
@@ -134,321 +154,236 @@ class _VehiclePageViewState extends State<VehiclePageView> {
           ),
         ];
       },
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(
-              height: 80,
-              width: double.infinity,
-              child: Stack(
-                children: [
-                  // show price and cross after show discount price
-                  Positioned(
-                    left: 0,
-                    child: Column(
-                      children: [
-                        Text(
-                          'Vehicle Price',
-                        ),
-                        Container(
-                          height: 50,
-                          padding: const EdgeInsets.all(5),
-                          decoration: BoxDecoration(
-                            color: Colors.green[800],
-                            borderRadius: BorderRadius.only(
-                              topRight: Radius.circular(20),
-                              bottomRight: Radius.circular(20),
-                            ),
-                          ),
-                          child: Center(
-                            child: widget.vModel.currency == "AED"
-                                ? aText(
-                                    "${widget.vModel.currency}: ${widget.vModel.vehiclePrice}",
-                                    color: Colors.white,
-                                    size: 20,
-                                  )
-                                : aText(
-                                    "Rs: ${widget.vModel.vehiclePrice}",
-                                    color: Colors.white,
-                                    size: 20,
-                                  ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            // vehicle name
-            Padding(
-              padding: EdgeInsets.all(8.0),
-              child: Column(
+      body: _buildBodyPage()
+    );
+  }
+
+   _buildBodyPage() {
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildVDetailsAvatar(widget.vModel.vehicleFuelType, widget.vModel.vehicleKm, widget.vModel.vehicleModel, widget.vModel.vehicleTransmission),
+          //   vehicle price
+          _buildVehicleDetails(),
+          //  reviews
+          _buildReviews(),
+
+          Card(
+            elevation: 5,
+            child: ListTile(
+              onTap: () {
+                urlLauncher('https://paysaw.com/');
+              },
+              title: Text('Explore car Insurance'),
+              subtitle: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Icon(
-                    Icons.directions_car,
-                    color: Colors.blue[800],
-                  ),
-                  SizedBox(width: 10.0),
-                  aText(
-                    '${widget.vModel.vehicleName}',
-                    size: 20,
-                  ),
-                  //   description
+                  Text('Insurance Start at PKR 105,000. 3rd Party Insurance'),
                   Text(
-                      "Model: ${widget.vModel.vehicleModel!}, For: ${widget.vModel.vehicleStatus}\n"),
-                  Divider(),
-                  aText(
-                    'Description',
-                    size: 16,
-                  ),
-                  Text('${widget.vModel.vehicleDescription}'),
-                  SizedBox(height: 10.0),
-                  Divider(),
-                  //   details
-                  SizedBox(
-                    height: 30,
-                  ),
-                  aText(
-                    'Vehicle Details',
-                  ),
-                  Divider(),
-                  _tableData(
-                    'Vehicle Type',
-                    '${widget.vModel.vehicleType}',
-                  ),
-                  Divider(),
-                  Text(
-                    'Posted: ${(GetTimeAgo.parse(DateTime.parse(widget.vModel.updatedDate!.toDate().toString()).toLocal()))}',
+                    "View plan details",
                     style: TextStyle(
-                      fontSize: 12.0,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue[800],
+                      color: Colors.blue,
                     ),
-                  ),
-                  SizedBox(height: 10.0),
-                  // location
-                  aText(
-                    'Location',
-                    size: 20,
-                  ),
-                  Text(
-                    'City: ${widget.vModel.city}',
-                    style: TextStyle(
-                      fontSize: 16.0,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  Text(
-                    '${widget.vModel.address}',
-                  ),
-                  SizedBox(height: 10.0),
-
-                  Divider(),
-                  SizedBox(height: 10.0),
-                  aText('Offers'),
-                  SizedBox(height: 5.0),
-                  isRating
-                      ? Container()
-                      : _buildOffers(widget.vModel.vehicleId),
-
-                  //   explore car insurance
-                  SizedBox(height: 20.0),
-                  Divider(),
-                  SizedBox(height: 20.0),
-                  aText(
-                    "Seller Details",
-                  ),
-                  Text('Name: ${widget.vModel.sellerName}\n'
-                      'Phone: ${widget.vModel.phone}'),
-                  SizedBox(height: 20.0),
-                  Divider(),
-                  SizedBox(height: 20.0),
-                  // seller rating
-                  GestureDetector(
-                    onTap: () {
-                      Get.to(() => VehicleRating(
-                        // Transition.zoom,
-                        sellerId: widget.vModel.sellerId,
-                        image: widget.vModel.sellerImage,
-                        name: widget.vModel.sellerName,
-                        sellerImage: widget.vModel.sellerImage,
-                      ));
-
-                    },
-                    child: Row(
-                      children: [
-                        aText('Seller Reviews'),
-                        SizedBox(width: 10.0),
-                        SmoothStarRating(
-                          onRatingChanged: (v) {
-                            // add rating
-                            Get.to(() => VehicleRating(
-                              // Transition.zoom,
-                              sellerId: widget.vModel.sellerId,
-                              image: widget.vModel.sellerImage,
-                              name: widget.vModel.sellerName,
-                              sellerImage: widget.vModel.sellerImage,
-                            ));
-                          },
-                          rating: 3.2,
-                          size: 20,
-                          color: Colors.amber,
-                          borderColor: Colors.amber,
-                          starCount: 5,
-                          allowHalfRating: true,
-                          spacing: 2.0,
-                        ),
-                        SizedBox(width: 10.0),
-                        // _getRating(widget.vModel.sellerId),
-                        isRating
-                            ? Text('Rating: 0.0')
-                            : _getRating(widget.vModel.sellerId),
-                        SizedBox(width: 1.0),
-                        Text(', Star')
-
-                      ],
-                    ),
-                  ),
-                  // if rating is available then show rating or show add rating button
-                  isRating
-                      ?  Container()
-                      : _buildRatingBar(widget.vModel.sellerId),
-                  //   add rating
-                  SizedBox(height: 20.0),
-                  Divider(),
-
-                  // on vehicle offers
-                  SizedBox(height: 10.0),
-                  //   offers
-
-                  Card(
-                    elevation: 5,
-                    child: ListTile(
-                      onTap: () {
-                        urlLauncher('https://paysaw.com/');
-                      },
-                      title: Text('Explore car Insurance'),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                              'Insurance Start at PKR 105,000. 3rd Party Insurance'),
-                          Text(
-                            "View plan details",
-                            style: TextStyle(
-                              color: Colors.blue,
-                            ),
-                          )
-                        ],
-                      ),
-                      trailing: SizedBox(
-                        height: 60,
-                        width: 60,
-                        child: Lottie.asset('assets/lottie/rstate.json'),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 20.0),
-                  // Explore Tacker GPS
-                  Card(
-                    elevation: 5,
-                    child: ListTile(
-                      onTap: () {
-                        urlLauncher('https://paysaw.com/');
-                      },
-                      title: Text('Explore Tacker GPS'),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Tacker GPS Start at PKR 3,000.'),
-                          Text(
-                            "View plan details",
-                            style: TextStyle(
-                              color: Colors.blue,
-                            ),
-                          )
-                        ],
-                      ),
-                      trailing: SizedBox(
-                        height: 60,
-                        width: 60,
-                        child: Icon(
-                          Icons.location_on,
-                          color: Colors.blue,
-                        ),
-                      ),
-                    ),
-                  ),
-                  //  more related vehicles
-                  SizedBox(height: 20.0),
-                  aText('More Related Vehicles'),
-                  SizedBox(height: 10.0),
-                  //   related vehicles
-                  SizedBox(
-                    height: 200,
-                    child: StreamBuilder<QuerySnapshot>(
-                        stream: FirebaseFirestore.instance
-                            .collection('vehicle')
-                            .where('vehicleType',
-                                isEqualTo: widget.vModel.vehicleType)
-                            .limit(15)
-                            .snapshots(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            return ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: snapshot.data!.docs.length,
-                              itemBuilder: (context, index) {
-                                return _buildBox(
-                                    snapshot.data!.docs[index].data());
-                              },
-                            );
-                          } else {
-                            return Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          }
-                        }),
-                  ),
-                  //   real state
-                  SizedBox(height: 20.0),
-                  aText('Products'),
-                  SizedBox(height: 10.0),
-                  //   related vehicles
-                  SizedBox(
-                    height: 280,
-                    child: StreamBuilder(
-                        stream: FirebaseFirestore.instance
-                            .collection("products")
-                            .orderBy("pCreatedAt", descending: true)
-                            .snapshots(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            return ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: snapshot.data!.docs.length,
-                              itemBuilder: (context, index) {
-                                return wBuildRealstateC(
-                                    snapshot.data!.docs[index]);
-                              },
-                            );
-                          } else {
-                            return Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          }
-                        }),
-                  ),
+                  )
                 ],
               ),
+              trailing: SizedBox(
+                height: 60,
+                width: 60,
+                child: Lottie.asset('assets/lottie/rstate.json'),
+              ),
             ),
+          ),
+          SizedBox(height: 20.0),
+          // Explore Tacker GPS
+          Card(
+            elevation: 5,
+            child: ListTile(
+              onTap: () {
+                urlLauncher('https://paysaw.com/');
+              },
+              title: Text('Explore Tacker GPS'),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Tacker GPS Start at PKR 3,000.'),
+                  Text(
+                    "View plan details",
+                    style: TextStyle(
+                      color: Colors.blue,
+                    ),
+                  )
+                ],
+              ),
+              trailing: SizedBox(
+                height: 60,
+                width: 60,
+                child: Icon(
+                  Icons.location_on,
+                  color: Colors.blue,
+                ),
+              ),
+            ),
+          ),
+          // more related vehicles
+          SizedBox(height: 20.0),
+          rText('More Related Vehicles', size: 20),
+          _buildRelatedVehicles(),
+          SizedBox(height: 10.0),
+          // related products
+          rText('Products', size: 20),
+          SizedBox(height: 10.0),
+          _buildProducts(),
 
-            SizedBox(height: 20.0),
-            //   share on facebook, twitter, whatsapp, email as a post or message
-          ],
-        ),
+          //       SizedBox(
+          //         height: 200,
+          //         child: StreamBuilder<QuerySnapshot>(
+          //             stream: FirebaseFirestore.instance
+          //                 .collection('vehicle')
+          //                 .where('vehicleType',
+          //                 isEqualTo: widget.vModel.vehicleType)
+          //                 .limit(15)
+          //                 .snapshots(),
+          //             builder: (context, snapshot) {
+          //               if (snapshot.hasData) {
+          //                 return ListView.builder(
+          //                   scrollDirection: Axis.horizontal,
+          //                   itemCount: snapshot.data!.docs.length,
+          //                   itemBuilder: (context, index) {
+          //                     return _buildBox(
+          //                         snapshot.data!.docs[index].data());
+          //                   },
+          //                 );
+          //               } else {
+          //                 return Center(
+          //                   child: CircularProgressIndicator(),
+          //                 );
+          //               }
+          //             }),
+          //       ),
+          //       //   real state
+          //       SizedBox(height: 20.0),
+          //       aText('Products'),
+          //       SizedBox(height: 10.0),
+          //       //   related vehicles
+          //       SizedBox(
+          //         height: 280,
+          //         child: StreamBuilder(
+          //             stream: FirebaseFirestore.instance
+          //                 .collection("products")
+          //                 .orderBy("pCreatedAt", descending: true)
+          //                 .snapshots(),
+          //             builder: (context, snapshot) {
+          //               if (snapshot.hasData) {
+          //                 return ListView.builder(
+          //                   scrollDirection: Axis.horizontal,
+          //                   itemCount: snapshot.data!.docs.length,
+          //                   itemBuilder: (context, index) {
+          //                     return wBuildProductsC(
+          //                         snapshot.data!.docs[index]);
+          //                   },
+          //                 );
+          //               } else {
+          //                 return Center(
+          //                   child: CircularProgressIndicator(),
+          //                 );
+          //               }
+          //             }),
+          //       ),
+          //     ],
+          //   ),
+          // ),
+
+          SizedBox(height: 20.0),
+          //   share on facebook, twitter, whatsapp, email as a post or message
+        ],
+      ),
+    );
+  }
+
+  _buildVehicleDetails() {
+    return Container(
+      padding: EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Divider(),
+          SizedBox(height: 10.0),
+          //   vehicle name
+          aText(
+            '${widget.vModel.vehicleName}',
+            size: 24,
+          ),
+          //   description
+          Text(
+              "For: ${widget.vModel.vehicleStatus}\n"),
+          Divider(),
+          aText(
+            'Description',
+            size: 16,
+          ),
+          Text('${widget.vModel.vehicleDescription}'),
+          SizedBox(height: 10.0),
+          Divider(),
+          //   details
+          SizedBox(
+            height: 30,
+          ),
+          aText(
+            'Vehicle Details',
+          ),
+          Divider(),
+          _tableData(
+            'Vehicle Type',
+            '${widget.vModel.vehicleType}',
+          ),
+          Divider(),
+          Text(
+            'Posted: ${(GetTimeAgo.parse(DateTime.parse(widget.vModel.updatedDate!.toDate().toString()).toLocal()))}',
+            style: TextStyle(
+              fontSize: 12.0,
+              fontWeight: FontWeight.bold,
+              color: Colors.blue[800],
+            ),
+          ),
+          SizedBox(height: 10.0),
+          // location
+          aText(
+            'Location',
+            size: 20,
+          ),
+          Text(
+            'City: ${widget.vModel.city}',
+            style: TextStyle(
+              fontSize: 16.0,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Text(
+            '${widget.vModel.address}',
+          ),
+          SizedBox(height: 10.0),
+          Divider(),
+          SizedBox(height: 10.0),
+          aText('Offers'),
+          SizedBox(height: 5.0),
+          isRating ? Container() : _buildOffers(widget.vModel.vehicleId),
+          //   explore car insurance
+          SizedBox(height: 20.0),
+          Divider(),
+          SizedBox(height: 20.0),
+          aText(
+            "Seller Details",
+          ),
+          Text('Name: ${widget.vModel.sellerName}\n'
+              'Phone: ${widget.vModel.phone}'),
+          SizedBox(height: 20.0),
+          Divider(),
+          SizedBox(height: 20.0),
+          // seller rating
+        ],
       ),
     );
   }
@@ -457,8 +392,8 @@ class _VehiclePageViewState extends State<VehiclePageView> {
     return Container(
       padding: EdgeInsets.only(bottom: 20, left: 15, right: 15, top: 5),
       decoration: BoxDecoration(
-        // color: Colors.blue[800],
-      ),
+          // color: Colors.blue[800],
+          ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -499,22 +434,25 @@ class _VehiclePageViewState extends State<VehiclePageView> {
             ),
           ),
           Spacer(),
-          GFButton(
-            onPressed: () {
-              Get.to(() => OfferView(vehicle: widget.vModel));
-            },
-            text: 'Give Offer',
-            textStyle: GoogleFonts.aBeeZee(fontSize: 20),
-            type: GFButtonType.solid,
-            color: Colors.green,
-            textColor: Colors.white,
-            size: 50,
-            shape: GFButtonShape.standard,
-            icon: Icon(
-              Icons.shopping_cart,
-              color: Colors.white,
-            ),
-          ),
+          // GFButton(
+          //   onPressed: () {
+          //     Get.to(() => OfferView(vehicle: widget.vModel));
+          //   },
+          //   text: 'Give Offer',
+          //   textStyle: GoogleFonts.aBeeZee(fontSize: 20),
+          //   type: GFButtonType.solid,
+          //   color: Colors.green,
+          //   textColor: Colors.white,
+          //   size: 50,
+          //   shape: GFButtonShape.standard,
+          //   icon: Icon(
+          //     Icons.shopping_cart,
+          //     color: Colors.white,
+          //   ),
+          // ),
+          ElevatedButton(onPressed: (){
+            Get.to(() => OfferView(vehicle: widget.vModel));
+          }, child: Text('Give Offer'))
         ],
       ),
     );
@@ -560,10 +498,10 @@ class _VehiclePageViewState extends State<VehiclePageView> {
     );
   }
 
-  wBuildRealstateC(QueryDocumentSnapshot<Map<String, dynamic>> doc) {
+  wBuildProductsC(QueryDocumentSnapshot<Map<String, dynamic>> doc) {
     return SizedBox(
       width: 200,
-      height: 300,
+      height: 340,
       child: GestureDetector(
         onTap: () {
           //   show on  same page
@@ -621,7 +559,7 @@ class _VehiclePageViewState extends State<VehiclePageView> {
                           Text(
                             'Rs:${doc['pPrice']}',
                             style: const TextStyle(
-                              color: Colors.grey,
+                              color: Colors.red,
                               decoration: TextDecoration.lineThrough,
                             ),
                           ),
@@ -659,7 +597,7 @@ class _VehiclePageViewState extends State<VehiclePageView> {
       children: [
         SizedBox(height: 10.0),
         SizedBox(
-          height: 270,
+          height: 290,
           child: StreamBuilder<QuerySnapshot>(
             stream: FirebaseFirestore.instance
                 .collection('sellers')
@@ -702,19 +640,18 @@ class _VehiclePageViewState extends State<VehiclePageView> {
       onTap: () {
         //   show on  same page
         Get.to(() => VehicleRating(
-          // Transition.zoom,
-          sellerId: widget.vModel.sellerId,
-          image: widget.vModel.sellerImage,
-          name: widget.vModel.sellerName,
-          sellerImage: widget.vModel.sellerImage,
-        ));
+              // Transition.zoom,
+              sellerId: widget.vModel.sellerId,
+              image: widget.vModel.sellerImage,
+              name: widget.vModel.sellerName,
+              sellerImage: widget.vModel.sellerImage,
+            ));
       },
       child: Card(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
           children: [
-
             Padding(
               padding: const EdgeInsets.only(top: 8.0, left: 4.0),
               child: Row(
@@ -733,14 +670,13 @@ class _VehiclePageViewState extends State<VehiclePageView> {
               ),
             ),
             rText(data['title'].toString()),
-            Expanded(child: SingleChildScrollView(
+            Expanded(
+                child: SingleChildScrollView(
               child: Container(
-                padding: const EdgeInsets.all(5),
+                  padding: const EdgeInsets.all(5),
                   width: 270,
-
                   child: Text("${data['comment']}".toString())),
             )),
-
             Row(
               children: [
                 SmoothStarRating(
@@ -769,8 +705,6 @@ class _VehiclePageViewState extends State<VehiclePageView> {
                 color: Colors.blue[800],
               ),
             ),
-
-
           ],
         ),
       ),
@@ -780,25 +714,22 @@ class _VehiclePageViewState extends State<VehiclePageView> {
   _getRating(String? sellerId) {
     return StreamBuilder(
         stream: FirebaseFirestore.instance
-        .collection('sellers')
-        .doc(sellerId)
-        .snapshots(),
+            .collection('sellers')
+            .doc(sellerId)
+            .snapshots(),
         builder: (context, snapshot) {
-          if(snapshot.hasError){
+          if (snapshot.hasError) {
             return Text("Error");
-          } else if(snapshot.connectionState == ConnectionState.waiting){
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
             return Text("Loading...");
-          } else if(snapshot.data!.data() != null){
-            return Text('/ ${snapshot.data!.data()!['rating']}'.toString().substring(0, 3)
-            );
-          }
-          else {
+          } else if (snapshot.data!.data() != null) {
+            return Text('/ ${snapshot.data!.data()!['rating']}'
+                .toString()
+                .substring(0, 3));
+          } else {
             return Text('Rating: 0');
           }
-        }
-    );
-
-
+        });
   }
 
   _buildOffers(String? vehicleId) {
@@ -806,8 +737,8 @@ class _VehiclePageViewState extends State<VehiclePageView> {
       height: 200,
       child: StreamBuilder<QuerySnapshot>(
         stream: FirebaseFirestore.instance
-        .collection("sellers")
-        .doc(widget.vModel.sellerId)
+            .collection("sellers")
+            .doc(widget.vModel.sellerId)
             .collection('vehicle')
             .doc(vehicleId)
             .collection('offers')
@@ -815,15 +746,15 @@ class _VehiclePageViewState extends State<VehiclePageView> {
             // .where('vehicleId', isEqualTo: vehicleId)
             .snapshots(),
         builder: (context, snapshot) {
-          if(snapshot.hasError){
+          if (snapshot.hasError) {
             return const Center(
               child: CircularProgressIndicator(),
             );
-          } else if(snapshot.connectionState == ConnectionState.waiting){
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(
               child: Text('Loading...'),
             );
-          } else if(snapshot.data!.docs.isEmpty){
+          } else if (snapshot.data!.docs.isEmpty) {
             return const Center(
               child: Text('No offers yet'),
             );
@@ -883,7 +814,6 @@ class _VehiclePageViewState extends State<VehiclePageView> {
               rText(
                 (GetTimeAgo.parse(DateTime.parse(data['date']).toLocal())),
               ),
-
             ],
           ),
         ),
@@ -922,7 +852,8 @@ class _VehiclePageViewState extends State<VehiclePageView> {
           ),
           children: [
             eText('Vehicle Fuel:'),
-            eText('${widget.vModel.vehicleFuelType}',
+            eText(
+              '${widget.vModel.vehicleFuelType}',
             ),
           ],
         ),
@@ -940,8 +871,9 @@ class _VehiclePageViewState extends State<VehiclePageView> {
           ),
           children: [
             eText('Vehicle Color:'),
-            eText('${widget.vModel.vehicleColor}',
-               ),
+            eText(
+              '${widget.vModel.vehicleColor}',
+            ),
           ],
         ),
         // status
@@ -952,6 +884,195 @@ class _VehiclePageViewState extends State<VehiclePageView> {
           ],
         ),
       ],
+    );
+  }
+
+  _buildReviews() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          GestureDetector(
+            onTap: () {
+              Get.to(() => VehicleRating(
+                    // Transition.zoom,
+                    sellerId: widget.vModel.sellerId,
+                    image: widget.vModel.sellerImage,
+                    name: widget.vModel.sellerName,
+                    sellerImage: widget.vModel.sellerImage,
+                  ));
+            },
+            child: Row(
+              children: [
+                aText('Seller Reviews'),
+                SizedBox(width: 10.0),
+                SmoothStarRating(
+                  onRatingChanged: (v) {
+                    // add rating
+                    Get.to(() => VehicleRating(
+                          // Transition.zoom,
+                          sellerId: widget.vModel.sellerId,
+                          image: widget.vModel.sellerImage,
+                          name: widget.vModel.sellerName,
+                          sellerImage: widget.vModel.sellerImage,
+                        ));
+                  },
+                  rating: 3.2,
+                  size: 20,
+                  color: Colors.amber,
+                  borderColor: Colors.amber,
+                  starCount: 5,
+                  allowHalfRating: true,
+                  spacing: 2.0,
+                ),
+                SizedBox(width: 10.0),
+                // _getRating(widget.vModel.sellerId),
+                isRating
+                    ? Text('Rating: 0.0')
+                    : _getRating(widget.vModel.sellerId),
+                SizedBox(width: 1.0),
+                Text(', Star')
+              ],
+            ),
+          ),
+          // if rating is available then show rating or show add rating button
+          isRating ? Container() : _buildRatingBar(widget.vModel.sellerId),
+          SizedBox(height: 10.0),
+          Divider(),
+        ],
+      ),
+    );
+  }
+
+  _buildRelatedVehicles() {
+    return SizedBox(
+      height: 200,
+      child: StreamBuilder<QuerySnapshot>(
+          stream: FirebaseFirestore.instance
+              .collection('vehicle')
+              .where('vehicleType', isEqualTo: widget.vModel.vehicleType)
+              .limit(15)
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: snapshot.data!.docs.length,
+                itemBuilder: (context, index) {
+                  return _buildBox(snapshot.data!.docs[index].data());
+                },
+              );
+            } else {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          }),
+    );
+    //   real state
+    // SizedBox(height: 20.0),
+    // aText('Products'),
+    // SizedBox(height: 10.0),
+    //   related vehicles
+    // SizedBox(
+    //   height: 280,
+    //   child: StreamBuilder(
+    //       stream: FirebaseFirestore.instance
+    //           .collection("products")
+    //           .orderBy("pCreatedAt", descending: true)
+    //           .snapshots(),
+    //       builder: (context, snapshot) {
+    //         if (snapshot.hasData) {
+    //           return ListView.builder(
+    //             scrollDirection: Axis.horizontal,
+    //             itemCount: snapshot.data!.docs.length,
+    //             itemBuilder: (context, index) {
+    //               return wBuildProductsC(
+    //                   snapshot.data!.docs[index]);
+    //             },
+    //           );
+    //         } else {
+    //           return Center(
+    //             child: CircularProgressIndicator(),
+    //           );
+    //         }
+    //       }),
+  }
+
+  _buildProducts() {
+    return SizedBox(
+      height: 260,
+      child: StreamBuilder(
+          stream: FirebaseFirestore.instance
+              .collection("products")
+              .orderBy("pCreatedAt", descending: true)
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              return ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: snapshot.data!.docs.length,
+                itemBuilder: (context, index) {
+                  return wBuildProductsC(snapshot.data!.docs[index]);
+                },
+              );
+            } else {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          }),
+    );
+  }
+
+
+  _buildVDetailsAvatar(String? vehicleStatus, String? vehicleKm, String? vehicleModel, String? vehicleType) {
+    return SizedBox(
+      height: 130,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+         Expanded(child:  _buildVDetails('Model', vehicleModel, Icons.directions_car)),
+          Expanded(child: _buildVDetails('Fuel:', vehicleStatus, Icons.local_gas_station)),
+          Expanded(child: _buildVDetails('Type', vehicleType, Icons.directions_car)),
+          Expanded(child: _buildVDetails('Km', vehicleKm, Icons.memory)),
+        ],
+      ),
+    );
+  }
+
+  _buildVDetails(String type, String? vehicleModel, IconData directionsCar) {
+    return Card(
+      elevation: 5,
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              directionsCar,
+              size: 30,
+              color: Colors.green[800],
+            ),
+            Text(
+              type,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Text(
+              maxLines: 1,
+              vehicleModel!,
+
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }

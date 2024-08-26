@@ -222,6 +222,8 @@ class VehicleController extends GetxController {
   final Rx<List> vehicleProfilesList = Rx<List>([]);
   List get vehicleProfiles => vehicleProfilesList.value;
 
+  var currentScreen = 0.obs;
+
   @override
   void onInit() {
     super.onInit();
