@@ -131,7 +131,7 @@ class _ShopsViewState extends State<ShopsView> {
     return TabBarView(
       children: [
         _buildHome(),
-        _buildShops(),
+        _buildVehicleTab(),
         AllProducts(),
         _buildRealState(),
       ],
@@ -181,7 +181,7 @@ class _ShopsViewState extends State<ShopsView> {
   }
 
 
-  _buildShops() {
+  _buildVehicleTab() {
     return StreamBuilder<QuerySnapshot>(
       stream: controllerVehicle.allVehicleStream(),
       builder: (context, snapshot) {
@@ -197,7 +197,7 @@ class _ShopsViewState extends State<ShopsView> {
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, index) {
                 var data = snapshot.data!.docs[index].data() as Map;
-                return _buildShopItem(data);
+                return _buildVehicleItem(data);
               },
             );
           }
@@ -215,7 +215,7 @@ class _ShopsViewState extends State<ShopsView> {
     );
   }
 
-  _buildShopItem(model) {
+  _buildVehicleItem(model) {
     return GestureDetector(
       onTap: () {
         Get.to(() => VehiclePageView(
@@ -259,7 +259,10 @@ class _ShopsViewState extends State<ShopsView> {
                         ),
                       ),
                       Text(
-                        'Price: ${model['vehiclePrice']}'.tr,
+                        'Price: ${model['vehiclePrice']}'.tr.splitMapJoin(
+                          RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"),
+                          onMatch: (m) => '${m[1]},',
+                        ),
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,

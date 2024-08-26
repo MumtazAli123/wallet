@@ -108,7 +108,10 @@ Widget wBuildProductCard(Map<String, dynamic> data) {
                           fontWeight: FontWeight.bold,
                         ),
                       )
-                          : wText('Rs: ${data['pDiscount']} OFF',
+                          : wText('Rs: ${data['pDiscount']} OFF'.splitMapJoin(
+                        RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"),
+                        onMatch: (m) => "${m[1]},",
+                      ),
                           color: Colors.white, size: 14),
                     ),
                   ),
@@ -159,9 +162,12 @@ Widget wBuildProductCard(Map<String, dynamic> data) {
                           child: Column(
                             children: [
                               Text(
-                                'Rs:${data['pPrice']}',
+                                'Rs:${data['pPrice']}'.splitMapJoin(
+                                  RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"),
+                                  onMatch: (m) => "${m[1]},",
+                                ),
                                 style: const TextStyle(
-                                  color: Colors.grey,
+                                  color: Colors.red,
                                   decoration: TextDecoration.lineThrough,
                                 ),
                               ),
@@ -173,8 +179,14 @@ Widget wBuildProductCard(Map<String, dynamic> data) {
                                 ),
                                 child: Text(
                                   data['pDiscountType'] == "Percentage"
-                                      ? 'Rs:${double.parse(data['pPrice']) - (double.parse(data['pPrice']) * double.parse(data['pDiscount']) / 100)}'
-                                      : 'Rs:${double.parse(data['pPrice']) - double.parse(data['pDiscount'])}',
+                                      ? 'Rs:${double.parse(data['pPrice']) - (double.parse(data['pPrice']) * double.parse(data['pDiscount']) / 100)}'.splitMapJoin(
+                                    RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"),
+                                    onMatch: (m) => "${m[1]},",
+                                  )
+                                      : 'Rs:${double.parse(data['pPrice']) - double.parse(data['pDiscount'])}'.splitMapJoin(
+                                    RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"),
+                                    onMatch: (m) => "${m[1]},",
+                                  ),
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
