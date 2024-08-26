@@ -11,13 +11,11 @@ import 'package:getwidget/components/rating/gf_rating.dart';
 import 'package:getwidget/types/gf_button_type.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:like_button/like_button.dart';
-import 'package:smooth_star_rating_nsafe/smooth_star_rating.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/models/realstate_model.dart';
 
 import '../app/modules/realstate/views/tabbar/realstate_view_page.dart';
 import '../app/modules/register/controllers/register_controller.dart';
-import '../app/modules/shops/views/vehicle_rating.dart';
 import '../rating/show_rating_screen.dart';
 
 bool isRating = false;
