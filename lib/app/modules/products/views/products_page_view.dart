@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:get_time_ago/get_time_ago.dart';
+import 'package:getwidget/components/avatar/gf_avatar.dart';
 import 'package:getwidget/components/button/gf_button.dart';
 import 'package:getwidget/shape/gf_button_shape.dart';
 import 'package:getwidget/types/gf_button_type.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:smooth_star_rating_nsafe/smooth_star_rating.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/app/modules/products/controllers/products_controller.dart';
 import 'package:wallet/app/modules/products/views/products_view.dart';
@@ -148,9 +150,12 @@ class _ProductPageViewState extends State<ProductPageView> {
                   child: Column(
                     children: [
                       Text(
-                        'Rs:${widget.vModel.pPrice}',
+                        'Rs:${widget.vModel.pPrice}'.splitMapJoin(
+                          RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"),
+                          onMatch: (m) => '${m[1]},',
+                        ),
                         style: const TextStyle(
-                          color: Colors.grey,
+                          color: Colors.red,
                           decoration: TextDecoration.lineThrough,
                         ),
                       ),
@@ -167,7 +172,14 @@ class _ProductPageViewState extends State<ProductPageView> {
                         child: wText(
                           widget.vModel.pDiscountType == "Percentage"
                               ? 'Rs: ${double.parse(widget.vModel.pPrice!) - (double.parse(widget.vModel.pPrice!) * double.parse(widget.vModel.pDiscount!) / 100)}'
-                              : 'Rs: ${double.parse(widget.vModel.pPrice!) - double.parse(widget.vModel.pDiscount!)}',
+                          .splitMapJoin(
+                            RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"),
+                            onMatch: (m) => '${m[1]},',
+                          )
+                              : 'Rs: ${double.parse(widget.vModel.pPrice!) - double.parse(widget.vModel.pDiscount!)}'.splitMapJoin(
+                            RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"),
+                            onMatch: (m) => '${m[1]},',
+                          ),
                           color: Colors.white,
                           size: 20,
                         ),
@@ -199,14 +211,11 @@ class _ProductPageViewState extends State<ProductPageView> {
                 aText(
                   'Product Details',
                 ),
+                Divider(),
                 Table(
                   textBaseline: TextBaseline.ideographic,
                   defaultVerticalAlignment:
                       TableCellVerticalAlignment.intrinsicHeight,
-                  border: TableBorder.all(
-                    color: Colors.black,
-                    width: 1,
-                  ),
                   columnWidths: {
                     0: FlexColumnWidth(0.5),
                     1: FlexColumnWidth(0.5),
@@ -216,8 +225,13 @@ class _ProductPageViewState extends State<ProductPageView> {
                       eText('Category:'),
                       eText(model.pCategory!),
                     ]),
-                    TableRow(children: [
+                    TableRow(
+                      decoration: BoxDecoration(
+                        color: Theme.of(context).primaryColor.withOpacity(0.1),
+                      ),
+                        children: [
                       eText('Condition:'),
+
                       eText(model.pCondition!),
                     ]),
                     TableRow(children: [
@@ -230,7 +244,11 @@ class _ProductPageViewState extends State<ProductPageView> {
                               "Delivery: Not Available",
                             ),
                     ]),
-                    TableRow(children: [
+                    TableRow(
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor.withOpacity(0.1),
+                        ),
+                        children: [
                       eText('Return:'),
                       widget.vModel.pReturn == "Yes"
                           ? eText(
@@ -244,7 +262,11 @@ class _ProductPageViewState extends State<ProductPageView> {
                       eText('Color:'),
                       eText(model.pColor!),
                     ]),
-                    TableRow(children: [
+                    TableRow(
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor.withOpacity(0.1),
+                        ),
+                        children: [
                       eText('Size:'),
                       eText(model.pSize!),
                     ]),
@@ -254,13 +276,17 @@ class _ProductPageViewState extends State<ProductPageView> {
                       eText(model.pQuantity!),
                     ]),
                     //   pBrand
-                    TableRow(children: [
+                    TableRow(
+                        decoration: BoxDecoration(
+                          color: Theme.of(context).primaryColor.withOpacity(0.1),
+                        ),
+                        children: [
                       eText('Brand:'),
                       eText(model.pBrand!),
                     ]),
                   ],
                 ),
-                SizedBox(height: 10.0),
+                Divider(),
                 Text(
                   'Posted: ${(GetTimeAgo.parse(DateTime.parse(widget.vModel.pCreatedAt!.toDate().toString()).toLocal()))}',
                   style: TextStyle(
@@ -325,6 +351,8 @@ class _ProductPageViewState extends State<ProductPageView> {
           SizedBox(
             height: 30,
           ),
+          Divider(),
+          _buildReviews(),
           cText(
             'More Products from ${widget.vModel.pSellerName}',
             size: 20,
@@ -333,95 +361,7 @@ class _ProductPageViewState extends State<ProductPageView> {
             height: 10,
           ),
           //   more products
-          SizedBox(
-            height: 200,
-            child: StreamBuilder<QuerySnapshot>(
-              stream: controller.getMoreProducts(widget.vModel.pSellerId),
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  return ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: snapshot.data!.docs.length,
-                    itemBuilder: (context, index) {
-                      var data = snapshot.data!.docs[index];
-                      return GestureDetector(
-                        onTap: () {
-                          //   show product details page
-                          _buildBodyDialog(data);
-                        },
-                        child: Container(
-                          width: 150,
-                          margin: EdgeInsets.only(right: 10),
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              image: NetworkImage(data['pImages'].toString()),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          child: Column(
-                            // crossAxisAlignment: CrossAxisAlignment.s,
-                            children: [
-                              Align(
-                                alignment: Alignment.bottomRight,
-                                child: Container(
-                                  padding: EdgeInsets.all(5),
-                                  decoration: BoxDecoration(
-                                    color: Colors.red.withOpacity(0.5),
-                                  ),
-                                  child: Text(
-                                    data['pDiscountType'] == "Percentage"
-                                        ? '${data['pDiscount']}% OFF'
-                                        : 'Rs: ${data['pDiscount']} OFF',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Spacer(),
-                              //   product name
-                              Text(
-                                data['pName'],
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              //   product price after discount
-                              Align(
-                                alignment: Alignment.topLeft,
-                                child: Container(
-                                  padding: EdgeInsets.all(5),
-                                  decoration: BoxDecoration(
-                                    color: Colors.green.withOpacity(0.5),
-                                  ),
-                                  child: Text(
-                                    data['pDiscountType'] == "Percentage"
-                                        ? 'Rs: ${double.parse(data['pPrice']) - (double.parse(data['pPrice']) * double.parse(data['pDiscount']) / 100)}'
-                                        : 'Rs: ${double.parse(data['pPrice']) - double.parse(data['pDiscount'])}',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                  );
-                } else {
-                  return Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-              },
-            ),
-          ),
+          _moreProducts(),
           SizedBox(height: 20.0),
           //   related products
           cText(
@@ -478,9 +418,6 @@ class _ProductPageViewState extends State<ProductPageView> {
   _buildBottomBar() {
     return Container(
       padding: EdgeInsets.only(bottom: 20, left: 15, right: 15, top: 5),
-      decoration: BoxDecoration(
-        color: Colors.green.withOpacity(0.5),
-      ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -649,6 +586,285 @@ class _ProductPageViewState extends State<ProductPageView> {
             ),
             //   product price after discount
           ],
+        ),
+      ),
+    );
+  }
+
+  _moreProducts() {
+    return SizedBox(
+      height: 200,
+      child: StreamBuilder<QuerySnapshot>(
+        stream: controller.getMoreProducts(widget.vModel.pSellerId),
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            return ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: snapshot.data!.docs.length,
+              itemBuilder: (context, index) {
+                var data = snapshot.data!.docs[index];
+                return GestureDetector(
+                  onTap: () {
+                    //   show product details page
+                    _buildBodyDialog(data);
+                  },
+                  child: Container(
+                    width: 150,
+                    margin: EdgeInsets.only(right: 10),
+                    decoration: BoxDecoration(
+                      image: DecorationImage(
+                        image: NetworkImage(data['pImages'].toString()),
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    child: Column(
+                      // crossAxisAlignment: CrossAxisAlignment.s,
+                      children: [
+                        Align(
+                          alignment: Alignment.bottomRight,
+                          child: Container(
+                            padding: EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                              color: Colors.red.withOpacity(0.9),
+                            ),
+                            child: Text(
+                              data['pDiscountType'] == "Percentage"
+                                  ? '${data['pDiscount']}% OFF'
+                                  : 'Rs: ${data['pDiscount']} OFF',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                        Spacer(),
+                        //   product name
+                        Align(
+                          alignment: Alignment.topLeft,
+                          child: Container(
+                            padding: EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                              color: Colors.green.withOpacity(0.9),
+                            ),
+                            child: Text("${data['pName']}",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                )),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            );
+          } else {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+        },
+      ),
+    );
+  }
+
+  _buildReviews() {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        children: [
+          GestureDetector(
+            onTap: () {
+              Get.to(() => VehicleRating(
+                // Transition.zoom,
+                sellerId: widget.vModel.pSellerId,
+                image: widget.vModel.pImages,
+                name: widget.vModel.pSellerName,
+                sellerImage: widget.vModel.pSellerPhoto,
+              ));
+            },
+            child: Row(
+              children: [
+                aText('Seller Reviews'),
+                SizedBox(width: 10.0),
+                SmoothStarRating(
+                  onRatingChanged: (v) {
+                    // add rating
+                    Get.to(() => VehicleRating(
+                      // Transition.zoom,
+                      sellerId: widget.vModel.pSellerId,
+                      image: widget.vModel.pImages,
+                      name: widget.vModel.pSellerName,
+                      sellerImage: widget.vModel.pSellerPhoto,
+                    ));
+                  },
+                  rating: 3.2,
+                  size: 20,
+                  color: Colors.amber,
+                  borderColor: Colors.amber,
+                  starCount: 5,
+                  allowHalfRating: true,
+                  spacing: 2.0,
+                ),
+                SizedBox(width: 10.0),
+                // _getRating(widget.vModel.sellerId),
+                isRating
+                    ? Text('Rating: 0.0')
+                    : _getRating(widget.vModel.pSellerId),
+                SizedBox(width: 1.0),
+                Text(', Star')
+              ],
+            ),
+          ),
+          // if rating is available then show rating or show add rating button
+          isRating ? Container() : _buildRatingBar(widget.vModel.pSellerId),
+          SizedBox(height: 10.0),
+          Divider(),
+        ],
+      ),
+    );
+  }
+
+  _buildRatingBar(String? sellerId) {
+    return Column(
+      children: [
+        SizedBox(height: 10.0),
+        SizedBox(
+          height: 290,
+          child: StreamBuilder<QuerySnapshot>(
+            stream: FirebaseFirestore.instance
+                .collection('sellers')
+                .doc(sellerId)
+                .collection('rating')
+                .orderBy('date', descending: true)
+                .snapshots(),
+            builder: (context, snapshot) {
+              if (snapshot.hasError) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (snapshot.data!.docs.isEmpty) {
+                return const Center(
+                  child: Text('Not available reviews yet'),
+                );
+              } else {
+                return ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: snapshot.data!.docs.length,
+                  itemBuilder: (context, index) {
+                    var data = snapshot.data!.docs[index].data() as Map;
+                    return wBuildRatingCard(data);
+                  },
+                );
+              }
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  _getRating(String? sellerId) {
+    return StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection('sellers')
+            .doc(sellerId)
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) {
+            return Text("Error");
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
+            return Text("Loading...");
+          } else if (snapshot.data!.data() != null) {
+            return Text('/ ${snapshot.data!.data()!['rating']}'
+                .toString()
+                .substring(0, 3));
+          } else {
+            return Text('Rating: 0');
+          }
+        });
+  }
+
+  wBuildRatingCard(Map data) {
+    return GestureDetector(
+      onTap: () {
+        //   show on  same page
+        Get.to(() => VehicleRating(
+          // Transition.zoom,
+          sellerId: widget.vModel.pSellerId,
+          image: widget.vModel.pImages,
+          name: widget.vModel.pSellerName,
+          sellerImage: widget.vModel.pSellerPhoto,
+        ));
+      },
+      child: Card(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0, left: 4.0),
+                child: Row(
+                  children: [
+                    data['image'].toString().isNotEmpty
+                        ? GFAvatar(
+                      backgroundImage: NetworkImage(data['image']),
+                    )
+                        : GFAvatar(
+                      size: 15,
+                      child: Text("${data['name'][0]}"),
+                    ),
+                    SizedBox(width: 10.0),
+                    Text(data['name']),
+                  ],
+                ),
+              ),
+              rText(data['title'].toString()),
+              Expanded(
+                  child: SingleChildScrollView(
+                    child: Container(
+                        padding: const EdgeInsets.all(5),
+                        width: 270,
+                        child: Text("${data['comment']}".toString())),
+                  )),
+              Row(
+                children: [
+                  SmoothStarRating(
+                    rating: double.parse(data['rating'].toString()),
+                    size: 20,
+                    color: Colors.amber,
+                    borderColor: Colors.amber,
+                    starCount: 5,
+                    allowHalfRating: true,
+                    spacing: 2.0,
+                  ),
+                  Text(
+                    ' ${data['rating']}',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+              Text(
+                (GetTimeAgo.parse(DateTime.parse(data['date']).toLocal())),
+                style: TextStyle(
+                  fontSize: 12.0,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.blue[800],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
