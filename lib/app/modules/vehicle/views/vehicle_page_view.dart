@@ -434,25 +434,13 @@ class _VehiclePageViewState extends State<VehiclePageView> {
             ),
           ),
           Spacer(),
-          // GFButton(
-          //   onPressed: () {
-          //     Get.to(() => OfferView(vehicle: widget.vModel));
-          //   },
-          //   text: 'Give Offer',
-          //   textStyle: GoogleFonts.aBeeZee(fontSize: 20),
-          //   type: GFButtonType.solid,
-          //   color: Colors.green,
-          //   textColor: Colors.white,
-          //   size: 50,
-          //   shape: GFButtonShape.standard,
-          //   icon: Icon(
-          //     Icons.shopping_cart,
-          //     color: Colors.white,
-          //   ),
-          // ),
           ElevatedButton(onPressed: (){
             Get.to(() => OfferView(vehicle: widget.vModel));
-          }, child: Text('Give Offer'))
+
+          },style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(Colors.green[600]),
+          ),
+              child: aText('Give Offer',color: Colors.white)),
         ],
       ),
     );
@@ -809,7 +797,11 @@ class _VehiclePageViewState extends State<VehiclePageView> {
                 size: 18,
               ),
               rText(
-                "Offers: ${data['buyerOffer']}",
+                "Offers: ${data['buyerOffer']}".splitMapJoin(
+                  RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"),
+                  onMatch: (m) => '${m[1]},',
+                ),
+                color: Colors.green[800],
               ),
               rText(
                 (GetTimeAgo.parse(DateTime.parse(data['date']).toLocal())),
@@ -1035,7 +1027,11 @@ class _VehiclePageViewState extends State<VehiclePageView> {
          Expanded(child:  _buildVDetails('Model', vehicleModel, Icons.directions_car)),
           Expanded(child: _buildVDetails('Fuel:', vehicleStatus, Icons.local_gas_station)),
           Expanded(child: _buildVDetails('Type', vehicleType, Icons.directions_car)),
-          Expanded(child: _buildVDetails('Km', vehicleKm, Icons.memory)),
+          Expanded(child: _buildVDetails('Km', vehicleKm?.splitMapJoin(
+            RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"),
+            onMatch: (m) => '${m[1]},',
+          ), (Icons.memory)),
+          ),
         ],
       ),
     );
