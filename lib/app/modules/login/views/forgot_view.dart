@@ -2,13 +2,11 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 import 'package:get/get.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:wallet/app/modules/login/controllers/login_controller.dart';
-import 'package:wallet/global/global.dart';
 
 class ForgotView extends StatefulWidget {
   const ForgotView({super.key});

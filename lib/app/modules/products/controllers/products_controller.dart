@@ -97,8 +97,7 @@ class ProductsController extends GetxController {
   String pColor = "Red";
   String pSize = "S";
 
-  bool uploading = false,
-      next = false;
+  bool uploading = false, next = false;
   List<String> urlList = [];
   double val = 0;
 
@@ -109,10 +108,7 @@ class ProductsController extends GetxController {
   List<String> imageUrlPath = [];
   String downloadImageUrl = "";
   var imageFileCount = 0.obs;
-  var pUniqueId = DateTime
-      .now()
-      .millisecondsSinceEpoch
-      .toString();
+  var pUniqueId = DateTime.now().millisecondsSinceEpoch.toString();
 
   var productList = [].obs;
 
@@ -123,6 +119,9 @@ class ProductsController extends GetxController {
   List get allProductsDetails => productsList.value;
 
   var fabController;
+
+  var quantity = 1.obs;
+  var reFresh = 0.obs;
 
   @override
   void onInit() {
@@ -137,7 +136,6 @@ class ProductsController extends GetxController {
     pSizeController = TextEditingController();
     pAddressController = TextEditingController();
     pCityController = TextEditingController();
-
   }
 
   @override
@@ -295,9 +293,7 @@ class ProductsController extends GetxController {
           .doc(id)
           .delete()
           .then((value) {
-        FirebaseFirestore.instance
-            .collection("products")
-            .doc(id).delete();
+        FirebaseFirestore.instance.collection("products").doc(id).delete();
         Get.snackbar("Success", "Product deleted successfully",
             snackPosition: SnackPosition.BOTTOM);
       });
@@ -312,7 +308,6 @@ class ProductsController extends GetxController {
         .orderBy("pCreatedAt", descending: true)
         .snapshots();
   }
-
 
   Widget wBuildProductCard(Map<String, dynamic> data) {
     return GestureDetector(
@@ -362,14 +357,14 @@ class ProductsController extends GetxController {
                         color: Colors.red,
                         child: data['pDiscountType'] == "Percentage"
                             ? Text(
-                          '${data['pDiscount']}% OFF',
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        )
+                                '${data['pDiscount']}% OFF',
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              )
                             : wText('Rs: ${data['pDiscount']} OFF',
-                            color: Colors.white, size: 14),
+                                color: Colors.white, size: 14),
                       ),
                     ),
                   ],
@@ -433,14 +428,8 @@ class ProductsController extends GetxController {
                                   ),
                                   child: Text(
                                     data['pDiscountType'] == "Percentage"
-                                        ? 'Rs:${double.parse(
-                                        data['pPrice']) -
-                                        (double.parse(data['pPrice']) *
-                                            double.parse(data['pDiscount']) /
-                                            100)}'
-                                        : 'Rs:${double.parse(
-                                        data['pPrice']) -
-                                        double.parse(data['pDiscount'])}',
+                                        ? 'Rs:${double.parse(data['pPrice']) - (double.parse(data['pPrice']) * double.parse(data['pDiscount']) / 100)}'
+                                        : 'Rs:${double.parse(data['pPrice']) - double.parse(data['pDiscount'])}',
                                     style: const TextStyle(
                                       color: Colors.white,
                                       fontWeight: FontWeight.bold,
@@ -501,6 +490,81 @@ class ProductsController extends GetxController {
         .collection("products")
         .where("pCategory", isEqualTo: pCategory)
         .snapshots();
+  }
+
+  void addToCart(ProductsModel vModel) {
+    FirebaseFirestore.instance
+        .collection("sellers")
+        .doc(sharedPreferences!.getString("uid"))
+        .collection("cart")
+        .doc(vModel.pUniqueId)
+        .set(vModel.toJson())
+        .then((value) {
+      Get.snackbar("Success", "Product added to cart successfully",
+          snackPosition: SnackPosition.BOTTOM);
+    });
+  }
+
+  void increaseQuantity(String? pQuantity) async{
+    // check available quantity
+    if (quantity.value == int.parse(pQuantity!)) {
+      return;
+    } else {
+      quantity.value++;
+    }
+
+    await FirebaseFirestore.instance
+        .collection("sellers")
+        .doc(sharedPreferences!.getString("uid"))
+        .collection("products")
+        .doc(pUniqueId)
+        .update({"pQuantity": pQuantityController.text.trim()});
+    await FirebaseFirestore.instance
+        .collection("products")
+        .doc(pUniqueId)
+        .update({"pQuantity": pQuantityController.text.trim()});
+
+  }
+
+  void decreaseQuantity(String? pQuantity) async{
+    if (quantity.value == 1) {
+      return;
+    } else {
+      quantity.value--;
+    }
+
+  await  FirebaseFirestore.instance
+        .collection("sellers")
+        .doc(sharedPreferences!.getString("uid"))
+        .collection("products")
+        .doc(pUniqueId)
+        .update({"pQuantity": quantity.value});
+    await FirebaseFirestore.instance
+        .collection("products")
+        .doc(pUniqueId)
+        .update({"pQuantity": quantity.value});
+
+  }
+
+  void increment() {
+   //  when page chane quantity value is 1 auto refresh
+    reFresh.value = 1;
+    if (quantity.value == 20) {
+      return;
+    } else {
+      quantity.value++;
+    }
+
+
+  }
+
+  void decrement() {
+    reFresh.value = 1;
+    if (quantity.value == 1) {
+      return;
+    } else {
+      quantity.value--;
+    }
   }
 
 }

@@ -1,9 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wallet/global/global.dart';
-import 'package:wallet/notification/push_notification_sys.dart';
 
 class ProfileController extends GetxController {
 

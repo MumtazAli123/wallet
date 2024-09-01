@@ -16,7 +16,6 @@ import 'package:wallet/app/modules/products/views/products_page_view.dart';
 import 'package:wallet/app/modules/products/views/upload_products_view.dart';
 import 'package:wallet/global/global.dart';
 import 'package:wallet/models/products_model.dart';
-import 'package:wallet/notification/push_notification_sys.dart';
 
 import '../../../../widgets/mix_widgets.dart';
 

@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wallet/app/modules/products/controllers/products_controller.dart';
 
-import 'all_products.dart';
 
 class LaptopView extends GetView <ProductsController> {
   const LaptopView({super.key});

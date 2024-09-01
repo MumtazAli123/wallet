@@ -6,10 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_time_ago/get_time_ago.dart';
 import 'package:getwidget/components/avatar/gf_avatar.dart';
-import 'package:getwidget/components/button/gf_button.dart';
-import 'package:getwidget/shape/gf_button_shape.dart';
-import 'package:getwidget/types/gf_button_type.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:smooth_star_rating_nsafe/smooth_star_rating.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:wallet/app/modules/products/controllers/products_controller.dart';
@@ -55,11 +51,31 @@ class _ProductPageViewState extends State<ProductPageView> {
   void initState() {
     super.initState();
     readCurrentUserData();
+    //   counter value is 1
+    controller.quantity.value = 1;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {
+      //     // add product to cart
+      //     if (widget.vModel.pQuantity == "0") {
+      //       Get.snackbar('Out of Stock', 'Product is out of stock',
+      //           snackPosition: SnackPosition.BOTTOM,
+      //           backgroundColor: Colors.red,
+      //           colorText: Colors.white);
+      //     } else {
+      //       controller.addToCart(widget.vModel);
+      //       Get.snackbar('Added to Cart', 'Product added to cart',
+      //           snackPosition: SnackPosition.BOTTOM,
+      //           backgroundColor: Colors.green,
+      //           colorText: Colors.white);
+      //     }
+      //   },
+      //   child: Icon(Icons.shopping_cart),
+      // ),
       bottomNavigationBar: _buildBottomBar(),
       body: _buildBody(widget.vModel),
     );
@@ -329,52 +345,59 @@ class _ProductPageViewState extends State<ProductPageView> {
                 ),
                 //   seller Details
                 wText('Seller Details', size: 22),
-                Row(
-                  children: [
-                    widget.vModel.pSellerPhoto!.isEmpty
-                        ? CircleAvatar(
-                            radius: 30,
-                            backgroundColor: Colors.white,
-                            child: Icon(
-                              Icons.person,
-                              color: Colors.black,
+                GestureDetector(
+                  onTap: () {
+                    Get.to(() => UserDetailsView(
+                          userID: widget.vModel.pSellerId,
+                        ));
+                  },
+                  child: Row(
+                    children: [
+                      widget.vModel.pSellerPhoto!.isEmpty
+                          ? CircleAvatar(
+                              radius: 30,
+                              backgroundColor: Colors.white,
+                              child: Icon(
+                                Icons.person,
+                                color: Colors.black,
+                              ),
+                            )
+                          : CircleAvatar(
+                              radius: 30,
+                              backgroundImage: NetworkImage(
+                                  widget.vModel.pSellerPhoto.toString()),
                             ),
-                          )
-                        : CircleAvatar(
-                            radius: 30,
-                            backgroundImage: NetworkImage(
-                                widget.vModel.pSellerPhoto.toString()),
+                      SizedBox(
+                        width: 10,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.vModel.pSellerName!,
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          widget.vModel.pSellerName!,
-                          style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
+                          Text(
+                            'Phone: ${widget.vModel.pSellerPhone}',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        Text(
-                          'Phone: ${widget.vModel.pSellerPhone}',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
+                          Text(
+                            'Email: ${widget.vModel.pSellerEmail}',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        Text(
-                          'Email: ${widget.vModel.pSellerEmail}',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
                 SizedBox(
                   height: 30,
@@ -452,70 +475,96 @@ class _ProductPageViewState extends State<ProductPageView> {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          // seller Image and name
-          GestureDetector(
-            onTap: () {
-              Get.to(() => UserDetailsView(
-                    userID: widget.vModel.pSellerId,
-                  ));
-            },
-            child: widget.vModel.pSellerPhoto!.isEmpty
-                ? CircleAvatar(
-                    radius: 30,
-                    backgroundColor: Colors.white,
-                    child: Icon(
-                      Icons.person,
-                      color: Colors.black,
-                    ),
-                  )
-                : CircleAvatar(
-                    radius: 30,
-                    backgroundImage:
-                        NetworkImage(widget.vModel.pSellerPhoto.toString()),
-                  ),
-          ),
-          SizedBox(
-            width: 5,
-          ),
-          Expanded(
-            child: Text(
-              maxLines: 1,
-              widget.vModel.pSellerName!,
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
           //   add to cart
+          _buildCounter(),
+
           Spacer(),
-          GFButton(
-            onPressed: () {
-              // send message to seller on whatsapp
-              launch(
-                  'https://wa.me/${widget.vModel.pSellerPhone}?text=ZubiPay\n'
-                  '\n'
-                  'I want to buy your product ${widget.vModel.pName}\n'
-                  'Rs: ${widget.vModel.pPrice}'
-                  '\nDiscount: ${widget.vModel.pDiscountType == "Percentage" ? "${widget.vModel.pDiscount!}%" : widget.vModel.pDiscount}\n'
-                  'After Discount: ${widget.vModel.pDiscountType == "Percentage" ? "${double.parse(widget.vModel.pPrice!) - (double.parse(widget.vModel.pPrice!) * double.parse(widget.vModel.pDiscount!) / 100)}" : "${double.parse(widget.vModel.pPrice!) - double.parse(widget.vModel.pDiscount!)}"}\n'
-                  '\nColor: ${widget.vModel.pColor}\n'
-                  'Description: ${widget.vModel.pDescription}\n'
-                  'Brand: ${widget.vModel.pBrand}\n'
-                  'Category: ${widget.vModel.pCategory}\n'
-                  'Size: ${widget.vModel.pSize}\n');
-            },
-            text: 'Buy Now',
-            textStyle: GoogleFonts.aBeeZee(fontSize: 20),
-            type: GFButtonType.solid,
-            color: Colors.green,
-            textColor: Colors.white,
-            size: 50,
-            shape: GFButtonShape.standard,
-            icon: Icon(
-              Icons.shopping_cart,
-              color: Colors.white,
+          // GFButton(
+          //   onPressed: () {
+          //     // send message to seller on whatsapp
+          //     launch(
+          //         'https://wa.me/${widget.vModel.pSellerPhone}?text=ZubiPay\n'
+          //         '\n'
+          //         'I want to buy your product ${widget.vModel.pName}\n'
+          //         'Rs: ${widget.vModel.pPrice}'
+          //         '\nDiscount: ${widget.vModel.pDiscountType == "Percentage" ? "${widget.vModel.pDiscount!}%" : widget.vModel.pDiscount}\n'
+          //         'After Discount: ${widget.vModel.pDiscountType == "Percentage" ? "${double.parse(widget.vModel.pPrice!) - (double.parse(widget.vModel.pPrice!) * double.parse(widget.vModel.pDiscount!) / 100)}" : "${double.parse(widget.vModel.pPrice!) - double.parse(widget.vModel.pDiscount!)}"}\n'
+          //         '\nColor: ${widget.vModel.pColor}\n'
+          //         'Description: ${widget.vModel.pDescription}\n'
+          //         'Brand: ${widget.vModel.pBrand}\n'
+          //         'Category: ${widget.vModel.pCategory}\n'
+          //         'Size: ${widget.vModel.pSize}\n');
+          //   },
+          //   text: 'Buy Now',
+          //   textStyle: GoogleFonts.aBeeZee(fontSize: 20),
+          //   type: GFButtonType.solid,
+          //   color: Colors.green,
+          //   textColor: Colors.white,
+          //   size: 50,
+          //   shape: GFButtonShape.standard,
+          //   icon: Icon(
+          //     Icons.shopping_cart,
+          //     color: Colors.white,
+          //   ),
+          // ),
+          //   price show as per counting
+          Container(
+            height: 50,
+            padding: EdgeInsets.all(1),
+            decoration: BoxDecoration(
+              color: Colors.green,
+              borderRadius: BorderRadius.circular(20),
             ),
+            child: TextButton(
+                onPressed: () {
+                  //   if product is out of stock than show message
+                  // setState(() {
+                  //   if (widget.vModel.pQuantity == "0") {
+                  //     Get.snackbar('Out of Stock', 'Product is out of stock',
+                  //         snackPosition: SnackPosition.BOTTOM,
+                  //         backgroundColor: Colors.red,
+                  //         colorText: Colors.white);
+                  //   } else {
+                  //     controller.addToCart(widget.vModel);
+                  //     Get.snackbar('Added to Cart', 'Product added to cart',
+                  //         snackPosition: SnackPosition.BOTTOM,
+                  //         backgroundColor: Colors.green,
+                  //         colorText: Colors.white);
+                  //   }
+                  // });
+                  launch(
+                      'https://wa.me/${widget.vModel.pSellerPhone}?text=ZubiPay\n'
+                      '\n'
+                      'I want to buy your product ${widget.vModel.pName}\n'
+                          'Price: ${widget.vModel.pPrice}'
+                          '\nDiscount: ${widget.vModel.pDiscountType == "Percentage" ? "${widget.vModel.pDiscount!}%" : widget.vModel.pDiscount}\n'
+                          'After Discount: ${widget.vModel.pDiscountType == "Percentage" ? "${double.parse(widget.vModel.pPrice!) - (double.parse(widget.vModel.pPrice!) * double.parse(widget.vModel.pDiscount!) / 100)}" : "${double.parse(widget.vModel.pPrice!) - double.parse(widget.vModel.pDiscount!)}"}\n'
+                          '\nQuantity: ${controller.quantity.value}\n'
+                      'Total: ${widget.vModel.pDiscountType == "Percentage" ? '${(double.parse(widget.vModel.pPrice!) - (double.parse(widget.vModel.pPrice!) * double.parse(widget.vModel.pDiscount!) / 100)) * controller.quantity.value}' : '${(double.parse(widget.vModel.pPrice!) - double.parse(widget.vModel.pDiscount!) * controller.quantity.value)}'}\n'
+                          '\n'
+                      '\nColor: ${widget.vModel.pColor}\n'
+                      'Description: ${widget.vModel.pDescription}\n'
+                      'Brand: ${widget.vModel.pBrand}\n'
+                      'Category: ${widget.vModel.pCategory}\n'
+                      'Size: ${widget.vModel.pSize}\n');
+                },
+                child: aText(
+                  // when click on counter than show price
+
+                  // 'Buy Now: Rs: ${widget.vModel.pDiscountType == "Percentage" ? '${double.parse(widget.vModel.pPrice!) - (double.parse(widget.vModel.pPrice!) * double.parse(widget.vModel.pDiscount!) / 100)}' : '${double.parse(widget.vModel.pPrice!) - double.parse(widget.vModel.pDiscount!)}'}',
+                  controller.quantity.value == 1
+                      ? 'Total, Rs: ${widget.vModel.pDiscountType == "Percentage" ? '${double.parse(widget.vModel.pPrice!) - (double.parse(widget.vModel.pPrice!) * double.parse(widget.vModel.pDiscount!) / 100)}' : '${double.parse(widget.vModel.pPrice!) - double.parse(widget.vModel.pDiscount!)}'}'.splitMapJoin(
+                          RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"),
+                          onMatch: (m) => '${m[1]},',
+                  )
+                      : 'Total, Rs: ${widget.vModel.pDiscountType == "Percentage" ? '${(double.parse(widget.vModel.pPrice!) - (double.parse(widget.vModel.pPrice!) * double.parse(widget.vModel.pDiscount!) / 100)) * controller.quantity.value}' : '${(double.parse(widget.vModel.pPrice!) - double.parse(widget.vModel.pDiscount!)) * controller.quantity.value}'}'.splitMapJoin(
+                          RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"),
+                          onMatch: (m) => '${m[1]},',
+
+                  ),
+                  color: Colors.white,
+                  size: 14
+                )),
           ),
         ],
       ),
@@ -668,7 +717,7 @@ class _ProductPageViewState extends State<ProductPageView> {
                               color: Colors.green.withOpacity(0.9),
                             ),
                             child: Text(
-                              maxLines: 1,
+                                maxLines: 1,
                                 "${data['pName']}",
                                 style: TextStyle(
                                   color: Colors.white,
@@ -709,15 +758,18 @@ class _ProductPageViewState extends State<ProductPageView> {
             },
             child: Row(
               children: [
-                Expanded(child: aText('Seller Reviews', size: 14),),
+                Expanded(
+                  child: aText('Seller Reviews', size: 14),
+                ),
                 SizedBox(width: 10.0),
                 Icon(Icons.star, color: Colors.amber),
                 SizedBox(width: 10.0),
                 // _getRating(widget.vModel.sellerId),
-                Expanded(child: isRating
-                    ? Text('Rating: 0.0')
-                    : _getRating(widget.vModel.pSellerId)),
-                    SizedBox(width: 1.0),
+                Expanded(
+                    child: isRating
+                        ? Text('Rating: 0.0')
+                        : _getRating(widget.vModel.pSellerId)),
+                SizedBox(width: 1.0),
               ],
             ),
           ),
@@ -927,4 +979,51 @@ class _ProductPageViewState extends State<ProductPageView> {
       ),
     );
   }
+
+  _buildCounter() {
+    //   when click new products than remove add to cart just current products work add to cart
+    return Container(
+      padding: EdgeInsets.all(10),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        children: [
+          IconButton(
+            icon: Icon(Icons.remove),
+            onPressed: () {
+              setState(() {
+                //   if quantity is 1 than not decrease and price show as per quantity
+                if (controller.quantity.value > 1) {
+                  controller.decrement();
+                }
+              });
+            },
+          ),
+          Obx(() => Text(
+                '${controller.quantity}',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              )),
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () {
+              //   if quantity is 1 than not decrease and price show as per quantity
+
+              setState(() {
+                if (controller.quantity.value <
+                    int.parse(widget.vModel.pQuantity!)) {
+                  controller.increment();
+                }
+              });
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
 }

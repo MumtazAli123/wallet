@@ -1,11 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:wallet/app/modules/realstate/views/show_realstate.dart';
 
 
 import '../../app/modules/realstate/controllers/realstate_controller.dart';
-import '../../app/modules/realstate/views/realstate_view.dart';
 import '../../app/modules/realstate/views/tabbar/realstate_view_page.dart';
 import '../../global/global.dart';
 import '../../models/realstate_model.dart';

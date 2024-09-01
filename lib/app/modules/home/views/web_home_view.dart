@@ -6,15 +6,12 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:wallet/app/modules/products/views/show_products_view.dart';
 import 'package:wallet/app/modules/realstate/views/show_realstate.dart';
-import 'package:wallet/app/modules/vehicle/views/show_vehicle_view.dart';
-import 'package:wallet/models/seller_model.dart';
 import 'package:wallet/widgets/nav_appbar.dart';
 
 import '../../../../models/realstate_model.dart';
 import '../../../../models/user_model.dart';
 import '../../../../models/vehicle_model.dart';
 import '../../../../widgets/mix_widgets.dart';
-import '../../../../widgets/my_drawer.dart';
 import '../../vehicle/views/vehicle_page_view.dart';
 import '../../wallet/views/web_wallet.dart';
 import '../controllers/home_controller.dart';

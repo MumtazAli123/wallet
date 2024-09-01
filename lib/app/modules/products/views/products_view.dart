@@ -23,7 +23,6 @@ import 'package:wallet/app/modules/products/views/tabbar/stationery.dart';
 import 'package:wallet/app/modules/products/views/tabbar/toys.dart';
 
 import '../../../../widgets/mix_widgets.dart';
-import '../../vehicle/views/search_view.dart';
 import '../controllers/products_controller.dart';
 
 class ProductsView extends GetView<ProductsController> {

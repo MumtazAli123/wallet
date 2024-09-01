@@ -16,6 +16,9 @@ class SellerModel {
   String? status;
   String? cart;
   double? rating;
+  String? address;
+  String? city;
+  String? state;
 
   SellerModel({
     this.uid,
@@ -34,6 +37,9 @@ class SellerModel {
     this.status,
     this.cart,
     this.rating,
+    this.address,
+    this.city,
+    this.state,
   });
 
   SellerModel.fromJson(Map<String, dynamic> json) {
@@ -53,6 +59,9 @@ class SellerModel {
     status = json['status'];
     cart = json['cart'];
     rating = json['rating'];
+    address = json['address'];
+    city = json['city'];
+    state = json['state'];
   }
 
   Map<String, dynamic> toJson() {
@@ -73,6 +82,9 @@ class SellerModel {
     data['status'] = status;
     data['cart'] = cart;
     data['rating'] = rating;
+    data['address'] = address;
+    data['city'] = city;
+    data['state'] = state;
     return data;
   }
 
@@ -94,6 +106,9 @@ class SellerModel {
       status: map['status'],
       cart: map['cart'],
       rating: map['rating'],
+      address: map['address'],
+      city: map['city'],
+      state: map['state'],
     );
   }
 
@@ -115,6 +130,9 @@ class SellerModel {
       'status': status,
       'cart': cart,
       'rating': rating,
+      'address': address,
+      'city': city,
+      'state': state,
     };
   }
 }

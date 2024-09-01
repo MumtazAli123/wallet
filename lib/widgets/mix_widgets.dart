@@ -484,10 +484,10 @@ wTextField(
   );
 }
 
-void wGetSnackBar(String title, String text) {
+void wGetSnackBar(String title, String text, {Color? color}) {
   Get.snackbar(title, text,
       snackPosition: SnackPosition.TOP,
-      backgroundColor: Colors.red,
+      backgroundColor: color,
       colorText: Colors.white);
 }
 

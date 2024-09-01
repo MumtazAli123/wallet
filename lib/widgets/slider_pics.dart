@@ -1,7 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 import 'package:flutter/material.dart';
 
-import '../global/global.dart';
 
 class SliderPics extends StatelessWidget {
   const SliderPics({super.key});

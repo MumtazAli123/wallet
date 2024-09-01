@@ -8,9 +8,7 @@ import 'package:wallet/app/modules/products/views/products_page_view.dart';
 import 'package:wallet/app/modules/register/controllers/register_controller.dart';
 import 'package:wallet/models/products_model.dart';
 
-import '../../../../models/vehicle_model.dart';
 import '../../../../widgets/mix_widgets.dart';
-import '../../vehicle/views/search_view.dart';
 
 class ProductsSearchView extends StatefulWidget {
   const ProductsSearchView({super.key});

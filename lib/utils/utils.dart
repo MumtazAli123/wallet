@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
 
 pickImage(ImageSource source) async {
@@ -121,4 +122,7 @@ class UtilsApp{
     Share.share(text,
         sharePositionOrigin: box.localToGlobal(Offset.zero) & box.size);
   }
+
+  static formatPrice(double price) => '\$ ${price.toStringAsFixed(2)}';
+  static formatDate(DateTime date) => DateFormat.yMd().format(date);
 }
