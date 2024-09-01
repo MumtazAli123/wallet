@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
+import 'package:eva_icons_flutter/eva_icons_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +30,7 @@ import '../../products/views/tabbar/all_products.dart';
 import '../../realstate/views/show_realstate.dart';
 import '../../realstate/views/tabbar/realstate_view_page.dart';
 import '../../vehicle/controllers/vehicle_controller.dart';
+import '../../vehicle/views/rent_a_car.dart';
 import '../../vehicle/views/show_vehicle_view.dart';
 import '../../vehicle/views/vehicle_page_view.dart';
 
@@ -150,6 +152,8 @@ class _ShopsViewState extends State<ShopsView> {
             SizedBox(height: 10.0),
             _buildButton(),
             SizedBox(height: 10.0),
+            // rent a car
+            _buildRentCar(),
             // vehicle
             // search your partner
             _buildLifePartner(),
@@ -1032,6 +1036,15 @@ class _ShopsViewState extends State<ShopsView> {
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
+                // Statement wallet
+                ListTile(
+                  leading: Icon(EvaIcons.fileText),
+                  title: Text('Statement'),
+                  onTap: () {
+                    Get.back();
+                    Get.toNamed('/statement');
+                  },
+                ),
                 ListTile(
                   leading: Icon(Icons.language),
                   title: Text('Change Language'),
@@ -1040,15 +1053,7 @@ class _ShopsViewState extends State<ShopsView> {
                     wBuildLanguageBottomSheet(context);
                   },
                 ),
-                // Inspection vehicle with us
-                ListTile(
-                  leading: Icon(Icons.car_rental),
-                  title: Text('Inspection Vehicle'),
-                  onTap: () {
-                    Get.back();
-                    Get.toNamed('/inspection');
-                  },
-                ),
+
                 ListTile(
                   leading: Icon(Icons.lock),
                   title: Text('Logout'),
@@ -1253,6 +1258,43 @@ class _ShopsViewState extends State<ShopsView> {
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: AssetImage('assets/images/job.png'),
+                  fit: BoxFit.fill,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  _buildRentCar() {
+    return GestureDetector(
+      onTap: () {
+        Get.to(()=> RentACar(
+          model: VehicleModel(),
+        ));
+      },
+      child: Card(
+        elevation: 5,
+        child: Column(
+          children: [
+            ListTile(
+              leading: Icon(EvaIcons.car, color: Colors.blue[900]),
+              title: Text('Rent a Car'.tr),
+              trailing: IconButton(
+                onPressed: () {
+                  Get.toNamed('/vehicle');
+                },
+                icon: Icon(Icons.more_vert),
+              ),
+            ),
+            Container(
+              height: 257,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/rent.png'),
                   fit: BoxFit.fill,
                 ),
               ),

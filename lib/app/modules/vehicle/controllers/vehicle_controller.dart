@@ -514,4 +514,12 @@ class VehicleController extends GetxController {
           backgroundColor: Colors.green, colorText: Colors.white);
     });
   }
+
+  carStream() {
+  //   rent a car
+    return FirebaseFirestore.instance
+        .collection("vehicle")
+        .where("vehicleStatus", isEqualTo: "Rent")
+        .snapshots();
+  }
 }
