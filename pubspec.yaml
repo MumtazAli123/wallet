@@ -41,9 +41,9 @@ dependencies:
   image_gallery_saver:
   dio:
   permission_handler:
-  url_launcher: ^6.3.0
-  audioplayers: ^6.1.0
-  flutter_slidable: ^3.1.1
+  url_launcher: any
+  audioplayers: any
+  flutter_slidable: any
   country_state_city_picker:
   csc_picker: any
   email_auth: any

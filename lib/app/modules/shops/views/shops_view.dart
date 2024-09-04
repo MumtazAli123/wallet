@@ -169,41 +169,64 @@ class _ShopsViewState extends State<ShopsView> {
                 //   build grid view
               ],
             ),
-            Column(
-              children: [
-                Text('Welcome to ZubiPay'.tr,
-                    style:
-                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                SizedBox(height: 10.0),
-                Text(
-                  'ZubiPay is a platform where you can sell your products, real state, and vehicles. You can also find a job, rent a car and find your life partner.',
-                  style: TextStyle(fontSize: 16),
-                ),
-                SizedBox(height: 10.0),
-                Divider(),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Text('Vehicles'.tr,
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold)),
-                    _buildVehicles(),
-                    SizedBox(height: 10.0),
-                    Text('Real State'.tr,
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold)),
-                    _buildRealStateBox(),
-                    SizedBox(height: 10.0),
-                    Text('Products'.tr,
-                        style: TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold)),
-                    _buildProductsBox(),
-                    SizedBox(height: 10.0),
-                  ],
-                ),
-                SizedBox(height: 40.0),
-              ],
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.grey.withOpacity(0.5),
+                          spreadRadius: 1,
+                          blurRadius: 7,
+                          offset: Offset(0, 3), // changes position of shadow
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+                        Text('Welcome to ZubiPay'.tr,
+                            style:
+                            TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                        SizedBox(height: 10.0),
+                        Divider(),
+                        Text(
+                          'ZubiPay is a platform where you can sell your products, real state, and vehicles. You can also find a job, rent a car and find your life partner.',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        SizedBox(height: 10.0),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: 10.0),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Text('Vehicles'.tr,
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold)),
+                      _buildVehicles(),
+                      SizedBox(height: 10.0),
+                      Text('Real State'.tr,
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold)),
+                      _buildRealStateBox(),
+                      SizedBox(height: 10.0),
+                      Text('Products'.tr,
+                          style: TextStyle(
+                              fontSize: 20, fontWeight: FontWeight.bold)),
+                      _buildProductsBox(),
+                      SizedBox(height: 10.0),
+                    ],
+                  ),
+                  SizedBox(height: 40.0),
+                ],
+              ),
             ),
           ],
         ),
@@ -593,17 +616,17 @@ class _ShopsViewState extends State<ShopsView> {
                   var data = snapshot.data!.docs[index].data() as Map;
                   VehicleModel model =
                       VehicleModel.fromJson(data as Map<String, dynamic>);
-                  return _buildCard(
-                    image: model.image.toString(),
-                    label: "${model.vehicleName.toString()}\n"
-                        "For ${model.vehicleStatus.toString()}",
-                    onTap: () {
-                      Get.to(() => VehiclePageView(
-                          vModel: VehicleModel.fromJson(model.toJson()),
-                          doc: ''));
-                    },
-                  );
-                  // return _buildVehicleBox(model);
+                  // return _buildCard(
+                  //   image: model.image.toString(),
+                  //   label: "${model.vehicleName.toString()}\n"
+                  //       "For ${model.vehicleStatus.toString()}",
+                  //   onTap: () {
+                  //     Get.to(() => VehiclePageView(
+                  //         vModel: VehicleModel.fromJson(model.toJson()),
+                  //         doc: ''));
+                  //   },
+                  // );
+                  return _buildVehicleBox(model);
                 },
               );
             } else {
