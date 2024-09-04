@@ -1237,14 +1237,14 @@ class _ShopsViewState extends State<ShopsView> {
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Image.asset(
-                'assets/images/partner.png',
+                'assets/images/life.png',
                 height: 200,
                 width: double.infinity,
                 fit: BoxFit.cover,
               ),
             ),
             Positioned(
-              bottom: 0,
+              top: 0,
               right: 0,
               child: Container(
                 padding: EdgeInsets.all(5),
