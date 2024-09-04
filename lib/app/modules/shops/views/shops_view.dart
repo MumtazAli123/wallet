@@ -1269,24 +1269,6 @@ class _ShopsViewState extends State<ShopsView> {
                 fit: BoxFit.cover,
               ),
             ),
-            Positioned(
-              top: 0,
-              right: 0,
-              child: Container(
-                padding: EdgeInsets.all(5),
-                decoration: BoxDecoration(
-                  color: Colors.green,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    bottomRight: Radius.circular(0),
-                  ),
-                ),
-                child: cText(
-                  'Find Life Partner'.tr,
-                  color: Colors.white,
-                ),
-              ),
-            ),
           ],
         ),
       ),
