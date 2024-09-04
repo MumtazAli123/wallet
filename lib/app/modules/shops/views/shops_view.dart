@@ -145,58 +145,85 @@ class _ShopsViewState extends State<ShopsView> {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // welcome
-            _buildBalance(),
-            SizedBox(height: 10.0),
-            _buildButton(),
-            SizedBox(height: 10.0),
-            // rent a car
-            _buildRentCar(),
-            // vehicle
-            // search your partner
-            _buildLifePartner(),
-            SizedBox(height: 10.0),
-            // find job
-            _buildFindJob(),
-            SizedBox(height: 10.0),
-            _buildTackerCard(),
-            SizedBox(height: 10.0),
-            Text('Vehicles'.tr,
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-            _buildVehicles(),
-            // Tacker card
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // welcome
+                _buildBalance(),
+                SizedBox(height: 10.0),
+                _buildButton(),
+                SizedBox(height: 10.0),
+                // rent a car
+                _buildRentCar(),
+                // vehicle
+                // search your partner
+                _buildLifePartner(),
+                SizedBox(height: 10.0),
+                // find job
+                _buildFindJob(),
+                SizedBox(height: 10.0),
+                _buildTackerCard(),
 
-            SizedBox(height: 10.0),
-            wText("Real State".tr, size: 20),
-            _buildRealStateBox(),
-            SizedBox(height: 10.0),
-            // products
-            wText("Products".tr, size: 20),
-            _buildProductsBox(),
-            SizedBox(height: 40.0),
-
-            //   build grid view
+                //   build grid view
+              ],
+            ),
+            Column(
+              children: [
+                Text('Welcome to ZubiPay'.tr,
+                    style:
+                        TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                SizedBox(height: 10.0),
+                Text(
+                  'ZubiPay is a platform where you can sell your products, real state, and vehicles. You can also find a job, rent a car and find your life partner.',
+                  style: TextStyle(fontSize: 16),
+                ),
+                SizedBox(height: 10.0),
+                Divider(),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text('Vehicles'.tr,
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold)),
+                    _buildVehicles(),
+                    SizedBox(height: 10.0),
+                    Text('Real State'.tr,
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold)),
+                    _buildRealStateBox(),
+                    SizedBox(height: 10.0),
+                    Text('Products'.tr,
+                        style: TextStyle(
+                            fontSize: 20, fontWeight: FontWeight.bold)),
+                    _buildProductsBox(),
+                    SizedBox(height: 10.0),
+                  ],
+                ),
+                SizedBox(height: 40.0),
+              ],
+            ),
           ],
         ),
       ),
     );
   }
 
-
   _buildVehicleTab() {
     return StreamBuilder<QuerySnapshot>(
       stream: controllerVehicle.allVehicleStream(),
       builder: (context, snapshot) {
         try {
-          if(snapshot.hasError) {
+          if (snapshot.hasError) {
             return Text('Error: ${snapshot.error}');
-          }if (snapshot.connectionState == ConnectionState.waiting) {
+          }
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
               child: CircularProgressIndicator(),
             );
-          }if (snapshot.hasData) {
+          }
+          if (snapshot.hasData) {
             return ListView.builder(
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, index) {
@@ -204,8 +231,7 @@ class _ShopsViewState extends State<ShopsView> {
                 return _buildVehicleItem(data);
               },
             );
-          }
-          else {
+          } else {
             return const Center(
               child: CircularProgressIndicator(),
             );
@@ -264,9 +290,9 @@ class _ShopsViewState extends State<ShopsView> {
                       ),
                       Text(
                         'Price: ${model['vehiclePrice']}'.tr.splitMapJoin(
-                          RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"),
-                          onMatch: (m) => '${m[1]},',
-                        ),
+                              RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"),
+                              onMatch: (m) => '${m[1]},',
+                            ),
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -496,7 +522,6 @@ class _ShopsViewState extends State<ShopsView> {
     );
   }
 
-
   _buildButtonCard(
     String s,
     String send,
@@ -596,9 +621,9 @@ class _ShopsViewState extends State<ShopsView> {
         onTap: () {
           //   show on  same page
           Get.to(() => VehiclePageView(
-              vModel: VehicleModel.fromJson(model.toJson()), doc: '',
-
-          ));
+                vModel: VehicleModel.fromJson(model.toJson()),
+                doc: '',
+              ));
         },
         child: Card(
           elevation: 5,
@@ -614,7 +639,6 @@ class _ShopsViewState extends State<ShopsView> {
                         fit: BoxFit.cover,
                       )
                     : Container(),
-
                 Container(
                   padding: const EdgeInsets.all(3),
                   color: Colors.red,
@@ -632,7 +656,8 @@ class _ShopsViewState extends State<ShopsView> {
                           size: 12,
                         ),
                 ),
-                Expanded(child: rText(
+                Expanded(
+                    child: rText(
                   "${model.vehicleName}",
                   size: 16.0,
                 )),
@@ -776,58 +801,58 @@ class _ShopsViewState extends State<ShopsView> {
                   color: Colors.amber,
                   value: 3.5,
                   onChanged: (double rating) {
-                  if (sharedPreferences?.getString('uid') != null) {
-                    FirebaseFirestore.instance
-                        .collection('products')
-                        .doc(doc['pUniqueId'])
-                        .update({
-                      'rating': rating,
-                    });
-                  if (rating == 1) {
-                    QuickAlert.show(
-                      context: context,
-                      type: QuickAlertType.error,
-                      title: 'Very Bad',
-                      text: '$rating Star',
-                    );
-                  }else if (rating == 2) {
-                    QuickAlert.show(
-                      context: context,
-                      type: QuickAlertType.error,
-                      title: 'Bad',
-                      text: ' $rating Star',
-                    );
-                  }else if (rating == 3) {
-                    QuickAlert.show(
-                      context: context,
-                      type: QuickAlertType.success,
-                      title: 'Good',
-                      text: '$rating Star',
-                    );
-                  }else if (rating == 4) {
-                    QuickAlert.show(
-                      context: context,
-                      type: QuickAlertType.success,
-                      title: 'Very Good',
-                      text: '$rating Star',
-                    );
-                  }else if (rating == 5) {
-                    QuickAlert.show(
-                      context: context,
-                      type: QuickAlertType.success,
-                      title: 'Excellent',
-                      text: '$rating Star',
-                    );
-                  }
-                  } else {
-                    QuickAlert.show(
-                      context: context,
-                      type: QuickAlertType.error,
-                      title: 'Error',
-                      text: 'Please Login First',
-                    );
-                  }
-                },
+                    if (sharedPreferences?.getString('uid') != null) {
+                      FirebaseFirestore.instance
+                          .collection('products')
+                          .doc(doc['pUniqueId'])
+                          .update({
+                        'rating': rating,
+                      });
+                      if (rating == 1) {
+                        QuickAlert.show(
+                          context: context,
+                          type: QuickAlertType.error,
+                          title: 'Very Bad',
+                          text: '$rating Star',
+                        );
+                      } else if (rating == 2) {
+                        QuickAlert.show(
+                          context: context,
+                          type: QuickAlertType.error,
+                          title: 'Bad',
+                          text: ' $rating Star',
+                        );
+                      } else if (rating == 3) {
+                        QuickAlert.show(
+                          context: context,
+                          type: QuickAlertType.success,
+                          title: 'Good',
+                          text: '$rating Star',
+                        );
+                      } else if (rating == 4) {
+                        QuickAlert.show(
+                          context: context,
+                          type: QuickAlertType.success,
+                          title: 'Very Good',
+                          text: '$rating Star',
+                        );
+                      } else if (rating == 5) {
+                        QuickAlert.show(
+                          context: context,
+                          type: QuickAlertType.success,
+                          title: 'Excellent',
+                          text: '$rating Star',
+                        );
+                      }
+                    } else {
+                      QuickAlert.show(
+                        context: context,
+                        type: QuickAlertType.error,
+                        title: 'Error',
+                        text: 'Please Login First',
+                      );
+                    }
+                  },
                 ),
               ),
               SizedBox(
@@ -858,11 +883,13 @@ class _ShopsViewState extends State<ShopsView> {
                             ),
                             child: Text(
                               doc['pDiscountType'] == "Percentage"
-                                  ? 'Rs:${double.parse(doc['pPrice']) - (double.parse(doc['pPrice']) * double.parse(doc['pDiscount']) / 100)}'.splitMapJoin(
+                                  ? 'Rs:${double.parse(doc['pPrice']) - (double.parse(doc['pPrice']) * double.parse(doc['pDiscount']) / 100)}'
+                                      .splitMapJoin(
                                       RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"),
                                       onMatch: (m) => '${m[1]},',
-                              )
-                                  : 'Rs:${double.parse(doc['pPrice']) - double.parse(doc['pDiscount'])}'.splitMapJoin(
+                                    )
+                                  : 'Rs:${double.parse(doc['pPrice']) - double.parse(doc['pDiscount'])}'
+                                      .splitMapJoin(
                                       RegExp(r"(\d{1,3})(?=(\d{3})+(?!\d))"),
                                       onMatch: (m) => '${m[1]},',
                                     ),
@@ -1144,20 +1171,17 @@ class _ShopsViewState extends State<ShopsView> {
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
         Expanded(
-            child: _buildButtonCard(
-                "Vehicles".tr, "assets/lottie/rstate.json")),
+            child:
+                _buildButtonCard("Vehicles".tr, "assets/lottie/rstate.json")),
         // Expanded(
         //     child: _buildButtonCard("Receive Money".tr, Icons.money)),
         Expanded(
-            child: _buildButtonCard(
-                "Real State".tr, "assets/lottie/pro.json")),
+            child: _buildButtonCard("Real State".tr, "assets/lottie/pro.json")),
         Expanded(
-            child: _buildButtonCard(
-                "Products".tr, "assets/lottie/shop.json")),
+            child: _buildButtonCard("Products".tr, "assets/lottie/shop.json")),
       ],
     );
   }
-
 
   _buildTackerCard() {
     return GestureDetector(
@@ -1202,27 +1226,38 @@ class _ShopsViewState extends State<ShopsView> {
         Get.toNamed('/partner');
       },
       child: Card(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
         elevation: 5,
-        child: Column(
+        child: Stack(
           children: [
-            ListTile(
-              leading: Icon(Icons.favorite),
-              title: Text('Search Your Life Partner'.tr),
-              subtitle: Text('Find Your Partner'.tr),
-              trailing: IconButton(
-                onPressed: () {
-                  Get.toNamed('/partner');
-                },
-                icon: Icon(Icons.more_vert),
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Image.asset(
+                'assets/images/partner.png',
+                height: 200,
+                width: double.infinity,
+                fit: BoxFit.cover,
               ),
             ),
-            Container(
-              height: 257,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/images/life.png'),
-                  fit: BoxFit.fill,
+            Positioned(
+              bottom: 0,
+              right: 0,
+              child: Container(
+                padding: EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  color: Colors.green,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    bottomRight: Radius.circular(0),
+                  ),
+                ),
+                child: cText(
+                  'Find Life Partner'.tr,
+                  color: Colors.white,
                 ),
               ),
             ),
@@ -1271,31 +1306,35 @@ class _ShopsViewState extends State<ShopsView> {
   _buildRentCar() {
     return GestureDetector(
       onTap: () {
-        Get.to(()=> RentACar(
-          model: VehicleModel(),
-        ));
+        Get.to(() => RentACar(
+              model: VehicleModel(),
+            ));
       },
       child: Card(
         elevation: 5,
-        child: Column(
+        child: Stack(
           children: [
-            ListTile(
-              leading: Icon(EvaIcons.car, color: Colors.blue[900]),
-              title: Text('Rent a Car'.tr),
-              trailing: IconButton(
-                onPressed: () {
-                  Get.toNamed('/vehicle');
-                },
-                icon: Icon(Icons.more_vert),
-              ),
-            ),
-            Container(
-              height: 257,
+            Image.asset(
+              'assets/images/rent.png',
+              height: 200,
               width: double.infinity,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/images/rent.png'),
-                  fit: BoxFit.fill,
+              fit: BoxFit.cover,
+            ),
+            Positioned(
+              bottom: 0,
+              right: 0,
+              child: Container(
+                padding: EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  color: Colors.green,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    bottomRight: Radius.circular(0),
+                  ),
+                ),
+                child: cText(
+                  'Rent a Car'.tr,
+                  color: Colors.white,
                 ),
               ),
             ),
@@ -1304,5 +1343,4 @@ class _ShopsViewState extends State<ShopsView> {
       ),
     );
   }
-
 }
