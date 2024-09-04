@@ -156,6 +156,7 @@ class _ShopsViewState extends State<ShopsView> {
                 SizedBox(height: 10.0),
                 // rent a car
                 _buildRentCar(),
+                SizedBox(height: 10.0),
                 // vehicle
                 // search your partner
                 _buildLifePartner(),
@@ -1190,30 +1191,32 @@ class _ShopsViewState extends State<ShopsView> {
       },
       child: Card(
         elevation: 5,
-        child: Column(
+        child: Stack(
           children: [
-            ListTile(
-              leading: Icon(Icons.location_on),
-              title: Text('Tacker GPS'.tr),
-              subtitle: Text('Car Insurance'.tr),
-              trailing: IconButton(
-                onPressed: () {
-                  Get.toNamed('/inspection');
-                },
-                icon: Icon(Icons.more_vert),
-              ),
-            ),
-            Container(
-              height: 277,
+            Image.asset(
+              'assets/images/trac.png',
+              height: 200,
               width: double.infinity,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/images/trac.png'),
-                  fit: BoxFit.fill,
+              fit: BoxFit.cover,
+            ),
+            Positioned(
+              bottom: 0,
+              right: 0,
+              child: Container(
+                padding: EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  color: Colors.green,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    bottomRight: Radius.circular(0),
+                  ),
+                ),
+                child: cText(
+                  'Inspection'.tr,
+                  color: Colors.white,
                 ),
               ),
             ),
-            // Image.asset('assets/images/insur.png', height: 200, width: double.infinity, fit: BoxFit.cover),
           ],
         ),
       ),
@@ -1274,26 +1277,29 @@ class _ShopsViewState extends State<ShopsView> {
       },
       child: Card(
         elevation: 10,
-        child: Column(
+        child: Stack(
           children: [
-            ListTile(
-              leading: Icon(Icons.work),
-              title: Text('Find Dream Job'.tr),
-              subtitle: Text('Find Your Job'.tr),
-              // trailing: IconButton(
-              //   onPressed: () {
-              //     Get.toNamed('/job');
-              //   },
-              //   icon: Icon(Icons.more_vert),
-              // ),
-            ),
-            Container(
-              height: 257,
+            Image.asset(
+              'assets/images/job.png',
+              height: 200,
               width: double.infinity,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('assets/images/job.png'),
-                  fit: BoxFit.fill,
+              fit: BoxFit.cover,
+            ),
+            Positioned(
+              bottom: 0,
+              right: 0,
+              child: Container(
+                padding: EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                  color: Colors.green,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    bottomRight: Radius.circular(0),
+                  ),
+                ),
+                child: cText(
+                  'Find Job'.tr,
+                  color: Colors.white,
                 ),
               ),
             ),
