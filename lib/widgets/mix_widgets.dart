@@ -98,6 +98,7 @@ wCustomButton(
     {required int width,
     required String text,
     required IconData icon,
+      Color? color,
     required Null Function() onPressed}) {
   return Container(
     width: width.toDouble(),
@@ -105,7 +106,7 @@ wCustomButton(
     child: ElevatedButton(
       onPressed: onPressed,
       style: ElevatedButton.styleFrom(
-        backgroundColor: Colors.blue,
+        backgroundColor: color ?? Colors.blue,
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,

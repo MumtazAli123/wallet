@@ -24,6 +24,7 @@ import '../../../../global/global.dart';
 import '../../../../models/products_model.dart';
 import '../../../../models/vehicle_model.dart';
 import '../../../../widgets/mix_widgets.dart';
+import '../../partner/views/upload_profile.dart';
 import '../../products/views/products_page_view.dart';
 import '../../products/views/show_products_view.dart';
 import '../../products/views/tabbar/all_products.dart';
@@ -421,13 +422,31 @@ class _ShopsViewState extends State<ShopsView> {
                       label: wText('Sale Products'.tr,
                           color: Get.theme.primaryColor)),
                   SizedBox(height: 10.0),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Lottie.asset('assets/lottie/shop.json',
-                          width: 300, height: 150),
-                    ],
-                  ),
+                  // Add Job
+                  TextButton.icon(
+                      onPressed: () {
+                        Get.toNamed('/job');
+                      },
+                      icon: Icon(
+                        Icons.work,
+                        color: Get.theme.primaryColor,
+                      ),
+                      label: wText('Find Job'.tr,
+                          color: Get.theme.primaryColor)),
+                  SizedBox(height: 10.0),
+                  // Add Partner
+                  TextButton.icon(
+                      onPressed: () {
+                        Get.to(() => UploadProfile());
+                      },
+                      icon: Icon(
+                        Icons.favorite,
+                        color: Get.theme.primaryColor,
+                      ),
+                      label: wText('Find Partner'.tr,
+                          color: Get.theme.primaryColor)),
+                  SizedBox(height: 10.0),
+
                 ]),
             bottomBar: GFButtonBar(
               children: [

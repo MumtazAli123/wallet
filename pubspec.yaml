@@ -17,7 +17,7 @@ dependencies:
   firebase_messaging: any
   firebase_storage: any
   firebase_core: any
-  get_storage:
+  get_storage: any
   provider: any
   google_fonts: any
   shared_preferences: any
@@ -33,18 +33,18 @@ dependencies:
   mobile_scanner: ^5.1.1
   qr_flutter: ^4.1.0
   intl: any
-  flutter_barcode_scanner:
+  flutter_barcode_scanner: any
   smooth_star_rating_nsafe: any
-  overlay_support:
-  date_picker_plus:
-  screenshot:
-  image_gallery_saver:
-  dio:
-  permission_handler:
+  overlay_support: any
+  date_picker_plus: any
+  screenshot: any
+  image_gallery_saver: any
+  dio: any
+  permission_handler: any
   url_launcher: any
   audioplayers: any
   flutter_slidable: any
-  country_state_city_picker:
+  country_state_city_picker: any
   csc_picker: any
   email_auth: any
   getwidget: any
@@ -55,8 +55,9 @@ dependencies:
   rename: any
   lottie: any
   fl_chart: any
-  eva_icons_flutter:
-  flutter:
+  eva_icons_flutter: any
+  gender_picker: 1.1.0
+  flutter: 
     sdk: flutter
 
 dev_dependencies: 
