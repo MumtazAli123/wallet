@@ -160,7 +160,8 @@ class _MyDrawerState extends State<MyDrawer> {
           leading: const Icon(Icons.settings),
           title: const Text('Update App'),
           onTap: () {
-            launch('https://play.google.com/store/apps/details?id=com.paysaw.chatty');
+            launch(
+                'https://play.google.com/store/apps/details?id=com.paysaw.chatty');
           },
         ),
         ListTile(
@@ -175,7 +176,11 @@ class _MyDrawerState extends State<MyDrawer> {
     );
   }
 
-  void _buildRUSureDialog({required BuildContext context, required String title, required String content, required Null Function() onPressed}) {
+  void _buildRUSureDialog(
+      {required BuildContext context,
+      required String title,
+      required String content,
+      required Null Function() onPressed}) {
     showDialog(
       context: context,
       builder: (context) {
@@ -212,11 +217,9 @@ class _MyDrawerState extends State<MyDrawer> {
             controller: phoneNumber.isNotEmpty
                 ? phoneController
                 : TextEditingController(text: phoneNumber),
-            decoration:  const InputDecoration(
+            decoration: const InputDecoration(
               hintText: 'Enter your phone number',
-
             ),
-
             onChanged: (value) {
               phoneNumber = value;
             },
@@ -235,8 +238,7 @@ class _MyDrawerState extends State<MyDrawer> {
                     type: QuickAlertType.error,
                     text: 'Phone number is too short',
                   );
-                }
-                  else {
+                } else {
                   QuickAlert.show(
                     context: Get.context!,
                     type: QuickAlertType.error,
@@ -244,7 +246,7 @@ class _MyDrawerState extends State<MyDrawer> {
                   );
                 }
               },
-              child:  eText('Cancel', color: Colors.red),
+              child: eText('Cancel', color: Colors.red),
             ),
             TextButton(
               onPressed: () {
@@ -252,7 +254,7 @@ class _MyDrawerState extends State<MyDrawer> {
                   _savePhoneNum();
                 });
               },
-              child:  eText('Update', color: Colors.green),
+              child: eText('Update', color: Colors.green),
             ),
           ],
         );
@@ -262,21 +264,21 @@ class _MyDrawerState extends State<MyDrawer> {
 
   void _savePhoneNum() async {
     try {
-      if(phoneController.text.isEmpty){
+      if (phoneController.text.isEmpty) {
         QuickAlert.show(
           context: Get.context!,
           type: QuickAlertType.error,
           text: 'Phone number cannot be empty',
         );
         return;
-      }else if(phoneController.text.length < 13){
+      } else if (phoneController.text.length < 13) {
         QuickAlert.show(
           context: Get.context!,
           type: QuickAlertType.error,
           text: 'Phone number is too short',
         );
         return;
-      }else{
+      } else {
         phoneNumber = phoneController.text;
       }
       FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
@@ -286,23 +288,29 @@ class _MyDrawerState extends State<MyDrawer> {
           .get();
       return query.docs.isEmpty
           // note: once phone number is updated, it cannot be changed again
-          ? await firebaseFirestore.collection("sellers").doc(fAuth.currentUser!.uid).update({
+          ? await firebaseFirestore
+              .collection("sellers")
+              .doc(fAuth.currentUser!.uid)
+              .update({
               'phone': phoneNumber,
-            }).then((value) async{
+            }).then((value) async {
               // update the phone number in shared preferences
               await sharedPreferences!.setString('phone', phoneNumber);
               // update the phone number in the users collection
-              await firebaseFirestore.collection("users")
+              await firebaseFirestore
+                  .collection("users")
                   .doc(sharedPreferences!.getString('uid'))
                   .update({
                 'phone': phoneNumber,
               });
               // change the phone number in sellers to products collection
-              await firebaseFirestore.collection("sellers")
-                .doc(fAuth.currentUser!.uid)
-                .collection("products")
-                .where("pSellerId", isEqualTo: fAuth.currentUser!.uid)
-                .get().then((value) {
+              await firebaseFirestore
+                  .collection("sellers")
+                  .doc(fAuth.currentUser!.uid)
+                  .collection("products")
+                  .where("pSellerId", isEqualTo: fAuth.currentUser!.uid)
+                  .get()
+                  .then((value) {
                 for (var doc in value.docs) {
                   doc.reference.update({
                     'pSellerPhone': phoneNumber,
@@ -310,7 +318,11 @@ class _MyDrawerState extends State<MyDrawer> {
                 }
               });
               // change the phone number in products collection
-              await firebaseFirestore.collection("products").where("pSellerId", isEqualTo: fAuth.currentUser!.uid).get().then((value) {
+              await firebaseFirestore
+                  .collection("products")
+                  .where("pSellerId", isEqualTo: fAuth.currentUser!.uid)
+                  .get()
+                  .then((value) {
                 for (var doc in value.docs) {
                   doc.reference.update({
                     'pSellerPhone': phoneNumber,
@@ -318,11 +330,13 @@ class _MyDrawerState extends State<MyDrawer> {
                 }
               });
               // change the phone number in sellers to vehicle collection
-              await firebaseFirestore.collection("sellers")
+              await firebaseFirestore
+                  .collection("sellers")
                   .doc(fAuth.currentUser!.uid)
                   .collection("vehicles")
                   .where("sellerId", isEqualTo: fAuth.currentUser!.uid)
-                  .get().then((value) {
+                  .get()
+                  .then((value) {
                 for (var doc in value.docs) {
                   doc.reference.update({
                     'phone': phoneNumber,
@@ -331,9 +345,37 @@ class _MyDrawerState extends State<MyDrawer> {
               });
 
               // change the phone number in vehicles collection
-              await firebaseFirestore.collection("vehicles")
+              await firebaseFirestore
+                  .collection("vehicles")
                   .where("sellerId", isEqualTo: fAuth.currentUser!.uid)
-                  .get().then((value) {
+                  .get()
+                  .then((value) {
+                for (var doc in value.docs) {
+                  doc.reference.update({
+                    'phone': phoneNumber,
+                  });
+                }
+              });
+              // change the phone number in sellers to realState collection
+              await firebaseFirestore
+                  .collection("sellers")
+                  .doc(fAuth.currentUser!.uid)
+                  .collection("realState")
+                  .where("realStateId", isEqualTo: fAuth.currentUser!.uid)
+                  .get()
+                  .then((value) {
+                for (var doc in value.docs) {
+                  doc.reference.update({
+                    'phone': phoneNumber,
+                  });
+                }
+              });
+              // change the phone number in realState collection
+              await firebaseFirestore
+                  .collection("realState")
+                  .where("realStateId", isEqualTo: fAuth.currentUser!.uid)
+                  .get()
+                  .then((value) {
                 for (var doc in value.docs) {
                   doc.reference.update({
                     'phone': phoneNumber,
@@ -352,7 +394,6 @@ class _MyDrawerState extends State<MyDrawer> {
               context: Get.context!,
               type: QuickAlertType.error,
               text: 'Phone number already exists',
-
             );
     } catch (e) {
       QuickAlert.show(
@@ -362,5 +403,4 @@ class _MyDrawerState extends State<MyDrawer> {
       );
     }
   }
-
 }
