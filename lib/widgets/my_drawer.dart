@@ -288,8 +288,59 @@ class _MyDrawerState extends State<MyDrawer> {
           // note: once phone number is updated, it cannot be changed again
           ? await firebaseFirestore.collection("sellers").doc(fAuth.currentUser!.uid).update({
               'phone': phoneNumber,
-            }).then((value) {
-              sharedPreferences!.setString('phone', phoneNumber);
+            }).then((value) async{
+              // update the phone number in shared preferences
+              await sharedPreferences!.setString('phone', phoneNumber);
+              // update the phone number in the users collection
+              await firebaseFirestore.collection("users")
+                  .doc(sharedPreferences!.getString('uid'))
+                  .update({
+                'phone': phoneNumber,
+              });
+              // change the phone number in sellers to products collection
+              await firebaseFirestore.collection("sellers")
+                .doc(fAuth.currentUser!.uid)
+                .collection("products")
+                .where("pSellerId", isEqualTo: fAuth.currentUser!.uid)
+                .get().then((value) {
+                for (var doc in value.docs) {
+                  doc.reference.update({
+                    'pSellerPhone': phoneNumber,
+                  });
+                }
+              });
+              // change the phone number in products collection
+              await firebaseFirestore.collection("products").where("pSellerId", isEqualTo: fAuth.currentUser!.uid).get().then((value) {
+                for (var doc in value.docs) {
+                  doc.reference.update({
+                    'pSellerPhone': phoneNumber,
+                  });
+                }
+              });
+              // change the phone number in sellers to vehicle collection
+              await firebaseFirestore.collection("sellers")
+                  .doc(fAuth.currentUser!.uid)
+                  .collection("vehicles")
+                  .where("sellerId", isEqualTo: fAuth.currentUser!.uid)
+                  .get().then((value) {
+                for (var doc in value.docs) {
+                  doc.reference.update({
+                    'phone': phoneNumber,
+                  });
+                }
+              });
+
+              // change the phone number in vehicles collection
+              await firebaseFirestore.collection("vehicles")
+                  .where("sellerId", isEqualTo: fAuth.currentUser!.uid)
+                  .get().then((value) {
+                for (var doc in value.docs) {
+                  doc.reference.update({
+                    'phone': phoneNumber,
+                  });
+                }
+              });
+
               Get.back();
               QuickAlert.show(
                 context: Get.context!,

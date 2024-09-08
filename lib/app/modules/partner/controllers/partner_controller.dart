@@ -4,10 +4,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:quickalert/quickalert.dart';
 import 'package:wallet/global/global.dart';
+import 'package:wallet/widgets/mix_widgets.dart';
 
 class PartnerController extends GetxController {
   TextEditingController bioController = TextEditingController();
@@ -93,8 +95,10 @@ class PartnerController extends GetxController {
     '7.11',
     '8.0'
   ];
-  List<String> genderType = ["Male", "Female",];
-
+  List<String> genderType = [
+    "Male",
+    "Female",
+  ];
 
   String? language = '';
   String? educationLevel = '';
@@ -113,7 +117,6 @@ class PartnerController extends GetxController {
   int? age = 0;
   String? imageUrl = '';
 
-
   final currentScreen = 0.obs;
 
   late Rx<File?> pickedFile;
@@ -124,7 +127,6 @@ class PartnerController extends GetxController {
   final fFirestore = FirebaseFirestore.instance;
   final fAuth = FirebaseAuth.instance;
   final fStorage = FirebaseStorage.instance;
-
 
   void selectImage() async {
     imageFile = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -148,8 +150,7 @@ class PartnerController extends GetxController {
         imageUrl = downloadUrl;
       }
 
-      await fFirestore.collection('users').doc(fAuth.currentUser!.uid)
-          .set({
+      await fFirestore.collection('users').doc(fAuth.currentUser!.uid).set({
         'uid': sharedPreferences!.getString('uid'),
         'name': sharedPreferences!.getString('name'),
         'email': sharedPreferences!.getString('email'),
@@ -164,15 +165,13 @@ class PartnerController extends GetxController {
         "gender": genderValue,
       });
 
-
       Get.offAllNamed('/home');
-      QuickAlert.show(
-        context: Get.context!,
-        title: "Success",
-        text: "Profile created successfully",
-        type: QuickAlertType.success,
+      wGetSnackBar(
+        "Success",
+        "Profile created successfully",
       );
     } catch (e) {
+      Get.back();
       QuickAlert.show(
         context: Get.context!,
         title: "Error",
@@ -181,7 +180,6 @@ class PartnerController extends GetxController {
       );
     }
   }
-
 
   @override
   void onInit() {
@@ -213,5 +211,54 @@ class PartnerController extends GetxController {
         .orderBy("pCreatedAt", descending: true)
         .snapshots();
   }
-}
 
+  void saveProfile() async {
+    try {
+      QuickAlert.show(
+        context: Get.context!,
+        title: "Saving",
+        text: "Please wait...",
+        type: QuickAlertType.loading,
+      );
+
+      if (pickedFile.value != null) {
+        var snapshot = await fStorage
+            .ref()
+            .child('profileImages/${fAuth.currentUser!.uid}')
+            .putFile(pickedFile.value!);
+        var downloadUrl = await snapshot.ref.getDownloadURL();
+        imageUrl = downloadUrl;
+      }
+
+      await fFirestore.collection('users').doc(fAuth.currentUser!.uid).set({
+        'uid': sharedPreferences!.getString('uid'),
+        'name': sharedPreferences!.getString('name'),
+        'email': sharedPreferences!.getString('email'),
+        'phone': sharedPreferences!.getString('phone'),
+        'image': imageUrl,
+        'bio': bioController.text,
+        'profileHeading': profileHeadingController.text,
+        'income': incomeController.text,
+        'religion': religionController.text,
+        "age": age,
+        "dob": dobController.text,
+        "gender": genderValue,
+      });
+
+      Get.offAllNamed('/home');
+      wGetSnackBar(
+        "Success",
+        "Profile created successfully",
+        color: Colors.green,
+      );
+    } catch (e) {
+      Get.back();
+      QuickAlert.show(
+        context: Get.context!,
+        title: "Error",
+        text: e.toString(),
+        type: QuickAlertType.error,
+      );
+    }
+  }
+}

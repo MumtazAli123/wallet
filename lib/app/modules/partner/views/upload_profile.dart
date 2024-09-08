@@ -294,7 +294,9 @@ class _UploadProfileState extends State<UploadProfile> {
               text: 'Save Profile',
               icon: Icons.save,
               onPressed: () {
-                controller.createNewUserAccount();
+                setState(() {
+                  controller.saveProfile();
+                });
               }),
         ],
       ),
