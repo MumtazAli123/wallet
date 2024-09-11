@@ -38,10 +38,10 @@ class BottomPageView extends GetView {
             QrcodePage(),
             ShopsView(),
             // SliderPics(),
-            Container(
-              color: Colors.red,
-            ),
-            // ProfileScreen(),
+            // Container(
+            //   color: Colors.red,
+            // ),
+            ProfileScreen(),
 
 
           ],

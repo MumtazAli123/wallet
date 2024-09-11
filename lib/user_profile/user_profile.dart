@@ -16,9 +16,7 @@ import 'package:quickalert/quickalert.dart';
 import 'package:wallet/global/global.dart';
 import 'package:http/http.dart' as http;
 import 'package:wallet/models/user_model.dart';
-import 'package:wallet/user_profile/tabbar/user_all_products.dart';
-import 'package:wallet/user_profile/tabbar/user_all_realstate.dart';
-import 'package:wallet/user_profile/tabbar/user_all_vehicles.dart';
+import 'package:wallet/widgets/my_drawer.dart';
 
 import '../app/modules/home/views/wallet_view.dart';
 import '../notification/notification_page.dart';
@@ -74,8 +72,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     super.initState();
     _refresh();
-    descController.text = sharedPreferences!.getString('description')!;
-    cityController.text = sharedPreferences!.getString('city')!;
+    // descController.text = sharedPreferences!.getString('description')!;
+    // cityController.text = sharedPreferences!.getString('city')!;
     isLoading = false;
   }
 
@@ -89,73 +87,49 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 5,
-      child: GestureDetector(
-          onTap: () {
-            FocusScope.of(context).unfocus();
-          },
-          child: RefreshIndicator(
-            onRefresh: _refresh,
-            child: SafeArea(
-              child: Scaffold(
-                  body: _buildBody(),
-                  appBar: AppBar(
-                    title: Text('Profile'.tr),
-                    centerTitle: true,
-                    bottom: TabBar(
-                      tabAlignment: TabAlignment.center,
-                      controller: fabController,
-                      isScrollable: true,
-                      tabs: [
-                        Tab(
-                          icon: Icon(Icons.account_circle),
-                          text: 'Profile'.tr,
-                        ),
-                        Tab(
-                          icon: Icon(Icons.shopping_cart),
-                          text: 'Products'.tr,
-                        ),
-                        Tab(
-                          icon: Icon(Icons.car_rental),
-                          text: 'Vehicles'.tr,
-                        ),
-                        // real estate
-                        Tab(
-                          icon: Icon(Icons.home),
-                          text: 'Real Estate'.tr,
-                        ),
-                        Tab(
-                          icon: Icon(Icons.favorite),
-                          text: 'Favorite'.tr,
-                        ),
-                      ],
-                    ),
-                    actions: [
-                      IconButton(
-                        icon: Icon(Icons.edit),
-                        onPressed: () async {
-                          _updateDescription();
-                          // Get.to(() => EditProfileScreen());
-                        },
-                      ),
-                    ],
-                  )),
+    return GestureDetector(
+        onTap: () {
+          FocusScope.of(context).unfocus();
+        },
+        child: RefreshIndicator(
+          onRefresh: _refresh,
+          child: SafeArea(
+            child: Scaffold(
+              drawer: MyDrawer(),
+              body: _buildBody(),
             ),
-          )),
-    );
+          ),
+        ));
   }
 
   _buildBody() {
-    return TabBarView(
+    return Column(
       children: [
-        _buildBodyContent(),
-        MyAllProducts(),
-        MyAllVehicles(),
-        MyAllRealState(),
-        Center(
-          child: Text('Favorite'.tr),
+        //   app bar
+        AppBar(
+          title: wText('Profile'.tr),
+          centerTitle: true,
+          actions: [
+            IconButton(
+              icon: Icon(Icons.notifications),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => NotificationPage(),
+                  ),
+                );
+              },
+            ),
+          ],
         ),
+
+        Expanded(
+          child: _buildBodyContent(),
+        ),
+
+        //   bottom navigation bar
+
       ],
     );
   }
@@ -599,17 +573,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
-  void _uploadImage() {
+  void _uploadImage() async{
     storage
         .child('sellers')
         .child(user!.uid)
         .putFile(File(image!.path))
         .then((value) {
-      value.ref.getDownloadURL().then((value) {
+      value.ref.getDownloadURL().then((value) async {
         db.doc(user!.uid).update({
           'image': value,
         });
-        sharedPreferences!.setString('image', value);
+        await sharedPreferences!.setString('image', value);
         // vehicle image updated successfully
         QuickAlert.show(
           barrierDismissible: false,

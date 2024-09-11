@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
@@ -13,16 +12,17 @@ import 'package:wallet/widgets/mix_widgets.dart';
 
 class PartnerController extends GetxController {
   TextEditingController bioController = TextEditingController();
-  TextEditingController profileHeadingController = TextEditingController();
   TextEditingController incomeController = TextEditingController();
   TextEditingController religionController = TextEditingController();
   TextEditingController nationalityController = TextEditingController();
   TextEditingController dobController = TextEditingController();
+  TextEditingController languagesController = TextEditingController();
+  TextEditingController educationController = TextEditingController();
+  TextEditingController professionController = TextEditingController();
 
   List<String> languages = [];
   List<String> education = [];
   List<String> weight = [];
-  List<String> profession = [];
   List<String> kids = ['Yes', 'No'];
   List<String> wantKids = ['Yes', 'No'];
   List<String> maritalStatus = [
@@ -44,57 +44,6 @@ class PartnerController extends GetxController {
     'Marriage',
     'Other'
   ];
-  List<String> height = [
-    '4.0',
-    '4.1',
-    '4.2',
-    '4.3',
-    '4.4',
-    '4.5',
-    '4.6',
-    '4.7',
-    '4.8',
-    '4.9',
-    '4.10',
-    '4.11',
-    '5.0',
-    '5.1',
-    '5.2',
-    '5.3',
-    '5.4',
-    '5.5',
-    '5.6',
-    '5.7',
-    '5.8',
-    '5.9',
-    '5.10',
-    '5.11',
-    '6.0',
-    '6.1',
-    '6.2',
-    '6.3',
-    '6.4',
-    '6.5',
-    '6.6',
-    '6.7',
-    '6.8',
-    '6.9',
-    '6.10',
-    '6.11',
-    '7.0',
-    '7.1',
-    '7.2',
-    '7.3',
-    '7.4',
-    '7.5',
-    '7.6',
-    '7.7',
-    '7.8',
-    '7.9',
-    '7.10',
-    '7.11',
-    '8.0'
-  ];
   List<String> genderType = [
     "Male",
     "Female",
@@ -102,17 +51,16 @@ class PartnerController extends GetxController {
 
   String? language = '';
   String? educationLevel = '';
-  String? weightLevel = '';
-  String? professionLevel = '';
+  String? professionValue = '';
   String? kid = 'Yes';
   String? wantKid = 'Yes';
   String? marital = 'Single';
   String? live = 'Alone';
   String? smoke = 'Yes';
+  String? drink = 'Yes';
   String? drinkList = 'Yes';
   String? body = 'Slim';
   String? lookingFor = 'Friendship';
-  String? heightLevel = '4.0';
   String? genderValue = "Male";
   int? age = 0;
   String? imageUrl = '';
@@ -127,6 +75,8 @@ class PartnerController extends GetxController {
   final fFirestore = FirebaseFirestore.instance;
   final fAuth = FirebaseAuth.instance;
   final fStorage = FirebaseStorage.instance;
+
+
 
   void selectImage() async {
     imageFile = await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -157,12 +107,23 @@ class PartnerController extends GetxController {
         'phone': sharedPreferences!.getString('phone'),
         'image': imageUrl,
         'bio': bioController.text,
-        'profileHeading': profileHeadingController.text,
         'income': incomeController.text,
         'religion': religionController.text,
+        "Nationality": nationalityController.text,
         "age": age,
         "dob": dobController.text,
         "gender": genderValue,
+        "language": languages,
+        "education": education,
+        "profession": professionValue,
+        "kids": kid,
+        "wantKids": wantKid,
+        "maritalStatus": marital,
+        "living": live,
+        "smoking": smoke,
+        "drinking": drinkList,
+        "bodyType": body,
+        "lookingForInAPartner": lookingFor,
       });
 
       Get.offAllNamed('/home');
@@ -237,12 +198,24 @@ class PartnerController extends GetxController {
         'phone': sharedPreferences!.getString('phone'),
         'image': imageUrl,
         'bio': bioController.text,
-        'profileHeading': profileHeadingController.text,
         'income': incomeController.text,
         'religion': religionController.text,
+        "Nationality": nationalityController.text.trim(),
         "age": age,
         "dob": dobController.text,
         "gender": genderValue,
+        "language": languages,
+        "education": education,
+        "profession": professionValue,
+        "kids": kid,
+        "wantKids": wantKid,
+        "maritalStatus": marital,
+        "living": live,
+        "smoking": smoke,
+        "drinking": drinkList,
+        "bodyType": body,
+        "lookingForInAPartner": lookingFor,
+
       });
 
       Get.offAllNamed('/home');

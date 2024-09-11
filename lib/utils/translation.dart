@@ -138,8 +138,8 @@ class Utils {
               color: Colors.grey,
               borderRadius: BorderRadius.circular(100),
             ),
-            height: 200,
-            width: 200,
+            height: 150,
+            width: 150,
            child: CircleAvatar(
              backgroundImage: image != null ? FileImage(image) : null,
              child: image == null ? const Icon(Icons.person, size: 100,) : null,
