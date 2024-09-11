@@ -8,7 +8,7 @@ environment:
 dependencies: 
   get: any
   path: any
-  http: any
+#  http: any
   share_plus: any
   path_provider: any
   firebase_auth: any
